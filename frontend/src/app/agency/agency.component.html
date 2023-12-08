@@ -1,0 +1,96 @@
+<div class="bg-white container">
+  <h2 class="header">{{'AGENCY.TITLE_LIST' | translate}}</h2>
+
+  <div class="action-add" [hidden]="isStocker">
+    <button class="btn-add" (click)="onEdit(null)">
+      <mat-icon aria-hidden="false" aria-label="Add icon" fontSet="fas" fontIcon="fa-plus" class="fa-plus"></mat-icon>
+      <label class="pad-label">{{'BUTTON.ADD' | translate}}</label>
+    </button>
+  </div>
+
+  <div class="table-container">
+    <table mat-table [dataSource]="dataSource" matSort>
+
+      <!-- id Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by number">{{'AGENCY.ID' |
+          translate}}</th>
+        <td mat-cell *matCellDef="let element" class="nowrap">{{element.id}}</td>
+      </ng-container>
+
+      <!-- fullName Column -->
+      <ng-container matColumnDef="fullName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by fullname">{{'AGENCY.NAME' |
+          translate}}</th>
+        <td mat-cell *matCellDef="let element" class="nowrap">{{element.fullName}}</td>
+      </ng-container>
+
+      <!-- address Column -->
+      <ng-container matColumnDef="address">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by address">{{'AGENCY.ADDRESS'
+          | translate}}</th>
+        <td mat-cell *matCellDef="let element" class="nowrap">{{element.address}}</td>
+      </ng-container>
+
+      <!-- phone Column -->
+      <ng-container matColumnDef="phone">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by phone">{{'AGENCY.PHONE' |
+          translate}}</th>
+        <td mat-cell *matCellDef="let element">{{element.phone}}</td>
+      </ng-container>
+
+      <!-- email Column -->
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by email">{{'AGENCY.EMAIL' |
+          translate}}</th>
+        <td mat-cell *matCellDef="let element">{{element.email}}</td>
+      </ng-container>
+
+      <!-- contract Column -->
+      <ng-container matColumnDef="contract">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by contract">
+          {{'AGENCY.CONTRACT' | translate}}</th>
+        <td mat-cell *matCellDef="let element">{{element.contract}}</td>
+      </ng-container>
+
+      <!-- accountName Column -->
+      <ng-container matColumnDef="accountName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by accountName">
+          {{'AGENCY.USERNAME' | translate}}</th>
+        <td mat-cell *matCellDef="let element">{{element.accountName}}</td>
+      </ng-container>
+
+      <!-- note Column -->
+      <ng-container matColumnDef="note">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by note">{{'AGENCY.NOTE' |
+          translate}}</th>
+        <td mat-cell class="wrap-text" *matCellDef="let element">{{element.note}}</td>
+      </ng-container>
+
+      <!-- delete action Column -->
+      <ng-container matColumnDef="deleteAction">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Các thao tác</th>
+        <td mat-cell *matCellDef="let element">
+          <div class="center">
+            <mat-icon aria-hidden="false" aria-label="Trash icon" fontSet="fas" fontIcon="fa-pen" class="fa-pen"
+              (click)="onEdit(element)"></mat-icon>
+            <mat-icon aria-hidden="false" aria-label="Trash icon" fontSet="fas" fontIcon="fa-trash" class="fa-trash"
+              (click)="onDelete(element)" [hidden]="isStocker"></mat-icon>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="no-data">
+        <td mat-header-cell *matHeaderCellDef [attr.colspan]="colspan">
+          {{'MESSAGE.NO_DATA' | translate}}
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matHeaderRowDef="['no-data']" class="text-center" [hidden]="hasData"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <mat-paginator *ngIf="hasData" [pageSizeOptions]="[20, 50, 100]" showFirstLastButtons aria-label="Select page of periodic elements">
+    </mat-paginator>
+  </div>
+</div>

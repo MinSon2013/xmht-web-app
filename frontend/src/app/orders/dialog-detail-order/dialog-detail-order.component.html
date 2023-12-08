@@ -1,0 +1,200 @@
+<div class="container bg-white">
+  <h2 class="header p-bottom">{{header}}</h2>
+  <mat-dialog-content class="form-create shadow-md rounded px-8 pt-6 pb-8">
+    <div class="mb-3 row field" [hidden]="order.id === 0">
+      <span class="col-5 text-label" for="id">
+        {{'ORDER.ID' | translate}}
+        <label class="require">*</label>
+      </span>
+      <input matInput [disabled]="true"
+        class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        id="id" type="text" maxlength=10 [(ngModel)]="order.approvedNumber" [ngModelOptions]="{standalone: true}" />
+    </div>
+    <div class="mb-3 row field">
+      <span class="col-5 text-label" for="createdDate">
+        {{'ORDER.CREATEDDATE' | translate}}
+        <label class="require">*</label>
+      </span>
+      <input matInput [disabled]="true"
+        class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        id="createdDate" type="text" maxlength=15 [(ngModel)]="order.createdDate"
+        [ngModelOptions]="{standalone: true}" />
+    </div>
+    <div class="mb-3 row field" [hidden]="!isAdmin">
+      <span class="col-5 text-label" for="agency">
+        {{'ORDER.AGENCY' | translate}}
+        <label class="require">*</label>
+      </span>
+      <select
+        class="col-7 form-select appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        [(ngModel)]="agencySelected" (ngModelChange)="onChange($event)" required>
+        <option [ngValue]="null" [disabled]="true" [selected]="true">-- {{'ORDER.SELECT_AGENCY' | translate}} --
+        </option>
+        <option [ngValue]="item" *ngFor="let item of agencyList">{{item.fullName}}</option>
+      </select>
+    </div>
+    <div class="mb-3 row field">
+      <span class="col-5 text-label" for="contract">
+        {{'ORDER.CONTRACT' | translate}}
+        <label class="require">*</label>
+      </span>
+      <input matInput [disabled]="true"
+        class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        id="contract" type="text" placeholder="" maxlength=50 [(ngModel)]="order.contract"
+        [ngModelOptions]="{standalone: true}" [errorStateMatcher]="matcher" />
+    </div>
+    <div class="mb-3 row field">
+      <span class="col-5 text-label" for="deliveryId">
+        {{'ORDER.DELIVERY_ADDRESS' | translate}}
+        <label class="require">*</label>
+      </span>
+      <select class="col-7 form-select {{deliveryError.length !== 0 ? 'focus-d' : ''}}" [(ngModel)]="deliverySelected"
+      (ngModelChange)="onChangeDelivery($event)" required>
+        <option [ngValue]="null" [disabled]="true" [selected]="true">-- {{'ORDER.CITY' | translate}} --</option>
+        <option [ngValue]="item" *ngFor="let item of deliveries">{{item.label}}</option>
+      </select>
+    </div>
+    <div class="mb-3 row field" *ngIf="deliveryError || (deliveryError !== null && deliveryError.length !== 0)">
+      <div class="col-4"></div>
+      <div class="col-6 notification"> <span class="span">{{deliveryError}}</span></div>
+    </div>
+    <div class="mb-3 row field">
+      <span class="col-5 text-label" for="pickupId">
+        {{'ORDER.PICKUP_ADDRESS' | translate}}
+        <label class="require">*</label>
+      </span>
+      <select class="col-7 form-select {{pickupError.length !== 0 ? 'focus-p' : ''}}" [(ngModel)]="pickupSelected"
+      (ngModelChange)="onChangePickup($event)" required>
+        <option [ngValue]="null" [disabled]="true" [selected]="true">-- {{'ORDER.CITY' | translate}} --</option>
+        <option [ngValue]="item" *ngFor="let item of cities">{{item.label}}</option>
+      </select>
+    </div>
+    <div class="mb-3 row field" *ngIf="pickupError || (pickupError !== null && pickupError.length !== 0)">
+      <div class="col-4"></div>
+      <div class="col-6 notification"><span class="span">{{pickupError}}</span></div>
+    </div>
+    <div class="mb-3 row field">
+      <span class="col-5 text-label" for="products">
+        {{'ORDER.PRODUCT_TYPE' | translate}}
+        <label class="require">*</label>
+      </span>
+      <div class="col-7 row">
+        <div *ngFor="let item of order.products" class="custom-div">
+          <input matInput [disabled]="true"
+            class="p-name col-7 appearance-none border rounded w-full py-2 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="name" type="text" [(ngModel)]="item.name" [ngModelOptions]="{standalone: true}" />
+          <input matInput
+            class="p-quantity col-3 margin appearance-none border rounded w-full py-2 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline {{error1.length !== 0 ? 'focus-i' : ''}}"
+            id="quantity" type="text" maxlength="5" [(ngModel)]="item.quantity"
+            [ngModelOptions]="{standalone: true}" [errorStateMatcher]="matcher"
+            placeholder="0.0" 
+            (keydown)="onlyNumberKey($event)"
+            (focusout)="focusOut()" />
+          <span class="col-2 label-ton">(tấn)</span>
+        </div>
+      </div>
+    </div>
+    <div class="mb-3 row field" *ngIf="error1 || (error1 !== null && error1.length !== 0)">
+      <div class="col-4"></div>
+      <div class="col-6 notification"><span class="span">{{error1}}</span></div>
+    </div>
+    <div class="mb-3 row field">
+      <span class="col-5 text-label" for="productTotal">
+        {{'ORDER.LABEL_TOTAL' | translate}}
+        <label class="require">*</label>
+      </span>
+      <input matInput
+        class="p-total col-5 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        id="productTotal" type="number" max="99999" [(ngModel)]="order.productTotal"
+        [ngModelOptions]="{standalone: true}" [errorStateMatcher]="matcher" readonly="true" />
+      <span class="col-2 text-label label-ton ton">(tấn)</span>
+    </div>
+    <div class="mb-3 row field">
+      <span class="col-5 text-label" for="receipt">
+        {{'ORDER.RECEIPT' | translate}}
+        <label class="require">*</label>
+      </span>
+      <select class="col-7 form-select" [(ngModel)]="receiptSelected" (ngModelChange)="onChangeReceipt($event)" required>
+        <option [ngValue]="null" [disabled]="true" [selected]="true">-- {{'ORDER.SELECT_RECEIPT' | translate}} --
+        </option>
+        <option [ngValue]="item" *ngFor="let item of receipt">{{item.label}}</option>
+      </select>
+    </div>
+    <div class="mb-3 row field">
+      <span class="col-5 text-label" for="transport">
+        {{'ORDER.TRANSPORT' | translate}}
+        <label class="require">*</label>
+      </span>
+      <select class="col-7 form-select" [(ngModel)]="transportSelected" (ngModelChange)="onChangeTransport($event)" required>
+        <option [ngValue]="null" [disabled]="true" [selected]="true">-- {{'ORDER.SELECT_TRANSPORT' | translate}} --
+        </option>
+        <option [ngValue]="item" *ngFor="let item of transport">{{item.label}}</option>
+      </select>
+    </div>
+    <div class="mb-3 row field">
+      <span class="col-5 text-label" for="licensePlates">
+        {{'ORDER.LICENSE_PLATE' | translate}}
+        <label class="require">*</label>
+      </span>
+      <input matInput
+        class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        id="licensePlates" type="text" placeholder="" maxlength=20 [(ngModel)]="order.licensePlates"
+        [ngModelOptions]="{standalone: true}" [errorStateMatcher]="matcher" />
+    </div>
+    <div class="mb-3 row field">
+      <span class="col-5 text-label" for="driver">
+        {{'ORDER.DRIVER' | translate}}
+        <label class="require">*</label>
+      </span>
+      <input matInput
+        class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        id="driver" type="text" placeholder="" maxlength="100" [(ngModel)]="order.driver"
+        [ngModelOptions]="{standalone: true}" [errorStateMatcher]="matcher" />
+    </div>
+    <div class="mb-3 row field">
+      <span class="col-5 text-label" for="receivedDate">
+        {{'ORDER.LABEL_RECEIVEDDATE' | translate}}
+        <label class="require">*</label>
+      </span>
+      <form [formGroup]="testForm" class="testForm col-5">
+        <mat-form-field appearance="fill" class="border rounded">
+          <mat-label>Chọn ngày nhận</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="date">
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker [startAt]="date"></mat-datepicker>
+        </mat-form-field>
+      </form>
+    </div>
+    <div class="mb-3 row field">
+      <span class="col-5 text-label" for="note">
+        {{'ORDER.NOTE' | translate}}
+      </span>
+      <textarea
+        class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        id="note" type="text" placeholder="" maxlength="1000" [(ngModel)]="order.note"
+        [ngModelOptions]="{standalone: true}"></textarea>
+    </div>
+
+    <div class="mb-6 row field" [hidden]="!isAdmin">
+      <span class="col-5 text-label" for="status">
+        {{'ORDER.STATUS' | translate}}
+      </span>
+      <mat-radio-group class="col-7" [(ngModel)]="statusSelected">
+        <mat-radio-button *ngFor="let item of status" [value]="item">
+          {{item.label}}
+        </mat-radio-button>
+      </mat-radio-group>
+    </div>
+    <div class="mb-3 row field" *ngIf="error || (error !== null && error.length !== 0)">
+      <div class="col-4"></div>
+      <div class="col-6 notification"> <span class="span">{{error}}</span></div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button class="btn-cancel py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+      (click)="onCancel()">{{'BUTTON.CANCEL' | translate}}</button>
+    <button mat-button class="btn-save py-2 px-4 rounded focus:outline-none focus:shadow-outline {{loading ? 'disable' : ''}}" type="button"
+      (click)="onSubmit()" [disabled]="loading">{{'BUTTON.SAVE' | translate }}
+    </button>
+  </mat-dialog-actions>
+</div>

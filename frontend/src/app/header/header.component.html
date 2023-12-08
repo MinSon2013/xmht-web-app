@@ -1,0 +1,29 @@
+<div class="head" [ngClass]="getHeadClass()">
+    <div class="head-content row">
+        <div class="head-content-left col-5">
+            <h5 class="span">{{ "TITLE_APP" | translate }}</h5>
+        </div>
+        <div class="head-content-right col-7">
+            <div class="user {{isAdmin ? '' : 'cursor'}}" (click)="openHeaderMenu()">
+                <mat-icon aria-hidden="false" aria-label="User icon" fontSet="fas" fontIcon="fa-user" class="fa-user"></mat-icon>
+                <p class="agency">{{agency}}</p>
+            </div>
+            <span [matMenuTriggerFor]="clickMenu" #clickMenuTrigger="matMenuTrigger"></span>
+            <mat-menu #clickMenu="matMenu">
+                <button mat-menu-item (click)="onChangePassword()">
+                    <mat-icon aria-hidden="false" aria-label="User icon" fontSet="fas" fontIcon="fa-lock"></mat-icon>
+                    {{ "HEADER.MENU_1" | translate }}</button>
+                <button mat-menu-item (click)="onLogOut()">
+                    <mat-icon aria-hidden="false" aria-label="Logout icon" fontSet="fas" fontIcon="fa-right-from-bracket"></mat-icon>
+                    {{ "HEADER.MENU_2" | translate }}</button>
+            </mat-menu>
+
+            <div class="demo-section">
+                <mat-icon matBadge="{{badgeNumber}}" matBadgeColor="warn" [matBadgeHidden]="isBadgeHidden" 
+                (click)="onClick()" fontSet="fas" fontIcon="fa-bell" class="fa-bell"></mat-icon>
+                <span class="cdk-visually-hidden">
+                </span>
+            </div>
+        </div>
+    </div>
+</div>

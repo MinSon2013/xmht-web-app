@@ -1,0 +1,120 @@
+#login-container {
+    padding: 5rem;
+    color: white;
+    position: relative;
+    background: whitesmoke;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    max-width: 100%;
+    background-image: url("../../assets/images/cover1.jpg");
+    padding-bottom: 300px;
+
+    .login-body {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .logo {
+        max-height: 8rem;
+        margin: auto;
+        margin: 2rem 0;
+    }
+    .tieude {
+        max-height: 8rem;
+        margin: auto;
+        color: #1F497D;;
+        text-align: center;
+        padding: 1rem;
+    }
+
+    .notification {
+        bottom: 0;
+        left: 0;
+        right: 0;
+        color: red;
+        margin-top: 1rem;
+    }
+
+    .login-form {
+        padding: 1rem 1.25rem 1rem 1rem;
+        border-radius: 2rem !important;
+        box-shadow: 0 0.25rem 1.5rem rgb(132, 104, 235);
+        width: 50vh;
+
+        .text-label {
+            color: rgb(21, 20, 20);
+            margin: auto;
+            font-size: 20px;
+            font-weight: 800;
+            text-align: left;
+        }
+
+        .field {
+            padding: 0 0.5rem;
+            //color: black;
+            font-size:16px;
+            font-weight: 500;
+        }
+
+        .btn-login {
+            color: white;
+            background-color: royalblue;
+            border-color: royalblue;
+            margin-bottom: 1rem;
+        }
+    }
+
+    .footer {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        padding-top: 20px;
+        color: rgb(83, 83, 83);
+    }
+}
+
+@media only screen and (max-width:600px) {
+    #login-container {
+        height: 100%;
+        padding: 1rem !important;
+        margin-left: -1rem !important;
+
+        .login-body {
+            margin-top: 5rem !important;
+        }
+    }
+}
+
+@media only screen and (max-width:400px) {
+    #login-container {
+        height: 100%;
+        padding: 1rem !important;
+        margin-left: -1rem !important;
+
+        .login-body {
+            margin-top: 5rem !important;
+
+            .text-label {
+                font-size: 15px !important;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width:200px) {
+    #login-container {
+        height: 100%;
+        padding: 0.5rem !important;
+        margin-left: -1rem !important;
+
+        .login-body {
+            margin-top: 5rem !important;
+
+            .text-label {
+                font-size: 14px !important;
+            }
+        }
+    }
+}

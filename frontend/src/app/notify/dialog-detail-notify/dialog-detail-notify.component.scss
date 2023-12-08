@@ -1,0 +1,196 @@
+.container {
+    padding: 1.5rem;
+    margin: 0 !important;
+    min-width: 80vh;
+
+    .header {
+        text-align: center;
+        padding-bottom: 1.5rem;
+        color: #1F497D;;
+    }
+
+    .require {
+        color: red;
+        margin-left: 0.25rem;
+    }
+
+    .text-label {
+        text-align: left;
+        align-self: center;
+        font-weight: 500;
+        padding-left: 0;
+        padding-right: 1rem;
+    }
+
+    .mat-mdc-dialog-actions {
+        width: 100%;
+        justify-content: flex-end;
+        margin-right: 1rem;
+        margin-top: 1rem;
+    }
+
+    .btn-save {
+        color: white !important;
+        background-color: royalblue;
+        border-color: royalblue;
+    }
+
+    .btn-cancel {
+        color: black;
+        background-color: #dadada;
+        border-color: #dadada;
+        margin-right: 1rem;
+    }
+
+    .field {
+        width: 100%;
+        margin: auto;
+    }
+
+    .error {
+        color: red;
+        text-align: center;
+        margin-top: 1rem;
+    }
+
+    mat-dialog-content {
+        min-height: 32rem;
+        height: 32rem;
+    }
+
+    select {
+        width: 75% !important;
+    }
+
+    width: 100%;
+    max-width: 900px;
+    min-width: 320px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    display: block;
+
+    .title {
+        width: 100%;
+    }
+
+    .content {
+        width: 100%;
+
+        .display {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 1rem;
+
+            .logo {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                margin-bottom: 0.5rem;
+            }
+
+            .badges {
+                img {
+                    &:not(:last-child) {
+                        margin-right: 5px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.NgxEditor__Wrapper {
+    // width: 100vh !important;
+    // min-width: 100vh !important;
+    width: 100%;
+}
+
+.editor {
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+
+    .NgxEditor__MenuBar {
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    }
+
+    .NgxEditor {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        border: none;
+    }
+
+    .CodeMirror {
+        border: 1px solid #eee;
+        height: auto;
+        margin-bottom: 0.7rem;
+
+        pre {
+            white-space: pre !important;
+        }
+    }
+}
+
+@media only screen and (max-width:600px) {
+    .container {
+        padding: 0.5rem !important;
+
+        .header {
+            padding-bottom: 0.5rem !important;
+            padding-top: 0.5rem !important;
+            font-size: 17pt !important;
+        }
+
+        mat-dialog-content {
+            padding: 0.5rem !important;
+        }
+
+        .col-3,
+        .col-5,
+        .col-6,
+        .col-7,
+        .col-9,
+        select {
+            width: 100% !important;
+        }
+
+        .btn-cancel {
+            margin-right: 0 !important;
+        }
+    }
+}
+
+@media only screen and (max-width:400px) {
+    .container {
+        padding: 0.5rem !important;
+
+        .header {
+            padding-bottom: 0.5rem !important;
+            padding-top: 0.5rem !important;
+            font-size: 17pt !important;
+        }
+
+        mat-dialog-content {
+            padding: 0.5rem !important;
+        }
+
+        .col-3,
+        .col-5,
+        .col-6,
+        .col-7,
+        .col-9,
+        select {
+            width: 100% !important;
+        }
+
+        .btn-cancel {
+            margin-right: 0 !important;
+        }
+    }
+}

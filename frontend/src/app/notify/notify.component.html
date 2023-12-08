@@ -1,0 +1,206 @@
+<div class="bg-white container">
+  <h2 class="header">{{ "NOTIFY.TITLE" | translate }}</h2>
+
+  <div class="action-add" *ngIf="isAdmin">
+    <button class="btn-add" (click)="onEdit(null)">
+      <mat-icon
+        aria-hidden="false"
+        aria-label="Add icon"
+        fontSet="fas"
+        fontIcon="fa-plus"
+        class="fa-plus"
+      ></mat-icon>
+      <label class="pad-label">{{ "BUTTON.ADD" | translate }}</label>
+    </button>
+  </div>
+
+  <div class="table-container">
+    <table mat-table [dataSource]="dataSource" matSort>
+      <!-- id Column -->
+      <ng-container matColumnDef="createdDate">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+          sortActionDescription="Sort by number"
+        >
+          {{ "NOTIFY.CREATEDDATE" | translate }}
+        </th>
+        <td
+          mat-cell
+          *matCellDef="let element"
+          class="{{ element.isViewed === 0 || !element.isViewed ? 'bold' : '' }}"
+        >
+          {{ element.createdDate }}
+        </td>
+      </ng-container>
+
+      <!-- content Column -->
+      <ng-container matColumnDef="contents">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          
+          sortActionDescription="Sort by contents"
+        >
+          {{ "NOTIFY.CONTENT" | translate }}
+        </th>
+        <td
+          mat-cell
+          *matCellDef="let element"
+          class="{{ element.isViewed === 0 || !element.isViewed ? 'bold' : '' }}"
+        >
+          {{ element.shortContents }}
+        </td>
+      </ng-container>
+
+      <!-- agencyName Column -->
+      <ng-container matColumnDef="agencyName">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          
+          sortActionDescription="Sort by agencyName"
+        >
+          {{ "NOTIFY.AGENCY" | translate }}
+        </th>
+        <td
+          mat-cell
+          *matCellDef="let element"
+          class="nowrap"
+          class="{{ element.isViewed === 0 || !element.isViewed ? 'bold' : '' }}"
+        >
+          {{ element.agencyName }}
+        </td>
+      </ng-container>
+
+      <!-- fileName Column -->
+      <ng-container matColumnDef="fileName">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          
+          sortActionDescription="Sort by fileName"
+        >
+          {{ "NOTIFY.FILENAME" | translate }}
+        </th>
+        <td
+          mat-cell
+          *matCellDef="let element"
+          class="nowrap focus {{ element.isViewed === 0 || !element.isViewed ? 'bold' : '' }}"
+          (click)="onDownload(element)"
+        >
+          {{ element.fileName }}
+          <a download="{{ element.fileName }}"></a>
+        </td>
+      </ng-container>
+
+      <!-- note Column -->
+      <ng-container matColumnDef="note">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          
+          sortActionDescription="Sort by note"
+        >
+          {{ "NOTIFY.NOTE" | translate }}
+        </th>
+        <td
+          mat-cell
+          class="wrap-text"
+          *matCellDef="let element"
+          class="{{ element.isViewed === 0 || !element.isViewed ? 'bold' : '' }}"
+        >
+          {{ element.note }}
+        </td>
+      </ng-container>
+
+      <!-- status Column -->
+      <ng-container matColumnDef="status">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          
+          sortActionDescription="Sort by status"
+          class="nowrap"
+        >
+          {{ "NOTIFY.STATUS" | translate }}
+        </th>
+        <td
+          mat-cell
+          *matCellDef="let element"
+          class="nowrap {{
+            element.isPublished ? 'color-green' : 'color-black'
+          }}"
+        >
+          <mat-icon
+            aria-hidden="false"
+            aria-label="Confirm icon"
+            fontSet="fas"
+            fontIcon="{{
+              element.isPublished ? 'fa-check' : 'fa-pen-to-square'
+            }}"
+            class="status-icon"
+          ></mat-icon>
+          <label class="pad-label {{ element.isViewed === 0 || !element.isViewed ? 'bold' : '' }}">{{
+            (!element.isPublished
+              ? "NOTIFY.STATUS_DRAFT"
+              : "NOTIFY.STATUS_SENT"
+            ) | translate
+          }}</label>
+        </td>
+      </ng-container>
+
+      <!-- delete action Column -->
+      <ng-container matColumnDef="deleteAction">
+        <th mat-header-cell *matHeaderCellDef>Các thao tác</th>
+        <td mat-cell *matCellDef="let element">
+          <div class="center">
+            <mat-icon
+              aria-hidden="false"
+              aria-label="Trash icon"
+              fontSet="fas"
+              fontIcon="{{
+                isAdmin && element.sender === loginId
+                  ? 'fa-pen'
+                  : 'fa-circle-info'
+              }}"
+              class="fa-pen"
+              (click)="onEdit(element)"
+            ></mat-icon>
+            <mat-icon
+              *ngIf="isAdmin"
+              aria-hidden="false"
+              aria-label="Trash icon"
+              fontSet="fas"
+              fontIcon="fa-trash"
+              class="fa-trash"
+              (click)="onDelete(element)"
+            ></mat-icon>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="no-data">
+        <td mat-header-cell *matHeaderCellDef [attr.colspan]="colspan">
+          {{ "MESSAGE.NO_DATA" | translate }}
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr
+        mat-row
+        *matHeaderRowDef="['no-data']"
+        class="text-center"
+        [hidden]="hasData"
+      ></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+    <mat-paginator
+      [pageSizeOptions]="[10,30,100,200,500]"
+      showFirstLastButtons
+      aria-label="Select page of periodic elements"
+    >
+    </mat-paginator>
+  </div>
+</div>

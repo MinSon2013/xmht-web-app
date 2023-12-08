@@ -1,0 +1,12 @@
+<h2 mat-dialog-title>Xác nhận xóa</h2>
+<div mat-dialog-content>
+    {{data.content}}
+</div>
+<div mat-dialog-actions>
+    <button mat-button mat-dialog-close 
+    class="btn-cancel py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+    (click)="onCancel()">Không</button>
+    <button mat-button mat-dialog-close cdkFocusInitial 
+    class="btn-save py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+    (click)="onSubmit(data)">Có</button>
+</div>

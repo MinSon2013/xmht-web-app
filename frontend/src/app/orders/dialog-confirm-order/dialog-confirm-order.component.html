@@ -1,0 +1,153 @@
+<div class="container bg-white">
+    <h2 class="header p-bottom">{{'ORDER.TITLE_DETAIL' | translate}}</h2>
+    <mat-dialog-content class="form-create shadow-md rounded px-8 pt-6 pb-8">
+        <div class="mb-3 row field" [hidden]="order.id === 0">
+            <span class="col-5 text-label" for="id">
+                {{'ORDER.ID' | translate}}
+            </span>
+            <input matInput [disabled]="true"
+                class="col-5 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="id" type="text" maxlength=10 [(ngModel)]="order.approvedNumber" [ngModelOptions]="{standalone: true}" />
+        </div>
+        <div class="mb-3 row field">
+            <span class="col-5 text-label" for="createdDate">
+                {{'ORDER.CREATEDDATE' | translate}}
+            </span>
+            <input matInput [disabled]="true"
+                class="col-5 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="createdDate" type="text" maxlength=15 [(ngModel)]="order.createdDate"
+                [ngModelOptions]="{standalone: true}" />
+        </div>
+        <div class="mb-3 row field p-top">
+            <span class="col-5 text-label" for="contract">
+                {{'ORDER.CONTRACT' | translate}}
+            </span>
+            <input matInput [disabled]="true"
+                class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="contract" type="text" [(ngModel)]="order.contract" [ngModelOptions]="{standalone: true}" />
+        </div>
+        <div class="mb-3 row field" [hidden]="!isAdmin && !isStocker">
+            <span class="col-5 text-label" for="agency">
+                {{'ORDER.AGENCY' | translate}}
+            </span>
+            <input matInput [disabled]="true"
+                class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="agency" type="text" placeholder="" maxlength=200 [(ngModel)]="order.agencyName"
+                [ngModelOptions]="{standalone: true}" />
+        </div>
+        <div class="mb-3 row field">
+            <span class="col-5 text-label" for="deliveryId">
+                {{'ORDER.DELIVERY_ADDRESS' | translate}}
+            </span>
+            <input matInput [disabled]="true"
+                class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="deliveryId" type="text" [(ngModel)]="selectedDelivery.label"
+                [ngModelOptions]="{standalone: true}" />
+        </div>
+        <div class="mb-3 row field">
+            <span class="col-5 text-label" for="pickupId">
+                {{'ORDER.PICKUP_ADDRESS' | translate}}
+            </span>
+            <input matInput [disabled]="true"
+                class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="pickupId" type="text" [(ngModel)]="selectedPickup.label"
+                [ngModelOptions]="{standalone: true}" />
+        </div>
+        <div class="mb-3 row field">
+            <span class="col-5 text-label" for="products">
+                {{'ORDER.PRODUCT_TYPE' | translate}}
+            </span>
+            <div class="col-7 row">
+                <div *ngFor="let item of order.products" class="custom-div">
+                    <input matInput [disabled]="true"
+                        class="p-name col-7 appearance-none border rounded w-full py-2 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id="name" type="text" [(ngModel)]="item.name" [ngModelOptions]="{standalone: true}" />
+                    <input matInput [disabled]="true"
+                        class="p-quantity col-3 margin appearance-none border rounded w-full py-2 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id="quantity" type="text" maxlength="5" [(ngModel)]="item.quantity"
+                        [ngModelOptions]="{standalone: true}" />
+                    <label class="ton">(tấn)</label>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3 row field">
+            <span class="col-5 text-label" for="productTotal">
+                {{'ORDER.LABEL_TOTAL' | translate}}
+            </span>
+            <input matInput [disabled]="true"
+                class="p-total col-5 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="productTotal" [(ngModel)]="order.productTotal" [ngModelOptions]="{standalone: true}" />
+            <span class="col-2 text-label">(tấn)</span>
+        </div>
+        <div class="mb-3 row field">
+            <span class="col-5 text-label" for="receipt">
+                {{'ORDER.RECEIPT' | translate}}
+            </span>
+            <input matInput [disabled]="true"
+                class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="receipt" type="text" [(ngModel)]="selectedReceipt.label"
+                [ngModelOptions]="{standalone: true}" />
+        </div>
+        <div class="mb-3 row field">
+            <span class="col-5 text-label" for="transport">
+                {{'ORDER.TRANSPORT' | translate}}
+            </span>
+            <input matInput [disabled]="true"
+                class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="transport" type="text" [(ngModel)]="selectedTransport.label"
+                [ngModelOptions]="{standalone: true}" />
+        </div>
+        <div class="mb-3 row field">
+            <span class="col-5 text-label" for="licensePlates">
+                {{'ORDER.LICENSE_PLATE' | translate}}
+            </span>
+            <input matInput [disabled]="true"
+                class="col-5 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="licensePlates" [(ngModel)]="order.licensePlates" [ngModelOptions]="{standalone: true}" />
+        </div>
+        <div class="mb-3 row field">
+            <span class="col-5 text-label" for="driver">
+                {{'ORDER.DRIVER' | translate}}
+            </span>
+            <input matInput [disabled]="true"
+                class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="driver" type="text" [(ngModel)]="order.driver" [ngModelOptions]="{standalone: true}" />
+        </div>
+        <div class="mb-3 row field">
+            <span class="col-5 text-label" for="receivedDate">
+                {{'ORDER.LABEL_RECEIVEDDATE' | translate}}
+            </span>
+            <input matInput [disabled]="true"
+                class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="receivedDate" type="text" [(ngModel)]="order.receivedDate" [ngModelOptions]="{standalone: true}" />
+        </div>
+        <div class="mb-3 row field">
+            <span class="col-5 text-label" for="note">
+                {{'ORDER.NOTE' | translate}}
+            </span>
+            <textarea [disabled]="(isAdmin || isStocker ) ? false : true"
+                class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="note" type="text" [(ngModel)]="order.note" [ngModelOptions]="{standalone: true}"></textarea>
+        </div>
+        <div class="mb-6 row field" [hidden]="(!isAdmin && !isStocker) || order.status === 4 || order.status === 5">
+            <span class="col-5 text-label" for="status">
+                {{'ORDER.STATUS' | translate}}
+            </span>
+            <mat-radio-group class="col-7" [(ngModel)]="selectedStatus">
+                <mat-radio-button *ngFor="let item of status" [value]="item">
+                    {{item.label ? item.label : ''}}
+                </mat-radio-button>
+            </mat-radio-group>
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+        <button mat-button
+            class="btn-cancel py-2 px-4 rounded focus:outline-none focus:shadow-outline" (click)="onCancel()">
+            {{'BUTTON.CANCEL' | translate}}
+        </button>
+        <button mat-button
+            [hidden]="data.status === 5 ? true : (((data.status === 2 || data.status === 3) && !isAdmin && !isStocker) ? true : false)"
+            class="btn-save py-2 px-4 rounded focus:outline-none focus:shadow-outline ml-1" type="button"
+            (click)="onSubmit()">{{ 'BUTTON.SAVE' | translate}}</button>
+    </mat-dialog-actions>
+</div>

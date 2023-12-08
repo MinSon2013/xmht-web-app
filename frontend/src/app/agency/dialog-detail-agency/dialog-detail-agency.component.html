@@ -1,0 +1,206 @@
+<div class="container bg-white">
+  <h2 class="header">{{ header }}</h2>
+  <mat-dialog-content class="form-create shadow-md rounded px-8 pt-6 pb-8">
+    <div class="mb-3 row field p-top">
+      <span class="col-5 text-label" for="fullName">
+        {{ "AGENCY.NAME" | translate }}
+        <label class="require">*</label>
+      </span>
+      <input
+        matInput
+        class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        id="fullName"
+        type="text"
+        placeholder=""
+        maxlength="120"
+        [(ngModel)]="agency.fullName"
+        [ngModelOptions]="{ standalone: true }"
+        [errorStateMatcher]="matcher"
+        [disabled]="isStocker"
+      />
+    </div>
+    <div class="mb-3 row field">
+      <span class="col-5 text-label" for="address">
+        {{ "AGENCY.ADDRESS" | translate }}
+        <label class="require">*</label>
+      </span>
+      <input
+        matInput
+        class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        id="address"
+        type="text"
+        placeholder=""
+        maxlength="500"
+        [(ngModel)]="agency.address"
+        [ngModelOptions]="{ standalone: true }"
+        [errorStateMatcher]="matcher"
+        [disabled]="isStocker"
+      />
+    </div>
+    <div class="mb-3 row field">
+      <span class="col-5 text-label" for="phone">
+        {{ "AGENCY.PHONE" | translate }}
+        <label class="require">*</label>
+      </span>
+      <input
+        matInput
+        class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        id="phone"
+        type="text"
+        placeholder=""
+        (keydown)="onlyNumberKey($event)"
+        pattern="\d*"
+        maxlength="12"
+        [(ngModel)]="agency.phone"
+        [ngModelOptions]="{ standalone: true }"
+        [errorStateMatcher]="matcher"
+        [disabled]="isStocker"
+      />
+    </div>
+    <div class="mb-3 row field">
+      <span class="col-5 text-label" for="email">
+        {{ "AGENCY.EMAIL" | translate }}
+        <label class="require">*</label>
+      </span>
+      <input
+        matInput
+        class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        id="email"
+        type="email"
+        placeholder=""
+        maxlength="100"
+        [(ngModel)]="agency.email"
+        [ngModelOptions]="{ standalone: true }"
+        [errorStateMatcher]="matcher"
+        [disabled]="isStocker"
+      />
+    </div>
+    <div class="mb-3 row field">
+      <span class="col-5 text-label" for="accountName">
+        {{ "AGENCY.USERNAME" | translate }}
+        <label class="require">*</label>
+      </span>
+      <input
+        matInput
+        [disabled]="disabled"
+        class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        id="accountName"
+        type="text"
+        placeholder=""
+        maxlength="120"
+        [(ngModel)]="agency.accountName"
+        [ngModelOptions]="{ standalone: true }"
+        [errorStateMatcher]="matcher"
+        [disabled]="isStocker"
+      />
+    </div>
+    <div class="mb-3 row field">
+      <span class="col-5 text-label" for="password">
+        {{ "AGENCY.PASSWORD" | translate }}
+        <label class="require">*</label>
+      </span>
+      <input
+        matInput
+        class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:shadow-outline {{
+          errorPassword.length !== 0 ? 'focus-p' : ''
+        }}"
+        id="password"
+        type="password"
+        placeholder="********"
+        maxlength="30"
+        [(ngModel)]="agency.password"
+        [ngModelOptions]="{ standalone: true }"
+        [errorStateMatcher]="matcher"
+        [disabled]="isStocker"
+      />
+    </div>
+    <div class="mb-3 row field" [hidden]="disabled">
+      <span class="col-5 text-label" for="confirmPassword">
+        {{ "AGENCY.CONFIRM_PASSWORD" | translate }}
+        <label class="require">*</label>
+      </span>
+      <input
+        matInput
+        class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:shadow-outline {{
+          errorPassword.length !== 0 ? 'focus-p' : ''
+        }}"
+        id="confirmPassword"
+        type="password"
+        placeholder="********"
+        maxlength="30"
+        [(ngModel)]="agency.confirmPassword"
+        [ngModelOptions]="{ standalone: true }"
+        [errorStateMatcher]="matcher"
+        [disabled]="isStocker"
+      />
+    </div>
+    <div
+      class="mb-3 row field"
+      *ngIf="
+        errorPassword || (errorPassword !== null && errorPassword.length !== 0)
+      "
+    >
+      <div class="notification">
+        <span class="span">{{ errorPassword }}</span>
+      </div>
+    </div>
+    <div class="mb-3 row field">
+      <span class="col-5 text-label" for="contract">
+        {{ "AGENCY.CONTRACT" | translate }}
+        <label class="require">*</label>
+      </span>
+      <input
+        matInput
+        class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        id="contract"
+        type="text"
+        placeholder=""
+        maxlength="50"
+        [(ngModel)]="agency.contract"
+        [ngModelOptions]="{ standalone: true }"
+        [errorStateMatcher]="matcher"
+        [disabled]="isStocker"
+      />
+    </div>
+    <div class="mb-6 row field">
+      <span class="col-5 text-label" for="note">
+        {{ "AGENCY.NOTE" | translate }}
+      </span>
+      <textarea
+        class="col-7 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        id="note"
+        type="text"
+        placeholder=""
+        maxlength="1000"
+        [(ngModel)]="agency.note"
+        [ngModelOptions]="{ standalone: true }"
+        [disabled]="isStocker"
+      ></textarea>
+    </div>
+    <div *ngIf="error || (error !== null && error.length !== 0)">
+      <div class="col-5"></div>
+      <div class="notification">
+        <span class="span">{{ error }}</span>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button
+      mat-button
+      mat-dialog-close
+      class="btn-cancel py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+      (click)="onCancel()"
+    >
+      {{ isStocker ? ("BUTTON.CLOSE" | translate): ("BUTTON.CANCEL" | translate)}}
+    </button>
+    <button
+      mat-button
+      class="btn-save py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+      type="button"
+      (click)="onSubmit()"
+      [hidden]="isStocker"
+    >
+      {{ "BUTTON.SAVE" | translate }}
+    </button>
+  </mat-dialog-actions>
+</div>

@@ -1,0 +1,220 @@
+.app-body.body {
+    padding-left: 1rem !important;
+    padding-top: 0 !important;
+    padding-right: 1rem !important;
+    padding-bottom: 1rem !important;
+}
+
+.container {
+    padding-bottom: 2rem;
+    min-width: 100%;
+    height: 100vh;
+    margin-top: 4rem;
+}
+
+.header {
+    text-align: center;
+    padding: 2rem 0;
+    color: #1F497D;;
+    
+}
+
+.table-container {
+    padding: 3rem 8rem;
+
+    table {
+        width: 100%;
+        border: 1px solid grey;
+        border-bottom: 1.05px solid grey;
+        margin-bottom: 20px;
+        overflow-x: auto;
+
+        .wrap-text {
+            white-space: break-spaces;
+        }
+
+        .bg-tr {
+            background: beige;
+        }
+
+        .nowrap {
+            white-space: nowrap;
+        }
+
+        th {
+            white-space: pre;
+            background: #90bdf5;
+            color:rgb(0, 0, 0);
+            border:1px solid rgb(228, 222, 222);
+           // text-align: center;
+            font-size: 12pt;
+            width: auto;
+       
+        }
+        td{
+            border:1px solid rgb(224, 222, 222);
+           // text-align: center;
+            font-size: 11pt;
+            width: auto;
+        
+        }
+        
+        tr:hover{
+            background-color:#e6e6e6;
+            
+            cursor:pointer;
+        }
+
+        .color-green {
+            color: rgb(39, 171, 39);
+        }
+    
+        .color-black {
+            color: black;
+        }
+
+        .status-icon {
+            padding-top: 8px;
+            padding-right: 8px;
+        }
+
+        .focus:hover {
+            color: blue;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .focus {
+            font-style: italic;
+        }
+
+        .bold {
+            font-weight: 600;
+        }
+    }
+
+    .mat-mdc-row .mat-mdc-cell {
+        border-bottom: 1px solid grey;
+        border-top: 1px solid transparent;
+    }
+
+    .mat-mdc-row:hover .mat-mdc-cell {
+        border-color: currentColor;
+    }
+
+    .demo-row-is-clicked {
+        font-weight: bold;
+    }
+
+    th.mat-sort-header-sorted {
+        color: black;
+    }
+
+    .fa-trash {
+        text-align: center;
+        padding-top: 8px;
+        cursor: pointer;
+    }
+
+    .fa-pen {
+        text-align: center;
+        padding-top: 8px;
+        margin-right: 8px;
+        cursor: pointer;
+    }
+
+    .center {
+        text-align: center;
+        display: flex;
+    }
+}
+
+.action-add {
+    background: royalblue;
+    border: 1px solid royalblue;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    margin-right: 8rem;
+    width: 8rem;
+    cursor: pointer;
+    overflow: auto;
+    float: right;
+
+    .btn-add {
+        color: white;
+        background-color: transparent;
+        border: none;
+        padding-left: 8px;
+        padding-top: 8px;
+
+        .fa-plus {
+            color: #fff;
+            font-size: 20px;
+        }
+
+        .pad-label {
+            margin-left: 5px;
+            position: absolute;
+        }
+    }
+}
+
+.mat-mdc-dialog-content .mdc-dialog__content {
+    font-family: 'Times New Roman', Times, serif;
+}
+::ng-deep .body {
+    height: 100%;
+    min-height: 100%;
+}
+
+@media only screen and (max-width:600px) {
+    .container {
+        padding-left: 1rem !important;
+        padding-top: 1rem !important;
+
+        .header {
+            padding: 2rem 0 1rem 0 !important;
+            font-size: calc(1.2rem + 0.3vw) !important;
+            font-weight: 600;
+        }
+
+        .action-add {
+            margin-right: 0 !important;
+        }
+
+        .table-container {
+            padding: 0 !important;
+
+            table {
+                margin-bottom: 0.5rem !important;
+                display: block !important;
+            }
+        }
+    } 
+}
+
+@media only screen and (max-width:400px) {
+    .container {
+        padding-left: 1rem !important;
+        padding-top: 1rem !important;
+
+        .header {
+            padding: 2rem 0 1rem 0 !important;
+            font-size: calc(1.2rem + 0.3vw) !important;
+            font-weight: 600;
+        }
+
+        .action-add {
+            margin-right: 0 !important;
+        }
+
+        .table-container {
+            padding: 0 !important;
+
+            table {
+                margin-bottom: 0.5rem !important;
+                display: block !important;
+            }
+        }
+    } 
+}

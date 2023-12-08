@@ -1,0 +1,27 @@
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    background-color: lightgrey;
+    color: rgb(53, 16, 162);
+}
+
+@media only screen and (max-width:600px) {
+    .footer {
+        font-size: 10pt !important;
+    }
+}
+
+@media only screen and (max-width:400px) {
+    .footer {
+        font-size: 9pt !important;
+    }
+}
+
+@media only screen and (max-width:200px) {
+    .footer {
+        font-size: 8pt !important;
+    }
+}

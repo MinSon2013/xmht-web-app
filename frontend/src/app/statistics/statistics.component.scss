@@ -1,0 +1,261 @@
+.container {
+    min-width: 100%;
+    min-height: 100%;
+    padding: 2rem;
+    display: block;
+    background-color: white;
+    margin-top: 4rem;
+
+    .chart {
+        display: flex;
+        overflow-x: auto;
+    }
+
+    .bar-chart {
+        padding: 1.5rem 1rem;
+        background-color: white;
+
+        .column {
+            min-width: 100px;
+            height: 400px;
+            
+        }
+    }
+
+    .pie-chart {
+        padding: 1.5rem 1rem;
+        background-color: white;
+
+        .pie {
+            padding-top: 1rem;
+            margin: auto;
+            width: 500px !important;
+            height: 500px !important;
+        }
+
+        .no-data {
+            margin-top: 1rem;
+            background: whitesmoke;
+            padding: 1rem;
+            text-align: center;
+        }
+    }
+
+    .action-search {
+        border: 1px solid gray;
+        border-radius: 4px;
+    
+        .action-submit {
+    
+            margin-bottom: 1rem;
+            margin-top: 1rem;
+            margin-right: 1rem;
+            width: 100%;
+            cursor: pointer;
+            text-align: right;
+    
+            .btn-search {
+                background: royalblue !important;
+                border: 1px solid royalblue !important;
+                border-radius: 4px;
+                color: white;
+                background-color: transparent;
+                border: none;
+                padding-left: 8px;
+                padding-top: 5px;
+                padding-right: 1rem;
+                cursor: pointer;
+    
+                .fa-search {
+                    color: #fff;
+                    font-size: 18px;
+                    padding-top: 6px;
+                }
+    
+                label {
+                    padding-left: 5px;
+                    padding-bottom: 5px;
+                }
+            }
+        }
+    
+        span {
+            text-align: end;
+            font-weight: 700;
+            margin: auto 0;
+        }
+    
+        div {
+            margin-top: 6px;
+        }
+    
+        .select-1 {
+            width: 58% !important;
+        }
+    
+        select {
+            width: 50% !important;
+        }
+    
+        mat-form-field {
+            padding: 0;
+    
+            ::ng-deep .mat-mdc-form-field-bottom-align {
+                display: none;
+            }
+        }
+    }
+}
+
+.month-picker .mat-calendar-period-button {
+    pointer-events: none;
+}
+
+.month-picker .mat-calendar-arrow {
+    display: none;
+}
+
+::ng-deep app-body {
+    height: 100%;
+    min-height: 100%;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
+@media only screen and (max-width:600px) {
+    .container {
+        padding: 0.5rem;
+       // padding-left: 2rem !important;
+        padding-top: 1rem !important;
+
+        .action-search {
+            padding-right: 0.5rem !important;
+            padding-left: 0.5rem !important;
+            margin-top: 1.5rem !important;
+        
+            .row {
+                --mdb-gutter-x: 0rem !important;
+                display: block;
+            }
+        
+            .col-5,
+            .col-6,
+            .col-7,
+            .select,
+            .select-1 {
+                width: 100% !important;
+            }
+        
+            .action-submit {
+                margin-bottom: 0.5rem;
+                margin-top: 1rem;
+                margin-right: 0.5rem;
+        
+                .btn-search {
+                    padding-left: 6px;
+                    padding-top: 2px;
+        
+                    .fa-search {
+                        font-size: 16px;
+                        padding-top: 8px;
+                    }
+                }
+            }
+        }
+
+        .chart {
+            display: block !important;
+
+            .bar-chart {
+                width: 100%;
+
+                h4 {
+                    font-size: calc(1rem + 0.3vw);
+                }
+            }
+
+            .pie-chart {
+                width: 100%;
+                margin-bottom: 2rem;
+
+                h4 {
+                    font-size: calc(1rem + 0.3vw);
+                }
+
+                .pie {
+                    width: 300px !important;
+                    height: 300px !important;
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width:400px) {
+    .container {
+        padding: 0.5rem;
+        padding-left: 2rem !important;
+        padding-top: 1rem !important;
+
+        .action-search {
+            padding-right: 0.5rem !important;
+            padding-left: 0.5rem !important;
+            margin-top: 1.5rem !important;
+        
+            .row {
+                --mdb-gutter-x: 0rem !important;
+                display: block;
+            }
+        
+            .col-5,
+            .col-6,
+            .col-7,
+            .select,
+            .select-1 {
+                width: 100% !important;
+            }
+        
+            .action-submit {
+                margin-bottom: 0.5rem;
+                margin-top: 1rem;
+                margin-right: 0.5rem;
+        
+                .btn-search {
+                    padding-left: 6px;
+                    padding-top: 2px;
+        
+                    .fa-search {
+                        font-size: 16px;
+                        padding-top: 8px;
+                    }
+                }
+            }
+        }
+
+        .chart {
+            display: block !important;
+
+            .bar-chart {
+                width: 100%;
+
+                h4 {
+                    font-size: calc(1rem + 0.3vw);
+                }
+            }
+
+            .pie-chart {
+                width: 100%;
+                margin-bottom: 2rem;
+
+                h4 {
+                    font-size: calc(1rem + 0.3vw);
+                }
+
+                .pie {
+                    width: 300px !important;
+                    height: 300px !important;
+                }
+            }
+        }
+    }
+}

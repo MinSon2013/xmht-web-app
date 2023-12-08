@@ -1,0 +1,71 @@
+<div class="container bg-white">
+    <h2 class="header">{{header}}</h2>
+    <mat-dialog-content class="form-create shadow-md rounded px-8 pt-6 pb-8">
+        <div class="mb-3 row field p-top">
+            <span class="col-3 text-label" for="createdDate">
+                {{'NOTIFY.CREATEDDATE' | translate}}
+            </span>
+            <input matInput [disabled]="true"
+                class="col-5 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="createdDate" type="text" maxlength=15 [(ngModel)]="notify.createdDate"
+                [ngModelOptions]="{standalone: true}" />
+        </div>
+        <div class="mb-3 row field" *ngIf="isAdmin">
+            <span class="col-3 text-label" for="agencyName">
+                {{'NOTIFY.AGENCY' | translate}}
+                <label class="require">*</label>
+            </span>
+            <select [disabled]="(!isAdmin || !isEdit)"
+                class="col-9 form-select appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                [(ngModel)]="agencySelected" (ngModelChange)="onSelected($event)" required>
+                <option [ngValue]="null" [disabled]="true" [selected]="true">-- {{'NOTIFY.SELECT_AGENCY' | translate}}
+                    --
+                </option>
+                <option [ngValue]="item" *ngFor="let item of agencyListSelectOption">{{item.label}}</option>
+            </select>
+        </div>
+        <div class="mb-3 row field" *ngIf="isAdmin || isStocker">
+            <span class="col-3 text-label" for="fileName">
+                {{'NOTIFY.FILENAME' | translate}}
+                <label class="require">*</label>
+            </span>
+            <input matInput [disabled]="(!isAdmin || !isEdit || isStocker)"
+                class="col-9 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="fileName" type="file" placeholder="" (change)="onFileChange($event)"/>
+        </div>
+        <div class="mb-3 row field">
+            <span class="text-label" for="contents">
+                {{'NOTIFY.CONTENT' | translate}}
+                <label class="require">*</label>
+            </span>
+        </div>
+        <div class="mb-3 row field content">
+            <div class="NgxEditor__Wrapper" id="editor">
+                <ngx-editor-menu [editor]="editor" [toolbar]="toolbar" [disabled]="!isAdmin"> </ngx-editor-menu>
+                <ngx-editor [editor]="editor" [ngModel]="html" [disabled]="(!isAdmin || !isEdit)"
+                    [placeholder]="'Nhập ở đây...'" (ngModelChange)="onChange($event)" (keyup)="onKeyup($event)"></ngx-editor>
+            </div>
+        </div>
+        <div class="mb-3 row field">
+            <span class="col-3 text-label" for="note">
+                {{'NOTIFY.NOTE' | translate}}
+            </span>
+            <textarea [disabled]="(!isAdmin || !isEdit || isStocker)"
+                class="col-9 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="note" type="text" placeholder="" maxlength="1000" [(ngModel)]="notify.note"
+                [ngModelOptions]="{standalone: true}"></textarea>
+        </div>
+        <div *ngIf="error || (error !== null && error.length !== 0)" class="error">
+            <span>{{error}}</span>
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+        <button mat-button class="btn-cancel py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            (click)="onCancel()">{{'BUTTON.CLOSE' | translate}}</button>
+        <button mat-button *ngIf="(isAdmin && isEdit)" class="btn-save py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            (click)="onSubmit(false)">{{'BUTTON.DRAFT' | translate}}</button>
+        <button mat-button *ngIf="(isAdmin && isEdit)" class="btn-save py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            type="button" (click)="onSubmit(true)">{{ 'BUTTON.SENT' | translate }}
+        </button>
+    </mat-dialog-actions>
+</div>

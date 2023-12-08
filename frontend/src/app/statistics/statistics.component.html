@@ -1,0 +1,125 @@
+<div class="container">
+    <div
+        class="action-search shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        <div class="row">
+            <div class="col-6 row">
+                <span class="col-6" for="id">{{ "ORDER.SEARCH_ID" | translate }}</span>
+                <input matInput
+                    class="col-6 appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="id" type="text" maxlength="20" [(ngModel)]="searchForm.orderId" />
+            </div>
+            <div class="col-6 row">
+                <span class="col-5" for="createdDate">{{ "ORDER.CREATEDDATE" | translate }}</span>
+                <mat-form-field appearance="fill" class="col-7 border rounded">
+                    <mat-label>Chọn từ ngày đến ngày</mat-label>
+                    <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+                        <input matStartDate formControlName="start" placeholder="Từ ngày" />
+                        <input matEndDate formControlName="end" placeholder="Đến ngày" />
+                    </mat-date-range-input>
+                    <mat-hint style="display: none" [hidden]="true">DD/MM/YYYY - DD/MM/YYYY</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-date-range-picker #picker></mat-date-range-picker>
+                </mat-form-field>
+            </div>
+        </div>
+
+      <!-- <div class="row" *ngIf="isAdmin"> -->
+        <div class="row" *ngIf="isAdmin || isStocker">
+            <div class="col-6 row">
+                <span class="col-6" for="agency">{{ "ORDER.AGENCY" | translate }}</span>
+                <select class="col-6 form-select" [(ngModel)]="agencySelected" required>
+                    <option [ngValue]="null" [disabled]="true" [selected]="true">
+                        -- {{ "ORDER.SELECT_AGENCY" | translate }} --
+                    </option>
+                    <option [ngValue]="item" *ngFor="let item of agencyList">
+                        {{ item.fullName }}
+                    </option>
+                </select>
+            </div>
+            <div class="col-6 row">
+                <span class="col-5" for="product">{{ "ORDER.PRODUCT" | translate }}</span>
+                <select class="col-7 form-select select-1" [(ngModel)]="productSelected" required>
+                    <option [ngValue]="null" [disabled]="true" [selected]="true">
+                        -- {{ "ORDER.SELECT_PRODUCT" | translate }} --
+                    </option>
+                    <option [ngValue]="item" *ngFor="let item of productList">
+                        {{ item.name }}
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <!-- <div class="row" *ngIf="isAdmin"> -->
+            <div class="row" *ngIf="isAdmin || isStocker">
+            <div class="col-6 row">
+                <span class="col-6" for="status">{{ "ORDER.STATUS" | translate }}</span>
+                <select class="col-6 form-select" [(ngModel)]="selectedStatus">
+                    <option [ngValue]="null" [disabled]="true" [selected]="true">
+                        -- {{ "ORDER.LABEL_STATUS" | translate }} --
+                    </option>
+                    <option [ngValue]="item" *ngFor="let item of status">
+                        {{ item.label }}
+                    </option>
+                </select>
+            </div>
+            <div class="col-6"></div>
+        </div>
+
+        <!-- <div class="row" *ngIf="!isAdmin"> -->
+            <div class="row" *ngIf="!isAdmin && !isStocker">
+            <div class="col-6 row">
+                <span class="col-6" for="status">{{ "ORDER.STATUS" | translate }}</span>
+                <select class="col-6 form-select" [(ngModel)]="selectedStatus">
+                    <option [ngValue]="null" [disabled]="true" [selected]="true">
+                        -- {{ "ORDER.LABEL_STATUS" | translate }} --
+                    </option>
+                    <option [ngValue]="item" *ngFor="let item of status">
+                        {{ item.label }}
+                    </option>
+                </select>
+            </div>
+            <div class="col-6 row">
+                <span class="col-5" for="product">{{ "ORDER.PRODUCT" | translate }}</span>
+                <select class="col-7 form-select select-1" [(ngModel)]="productSelected" required>
+                    <option [ngValue]="null" [disabled]="true" [selected]="true">
+                        -- {{ "ORDER.SELECT_PRODUCT" | translate }} --
+                    </option>
+                    <option [ngValue]="item" *ngFor="let item of productList">
+                        {{ item.name }}
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <div class="action-submit">
+            <button type="submit" class="btn-search" (click)="onSearch()">
+                <mat-icon aria-hidden="false" aria-label="Search icon" fontSet="fas" fontIcon="fa-magnifying-glass"
+                    class="fa-search"></mat-icon>
+                <label>{{ "BUTTON.SEARCH" | translate }}</label>
+            </button>
+        </div>
+    </div>
+
+    <div class="row chart">
+        <div class="col-6 bar-chart">
+            <h4>{{'DASHBOARD.BAR_CHART_TITLE' | translate}}</h4>
+            <div style="display: block;">
+                <canvas class="column" baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions"
+                    [plugins]="barChartPlugins" [legend]="barChartLegend">
+                </canvas>
+            </div>
+        </div>
+
+        <div class="col-6 pie-chart">
+            <h4>{{'DASHBOARD.PIE_CHART_TITLE' | translate}}</h4>
+            <div style="display: block;">
+                <h6 *ngIf="pieChartData.datasets[0].data.length === 0" class="no-data">{{'STATISTICS.NO_DATA' |
+                    translate}}</h6>
+                <canvas class="pie" baseChart [data]="pieChartData" [type]="pieChartType"
+                    (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)" [options]="pieChartOptions"
+                    [plugins]="pieChartPlugins">
+                </canvas>
+            </div>
+        </div>
+    </div>
+</div>
