@@ -121,7 +121,11 @@
         "DOWNLOAD": "Tải xuống",
         "PRINT": "In",
         "DRAFT": "Lưu nháp",
-        "SENT": "Gửi"
+        "SENT": "Gửi",
+        "WAITING": "Chờ giải quyết",
+        "AGREE": "Đồng ý đơn",
+        "RECEIVED": "Đã giao",
+        "CANCELED": "Đã hủy"
     },
     "DIALOG_DELETE": {
         "TITLE": "Xác nhận xóa",
@@ -130,7 +134,7 @@
     "VALIDATE": {
         "USERNAME": "Tên đăng nhập không thể chứa kí tự đặc biệt."
     },
-    "MESSAGE" : {
+    "MESSAGE": {
         "ADD_PRODUCT": "Thêm mới sản phẩm",
         "MODIFIED_PRODUCT": "Cập nhật thông tin sản phẩm",
         "ADD_AGENCY": "Thêm mới nhà phân phối",

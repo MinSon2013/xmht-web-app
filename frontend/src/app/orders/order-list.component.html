@@ -102,11 +102,28 @@
       </button>
     </div>
   </div>
-  <div class="action-add" [hidden]="isStocker">
-    <button class="btn-add" (click)="onAdd()">
-      <mat-icon aria-hidden="false" aria-label="Add icon" fontSet="fas" fontIcon="fa-plus" class="fa-plus"></mat-icon>
-      <label class="pad-label">{{ "BUTTON.ADD" | translate }}</label>
-    </button>
+  <div class="action-group">
+    <div class="action-trigger-button">
+      <button class="btn1 btn-trigger" (click)="onLoadLasted(1)">
+        <label class="pad-label">{{ "BUTTON.WAITING" | translate }}</label>
+      </button>
+      <button class="btn2 btn-trigger" (click)="onLoadLasted(2)">
+        <label class="pad-label">{{ "BUTTON.AGREE" | translate }}</label>
+      </button>
+      <button class="btn3 btn-trigger" (click)="onLoadLasted(3)">
+        <label class="pad-label">{{ "BUTTON.RECEIVED" | translate }}</label>
+      </button>
+      <button class="btn4 btn-trigger" (click)="onLoadLasted(4)">
+        <label class="pad-label">{{ "BUTTON.CANCELED" | translate }}</label>
+      </button>
+    </div>
+
+    <div class="action-add" [hidden]="isStocker">
+      <button class="btn-add" (click)="onAdd()">
+        <mat-icon aria-hidden="false" aria-label="Add icon" fontSet="fas" fontIcon="fa-plus" class="fa-plus"></mat-icon>
+        <label class="pad-label">{{ "BUTTON.ADD" | translate }}</label>
+      </button>
+    </div>
   </div>
   <div class="table-container" #TABLE #table>
     <table mat-table [dataSource]="dataSource" matSort>
@@ -391,9 +408,9 @@
       </ng-container>
 
       <!-- delete action Column -->
-      <ng-container matColumnDef="deleteAction">
+      <ng-container matColumnDef="deleteAction" stickyEnd>
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Các thao tác</th>
-        <td mat-cell *matCellDef="let element">
+        <td mat-cell *matCellDef="let element" class="sticky-col">
           <div class="center">
             <mat-icon aria-hidden="false" aria-label="Edit icon" fontSet="fas" fontIcon="fa-pen" class="fa-pen"
               (click)="onEdit(element)"></mat-icon>

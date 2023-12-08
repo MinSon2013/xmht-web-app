@@ -354,6 +354,11 @@ export class OrderListComponent implements OnInit {
     });
   }
 
+  onLoadLasted(key: number) {
+    alert("key " + key)
+
+  }
+
   resetFormSearch() {
     this.agencySelected = null;
     this.productSelected = null;
