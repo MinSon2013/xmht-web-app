@@ -96,6 +96,7 @@ export class PrintPdfComponent implements OnInit {
           '.top {margin-top: 1rem;}',
           '.cd {margin-right: 1.5rem; font-size: 15pt; font-weight: 600;}',
           '.sd {margin-right: 1.5rem; font-size: 14pt;}',
+          '.w-0 {width: 0%}',
         ]
       }
       this.getData();
@@ -199,7 +200,7 @@ export class PrintPdfComponent implements OnInit {
     }
   }
 
-  onPrint(id: string) {
+  onPrint(id: string | any) {
     this.print.print(id, { ...this.config, printMode: 'template' });
   }
 

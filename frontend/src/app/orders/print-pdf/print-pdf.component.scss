@@ -77,6 +77,10 @@
         .align-center {
             text-align: center;
         }
+
+        .w-0 {
+            width: 0%;
+        }
     }
 
     .mat-mdc-row .mat-mdc-cell {
@@ -102,6 +106,7 @@
     padding-bottom: 5rem;
     padding-right: 8rem;
     background: white;
+    margin-top: 4rem;
 
     .btn-info {
         color: #fff;
