@@ -103,7 +103,8 @@
     <!-- <br/> -->
 </div>
 <div class="btn-container" id="action">
-    <button mat-button class="btn-cancel btn btn-info m-1"
-    (click)="onCancel()">{{ 'BUTTON.CANCEL' | translate}}</button>
-    <button (click)="onPrint('pdfTable')" class="btn btn-info m-1" [disabled]="dataSource.data.length === 0">{{ 'BUTTON.PRINT' | translate}}</button>
+    <button mat-button class="btn-cancel btn btn-info m-1" (click)="onCancel()">{{ 'BUTTON.CANCEL' |
+        translate}}</button>
+    <button (click)="onPrint()" class="btn btn-info m-1" [disabled]="dataSource.data.length === 0">{{ 'BUTTON.PRINT' |
+        translate}}</button>
 </div>

@@ -200,8 +200,9 @@ export class PrintPdfComponent implements OnInit {
     }
   }
 
-  onPrint(id: string | any) {
-    this.print.print(id, { ...this.config, printMode: 'template' });
+  onPrint() {
+    const element = new ElementRef('pdfTable');
+    this.print.print(element, { ...this.config, printMode: 'template' });
   }
 
 }
