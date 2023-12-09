@@ -17,7 +17,7 @@
 
 .table-container {
     padding: 1rem 1rem;
-    
+
     table {
         table-layout: fixed;
         width: 100%;
@@ -48,114 +48,117 @@
         .bg-tr {
             background: rgb(255, 255, 253);
         }
-     
+
         th {
             white-space: pre;
             background: #90bdf5;
-            color:rgb(0, 0, 0);
-            border:1px solid rgb(228, 222, 222);
+            color: rgb(0, 0, 0);
+            border: 1px solid rgb(228, 222, 222);
             font-size: 11pt;
             width: auto;
             text-align: center;
         }
-        td{
-            border:1px solid rgb(224, 222, 222);
+
+        td {
+            border: 1px solid rgb(224, 222, 222);
             font-size: 11pt;
             width: 10%;
             text-align: center;
         }
-        tr:hover{
-            background-color:#d4cece;
-            cursor:pointer;
-        .sticky-col {
-            background-color: #e0e0e0;
+
+        tr:hover {
+            background-color: #d4cece;
+            cursor: pointer;
+
+            .sticky-col {
+                background-color: #e0e0e0;
+            }
         }
-    }
 
-    .mat-mdc-row .mat-mdc-cell {
-        border-bottom: 1px solid rgb(203, 201, 201);
-        border-top: 1px solid transparent;
-    }
+        .mat-mdc-row .mat-mdc-cell {
+            border-bottom: 1px solid rgb(203, 201, 201);
+            border-top: 1px solid transparent;
+        }
 
-    .mat-mdc-row:hover .mat-mdc-cell {
-    }
+        .mat-mdc-row:hover .mat-mdc-cell {}
 
-    .row-is-clicked {
-        font-weight: bold;
-    }
+        .row-is-clicked {
+            font-weight: bold;
+        }
 
-    th.mat-sort-header-sorted {
-        color: black;
-    }
+        th.mat-sort-header-sorted {
+            color: black;
+        }
 
-    .center {
-        text-align: center;
-    }
+        .center {
+            text-align: center;
+        }
 
-    .color-green {
-        color: rgb(39, 171, 39);
-    }
+        .color-green {
+            color: rgb(39, 171, 39);
+        }
 
-    .color-black {
-        color: rgb(96, 93, 93);
-    }
+        .color-black {
+            color: rgb(96, 93, 93);
+        }
 
-    .color-red {
-        color: red;
-    }
+        .color-red {
+            color: red;
+        }
 
-    .fa-trash {
-        text-align: center;
-        padding-top: 8px;
-        cursor: pointer;
-    }
+        .fa-trash {
+            text-align: center;
+            padding-top: 8px;
+            cursor: pointer;
+        }
 
-    .fa-pen {
-        text-align: center;
-        padding-top: 8px;
-        margin-right: 8px;
-        cursor: pointer;
-    }
+        .fa-pen {
+            text-align: center;
+            padding-top: 8px;
+            margin-right: 8px;
+            cursor: pointer;
+        }
 
-    .fa-print {
-        text-align: center;
-        padding-top: 8px;
-        margin-right: 8px;
-        cursor: pointer;
-    }
+        .fa-print {
+            text-align: center;
+            padding-top: 8px;
+            margin-right: 8px;
+            cursor: pointer;
+        }
 
-    .fa-download {
-        text-align: center;
-        padding-top: 8px;
-        margin-right: 8px;
-        cursor: pointer;
-    }
+        .fa-download {
+            text-align: center;
+            padding-top: 8px;
+            margin-right: 8px;
+            cursor: pointer;
+        }
 
-    .fa-envelope {
-        text-align: center;
-        padding-top: 8px;
-        margin-right: 4px;
-        color: red;
-        font-size: 18px;
-    }
+        .fa-envelope {
+            text-align: center;
+            padding-top: 8px;
+            margin-right: 4px;
+            color: red;
+            font-size: 18px;
+        }
 
-    .fa-envelope-open {
-        text-align: center;
-        padding-top: 4px;
-        margin-right: 2px;
-        color: gray;
-        font-size: 20px;
-    }
+        .fa-envelope-open {
+            text-align: center;
+            padding-top: 4px;
+            margin-right: 2px;
+            color: gray;
+            font-size: 20px;
+        }
 
-    .new {
-        color: red;
-        font-size: 16px;
-        font-weight: 600;
-        font-family: auto;
-    }
+        .new {
+            color: red;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: auto;
+        }
 
-    .bold {
-        font-weight: 500;
+        .bold {
+            font-weight: 500;
+        }
     }
 }
 
@@ -334,22 +337,22 @@
         //padding-left: 1.5rem !important;
     }
 
-	.header {
-		padding: 2rem 0 1rem 0 !important;
+    .header {
+        padding: 2rem 0 1rem 0 !important;
         //font-size: calc(1.2rem + 0.3vw) !important;
         font-weight: 600;
-	}
+    }
 
     .action-search {
         padding-right: 0.5rem !important;
         padding-left: 0.5rem !important;
         margin: 0 0.5rem;
-    
+
         .row {
             --mdb-gutter-x: 0rem !important;
             display: block;
         }
-    
+
         .col-5,
         .col-6,
         .col-7,
@@ -357,16 +360,16 @@
         .select-1 {
             width: 100% !important;
         }
-    
+
         .action-submit {
             margin-bottom: 0.5rem;
             margin-top: 1rem;
             margin-right: 0.5rem;
-    
+
             .btn-search {
                 padding-left: 6px;
                 padding-top: 2px;
-    
+
                 .fa-search {
                     font-size: 16px;
                     padding-top: 8px;
@@ -374,35 +377,35 @@
             }
         }
     }
-    
+
     .action-add {
         margin-top: 1rem;
         margin-bottom: 0.75rem;
         margin-right: 1rem !important;
         width: 7.5rem;
-    
+
         .btn-add {
             padding-left: 6px;
             padding-top: 6px;
-    
+
             .fa-plus {
                 font-size: 18px;
                 padding-top: 2px;
             }
-    
+
             .pad-label {
                 font-size: 12pt;
             }
         }
     }
-    
+
     .table-container {
         padding: 1rem 0.5rem;
-    
+
         table {
             margin-bottom: 0rem;
         }
-    
+
         .bold {
             font-size: 12pt;
         }
@@ -418,22 +421,22 @@
         //padding-left: 1.5rem !important;
     }
 
-	.header {
-		padding: 2rem 0 1rem 0 !important;
+    .header {
+        padding: 2rem 0 1rem 0 !important;
         //font-size: calc(1.2rem + 0.3vw) !important;
         font-weight: 600;
-	}
+    }
 
     .action-search {
         padding-right: 0.5rem !important;
         padding-left: 0.5rem !important;
         margin: 0 0.5rem;
-    
+
         .row {
             --mdb-gutter-x: 0rem !important;
             display: block;
         }
-    
+
         .col-5,
         .col-6,
         .col-7,
@@ -441,16 +444,16 @@
         .select-1 {
             width: 100% !important;
         }
-    
+
         .action-submit {
             margin-bottom: 0.5rem;
             margin-top: 1rem;
             margin-right: 0.5rem;
-    
+
             .btn-search {
                 padding-left: 6px;
                 padding-top: 2px;
-    
+
                 .fa-search {
                     font-size: 16px;
                     padding-top: 8px;
@@ -458,35 +461,35 @@
             }
         }
     }
-    
+
     .action-add {
         margin-top: 1rem;
         margin-bottom: 0.75rem;
         margin-right: 1rem !important;
         width: 7.5rem;
-    
+
         .btn-add {
             padding-left: 6px;
             padding-top: 6px;
-    
+
             .fa-plus {
                 font-size: 18px;
                 padding-top: 2px;
             }
-    
+
             .pad-label {
                 font-size: 12pt;
             }
         }
     }
-    
+
     .table-container {
         padding: 1rem 0.5rem;
-    
+
         table {
             margin-bottom: 0rem;
         }
-    
+
         .bold {
             font-size: 12pt;
         }
@@ -502,22 +505,22 @@
         //padding-left: 1.5rem !important;
     }
 
-	.header {
-		padding: 2rem 0 1rem 0 !important;
+    .header {
+        padding: 2rem 0 1rem 0 !important;
         //font-size: calc(1.2rem + 0.3vw) !important;
         font-weight: 600;
-	}
+    }
 
     .action-search {
         padding-right: 0.5rem !important;
         padding-left: 0.5rem !important;
         margin: 0 0.5rem;
-    
+
         .row {
             --mdb-gutter-x: 0rem !important;
             display: block;
         }
-    
+
         .col-5,
         .col-6,
         .col-7,
@@ -525,16 +528,16 @@
         .select-1 {
             width: 100% !important;
         }
-    
+
         .action-submit {
             margin-bottom: 0.5rem;
             margin-top: 1rem;
             margin-right: 0.5rem;
-    
+
             .btn-search {
                 padding-left: 6px;
                 padding-top: 2px;
-    
+
                 .fa-search {
                     font-size: 16px;
                     padding-top: 8px;
@@ -542,35 +545,35 @@
             }
         }
     }
-    
+
     .action-add {
         margin-top: 1rem;
         margin-bottom: 0.75rem;
         margin-right: 1rem !important;
         width: 7.5rem;
-    
+
         .btn-add {
             padding-left: 6px;
             padding-top: 6px;
-    
+
             .fa-plus {
                 font-size: 18px;
                 padding-top: 2px;
             }
-    
+
             .pad-label {
                 font-size: 12pt;
             }
         }
     }
-    
+
     .table-container {
         padding: 1rem 0.5rem;
-    
+
         table {
             margin-bottom: 0rem;
         }
-    
+
         .bold {
             font-size: 12pt;
         }
@@ -585,23 +588,23 @@
     .bg-white {
         //padding-top: 1rem !important;
     }
-    
+
     .header {
-		padding: 2rem 0 1rem 0 !important;
+        padding: 2rem 0 1rem 0 !important;
         font-size: calc(1.2rem + 0.3vw) !important;
         font-weight: 600;
-	}
+    }
 
     .action-search {
         padding-right: 0.5rem !important;
         padding-left: 0.5rem !important;
         margin: 0 0.5rem;
-    
+
         .row {
             --mdb-gutter-x: 0rem !important;
             display: block;
         }
-    
+
         .col-5,
         .col-6,
         .col-7,
@@ -609,16 +612,16 @@
         .select-1 {
             width: 100% !important;
         }
-    
+
         .action-submit {
             margin-bottom: 0.5rem;
             margin-top: 1rem;
             margin-right: 0.5rem;
-    
+
             .btn-search {
                 padding-left: 6px;
                 padding-top: 2px;
-    
+
                 .fa-search {
                     font-size: 16px;
                     padding-top: 8px;
@@ -626,35 +629,35 @@
             }
         }
     }
-    
-    .action-add{
+
+    .action-add {
         margin-top: 1rem;
         margin-bottom: 0.75rem;
         margin-right: 1rem !important;
         width: 7.5rem;
-    
+
         .btn-add {
             padding-left: 6px;
             padding-top: 6px;
-    
+
             .fa-plus {
                 font-size: 18px;
                 padding-top: 2px;
             }
-    
+
             .pad-label {
                 font-size: 12pt;
             }
         }
     }
-    
+
     .table-container {
-      //  padding: 1rem 0.5rem;
-    
+        //  padding: 1rem 0.5rem;
+
         table {
             margin-bottom: 0rem;
         }
-    
+
         .bold {
             font-size: 12pt;
         }
@@ -667,21 +670,21 @@
 
 @media only screen and (max-width:200px) {
     .header {
-		padding: 2rem 0 1rem 0 !important;
+        padding: 2rem 0 1rem 0 !important;
         font-size: calc(1.2rem + 0.3vw) !important;
         font-weight: 600;
-	}
+    }
 
     .action-search {
         padding-right: 0.5rem !important;
         padding-left: 0.5rem !important;
         margin: 0 0.5rem;
-    
+
         .row {
             --mdb-gutter-x: 0rem !important;
             display: block;
         }
-    
+
         .col-5,
         .col-6,
         .col-7,
@@ -689,16 +692,16 @@
         .select-1 {
             width: 100% !important;
         }
-    
+
         .action-submit {
             margin-bottom: 0.5rem;
             margin-top: 1rem;
             margin-right: 0.5rem;
-    
+
             .btn-search {
                 padding-left: 6px;
                 padding-top: 2px;
-    
+
                 .fa-search {
                     font-size: 16px;
                     padding-top: 8px;
@@ -706,35 +709,35 @@
             }
         }
     }
-    
-    .action-add{
+
+    .action-add {
         margin-top: 1rem;
         margin-bottom: 0.75rem;
         margin-right: 1rem;
         width: 7.5rem;
-    
+
         .btn-add {
             padding-left: 6px;
             padding-top: 6px;
-    
+
             .fa-plus {
                 font-size: 18px;
                 padding-top: 2px;
             }
-    
+
             .pad-label {
                 font-size: 12pt;
             }
         }
     }
-    
+
     .table-container {
         padding: 1rem 0.5rem;
-    
+
         table {
             margin-bottom: 0rem;
         }
-    
+
         .bold {
             font-size: 12pt;
         }
