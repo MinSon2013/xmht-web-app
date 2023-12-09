@@ -1,4 +1,4 @@
-<div class="container" id="pdfTable">
+<div class="container" #pdfTable>
     <div class="row">
         <div class="col-6">
             <h4 class="fw-600">{{'PRINT_PDF.TITLE_1' | translate}}</h4>
@@ -105,6 +105,7 @@
 <div class="btn-container" id="action">
     <button mat-button class="btn-cancel btn btn-info m-1" (click)="onCancel()">{{ 'BUTTON.CANCEL' |
         translate}}</button>
-    <button (click)="onPrint()" class="btn btn-info m-1" [disabled]="dataSource.data.length === 0">{{ 'BUTTON.PRINT' |
-        translate}}</button>
+    <button (click)="onPrint()" class="btn btn-info m-1" [disabled]="dataSource.data.length === 0">
+        {{ 'BUTTON.PRINT' | translate}}
+    </button>
 </div>
