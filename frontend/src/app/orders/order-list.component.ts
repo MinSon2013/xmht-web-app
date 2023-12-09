@@ -34,6 +34,7 @@ export class OrderListComponent implements OnInit {
   displayedColumns: string[] = ['approvedNumber', 'createdDate', 'contract', 'receivedDate', 'confirmedDate', 'shippingDate', 'deliveryId', 'pickupId', 'productName', 'quantity', 'productTotal', 'licensePlates', 'driver', 'status', 'deleteAction'];
   colspan: number = 0;
   dataSource = new MatTableDataSource<Order>();
+  dataSourceClone = new MatTableDataSource<Order>();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -115,6 +116,7 @@ export class OrderListComponent implements OnInit {
       } else {
         this.hasData = true;
       }
+      this.dataSourceClone = new MatTableDataSource<Order>(this.dataSource.data);
     });
   }
 
@@ -343,6 +345,7 @@ export class OrderListComponent implements OnInit {
         this.dataSource.data.forEach(x => {
           x.agencyName = this.agencyList.find(i => i.id === x.agencyId)?.fullName;
         });
+        this.dataSourceClone = new MatTableDataSource<Order>(this.dataSource.data);
         this.hasData = true;
         this.resetFormSearch();
       } else {
@@ -355,8 +358,16 @@ export class OrderListComponent implements OnInit {
   }
 
   onLoadLasted(key: number) {
-    alert("key " + key)
-
+    this.dataSource.data = this.dataSourceClone.data;
+    const nowDate = moment(new Date(), 'HH:mm DD/MM/YYYY');
+    const subDate = nowDate.subtract(7, 'days');
+    const newList = this.dataSource.data.filter(x => x.status === key
+      && (subDate <= (moment(x.createdDate, 'HH:mm DD/MM/YYYY'))));
+    if (newList.length > 0) {
+      this.dataSource.data = newList;
+    } else {
+      this.helper.showWarning(this.toastr, "Không có thông tin cần tìm.");
+    }
   }
 
   resetFormSearch() {
