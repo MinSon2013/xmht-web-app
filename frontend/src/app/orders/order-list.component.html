@@ -427,7 +427,7 @@
           {{ "MESSAGE.NO_DATA" | translate }}
         </td>
       </ng-container>
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
       <tr mat-row *matHeaderRowDef="['no-data']" class="text-center" [hidden]="hasData"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
