@@ -361,8 +361,7 @@ export class OrderListComponent implements OnInit {
     this.dataSource.data = this.dataSourceClone.data;
     const nowDate = moment(new Date(), 'HH:mm DD/MM/YYYY');
     const subDate = nowDate.subtract(7, 'days');
-    const newList = this.dataSource.data.filter(x => x.status === key
-      && (subDate <= (moment(x.createdDate, 'HH:mm DD/MM/YYYY'))));
+    const newList = this.dataSource.data.filter(x => x.status === key && subDate < (moment(x.createdDate, 'HH:mm DD/MM/YYYY')));
     if (newList.length > 0) {
       this.dataSource.data = newList;
     } else {
