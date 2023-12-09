@@ -36,6 +36,10 @@
             white-space: pre;
         }
 
+        .pre-line {
+            white-space: pre-line;
+        }
+
         .status-icon {
             padding-top: 10px;
             padding-right: 10px;
@@ -312,7 +316,7 @@
     }
 
     div {
-        margin-top: 6px;
+        margin-top: 3px;
     }
 
     .select-1 {
@@ -321,6 +325,11 @@
 
     select {
         width: 50% !important;
+        max-height: 36px;
+    }
+
+    .id {
+        max-height: 40px;
     }
 
     mat-form-field {
