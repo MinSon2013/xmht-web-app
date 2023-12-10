@@ -14,4 +14,8 @@ export interface Notify {
     file?: any;
     isViewed: boolean;
     sender: number;
+    notificationType: number;
+    updatedDate: string;
+    orderId: number;
+    statusOrder: string;
 }

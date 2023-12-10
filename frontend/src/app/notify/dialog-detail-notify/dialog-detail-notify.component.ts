@@ -4,7 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import { Helper } from '../../helpers/helper';
 import { MyErrorStateMatcher } from '../../orders/order-add/order-add.component';
-import { MSG_STATUS } from '../../constants/const-data';
+import { MSG_STATUS, NOTIFY_TYPE } from '../../constants/const-data';
 import { Notify } from '../../models/notify';
 import { NotificationService } from '../../services/notification.service';
 import * as moment from 'moment';
@@ -52,6 +52,8 @@ export class DialogDetailNotifyComponent implements OnInit {
   form = new FormGroup({
     editorContent: new FormControl(null, [Validators.required()]),
   });
+
+  couponChecked: boolean = false;
 
   constructor(
     public dialogRef: MatDialogRef<DialogDetailNotifyComponent>,
@@ -110,6 +112,7 @@ export class DialogDetailNotifyComponent implements OnInit {
       this.html = this.notify.contents;
       this.notify.sender = this.data.sender;
       this.isEdit = (this.notify.sender === this.loginId);
+      this.couponChecked = this.data.notificationType === 2 ? true : false
     } else {
       this.notify.id = 0;
       this.notify.agencyList = [];
@@ -138,6 +141,9 @@ export class DialogDetailNotifyComponent implements OnInit {
       this.notify.agencyId = this.agencySelected.id;
       this.notify.shortContents = this.convertToPlain(this.notify.contents);
       this.notify.sender = this.agencyId;
+      this.notify.notificationType = this.couponChecked ? NOTIFY_TYPE.COUPON : NOTIFY_TYPE.GENERAL;
+      this.notify.orderId = 0;
+      this.notify.statusOrder = '';
       this.notify.agencyList = [];
       if (this.notify.agencyId === 0) {
         const res: number[] = [];
@@ -177,7 +183,7 @@ export class DialogDetailNotifyComponent implements OnInit {
           this.notify.isViewed = false;
         }
         this.socketService.updatedNotification(this.notify).pipe(
-          tap((res) => {  })
+          tap((res) => { })
         ).subscribe((response: any) => {
           if (response && response.affected > 0) {
             if (this.notify.file) {
@@ -263,6 +269,10 @@ export class DialogDetailNotifyComponent implements OnInit {
   }
 
   onKeyup(obj: any) { }
+
+  onChangeCheckbox(event: any) {
+    this.couponChecked = event.checked;
+  }
 
   private convertToPlain(html: string) {
     let tempDivElement = document.createElement('div');

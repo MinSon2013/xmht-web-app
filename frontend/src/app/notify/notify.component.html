@@ -3,151 +3,82 @@
 
   <div class="action-add" *ngIf="isAdmin">
     <button class="btn-add" (click)="onEdit(null)">
-      <mat-icon
-        aria-hidden="false"
-        aria-label="Add icon"
-        fontSet="fas"
-        fontIcon="fa-plus"
-        class="fa-plus"
-      ></mat-icon>
+      <mat-icon aria-hidden="false" aria-label="Add icon" fontSet="fas" fontIcon="fa-plus" class="fa-plus"></mat-icon>
       <label class="pad-label">{{ "BUTTON.ADD" | translate }}</label>
     </button>
   </div>
 
+  <div class="action">
+    <span>{{ "NOTIFY.LABEL" | translate }}</span>
+    <div class="div-btn">
+      <button (click)="onLoadNotify(1)" class="btn1">
+        <mat-icon aria-hidden="false" matBadge="" matBadgeColor="warn" aria-label="Add icon" fontSet="fas"
+          fontIcon="fa-home" class="fa-home"></mat-icon>
+        <label class="pad-label">{{ "NOTIFY.COMMON" | translate }}</label>
+      </button>
+      <button (click)="onLoadNotify(2)" class="btn2">
+        <mat-icon aria-hidden="false" matBadge="" matBadgeColor="warn" aria-label="Add icon" fontSet="fas"
+          fontIcon="fa-gift" class="fa-gift"></mat-icon>
+        <label class="pad-label">{{ "NOTIFY.COUPON" | translate }}</label>
+      </button>
+      <button (click)="onLoadNotify(3)" class="btn3">
+        <mat-icon aria-hidden="false" matBadge="" matBadgeColor="warn" aria-label="Add icon" fontSet="fas"
+          fontIcon="fa-clock-rotate-left" class="fa-clock-rotate-left"></mat-icon>
+        <label class="pad-label">{{ "NOTIFY.UNREAD" | translate }}</label>
+      </button>
+
+      <div class="checkall">
+        <mat-checkbox [checked]="checkedAll" (change)="onChangeCheckedAll($event)" [disabled]="(!isAdmin || isStocker)">
+          {{'NOTIFY.CHECKED_ALL' | translate}}
+        </mat-checkbox>
+        <mat-icon [hidden]="!isAdmin || !checkedAll" aria-hidden="false" aria-label="Trash icon" fontSet="fas"
+          fontIcon="fa-trash" class="fa-trash" (click)="onDeleteAll()"></mat-icon>
+      </div>
+    </div>
+  </div>
+
   <div class="table-container">
     <table mat-table [dataSource]="dataSource" matSort>
-      <!-- id Column -->
-      <ng-container matColumnDef="createdDate">
-        <th
-          mat-header-cell
-          *matHeaderCellDef
-          mat-sort-header
-          sortActionDescription="Sort by number"
-        >
+      <!-- updatedDate Column -->
+      <ng-container matColumnDef="updatedDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by updatedDate">
           {{ "NOTIFY.CREATEDDATE" | translate }}
         </th>
-        <td
-          mat-cell
-          *matCellDef="let element"
-          class="{{ element.isViewed === 0 || !element.isViewed ? 'bold' : '' }}"
-        >
-          {{ element.createdDate }}
-        </td>
-      </ng-container>
-
-      <!-- content Column -->
-      <ng-container matColumnDef="contents">
-        <th
-          mat-header-cell
-          *matHeaderCellDef
-          
-          sortActionDescription="Sort by contents"
-        >
-          {{ "NOTIFY.CONTENT" | translate }}
-        </th>
-        <td
-          mat-cell
-          *matCellDef="let element"
-          class="{{ element.isViewed === 0 || !element.isViewed ? 'bold' : '' }}"
-        >
-          {{ element.shortContents }}
+        <td mat-cell *matCellDef="let element" class="{{ element.isViewed === 0 || !element.isViewed ? 'bold' : '' }}">
+          {{ element.updatedDate }}
         </td>
       </ng-container>
 
       <!-- agencyName Column -->
       <ng-container matColumnDef="agencyName">
-        <th
-          mat-header-cell
-          *matHeaderCellDef
-          
-          sortActionDescription="Sort by agencyName"
-        >
+        <th mat-header-cell *matHeaderCellDef sortActionDescription="Sort by agencyName">
           {{ "NOTIFY.AGENCY" | translate }}
         </th>
-        <td
-          mat-cell
-          *matCellDef="let element"
-          class="nowrap"
-          class="{{ element.isViewed === 0 || !element.isViewed ? 'bold' : '' }}"
-        >
+        <td mat-cell *matCellDef="let element" class="nowrap"
+          class="{{ element.isViewed === 0 || !element.isViewed ? 'bold' : '' }}">
           {{ element.agencyName }}
         </td>
       </ng-container>
 
-      <!-- fileName Column -->
-      <ng-container matColumnDef="fileName">
-        <th
-          mat-header-cell
-          *matHeaderCellDef
-          
-          sortActionDescription="Sort by fileName"
-        >
-          {{ "NOTIFY.FILENAME" | translate }}
+      <!-- content Column -->
+      <ng-container matColumnDef="contents">
+        <th mat-header-cell *matHeaderCellDef sortActionDescription="Sort by contents">
+          {{ "NOTIFY.CONTENT" | translate }}
         </th>
-        <td
-          mat-cell
-          *matCellDef="let element"
-          class="nowrap focus {{ element.isViewed === 0 || !element.isViewed ? 'bold' : '' }}"
-          (click)="onDownload(element)"
-        >
-          {{ element.fileName }}
-          <a download="{{ element.fileName }}"></a>
+        <td mat-cell *matCellDef="let element"
+          class="col-content {{ element.isViewed === 0 || !element.isViewed ? 'bold' : '' }}">
+          {{ element.shortContents }}
         </td>
       </ng-container>
 
-      <!-- note Column -->
-      <ng-container matColumnDef="note">
-        <th
-          mat-header-cell
-          *matHeaderCellDef
-          
-          sortActionDescription="Sort by note"
-        >
-          {{ "NOTIFY.NOTE" | translate }}
+      <!-- statusOrder Column -->
+      <ng-container matColumnDef="statusOrder">
+        <th mat-header-cell *matHeaderCellDef sortActionDescription="Sort by statusOrder" class="pre-line">
+          {{ "NOTIFY.STATUS_ORDER" | translate }}
         </th>
-        <td
-          mat-cell
-          class="wrap-text"
-          *matCellDef="let element"
-          class="{{ element.isViewed === 0 || !element.isViewed ? 'bold' : '' }}"
-        >
-          {{ element.note }}
-        </td>
-      </ng-container>
-
-      <!-- status Column -->
-      <ng-container matColumnDef="status">
-        <th
-          mat-header-cell
-          *matHeaderCellDef
-          
-          sortActionDescription="Sort by status"
-          class="nowrap"
-        >
-          {{ "NOTIFY.STATUS" | translate }}
-        </th>
-        <td
-          mat-cell
-          *matCellDef="let element"
-          class="nowrap {{
-            element.isPublished ? 'color-green' : 'color-black'
-          }}"
-        >
-          <mat-icon
-            aria-hidden="false"
-            aria-label="Confirm icon"
-            fontSet="fas"
-            fontIcon="{{
-              element.isPublished ? 'fa-check' : 'fa-pen-to-square'
-            }}"
-            class="status-icon"
-          ></mat-icon>
-          <label class="pad-label {{ element.isViewed === 0 || !element.isViewed ? 'bold' : '' }}">{{
-            (!element.isPublished
-              ? "NOTIFY.STATUS_DRAFT"
-              : "NOTIFY.STATUS_SENT"
-            ) | translate
-          }}</label>
+        <td mat-cell class="wrap-text" *matCellDef="let element"
+          class="{{ element.isViewed === 0 || !element.isViewed ? 'bold' : '' }}">
+          {{ element.statusOrder }}
         </td>
       </ng-container>
 
@@ -156,27 +87,13 @@
         <th mat-header-cell *matHeaderCellDef>Các thao tác</th>
         <td mat-cell *matCellDef="let element">
           <div class="center">
-            <mat-icon
-              aria-hidden="false"
-              aria-label="Trash icon"
-              fontSet="fas"
-              fontIcon="{{
+            <mat-icon aria-hidden="false" aria-label="Trash icon" fontSet="fas" fontIcon="{{
                 isAdmin && element.sender === loginId
                   ? 'fa-pen'
                   : 'fa-circle-info'
-              }}"
-              class="fa-pen"
-              (click)="onEdit(element)"
-            ></mat-icon>
-            <mat-icon
-              *ngIf="isAdmin"
-              aria-hidden="false"
-              aria-label="Trash icon"
-              fontSet="fas"
-              fontIcon="fa-trash"
-              class="fa-trash"
-              (click)="onDelete(element)"
-            ></mat-icon>
+              }}" class="fa-pen" (click)="onEdit(element)"></mat-icon>
+            <mat-icon *ngIf="isAdmin" aria-hidden="false" aria-label="Trash icon" fontSet="fas" fontIcon="fa-trash"
+              class="fa-trash" (click)="onDelete(element)"></mat-icon>
           </div>
         </td>
       </ng-container>
@@ -187,20 +104,12 @@
         </td>
       </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr
-        mat-row
-        *matHeaderRowDef="['no-data']"
-        class="text-center"
-        [hidden]="hasData"
-      ></tr>
+      <!-- <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr> -->
+      <tr mat-row *matHeaderRowDef="['no-data']" class="text-center" [hidden]="hasData"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
-    <mat-paginator
-      [pageSizeOptions]="[10,30,100,200,500]"
-      showFirstLastButtons
-      aria-label="Select page of periodic elements"
-    >
+    <mat-paginator [pageSizeOptions]="[10,30,100,200,500]" showFirstLastButtons
+      aria-label="Select page of periodic elements">
     </mat-paginator>
   </div>
 </div>

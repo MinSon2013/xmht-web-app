@@ -93,3 +93,10 @@ export const SERVICE_TYPE = {
   ORDERSERVICE: 3,
   NOTIFYSERVICE: 4,
 }
+
+
+export const NOTIFY_TYPE = {
+  GENERAL: 1,
+  COUPON: 2,
+  UNREAD: 3,
+}

@@ -13,6 +13,7 @@ import moment from 'moment';
 
 @EntityRepository(Order)
 export class OrderRepository extends Repository<Order> {
+    private NOTIFY_TYPE_GENERAL = 1;
 
     constructor() {
         super();
@@ -130,7 +131,8 @@ export class OrderRepository extends Repository<Order> {
         // tao thong bao
         const agencyName = await agencyService.getName(modifyOrderDto.sender);
         let contents = `${agencyName} đã tạo đơn hàng mới`;
-        await this.createNotify(modifyOrderDto, contents, notificationService);
+        modifyOrderDto.id = order.id;
+        await this.createNotify(modifyOrderDto, contents, notificationService, 'CREATE');
 
         modifyOrderDto.id = order.id;
         return modifyOrderDto;
@@ -192,14 +194,14 @@ export class OrderRepository extends Repository<Order> {
                     contents = `Đơn hàng số [${order.approvedNumber}] đã bị hủy `;
                     break;
             }
-            await this.createNotify(modifyOrderDto, contents, notificationService);
+            await this.createNotify(modifyOrderDto, contents, notificationService, 'UPDATE');
         } else {
             if (modifyOrderDto.approvedNumber === 0) {
                 contents = `${agencyName} đã cập nhật đơn hàng số [-]`;
             } else {
                 contents = `${agencyName} đã cập nhật đơn hàng số [${modifyOrderDto.approvedNumber}]`;
             }
-            await this.createNotify(modifyOrderDto, contents, notificationService);
+            await this.createNotify(modifyOrderDto, contents, notificationService, 'UPDATE');
         }
         return await this.update(modifyOrderDto.id, order);
     }
@@ -215,11 +217,13 @@ export class OrderRepository extends Repository<Order> {
         }
         const query = await this.createQueryBuilder()
             .update(Order)
-            .set({ status: body.status, 
-                isViewed: body.isViewed, 
-                approvedNumber: newApprovedNumber, 
+            .set({
+                status: body.status,
+                isViewed: body.isViewed,
+                approvedNumber: newApprovedNumber,
                 shippingDate: body.shippingDate,
-                note: body.note })
+                note: body.note
+            })
             .where("id = :orderId", { orderId: body.id })
             .execute();
 
@@ -244,7 +248,9 @@ export class OrderRepository extends Repository<Order> {
         modifyOrderDto.agencyId = body.agencyId;
         modifyOrderDto.notifyReceiver = body.agencyId;
         modifyOrderDto.agencyUpdated = body.agencyUpdated;
-        await this.createNotify(modifyOrderDto, contents, notificationService);
+        modifyOrderDto.id = body.id;
+        modifyOrderDto.status = body.status;
+        await this.createNotify(modifyOrderDto, contents, notificationService, 'UPDATE');
         return query;
     }
 
@@ -372,7 +378,7 @@ export class OrderRepository extends Repository<Order> {
         return list1;
     }
 
-    async createNotify(modifyOrderDto, contents: string, notificationService: NotificationService) {
+    async createNotify(modifyOrderDto, contents: string, notificationService: NotificationService, k: string) {
         const adminId = modifyOrderDto.adminId || modifyOrderDto.stockerId;
         const notifyDto = new NotificationDto();
         notifyDto.contents = contents;
@@ -386,7 +392,15 @@ export class OrderRepository extends Repository<Order> {
         notifyDto.agencyList.push(modifyOrderDto.notifyReceiver === 0 ? adminId : modifyOrderDto.notifyReceiver);
         notifyDto.createdDate = modifyOrderDto.createdDate ? modifyOrderDto.createdDate : moment(new Date).format('HH:mm DD/MM/YYYY');
         notifyDto.sender = modifyOrderDto.id !== 0 ? modifyOrderDto.agencyUpdated : modifyOrderDto.sender;
-        await notificationService.create(notifyDto);
+        notifyDto.notificationType = this.NOTIFY_TYPE_GENERAL;
+        notifyDto.updatedDate = moment(new Date).format('HH:mm DD/MM/YYYY');
+        notifyDto.orderId = modifyOrderDto.id;
+        notifyDto.statusOrder = this.getStatusOrder(modifyOrderDto.status);
+        if (k === 'UPDATE') {
+            await notificationService.updateNotifyOrder(notifyDto);
+        } else if (k === 'CREATE') {
+            await notificationService.create(notifyDto);
+        }
     }
 
     private async getApprovdeNumberByOrderId(orderId: number) {
@@ -401,5 +415,36 @@ export class OrderRepository extends Repository<Order> {
             .from(Order, 'o')
             .getRawOne();
         return max = order.max;
+    }
+
+    private getStatusOrder(k: number): string {
+        const STATUS = {
+            label1: 'Chờ giải quyết',
+            label2: 'Đồng ý đơn hàng',
+            label3: 'Đang giao hàng',
+            label4: 'Đã giao hàng',
+            label5: 'Hủy đơn hàng'
+        };
+
+        let str = '';
+        switch (k) {
+            case 1:
+                str = STATUS.label1;
+                break;
+            case 2:
+                str = STATUS.label2;
+                break;
+            case 3:
+                str = STATUS.label3;
+                break;
+            case 4:
+                str = STATUS.label4;
+                break;
+            case 5:
+                str = STATUS.label5;
+                break;
+        }
+
+        return str;
     }
 }

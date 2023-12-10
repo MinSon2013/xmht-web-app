@@ -126,6 +126,10 @@ export class NotificationRepository extends Repository<Notification> {
         notify.filePath = modifyDto.filePath;
         notify.shortContents = modifyDto.shortContents;
         notify.sender = modifyDto.sender;
+        notify.notificationType = modifyDto.notificationType;
+        notify.updatedDate = modifyDto.updatedDate;
+        notify.orderId = modifyDto.orderId;
+        notify.statusOrder = modifyDto.statusOrder;
         return notify;
     }
 

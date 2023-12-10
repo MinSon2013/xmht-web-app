@@ -4,7 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { DialogDeleteConfirmComponent } from '../common/dialog-delete-confirm/dialog-delete-confirm.component';
-import { SERVICE_TYPE } from '../constants/const-data';
+import { NOTIFY_TYPE, SERVICE_TYPE } from '../constants/const-data';
 import { Helper } from '../helpers/helper';
 import { DialogDetailNotifyComponent } from './dialog-detail-notify/dialog-detail-notify.component';
 import { Notify } from '../models/notify';
@@ -12,7 +12,6 @@ import { NotificationService } from '../services/notification.service';
 import { Agency } from '../models/agency';
 import { SocketService } from '../services/socket.service';
 import { CustomSocket } from '../sockets/custom-socket';
-import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-notify',
@@ -21,8 +20,9 @@ import { tap } from 'rxjs';
 })
 export class NotifyComponent implements OnInit {
 
-  displayedColumns: string[] = ['createdDate', 'contents', 'agencyName', 'fileName', 'note', 'status', 'deleteAction'];
+  displayedColumns: string[] = ['updatedDate', 'agencyName', 'contents', 'statusOrder', 'deleteAction'];
   dataSource = new MatTableDataSource<Notify>();
+  dataSourceClone = new MatTableDataSource<Notify>();
   colspan: number = 0;
 
   helper = new Helper();
@@ -31,6 +31,8 @@ export class NotifyComponent implements OnInit {
   hasData: boolean = false;
   agencyList: Agency[] = [];
   agencyId: number = 0;
+  checkedAll: boolean = false;
+  isStocker: boolean = this.helper.isStocker();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -44,7 +46,7 @@ export class NotifyComponent implements OnInit {
   ngOnInit(): void {
     this.agencyId = this.helper.getAgencyId();
     if (!this.isAdmin) {
-      this.displayedColumns = ['createdDate', 'contents', 'fileName', 'note', 'deleteAction'];
+      this.displayedColumns = ['updatedDate', 'agencyName', 'contents', 'statusOrder', 'deleteAction'];
     }
     this.colspan = this.displayedColumns.length;
     this.agencyList = this.helper.getAgencyList();
@@ -92,12 +94,35 @@ export class NotifyComponent implements OnInit {
         this.dataSource.data = [];
       }
 
+      this.dataSourceClone = new MatTableDataSource<Notify>(this.dataSource.data);
       if (this.dataSource.data.length === 0) {
         this.hasData = false;
       } else {
         this.hasData = true;
       }
     });
+  }
+
+  onLoadNotify(key: number) {
+    switch (key) {
+      case 1:
+        this.getData();
+        break;
+      case 2:
+        const arr1 = this.dataSourceClone.data.filter(x => x.notificationType === NOTIFY_TYPE.COUPON);
+        this.dataSource.data = arr1;
+        break;
+      case 3:
+        const arr2 = this.dataSourceClone.data.filter(x => x.isViewed !== true);
+        this.dataSource.data = arr2;
+        break;
+    }
+
+    if (this.dataSource.data.length === 0) {
+      this.hasData = false;
+    } else {
+      this.hasData = true;
+    }
   }
 
   emitSocket() {
@@ -139,6 +164,7 @@ export class NotifyComponent implements OnInit {
           row.agencyList = result.agencyList;
           row.mimeType = result.mimeType;
           row.filePath = result.filePath;
+          row.isViewd = result.isViewd;
         } else {
           this.dataSource.data = [result, ...this.dataSource.data];
           this.dataSource.data = this.dataSource.data;
@@ -176,6 +202,23 @@ export class NotifyComponent implements OnInit {
     //     console.log(res)
     //   }
     // });
+  }
+
+  onChangeCheckedAll(event: any) {
+    this.checkedAll = event.checked;
+  }
+
+  onDeleteAll() {
+    const dialogRef = this.dialog.open(DialogDeleteConfirmComponent, {
+      data: { id: 0, type: SERVICE_TYPE.NOTIFYSERVICE, content: 'Bạn chắc chắn muốn xóa tất cả thông báo?' },
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.dataSource.data = [];
+        this.hasData = false;
+      }
+    });
   }
 
 }

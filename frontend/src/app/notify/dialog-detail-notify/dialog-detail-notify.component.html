@@ -18,8 +18,8 @@
             <select [disabled]="(!isAdmin || !isEdit)"
                 class="col-9 form-select appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 [(ngModel)]="agencySelected" (ngModelChange)="onSelected($event)" required>
-                <option [ngValue]="null" [disabled]="true" [selected]="true">-- {{'NOTIFY.SELECT_AGENCY' | translate}}
-                    --
+                <option [ngValue]="null" [disabled]="true" [selected]="true">
+                    -- {{'NOTIFY.SELECT_AGENCY' | translate}} --
                 </option>
                 <option [ngValue]="item" *ngFor="let item of agencyListSelectOption">{{item.label}}</option>
             </select>
@@ -31,7 +31,7 @@
             </span>
             <input matInput [disabled]="(!isAdmin || !isEdit || isStocker)"
                 class="col-9 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                id="fileName" type="file" placeholder="" (change)="onFileChange($event)"/>
+                id="fileName" type="file" placeholder="" (change)="onFileChange($event)" />
         </div>
         <div class="mb-3 row field">
             <span class="text-label" for="contents">
@@ -43,9 +43,19 @@
             <div class="NgxEditor__Wrapper" id="editor">
                 <ngx-editor-menu [editor]="editor" [toolbar]="toolbar" [disabled]="!isAdmin"> </ngx-editor-menu>
                 <ngx-editor [editor]="editor" [ngModel]="html" [disabled]="(!isAdmin || !isEdit)"
-                    [placeholder]="'Nhập ở đây...'" (ngModelChange)="onChange($event)" (keyup)="onKeyup($event)"></ngx-editor>
+                    [placeholder]="'Nhập ở đây...'" (ngModelChange)="onChange($event)"
+                    (keyup)="onKeyup($event)"></ngx-editor>
             </div>
         </div>
+
+        <div class="mb-3 row field">
+            <span class="col-3 text-label" for="type"></span>
+            <mat-checkbox class="col-9" [checked]="couponChecked" (change)="onChangeCheckbox($event)"
+                [disabled]="(!isAdmin || !isEdit || isStocker)">
+                {{'NOTIFY.COUPON_TYPE' | translate}}
+            </mat-checkbox>
+        </div>
+
         <div class="mb-3 row field">
             <span class="col-3 text-label" for="note">
                 {{'NOTIFY.NOTE' | translate}}
@@ -62,10 +72,12 @@
     <mat-dialog-actions>
         <button mat-button class="btn-cancel py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             (click)="onCancel()">{{'BUTTON.CLOSE' | translate}}</button>
-        <button mat-button *ngIf="(isAdmin && isEdit)" class="btn-save py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        <button mat-button *ngIf="(isAdmin && isEdit)"
+            class="btn-save py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             (click)="onSubmit(false)">{{'BUTTON.DRAFT' | translate}}</button>
-        <button mat-button *ngIf="(isAdmin && isEdit)" class="btn-save py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            type="button" (click)="onSubmit(true)">{{ 'BUTTON.SENT' | translate }}
+        <button mat-button *ngIf="(isAdmin && isEdit)"
+            class="btn-save py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button"
+            (click)="onSubmit(true)">{{ 'BUTTON.SENT' | translate }}
         </button>
     </mat-dialog-actions>
 </div>

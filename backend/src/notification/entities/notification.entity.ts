@@ -5,10 +5,10 @@ export class Notification {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({type: 'text'})
+  @Column({ type: 'text' })
   contents: string;
 
-  @Column({name: 'short_contents', length: 100})
+  @Column({ name: 'short_contents', length: 100 })
   shortContents: string;
 
   @Column({ type: 'text' })
@@ -25,10 +25,22 @@ export class Notification {
 
   @Column({ name: 'file_path' })
   filePath: string;
-  
-  @Column({name: 'mime_type'})
+
+  @Column({ name: 'mime_type' })
   mimeType: string;
 
-  @Column({ name: 'sender', default: 0, type: 'tinyint'}) 
+  @Column({ name: 'sender', default: 0, type: 'tinyint' })
   sender: number;
+
+  @Column({ name: 'notification_type', default: 0, type: 'tinyint' })
+  notificationType: number;
+
+  @Column({ name: 'updated_date' })
+  updatedDate: string;
+
+  @Column({ name: 'order_id', default: 0 })
+  orderId: number;
+
+  @Column({ name: 'status_order' })
+  statusOrder: string;
 }

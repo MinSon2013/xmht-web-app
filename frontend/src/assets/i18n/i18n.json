@@ -98,10 +98,17 @@
         "TITLE_MODIFIED": "Cập nhật thông tin thông báo",
         "SELECT_AGENCY": "Chọn NPP",
         "SELECT_ALL_AGENCY": "Tất cả",
-        "STATUS": "Trạng thái đơn hàng",
+        "STATUS_NOTIFY": "Trạng thái thông báo",
+        "STATUS_ORDER": "Trạng thái đơn hàng",
         "STATUS_DRAFT": "Bản nháp",
         "STATUS_SENT": "Đã gửi",
-        "CREATEDDATE": "Ngày tạo"
+        "CREATEDDATE": "Cập nhật",
+        "COMMON": "Chung",
+        "COUPON": "Khuyến mãi",
+        "UNREAD": "Chưa xem",
+        "LABEL": "Thông báo của tôi",
+        "COUPON_TYPE": "Thông báo khuyến mãi",
+        "CHECKED_ALL": "Chọn xóa tất cả"
     },
     "STATISTICS": {
         "CHOOSE_DATE": "Chọn tháng và năm ",

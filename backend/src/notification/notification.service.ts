@@ -7,6 +7,7 @@ import { Notification } from './entities/notification.entity';
 import { NotificationAgencyRepository } from './repository/notification-agency.repository';
 import { NotificationRepository } from './repository/notification.repository';
 import { AgencyService } from '../agency/agency.service';
+import moment from 'moment';
 
 @Injectable()
 export class NotificationService {
@@ -30,7 +31,7 @@ export class NotificationService {
     }
 
     let query = await sql.groupBy('n.id')
-      .orderBy('n.id', 'DESC')
+      .orderBy('n.updated_date', 'DESC')
       .getRawMany();
     const res: NotificationDto[] = [];
     query.forEach(x => {
@@ -46,6 +47,10 @@ export class NotificationService {
       item.filePath = x.n_file_path;
       item.shortContents = x.n_short_contents;
       item.sender = x.n_sender;
+      item.notificationType = x.n_notification_type;
+      item.orderId = x.n_order_id;
+      item.statusOrder = x.n_status_order;
+      item.updatedDate = x.n_updated_date;
       res.push(item);
     });
 
@@ -119,11 +124,17 @@ export class NotificationService {
   }
 
   async delete(id: number): Promise<DeleteResult> {
-    await this.notifyAgencyRepo.createQueryBuilder()
-      .delete()
-      .where("notification_id = :notifyId", { notifyId: id })
-      .execute();
-    return await this.notifyRepo.delete(id);
+    if (id === 0) {
+      await this.notifyAgencyRepo.createQueryBuilder().delete().execute();
+      return await this.notifyRepo.createQueryBuilder().delete().execute();
+    } else {
+      await this.notifyAgencyRepo.createQueryBuilder()
+        .delete()
+        .where("notification_id = :notifyId", { notifyId: id })
+        .execute();
+      return await this.notifyRepo.delete(id);
+    }
+
   }
 
   private mappingNoyify(modifyDto: NotificationDto): Notification {
@@ -137,6 +148,10 @@ export class NotificationService {
     notify.filePath = modifyDto.filePath ? modifyDto.filePath : '';
     notify.shortContents = modifyDto.shortContents;
     notify.sender = modifyDto.sender;
+    notify.notificationType = modifyDto.notificationType;
+    notify.updatedDate = moment(new Date).format('HH:mm DD/MM/YYYY');
+    notify.orderId = modifyDto.orderId ? modifyDto.orderId : 0;
+    notify.statusOrder = modifyDto.statusOrder;
     return notify;
   }
 
@@ -177,6 +192,28 @@ export class NotificationService {
       .where("notification_id = :notificationId", { notificationId: body.notificationId })
       .andWhere('agency_id = :agencyId', { agencyId: body.agencyId })
       .execute();
+  }
+
+  async updateNotifyOrder(body: NotificationDto) {
+    let sql = this.notifyRepo.createQueryBuilder()
+      .update(Notification)
+      .set({
+        updatedDate: body.updatedDate,
+        statusOrder: body.statusOrder,
+        orderId: body.orderId,
+        contents: body.contents,
+        shortContents: body.shortContents,
+      });
+
+    if (body.id === 0 || body.id === undefined) {
+      sql = sql.where("order_id = :orderId", { orderId: body.orderId });
+    } else if (body.orderId === 0 || body.orderId === undefined) {
+      sql = sql.where("id = :notifyId", { notifyId: body.id });
+    } else {
+      sql = sql.where("order_id = :orderId", { orderId: body.orderId })
+        .andWhere("id = :notifyId", { notifyId: body.id });
+    }
+    return await sql.execute();
   }
 
 }
