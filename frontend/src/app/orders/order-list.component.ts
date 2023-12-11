@@ -19,7 +19,7 @@ import { TranslateService } from '@ngx-translate/core';
 import * as XLSX from 'xlsx-js-style';
 import { CustomSocket } from '../sockets/custom-socket';
 import { ExcelConfig } from '../helpers/excel.config';
-
+import { DeviceDetectorService } from 'ngx-device-detector';
 
 @Component({
   selector: 'app-order-list',
@@ -70,17 +70,22 @@ export class OrderListComponent implements OnInit {
     end: new FormControl<Date | null>(null),
   });
 
+  sticky: boolean = true;
+
   constructor(public dialog: MatDialog,
     public router: Router,
     private orderService: OrderService,
     private toastr: ToastrService,
     public translate: TranslateService,
     private socket: CustomSocket,
-  ) { }
+    private deviceService: DeviceDetectorService,
+  ) {
+    this.epicFunction();
+  }
 
   ngOnInit(): void {
     if (this.isAdmin || this.isStocker) {
-      this.displayedColumns = ['approvedNumber' ,'agencyName', 'contract', 'createdDate', 'receivedDate', 'confirmedDate', 'shippingDate', 'deliveryId', 'pickupId', 'productName', 'quantity', 'productTotal', 'licensePlates', 'driver', 'status', 'deleteAction'];
+      this.displayedColumns = ['approvedNumber', 'agencyName', 'contract', 'createdDate', 'receivedDate', 'confirmedDate', 'shippingDate', 'deliveryId', 'pickupId', 'productName', 'quantity', 'productTotal', 'licensePlates', 'driver', 'status', 'deleteAction'];
     }
     this.colspan = this.displayedColumns.length;
     this.productList = this.helper.getProductList();
@@ -103,9 +108,9 @@ export class OrderListComponent implements OnInit {
         if (this.isStocker) {
           this.dataSource.data = this.dataSource.data.filter(
             x => x.status === STATUS[1].value
-            || x.status === STATUS[2].value
-            || x.status === STATUS[3].value
-            );
+              || x.status === STATUS[2].value
+              || x.status === STATUS[3].value
+          );
         }
       } else {
         this.dataSource.data = [];
@@ -245,7 +250,7 @@ export class OrderListComponent implements OnInit {
     const max_width_7 = rows.reduce((w, r) => Math.max(w, r[4].length), 15);
     const max_width_8 = rows.reduce((w, r) => Math.max(w, r[5] ? r[5].length : 0), 15);
     const max_width_9 = rows.reduce((w, r) => Math.max(w, r[6] ? r[6].length : 0), 15);
-    const max_width_10 = rows.reduce((w, r) => Math.max(w, r[7].length/2), 15);
+    const max_width_10 = rows.reduce((w, r) => Math.max(w, r[7].length / 2), 15);
     const max_width_13 = rows.reduce((w, r) => Math.max(w, r[10].length), 15);
     const max_width_14 = rows.reduce((w, r) => Math.max(w, r[11].length), 15);
     const wscols = [
@@ -388,6 +393,23 @@ export class OrderListComponent implements OnInit {
       return obj.label;
     }
     return '';
+  }
+
+  private epicFunction() {
+    const deviceInfo = this.deviceService.getDeviceInfo();
+    switch (deviceInfo.deviceType) {
+      case "mobile":
+        this.sticky = false;
+        break;
+      case "tablet":
+        this.sticky = true;
+        break;
+      case "desktop":
+        this.sticky = true;
+        break;
+      default:
+        this.sticky = true;
+    }
   }
 
 }
