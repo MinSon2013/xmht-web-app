@@ -113,6 +113,9 @@ export class DialogDetailNotifyComponent implements OnInit {
       this.notify.sender = this.data.sender;
       this.isEdit = (this.notify.sender === this.loginId);
       this.couponChecked = this.data.notificationType === 2 ? true : false
+      this.notify.notificationType = this.data.notificationType;
+      this.notify.orderId = this.data.orderId;
+      this.notify.statusOrder = this.data.statusOrder;
     } else {
       this.notify.id = 0;
       this.notify.agencyList = [];
@@ -126,6 +129,9 @@ export class DialogDetailNotifyComponent implements OnInit {
       this.agencySelected = this.agencyListSelectOption[0];
       this.html = '';
       this.notify.isViewed = false;
+      this.notify.notificationType = 0;
+      this.notify.orderId = 0;
+      this.notify.statusOrder = '';
     }
   }
 
@@ -136,14 +142,12 @@ export class DialogDetailNotifyComponent implements OnInit {
   onSubmit(isPublished: boolean) {
     if (this.validForm()) {
       this.notify.isPublished = isPublished;
-      this.notify.fileName = this.getFilename(this.notify.fileName);
-      this.notify.fileName = this.toNonAccentVietnamese(this.notify.fileName);
+      // this.notify.fileName = this.getFilename(this.notify.fileName);
+      // this.notify.fileName = this.toNonAccentVietnamese(this.notify.fileName);
       this.notify.agencyId = this.agencySelected.id;
       this.notify.shortContents = this.convertToPlain(this.notify.contents);
+      this.notify.contents = this.notify.shortContents;
       this.notify.sender = this.agencyId;
-      this.notify.notificationType = this.couponChecked ? NOTIFY_TYPE.COUPON : NOTIFY_TYPE.GENERAL;
-      this.notify.orderId = 0;
-      this.notify.statusOrder = '';
       this.notify.agencyList = [];
       if (this.notify.agencyId === 0) {
         const res: number[] = [];
@@ -159,19 +163,24 @@ export class DialogDetailNotifyComponent implements OnInit {
       }
 
       if (this.notify.id === 0) {
+        this.notify.notificationType = this.couponChecked ? NOTIFY_TYPE.COUPON : NOTIFY_TYPE.GENERAL;
+        this.notify.orderId = 0;
+        this.notify.statusOrder = '';
         this.socketService.createdNotification(this.notify).pipe(
           tap((res) => { })
         ).subscribe((response: any) => {
           if (response) {
             this.notify.id = response.id;
-            this.notifyService.uploadFile(this.notify).subscribe((res: any) => {
-              if (res.statusCode === 200) {
-                this.helper.showSuccess(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.ADD_NOTIFY', MSG_STATUS.SUCCESS));
-                this.dialogRef.close(this.notify);
-              } else {
-                this.helper.showError(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.SAVE_FILE', MSG_STATUS.FAIL));
-              }
-            });
+            if (this.notify.file) {
+              this.notifyService.uploadFile(this.notify).subscribe((res: any) => {
+                if (res.statusCode === 200) {
+                  this.helper.showSuccess(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.ADD_NOTIFY', MSG_STATUS.SUCCESS));
+                  this.dialogRef.close(this.notify);
+                } else {
+                  this.helper.showError(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.SAVE_FILE', MSG_STATUS.FAIL));
+                }
+              });
+            }
           } else {
             this.helper.showError(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.ADD_NOTIFY', MSG_STATUS.FAIL));
           }
@@ -226,9 +235,9 @@ export class DialogDetailNotifyComponent implements OnInit {
     if (this.notify.contents.length === 0) {
       isValidForm = false;
     }
-    if (this.notify.fileName.length === 0) {
-      isValidForm = false;
-    }
+    // if (this.notify.fileName.length === 0) {
+    //   isValidForm = false;
+    // }
 
     if (!isValidForm) {
       this.error = 'Vui lòng nhập đầy đủ thông tin bắt buộc (*)';

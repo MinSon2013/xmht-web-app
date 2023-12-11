@@ -84,4 +84,9 @@ export class NotificationService {
     delete(id: number) {
         return this.webrequestService.delete(this.url + `/${id}`);
     }
+
+    deleteMany(id: number[]) {
+        const strId = id.toString();
+        return this.webrequestService.deleteAll(this.url + `/${strId}`);
+    }
 }

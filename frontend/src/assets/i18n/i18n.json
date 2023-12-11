@@ -106,9 +106,8 @@
         "COMMON": "Chung",
         "COUPON": "Khuyến mãi",
         "UNREAD": "Chưa xem",
-        "LABEL": "Thông báo của tôi",
-        "COUPON_TYPE": "Thông báo khuyến mãi",
-        "CHECKED_ALL": "Chọn xóa tất cả"
+        "DELETE_LABEL": "Xóa tất cả thông báo đã chọn",
+        "COUPON_TYPE": "Thông báo khuyến mãi"
     },
     "STATISTICS": {
         "CHOOSE_DATE": "Chọn tháng và năm ",

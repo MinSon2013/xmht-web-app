@@ -27,7 +27,10 @@ export class NotificationRepository extends Repository<Notification> {
             sql = sql.where('na.agency_id = :agencyId', { agencyId });
         }
 
-        let query = await sql.groupBy('n.id').getRawMany();
+        let query = await sql.groupBy('n.id')
+            .orderBy('n.updated_date', 'DESC')
+            .addOrderBy('n.id', 'DESC')
+            .getRawMany();
         const res: NotificationDto[] = [];
         query.forEach(x => {
             const item = new NotificationDto();
@@ -42,6 +45,10 @@ export class NotificationRepository extends Repository<Notification> {
             item.filePath = x.n_file_path;
             item.shortContents = x.n_short_contents;
             item.sender = x.n_sender;
+            item.updatedDate = x.n_updated_date;
+            item.notificationType = x.n_notification_type;
+            item.orderId = x.n_order_id;
+            item.statusOrder = x.n_status_order;
             res.push(item);
         });
 

@@ -25,7 +25,7 @@
 }
 
 .table-container {
-    padding: 0 8rem 3rem;
+    padding: 0 5rem 3rem;
 
     table {
         width: 100%;
@@ -48,11 +48,13 @@
 
         th {
             white-space: pre;
-            background: #90bdf5;
             color: rgb(0, 0, 0);
             font-size: 12pt;
-            width: auto;
+            background-color: rgb(201, 201, 201);
 
+            label {
+                margin-left: 5px;
+            }
         }
 
         td {
@@ -62,6 +64,17 @@
             .col-content {
                 min-width: 30px;
                 max-width: 300px;
+            }
+
+            .show-content-detail {
+                color: rgb(8, 140, 8);
+                font-weight: 500;
+                font-style: italic;
+            }
+
+            .show-content-detail:hover {
+                cursor: pointer;
+                color: rgb(9, 203, 2);
             }
         }
 
@@ -95,6 +108,30 @@
 
         .bold {
             font-weight: 600;
+        }
+
+        .width-110 {
+            width: 137px;
+            min-width: 110px;
+        }
+
+        button {
+            border: none;
+            background-color: transparent;
+            padding: 0.5rem 1rem;
+        }
+
+        .btn1:hover,
+        .btn1 mat-icon:hover,
+        .btn1 label:hover,
+        .btn2:hover,
+        .btn2 mat-icon:hover,
+        .btn2 label:hover,
+        .btn3:hover,
+        .btn3 mat-icon:hover,
+        .btn3 label:hover {
+            cursor: pointer;
+            background-color: grey;
         }
     }
 
@@ -135,78 +172,35 @@
 }
 
 .action {
-    margin: 3rem 8rem 0;
+    margin: 3rem 5rem 0;
 
-    span {
-        font-weight: 500;
+    button {
+        border: none;
+        background-color: transparent;
+        padding: 0.5rem 1rem;
+
+        mat-icon {
+            padding-top: 8px;
+            padding-right: 8px;
+        }
     }
 
-    .div-btn {
-        background-color: rgb(201, 201, 201);
+    button:hover {
+        cursor: pointer;
+        background-color: whitesmoke;
+        border-radius: 4px;
 
-        button {
-            border: none;
-            background-color: transparent;
-            padding: 0.5rem 1rem;
-            width: 150px;
+        mat-icon {
+            color: #ff4081;
         }
 
-        .btn1:hover,
-        .btn1 mat-icon:hover,
-        .btn1 label:hover,
-        .btn2:hover,
-        .btn2 mat-icon:hover,
-        .btn2 label:hover,
-        .btn3:hover,
-        .btn3 mat-icon:hover,
-        .btn3 label:hover {
+        label {
+            color: dimgray;
             cursor: pointer;
-            background-color: grey;
-        }
-
-        .mat-icon {
-            height: auto !important;
-            padding-right: 1rem;
-
-            .mat-badge-warn .mat-badge-content {
-                color: #f44336 !important;
-            }
-
-            .mat-badge-medium.mat-badge-above .mat-badge-content {
-                top: -8px !important;
-            }
-
-            .mat-badge-medium.mat-badge-overlap.mat-badge-after .mat-badge-content {
-                right: 0px !important;
-            }
-
-            .mat-badge-medium .mat-badge-content {
-                width: 6px !important;
-                height: 6px !important;
-                line-height: 6px !important;
-            }
-        }
-
-        .checkall {
-            display: inline;
-            float: inline-end;
-
-            mat-checkbox {
-                margin-right: 1rem;
-            }
-
-            .fa-trash {
-                margin-left: 1rem;
-                margin-right: 1rem;
-                margin-bottom: -4px;
-            }
-
-            .fa-trash:hover {
-                cursor: pointer;
-                color: red;
-            }
+            font-weight: 500;
         }
     }
+
 }
 
 .action-add {
@@ -214,7 +208,7 @@
     border: 1px solid royalblue;
     border-radius: 4px;
     margin-bottom: 1rem;
-    margin-right: 8rem;
+    margin-right: 5rem;
     width: 8rem;
     cursor: pointer;
     overflow: auto;

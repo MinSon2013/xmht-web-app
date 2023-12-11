@@ -32,6 +32,7 @@ export class NotificationService {
 
     let query = await sql.groupBy('n.id')
       .orderBy('n.updated_date', 'DESC')
+      .addOrderBy('n.id', 'DESC')
       .getRawMany();
     const res: NotificationDto[] = [];
     query.forEach(x => {
@@ -134,7 +135,15 @@ export class NotificationService {
         .execute();
       return await this.notifyRepo.delete(id);
     }
+  }
 
+  async deleteMany(id: string): Promise<DeleteResult> {
+    const ids = id.split(',');
+    await this.notifyAgencyRepo.createQueryBuilder()
+      .delete()
+      .where("notification_id IN (:notifyId)", { notifyId: ids })
+      .execute();
+    return await this.notifyRepo.delete(ids);
   }
 
   private mappingNoyify(modifyDto: NotificationDto): Notification {
@@ -150,7 +159,7 @@ export class NotificationService {
     notify.sender = modifyDto.sender;
     notify.notificationType = modifyDto.notificationType;
     notify.updatedDate = moment(new Date).format('HH:mm DD/MM/YYYY');
-    notify.orderId = modifyDto.orderId ? modifyDto.orderId : 0;
+    notify.orderId = modifyDto.orderId;
     notify.statusOrder = modifyDto.statusOrder;
     return notify;
   }

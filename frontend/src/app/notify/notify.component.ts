@@ -20,7 +20,7 @@ import { CustomSocket } from '../sockets/custom-socket';
 })
 export class NotifyComponent implements OnInit {
 
-  displayedColumns: string[] = ['updatedDate', 'agencyName', 'contents', 'statusOrder', 'deleteAction'];
+  displayedColumns: string[] = ['checkAll', 'updatedDate', 'agencyName', 'contents', 'statusOrder', 'action'];
   dataSource = new MatTableDataSource<Notify>();
   dataSourceClone = new MatTableDataSource<Notify>();
   colspan: number = 0;
@@ -34,6 +34,9 @@ export class NotifyComponent implements OnInit {
   checkedAll: boolean = false;
   isStocker: boolean = this.helper.isStocker();
 
+  arrDelete: number[] = [];
+  MAX_LENGTH_SHORT_CONTENT: number = 50;
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -46,7 +49,7 @@ export class NotifyComponent implements OnInit {
   ngOnInit(): void {
     this.agencyId = this.helper.getAgencyId();
     if (!this.isAdmin) {
-      this.displayedColumns = ['updatedDate', 'agencyName', 'contents', 'statusOrder', 'deleteAction'];
+      this.displayedColumns = ['checkAll', 'updatedDate', 'contents', 'statusOrder', 'action'];
     }
     this.colspan = this.displayedColumns.length;
     this.agencyList = this.helper.getAgencyList();
@@ -60,9 +63,12 @@ export class NotifyComponent implements OnInit {
       if (response.notifyList.length > 0) {
         this.dataSource.data = response.notifyList.length > 0 ? response.notifyList : [];
         this.dataSource.data.forEach(el => {
-          if (el.shortContents.length > 50) {
-            el.shortContents = el.shortContents + ' [...]';
+          if (el.shortContents.length > this.MAX_LENGTH_SHORT_CONTENT) {
+            el.shortContents = el.shortContents.substring(0, (this.MAX_LENGTH_SHORT_CONTENT - 1));
+            el.showLabel = "...[Chi tiết]";
+            el.showDetail = false;
           }
+
           if (el.agencyList && el.agencyList?.length === 1) {
             let agencyId = el.agencyList[0];
             if (this.isAdmin) {
@@ -206,17 +212,64 @@ export class NotifyComponent implements OnInit {
 
   onChangeCheckedAll(event: any) {
     this.checkedAll = event.checked;
+    if (event.checked) {
+      this.dataSource.data.forEach(x => {
+        x.checkedItem = true;
+        this.arrDelete.push(x.id);
+      });
+    } else {
+      this.dataSource.data.forEach(x => {
+        x.checkedItem = false;
+      });
+      this.arrDelete = [];
+    }
+
+  }
+
+  onChangeCheckedItem(event: any, element: any) {
+    element.checkedItem = event.checked;
+    if (event.checked) {
+      this.arrDelete.push(element.id);
+      if (this.arrDelete.length === this.dataSource.data.length) {
+        this.checkedAll = true;
+      } else {
+        this.checkedAll = false;
+      }
+    } else {
+      this.arrDelete = this.arrDelete.filter(x => x !== element.id);
+      if (this.checkedAll) {
+        this.checkedAll = false;
+      }
+    }
+  }
+
+  showDetail(element: any) {
+    if (element.showDetail) {
+      if (element.shortContents.length > this.MAX_LENGTH_SHORT_CONTENT) {
+        element.showLabel = "...[Chi tiết]";
+        element.showDetail = false;
+        element.shortContents = element.shortContents.substring(0, (this.MAX_LENGTH_SHORT_CONTENT - 1));
+      } else {
+        element.shortContents = element.contents;
+      }
+
+    } else {
+      element.showLabel = "[Ẩn bớt]";
+      element.showDetail = true;
+      element.shortContents = element.contents;
+    }
   }
 
   onDeleteAll() {
     const dialogRef = this.dialog.open(DialogDeleteConfirmComponent, {
-      data: { id: 0, type: SERVICE_TYPE.NOTIFYSERVICE, content: 'Bạn chắc chắn muốn xóa tất cả thông báo?' },
+      data: { arrDelete: this.arrDelete, type: SERVICE_TYPE.NOTIFYSERVICE, content: 'Bạn chắc chắn muốn xóa tất cả thông báo?' },
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.dataSource.data = [];
-        this.hasData = false;
+        this.getData();
+        this.checkedAll = false;
+        this.arrDelete = [];
       }
     });
   }

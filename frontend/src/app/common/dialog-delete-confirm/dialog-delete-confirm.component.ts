@@ -53,8 +53,8 @@ export class DialogDeleteConfirmComponent implements OnInit {
         });
         break;
       case SERVICE_TYPE.NOTIFYSERVICE:
-        this.notifyService.delete(data.id).subscribe((response) => {
-          this.onResponse(data.id, 'MESSAGE.DELETE_NOTIFY', response);
+        this.notifyService.deleteMany(data.arrDelete).subscribe((response) => {
+          this.onResponse(data.arrDelete, 'MESSAGE.DELETE_NOTIFY', response);
         });
         break;
     }

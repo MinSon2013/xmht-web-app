@@ -44,6 +44,10 @@ export class WebRequestService {
         return this.http.delete(`${this.baseUrl}/${url}`, this.httpOptions);
     }
 
+    deleteAll(url: string) {
+        return this.http.delete(`${this.baseUrl}/${url}`, this.httpOptions);
+    }
+
     login(username: string, password: string) {
         return this.http.post(`${this.baseUrl}/${CONFIG.URL.LOGIN}`, {
             username,
