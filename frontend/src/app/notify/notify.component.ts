@@ -20,7 +20,7 @@ import { CustomSocket } from '../sockets/custom-socket';
 })
 export class NotifyComponent implements OnInit {
 
-  displayedColumns: string[] = ['checkAll', 'updatedDate', 'agencyName', 'contents', 'statusOrder', 'action'];
+  displayedColumns: string[] = ['checkAll', 'updatedDate', 'agencyName', 'contents', 'fileName', 'action'];
   dataSource = new MatTableDataSource<Notify>();
   dataSourceClone = new MatTableDataSource<Notify>();
   colspan: number = 0;
@@ -49,7 +49,7 @@ export class NotifyComponent implements OnInit {
   ngOnInit(): void {
     this.agencyId = this.helper.getAgencyId();
     if (!this.isAdmin) {
-      this.displayedColumns = ['checkAll', 'updatedDate', 'contents', 'statusOrder', 'action'];
+      this.displayedColumns = ['checkAll', 'updatedDate', 'contents', 'fileName', 'action'];
     }
     this.colspan = this.displayedColumns.length;
     this.agencyList = this.helper.getAgencyList();

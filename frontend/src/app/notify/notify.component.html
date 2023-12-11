@@ -19,7 +19,7 @@
     <table mat-table [dataSource]="dataSource" matSort>
       <!-- checkAll Column -->
       <ng-container matColumnDef="checkAll" sticky>
-        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by checkbox all">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by checkbox all" class="w5">
           <mat-checkbox [checked]="checkedAll" (change)="onChangeCheckedAll($event)">
           </mat-checkbox>
         </th>
@@ -31,7 +31,7 @@
 
       <!-- updatedDate Column -->
       <ng-container matColumnDef="updatedDate">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by updatedDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by updatedDate" class="w10">
           <!-- {{ "NOTIFY.CREATEDDATE" | translate }} -->
           <button (click)="onLoadNotify(1)" class="btn1">
             <mat-icon aria-hidden="false" matBadge="" matBadgeColor="warn" aria-label="Add icon" fontSet="fas"
@@ -46,7 +46,7 @@
 
       <!-- agencyName Column -->
       <ng-container matColumnDef="agencyName">
-        <th mat-header-cell *matHeaderCellDef sortActionDescription="Sort by agencyName">
+        <th mat-header-cell *matHeaderCellDef sortActionDescription="Sort by agencyName" class="w20">
           <!-- {{ "NOTIFY.AGENCY" | translate }} -->
           <button (click)="onLoadNotify(2)" class="btn2">
             <mat-icon aria-hidden="false" matBadge="" matBadgeColor="warn" aria-label="Add icon" fontSet="fas"
@@ -62,12 +62,12 @@
 
       <!-- content Column -->
       <ng-container matColumnDef="contents">
-        <th mat-header-cell *matHeaderCellDef sortActionDescription="Sort by contents">
-          <button (click)="onLoadNotify(3)" class="btn3">
+        <th mat-header-cell *matHeaderCellDef sortActionDescription="Sort by contents" class="w30">
+          <!-- <button (click)="onLoadNotify(3)" class="btn3">
             <mat-icon aria-hidden="false" matBadge="" matBadgeColor="warn" aria-label="Add icon" fontSet="fas"
               fontIcon="fa-clock-rotate-left" class="fa-clock-rotate-left"></mat-icon>
             <label class="pad-label">{{ "NOTIFY.UNREAD" | translate }}</label>
-          </button>
+          </button> -->
         </th>
         <td mat-cell *matCellDef="let element"
           class="col-content {{ element.isViewed === 0 || !element.isViewed ? 'bold' : '' }}">
@@ -76,20 +76,21 @@
         </td>
       </ng-container>
 
-      <!-- statusOrder Column -->
-      <ng-container matColumnDef="statusOrder">
-        <th mat-header-cell *matHeaderCellDef sortActionDescription="Sort by statusOrder" class="pre-line width-110">
-          {{ "NOTIFY.STATUS_ORDER" | translate }}
+      <!-- fileName Column -->
+      <ng-container matColumnDef="fileName">
+        <th mat-header-cell *matHeaderCellDef sortActionDescription="Sort by fileName" class="pre-line w20">
+          {{ "NOTIFY.FILENAME" | translate }}
         </th>
-        <td mat-cell class="wrap-text" *matCellDef="let element"
-          class="{{ element.isViewed === 0 || !element.isViewed ? 'bold' : '' }}">
-          {{ element.statusOrder }}
+        <td mat-cell *matCellDef="let element"
+          class="focus {{ element.isViewed === 0 || !element.isViewed ? 'bold' : '' }}" (click)="onDownload(element)">
+          {{ element.fileName }}
+          <a download="{{ element.fileName }}"></a>
         </td>
       </ng-container>
 
       <!-- action Column -->
       <ng-container matColumnDef="action">
-        <th mat-header-cell *matHeaderCellDef>Các thao tác</th>
+        <th mat-header-cell *matHeaderCellDef class="w15">Các thao tác</th>
         <td mat-cell *matCellDef="let element">
           <div class="center">
             <mat-icon aria-hidden="false" aria-label="Trash icon" fontSet="fas" fontIcon="{{
