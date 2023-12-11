@@ -42,6 +42,7 @@
     "mdb-angular-ui-kit": "^4.0.0",
     "moment": "^2.29.4",
     "ng2-charts": "^4.1.1",
+    "ngx-device-detector": "^7.0.0",
     "ngx-editor": "^15.3.0",
     "ngx-print-element": "^2.0.18",
     "ngx-socket-io": "^4.4.0",

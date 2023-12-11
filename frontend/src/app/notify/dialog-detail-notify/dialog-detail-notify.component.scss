@@ -6,7 +6,8 @@
     .header {
         text-align: center;
         padding-bottom: 1.5rem;
-        color: #1F497D;;
+        color: #1F497D;
+        ;
     }
 
     .require {
@@ -163,6 +164,10 @@
         .btn-cancel {
             margin-right: 0 !important;
         }
+
+        .checkbox {
+            margin-bottom: 0 !important;
+        }
     }
 }
 
@@ -191,6 +196,10 @@
 
         .btn-cancel {
             margin-right: 0 !important;
+        }
+
+        .checkbox {
+            margin-bottom: 0 !important;
         }
     }
 }

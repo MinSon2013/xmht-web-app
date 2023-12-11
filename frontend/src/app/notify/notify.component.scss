@@ -7,7 +7,7 @@
 
 .container {
     padding-bottom: 2rem;
-    min-width: 100%;
+    width: 100%;
     height: 100vh;
     margin-top: 4rem;
 }
@@ -25,14 +25,20 @@
 }
 
 .table-container {
-    padding: 0 5rem 3rem;
+    padding: 0 1rem 1rem;
 
     table {
+        table-layout: fixed;
         width: 100%;
-        border: 1px solid rgb(255, 255, 255);
-        border-bottom: 1.05px solid rgb(255, 255, 255);
+        border: 1px solid transparent;
+        border-bottom: 1.05px solid transparent;
         margin-bottom: 20px;
+        display: block;
         overflow-x: auto;
+        white-space: nowrap;
+        text-align: center;
+        max-height: 500px;
+        overflow: auto;
 
         .wrap-text {
             white-space: break-spaces;
@@ -47,6 +53,7 @@
         }
 
         th {
+            top: -2px !important;
             white-space: pre;
             color: rgb(0, 0, 0);
             font-size: 12pt;
@@ -115,6 +122,12 @@
             min-width: 110px;
         }
 
+        .width-300 {
+            width: 300px;
+            display: block;
+            white-space: break-spaces;
+        }
+
         button {
             border: none;
             background-color: transparent;
@@ -136,7 +149,7 @@
     }
 
     .mat-mdc-row .mat-mdc-cell {
-        border-bottom: 1px solid grey;
+        border-bottom: 1px solid transparent;
         border-top: 1px solid transparent;
     }
 
@@ -172,7 +185,7 @@
 }
 
 .action {
-    margin: 3rem 5rem 0;
+    margin: 1rem 1rem 0;
 
     button {
         border: none;
@@ -204,31 +217,35 @@
 }
 
 .action-add {
-    background: royalblue;
-    border: 1px solid royalblue;
-    border-radius: 4px;
-    margin-bottom: 1rem;
-    margin-right: 5rem;
-    width: 8rem;
-    cursor: pointer;
-    overflow: auto;
-    float: right;
+    // background: royalblue;
+    // border: 1px solid royalblue;
+    // border-radius: 4px;
+    // margin-bottom: 1rem;
+    // margin-right: 5rem;
+    // width: 8rem;
+    // cursor: pointer;
+    width: 100%;
+    text-align: right;
 
     .btn-add {
         color: white;
         background-color: transparent;
         border: none;
-        padding-left: 8px;
-        padding-top: 8px;
+        padding: 4px;
+
+        width: 150px;
+        background: royalblue;
+        border: 1px solid royalblue;
+        border-radius: 4px;
 
         .fa-plus {
             color: #fff;
             font-size: 20px;
+            padding-top: 6px;
         }
 
         .pad-label {
             margin-left: 5px;
-            position: absolute;
         }
     }
 }
@@ -263,6 +280,43 @@
             table {
                 margin-bottom: 0.5rem !important;
                 display: block !important;
+
+                th {
+                    button {
+                        background-color: lightgray;
+                        border-radius: 4px;
+                        border: 1px solid whitesmoke;
+                    }
+                }
+
+
+                .width-300 {
+                    width: 200px;
+                    display: block;
+                    white-space: break-spaces;
+                }
+            }
+        }
+
+        .action {
+            margin: 0 !important;
+
+            button {
+                cursor: pointer;
+                background-color: whitesmoke;
+                border-radius: 4px;
+                border: 1px solid grey;
+                margin-bottom: 5px;
+
+                mat-icon {
+                    color: #ff4081;
+                }
+
+                label {
+                    color: dimgray;
+                    cursor: pointer;
+                    font-weight: 500;
+                }
             }
         }
     }
@@ -289,6 +343,42 @@
             table {
                 margin-bottom: 0.5rem !important;
                 display: block !important;
+
+                th {
+                    button {
+                        background-color: lightgray;
+                        border-radius: 4px;
+                        border: 1px solid whitesmoke;
+                    }
+                }
+
+                .width-300 {
+                    width: 200px;
+                    display: block;
+                    white-space: break-spaces;
+                }
+            }
+        }
+
+        .action {
+            margin: 0 !important;
+
+            button {
+                cursor: pointer;
+                background-color: whitesmoke;
+                border-radius: 4px;
+                border: 1px solid grey;
+                margin-bottom: 5px;
+
+                mat-icon {
+                    color: #ff4081;
+                }
+
+                label {
+                    color: dimgray;
+                    cursor: pointer;
+                    font-weight: 500;
+                }
             }
         }
     }

@@ -18,7 +18,7 @@
   <div class="table-container">
     <table mat-table [dataSource]="dataSource" matSort>
       <!-- checkAll Column -->
-      <ng-container matColumnDef="checkAll">
+      <ng-container matColumnDef="checkAll" sticky>
         <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by checkbox all">
           <mat-checkbox [checked]="checkedAll" (change)="onChangeCheckedAll($event)">
           </mat-checkbox>
@@ -63,7 +63,6 @@
       <!-- content Column -->
       <ng-container matColumnDef="contents">
         <th mat-header-cell *matHeaderCellDef sortActionDescription="Sort by contents">
-          <!-- {{ "NOTIFY.CONTENT" | translate }} -->
           <button (click)="onLoadNotify(3)" class="btn3">
             <mat-icon aria-hidden="false" matBadge="" matBadgeColor="warn" aria-label="Add icon" fontSet="fas"
               fontIcon="fa-clock-rotate-left" class="fa-clock-rotate-left"></mat-icon>
@@ -72,7 +71,7 @@
         </th>
         <td mat-cell *matCellDef="let element"
           class="col-content {{ element.isViewed === 0 || !element.isViewed ? 'bold' : '' }}">
-          {{ element.shortContents }}
+          <span class="width-300">{{ element.shortContents }}</span>
           <span class="show-content-detail" (click)="showDetail(element)">{{element.showLabel}}</span>
         </td>
       </ng-container>
@@ -110,7 +109,7 @@
         </td>
       </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
       <tr mat-row *matHeaderRowDef="['no-data']" class="text-center" [hidden]="hasData"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>

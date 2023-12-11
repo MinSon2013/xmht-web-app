@@ -48,7 +48,7 @@
             </div>
         </div>
 
-        <div class="mb-3 row field">
+        <div class="checkbox mb-3 row field">
             <span class="col-3 text-label" for="type"></span>
             <mat-checkbox class="col-9" [checked]="couponChecked" (change)="onChangeCheckbox($event)"
                 [disabled]="(!isAdmin || !isEdit || isStocker)">
