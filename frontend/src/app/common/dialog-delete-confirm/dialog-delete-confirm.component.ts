@@ -60,7 +60,7 @@ export class DialogDeleteConfirmComponent implements OnInit {
     }
   }
 
-  onResponse(id: number, key: string, response: any) {
+  onResponse(id: number | number[], key: string, response: any) {
     if (response) {
       this.helper.showSuccess(this.toastr, this.helper.getMessage(this.translate, key, MSG_STATUS.SUCCESS));
       this.dialogRef.close(id);

@@ -68,8 +68,14 @@ export class NotificationController {
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  delete(@Param('id') id: string) {
-    return this.notificationService.deleteMany(id);
+  delete(@Param('id') id: number) {
+    return this.notificationService.delete(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('/deleteall')
+  deleteAll(@Body() body: any) {
+    return this.notificationService.deleteMany(body.id);
   }
 
   @UseGuards(JwtAuthGuard)

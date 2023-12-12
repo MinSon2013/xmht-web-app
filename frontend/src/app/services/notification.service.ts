@@ -87,6 +87,7 @@ export class NotificationService {
 
     deleteMany(id: number[]) {
         const strId = id.toString();
-        return this.webrequestService.deleteAll(this.url + `/${strId}`);
+        const payload = { id };
+        return this.webrequestService.deleteAll(this.url + `/deleteall`, payload);
     }
 }

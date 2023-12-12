@@ -136,8 +136,7 @@ export class NotificationService {
     }
   }
 
-  async deleteMany(id: string): Promise<DeleteResult> {
-    const ids = id.split(',');
+  async deleteMany(ids: number[]): Promise<DeleteResult> {
     await this.notifyAgencyRepo.createQueryBuilder()
       .delete()
       .where("notification_id IN (:notifyId)", { notifyId: ids })
