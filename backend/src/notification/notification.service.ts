@@ -51,6 +51,7 @@ export class NotificationService {
       item.notificationType = x.n_notification_type;
       item.orderId = x.n_order_id;
       item.updatedDate = x.n_updated_date;
+      item.statusOrder = x.n_status_order;
       res.push(item);
     });
 
@@ -158,6 +159,7 @@ export class NotificationService {
     notify.notificationType = modifyDto.notificationType;
     notify.updatedDate = moment(new Date).format('HH:mm DD/MM/YYYY');
     notify.orderId = modifyDto.orderId;
+    notify.statusOrder = modifyDto.statusOrder;
     return notify;
   }
 
@@ -205,9 +207,11 @@ export class NotificationService {
       .update(Notification)
       .set({
         updatedDate: body.updatedDate,
+        statusOrder: body.statusOrder,
         orderId: body.orderId,
         contents: body.contents,
         shortContents: body.shortContents,
+        sender: body.sender,
       });
 
     if (body.id === 0 || body.id === undefined) {

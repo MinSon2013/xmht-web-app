@@ -17,7 +17,9 @@ export interface Notify {
     notificationType: number;
     updatedDate: string;
     orderId: number;
+    statusOrder: string;
     checkedItem?: boolean;
     showDetail: boolean;
     showLabel: string;
+    confirmName?: string;
 }

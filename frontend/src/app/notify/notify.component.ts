@@ -20,7 +20,7 @@ import { CustomSocket } from '../sockets/custom-socket';
 })
 export class NotifyComponent implements OnInit {
 
-  displayedColumns: string[] = ['checkAll', 'updatedDate', 'agencyName', 'contents', 'fileName', 'action'];
+  displayedColumns: string[] = ['checkAll', 'updatedDate', 'agencyName', 'contents', 'fileName', 'statusOrder', 'confirmer', 'action'];
   dataSource = new MatTableDataSource<Notify>();
   dataSourceClone = new MatTableDataSource<Notify>();
   colspan: number = 0;
@@ -67,6 +67,13 @@ export class NotifyComponent implements OnInit {
             el.shortContents = el.shortContents.substring(0, (this.MAX_LENGTH_SHORT_CONTENT - 1));
             el.showLabel = "...[Chi tiết]";
             el.showDetail = false;
+          }
+
+          const agency = this.agencyList.find(x => x.id === el.sender);
+          if (agency) {
+            el.confirmName = agency.fullName;
+          } else {
+            el.confirmName = '';
           }
 
           if (el.agencyList && el.agencyList?.length === 1) {

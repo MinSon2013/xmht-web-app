@@ -64,7 +64,6 @@ export class DialogDetailAgencyComponent implements OnInit {
       this.agency.userId = this.data.userId;
     } else {
       this.translate.get('AGENCY.TITLE_ADD').subscribe(data => { this.header = data });
-      this.header
       this.disabled = false;
     }
   }

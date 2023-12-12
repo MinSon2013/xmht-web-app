@@ -14,4 +14,5 @@ export class NotificationDto {
   notificationType: number;
   updatedDate: string;
   orderId?: number;
+  statusOrder?: string;
 }

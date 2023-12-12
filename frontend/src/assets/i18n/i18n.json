@@ -107,7 +107,8 @@
         "COUPON": "Khuyến mãi",
         "UNREAD": "Chưa xem",
         "DELETE_LABEL": "Xóa tất cả thông báo đã chọn",
-        "COUPON_TYPE": "Thông báo khuyến mãi"
+        "COUPON_TYPE": "Thông báo khuyến mãi",
+        "CONFIRMER": "Người cập nhật đơn"
     },
     "STATISTICS": {
         "CHOOSE_DATE": "Chọn tháng và năm ",

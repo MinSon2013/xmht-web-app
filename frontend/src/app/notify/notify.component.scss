@@ -58,6 +58,7 @@
             color: rgb(0, 0, 0);
             font-size: 12pt;
             background-color: rgb(201, 201, 201);
+            padding: 8px;
 
             label {
                 margin-left: 5px;
@@ -67,6 +68,7 @@
         td {
             font-size: 11pt;
             width: auto;
+            padding: 8px;
 
             .col-content {
                 min-width: 30px;
@@ -118,7 +120,6 @@
         }
 
         .width-110 {
-            width: 137px;
             min-width: 110px;
         }
 
@@ -128,8 +129,16 @@
             white-space: break-spaces;
         }
 
+        .w3 {
+            width: 3%;
+        }
+
         .w5 {
             width: 5%;
+        }
+
+        .w7 {
+            width: 7%;
         }
 
         .w10 {
@@ -146,25 +155,6 @@
 
         .w30 {
             width: 30%;
-        }
-
-        button {
-            border: none;
-            background-color: transparent;
-            padding: 0.5rem 1rem;
-        }
-
-        .btn1:hover,
-        .btn1 mat-icon:hover,
-        .btn1 label:hover,
-        .btn2:hover,
-        .btn2 mat-icon:hover,
-        .btn2 label:hover,
-        .btn3:hover,
-        .btn3 mat-icon:hover,
-        .btn3 label:hover {
-            cursor: pointer;
-            background-color: grey;
         }
     }
 
@@ -239,8 +229,32 @@
 .action-add {
     padding-right: 1rem;
     padding-bottom: 1rem;
+    padding-left: 1rem;
     width: 100%;
     text-align: right;
+
+    .div-notify-type {
+        float: left;
+
+        button {
+            border: none;
+            background-color: whitesmoke;
+            border-radius: 4px;
+            padding: 0.5rem 1rem;
+            margin-right: 1rem;
+            width: 150px;
+        }
+
+        .btn1:hover,
+        .btn1 mat-icon:hover,
+        .btn1 label:hover,
+        .btn2:hover,
+        .btn2 mat-icon:hover,
+        .btn2 label:hover {
+            cursor: pointer;
+            background-color: grey;
+        }
+    }
 
     .btn-add {
         color: white;
@@ -310,6 +324,10 @@
                     display: block;
                     white-space: break-spaces;
                 }
+
+                td {
+                    padding: 8px 0 !important;
+                }
             }
         }
 
@@ -371,6 +389,10 @@
                     width: 200px;
                     display: block;
                     white-space: break-spaces;
+                }
+
+                td {
+                    padding: 8px 0 !important;
                 }
             }
         }

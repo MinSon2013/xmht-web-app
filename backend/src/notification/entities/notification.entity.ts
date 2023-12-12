@@ -40,4 +40,7 @@ export class Notification {
 
   @Column({ name: 'order_id', default: 0 })
   orderId: number;
+
+  @Column({ name: 'status_order' })
+  statusOrder: string;
 }

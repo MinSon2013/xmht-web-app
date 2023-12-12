@@ -115,6 +115,7 @@ export class DialogDetailNotifyComponent implements OnInit {
       this.couponChecked = this.data.notificationType === 2 ? true : false
       this.notify.notificationType = this.data.notificationType;
       this.notify.orderId = this.data.orderId;
+      this.notify.statusOrder = this.data.statusOrder;
     } else {
       this.notify.id = 0;
       this.notify.agencyList = [];
@@ -130,6 +131,7 @@ export class DialogDetailNotifyComponent implements OnInit {
       this.notify.isViewed = false;
       this.notify.notificationType = 0;
       this.notify.orderId = 0;
+      this.notify.statusOrder = '';
     }
   }
 
@@ -163,6 +165,7 @@ export class DialogDetailNotifyComponent implements OnInit {
       if (this.notify.id === 0) {
         this.notify.notificationType = this.couponChecked ? NOTIFY_TYPE.COUPON : NOTIFY_TYPE.GENERAL;
         this.notify.orderId = 0;
+        this.notify.statusOrder = '';
         this.socketService.createdNotification(this.notify).pipe(
           tap((res) => { })
         ).subscribe((response: any) => {

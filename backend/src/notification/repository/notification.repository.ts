@@ -48,6 +48,7 @@ export class NotificationRepository extends Repository<Notification> {
             item.updatedDate = x.n_updated_date;
             item.notificationType = x.n_notification_type;
             item.orderId = x.n_order_id;
+            item.statusOrder = x.n_status_order;
             res.push(item);
         });
 
@@ -135,6 +136,7 @@ export class NotificationRepository extends Repository<Notification> {
         notify.notificationType = modifyDto.notificationType;
         notify.updatedDate = modifyDto.updatedDate;
         notify.orderId = modifyDto.orderId;
+        notify.statusOrder = modifyDto.statusOrder;
         return notify;
     }
 

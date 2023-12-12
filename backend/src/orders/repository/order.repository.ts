@@ -395,6 +395,7 @@ export class OrderRepository extends Repository<Order> {
         notifyDto.notificationType = this.NOTIFY_TYPE_GENERAL;
         notifyDto.updatedDate = moment(new Date).format('HH:mm DD/MM/YYYY');
         notifyDto.orderId = modifyOrderDto.id;
+        notifyDto.statusOrder = this.getStatusOrder(modifyOrderDto.status);
         if (k === 'UPDATE') {
             await notificationService.updateNotifyOrder(notifyDto);
         } else if (k === 'CREATE') {
@@ -414,5 +415,36 @@ export class OrderRepository extends Repository<Order> {
             .from(Order, 'o')
             .getRawOne();
         return max = order.max;
+    }
+
+    private getStatusOrder(k: number): string {
+        const STATUS = {
+            label1: 'Chờ giải quyết',
+            label2: 'Đồng ý đơn hàng',
+            label3: 'Đang giao hàng',
+            label4: 'Đã giao hàng',
+            label5: 'Hủy đơn hàng'
+        };
+
+        let str = '';
+        switch (k) {
+            case 1:
+                str = STATUS.label1;
+                break;
+            case 2:
+                str = STATUS.label2;
+                break;
+            case 3:
+                str = STATUS.label3;
+                break;
+            case 4:
+                str = STATUS.label4;
+                break;
+            case 5:
+                str = STATUS.label5;
+                break;
+        }
+
+        return str;
     }
 }
