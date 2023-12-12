@@ -12,6 +12,8 @@ import { LogoutComponent } from './logout/logout.component';
 import { NotifyComponent } from './notify/notify.component';
 import { OrderAddComponent } from './orders/order-add/order-add.component';
 import { PrintPdfComponent } from './orders/print-pdf/print-pdf.component';
+import { StoresComponent } from './stores/stores.component';
+import { DistrictComponent } from './district/district.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -29,6 +31,8 @@ const routes: Routes = [
   { path: 'logout', component: LogoutComponent, canActivate: [AuthGuardGuard] },
   { path: 'notification', component: NotifyComponent, canActivate: [AuthGuardGuard] },
   { path: 'print', component: PrintPdfComponent, canActivate: [AuthGuardGuard] },
+  { path: 'store', component: StoresComponent, canActivate: [AuthGuardGuard] },
+  { path: 'district', component: DistrictComponent, canActivate: [AuthGuardGuard] },
   { path: '**', component: PageNotFoundComponent, canActivate: [AuthGuardGuard] },
 ];
 

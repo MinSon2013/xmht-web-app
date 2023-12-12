@@ -185,5 +185,12 @@
         "SECURITY": "Bảo vệ",
         "CREATOR": "Người lập phiếu",
         "SUM": "Tổng cộng"
+    },
+    "DISTRICT": {
+        "TITLE": "Danh sách khu vực",
+        "TITLE_ADD": "Thêm mới khu vực",
+        "TITLE_MODIFIED": "Cập nhật thông tin khu vực",
+        "DISTRICT_NAME": "Tên khu vực",
+        "PROVINCE": "Tỉnh/Thành phố"
     }
 }

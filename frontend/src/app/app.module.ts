@@ -48,6 +48,9 @@ import { environment } from '../environments/environment';
 import { DialogChangePasswordComponent } from './header/dialog-change-password/dialog-change-password.component';
 import { BnNgIdleService } from 'bn-ng-idle';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
+import { StoresComponent } from './stores/stores.component';
+import { DistrictComponent } from './district/district.component';
+import { DialogModifyDistrictComponent } from './district/dialog-modify-district/dialog-modify-district.component';
 
 const config: SocketIoConfig = { url: `${environment.apiUrl}`, options: {} };
 
@@ -85,6 +88,9 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     DialogDetailNotifyComponent,
     DatePickerFormatDirective,
     DialogChangePasswordComponent,
+    StoresComponent,
+    DistrictComponent,
+    DialogModifyDistrictComponent,
   ],
   imports: [
     BrowserModule,

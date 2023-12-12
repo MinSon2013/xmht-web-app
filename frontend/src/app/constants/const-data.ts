@@ -1,4 +1,6 @@
-export const Cities = [
+import { Pickup } from "../models/pickup"
+
+export const Cities: Pickup[] = [
   { id: 1, label: 'An Giang' },
  /*  { id: 2, label: 'Bà Rịa - Vũng Tàu' },
   { id: 3, label: 'Bắc Giang' },
