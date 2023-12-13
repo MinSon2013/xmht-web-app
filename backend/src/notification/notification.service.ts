@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { DeleteResult, UpdateResult } from 'typeorm';
+import { DeleteResult, Like, UpdateResult } from 'typeorm';
 import { NotificationAgencyDto } from './dto/notification-agency.dto';
 import { NotificationDto } from './dto/notification.dto';
 import { NotificationAgency } from './entities/notification-agency.entity';
@@ -31,10 +31,10 @@ export class NotificationService {
     }
 
     let query = await sql.groupBy('n.id')
-      .orderBy('n.updated_date', 'DESC')
-      .addOrderBy('n.id', 'DESC')
+      .orderBy("DATE_FORMAT(n.updated_date, '%H:%i %d/%M/%y')", 'ASC')
       .getRawMany();
     const res: NotificationDto[] = [];
+    query = query.reverse();
     query.forEach(x => {
       const item = new NotificationDto();
       item.id = x.n_id;
@@ -203,6 +203,25 @@ export class NotificationService {
   }
 
   async updateNotifyOrder(body: NotificationDto) {
+    const ind1 = body.contents.indexOf('[');
+    const ind2 = body.contents.indexOf(']');
+    const approvedNumber = body.contents.substring(ind1 + 1, ind2);
+    let notify = null;
+    if (approvedNumber.length > 0) {
+      notify = await this.notifyRepo.find({
+        contents: Like(`%${approvedNumber}%`)
+      });
+
+    } else {
+      notify = await this.notifyRepo.find({
+        orderId: body.orderId
+      });
+    }
+
+    if (notify.length > 0) {
+      body.id = notify[0].id;
+    }
+
     let sql = this.notifyRepo.createQueryBuilder()
       .update(Notification)
       .set({
@@ -214,14 +233,20 @@ export class NotificationService {
         sender: body.sender,
       });
 
-    if (body.id === 0 || body.id === undefined) {
-      sql = sql.where("order_id = :orderId", { orderId: body.orderId });
-    } else if (body.orderId === 0 || body.orderId === undefined) {
+    if (body.id !== 0 && body.id !== undefined) {
       sql = sql.where("id = :notifyId", { notifyId: body.id });
+
+    } else if (body.orderId !== 0 && body.orderId !== undefined) {
+      if (approvedNumber.length === 0) {
+        body.createdDate = moment(new Date).format('HH:mm DD/MM/YYYY');
+        body.updatedDate = body.createdDate;
+        return await this.create(body);
+      }
+      sql = sql.where("order_id = :orderId", { orderId: body.orderId });
     } else {
-      sql = sql.where("order_id = :orderId", { orderId: body.orderId })
-        .andWhere("id = :notifyId", { notifyId: body.id });
+
     }
+
     return await sql.execute();
   }
 
