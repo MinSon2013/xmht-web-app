@@ -3,13 +3,13 @@ import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { CustomPaginator } from '../common/custom-paginator';
 import { DialogDeleteConfirmComponent } from '../common/dialog-delete-confirm/dialog-delete-confirm.component';
 import { SERVICE_TYPE } from '../constants/const-data';
-import { DialogDetailAgencyComponent } from '../agency/dialog-detail-agency/dialog-detail-agency.component';
 import { MatDialog } from '@angular/material/dialog';
-import { AgencyService } from '../services/agency.service';
-import { Agency } from '../models/agency';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { Helper } from '../helpers/helper';
+import { Store } from '../models/store';
+import { StoreService } from '../services/store.service';
+import { DialogModifyStoreComponent } from './dialog-modify-store/dialog-modify-store.component';
 
 @Component({
   selector: 'app-stores',
@@ -21,9 +21,9 @@ import { Helper } from '../helpers/helper';
 })
 export class StoresComponent implements OnInit {
 
-  displayedColumns: string[] = ['id', 'fullName', 'address', 'phone', 'email', 'accountName', 'contract', 'note', 'deleteAction'];
-  dataSource = new MatTableDataSource<Agency>();
-  clickedRows = new Set<Agency>();
+  displayedColumns: string[] = ['agencyName', 'districtName', 'provinceName', 'storeList', 'deleteAction'];
+  dataSource = new MatTableDataSource<Store>();
+  clickedRows = new Set<Store>();
   colspan: number = 0;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -33,33 +33,37 @@ export class StoresComponent implements OnInit {
   hasData: boolean = false;
   isStocker: boolean = this.helper.isStocker();
 
+
   constructor(public dialog: MatDialog,
-    private agencyService: AgencyService,
+    private storeService: StoreService,
   ) { }
 
   ngOnInit(): void {
     this.colspan = this.displayedColumns.length;
-    const agencyList = this.helper.getAgencyList();
-    const userList = this.helper.getUserList();
-    if (agencyList.length === 0) {
-      this.agencyService.getAgencyList().subscribe((response: any) => {
-        if (response.length > 0) {
-          this.dataSource.data = response.reverse();
-          this.dataSource.data.forEach(element => {
-            const user = userList.find(x => x.id === element.userId);
-            element.accountName = user ? user.username : '';
-            element.password = user ? user.password : '';
-          });
-          this.helper.setAgencyList(this.dataSource.data.reverse());
-        } else {
-          this.dataSource.data = [];
-        }
-      });
-    } else {
-      this.dataSource.data = agencyList.reverse();
-    }
+    this.getData();
+  }
 
-    this.hideShowNoDataRow();
+  getData() {
+    this.storeService.getStoreList().subscribe((response: any) => {
+      if (response.length > 0) {
+        this.dataSource.data = response;
+        this.dataSource.data.forEach(element => {
+          // element.provinceList = [];
+          // const list = element.provinceId.split(',');
+          // if (list.length > 0) {
+          //   list.forEach(id => {
+          //     const item = this.cities.find(x => x.id === Number(id));
+          //     if (item) {
+          //       element.provinceList.push(item.label);
+          //     }
+          //   });
+          // }
+        });
+      } else {
+        this.dataSource.data = [];
+      }
+      this.hideShowNoDataRow();
+    });
   }
 
   hideShowNoDataRow() {
@@ -79,7 +83,7 @@ export class StoresComponent implements OnInit {
     const elements = Array.from(
       document.getElementsByClassName('body') as HTMLCollectionOf<HTMLElement>,
     );
-    const dialogRef = this.dialog.open(DialogDetailAgencyComponent, {
+    const dialogRef = this.dialog.open(DialogModifyStoreComponent, {
       data: row,
     });
 
@@ -93,16 +97,12 @@ export class StoresComponent implements OnInit {
       });
       if (result !== null) {
         if (row && row.id !== 0) {
-          row.fullName = result.fullName;
-          row.address = result.address;
-          row.phone = result.phone;
-          row.note = result.note;
-          row.email = result.email;
-          row.contract = result.contract;
-          row.password = result.password.length !== 0 ? result.password : row.password;
+          row.name = result.name;
+          row.provinceId = result.provinceId;
+          row.provinceList = result.provinceList;
         } else {
-          this.dataSource.data = [result, ...this.dataSource.data];
-          this.dataSource.data = this.dataSource.data; // push obj into datasource
+          this.dataSource.data = [...this.dataSource.data, result];
+          this.dataSource.data = this.dataSource.data;
           this.hideShowNoDataRow();
         }
       }
@@ -111,12 +111,11 @@ export class StoresComponent implements OnInit {
 
   onDelete(row: any) {
     const dialogRef = this.dialog.open(DialogDeleteConfirmComponent, {
-      data: { id: row.id, type: SERVICE_TYPE.AGENCYSERVICE, content: 'Bạn chắc chắn muốn xóa nhà phân phối "' + row.fullName + '"?' },
+      data: { id: row.id, type: SERVICE_TYPE.DISTRICTSERVICE, content: 'Bạn chắc chắn muốn xóa "' + row.name + '"?' },
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.helper.deleteAgency(row);
         this.dataSource.data = this.dataSource.data.filter(x => x.id !== row.id);
         if (this.dataSource.data.length === 0) {
           this.hasData = false;
@@ -128,4 +127,5 @@ export class StoresComponent implements OnInit {
   }
 
 }
+
 

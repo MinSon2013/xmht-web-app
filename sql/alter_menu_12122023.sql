@@ -3,8 +3,8 @@ ADD `position` int(2) DEFAULT 0;
 
 INSERT INTO `menu` (`id`, `parent_id`, `route_link`, `label`, `icon`, `is_admin`, `position`) VALUES
 (10, 0, 'store', 'Danh sách cửa hàng', 'fa-shop', 0, 5);
-INSERT INTO `menu` (`id`, `parent_id`, `route_link`, `label`, `icon`, `is_admin`) VALUES
-(11, 0, 'district', 'Quản lý khu vực', 'fa-building', 6);
+INSERT INTO `menu` (`id`, `parent_id`, `route_link`, `label`, `icon`, `is_admin`, `position`) VALUES
+(11, 0, 'district', 'Quản lý khu vực', 'fa-building', 1, 6);
 
 UPDATE menu
 SET `position` = 1

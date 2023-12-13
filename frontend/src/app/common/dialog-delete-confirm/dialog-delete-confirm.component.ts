@@ -10,6 +10,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '../../services/notification.service';
 import { SocketService } from '../../services/socket.service';
 import { tap } from 'rxjs';
+import { DistrictService } from '../../services/district.service';
+import { StoreService } from '../../services/store.service';
 
 @Component({
   selector: 'app-dialog-delete-confirm',
@@ -29,6 +31,8 @@ export class DialogDeleteConfirmComponent implements OnInit {
     private toastr: ToastrService,
     public translate: TranslateService,
     private socketService: SocketService,
+    private districtService: DistrictService,
+    private storeService: StoreService,
   ) { }
 
   ngOnInit(): void { }
@@ -55,6 +59,16 @@ export class DialogDeleteConfirmComponent implements OnInit {
       case SERVICE_TYPE.NOTIFYSERVICE:
         this.notifyService.deleteMany(data.arrDelete).subscribe((response) => {
           this.onResponse(data.arrDelete, 'MESSAGE.DELETE_NOTIFY', response);
+        });
+        break;
+      case SERVICE_TYPE.DISTRICTSERVICE:
+        this.districtService.delete(data.id).subscribe((response) => {
+          this.onResponse(data.id, 'MESSAGE.DELETE_DISTRICT', response);
+        });
+        break;
+      case SERVICE_TYPE.STORESERVICE:
+        this.storeService.delete(data.id).subscribe((response) => {
+          this.onResponse(data.id, 'MESSAGE.DELETE_STORE', response);
         });
         break;
     }

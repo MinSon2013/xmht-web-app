@@ -10,7 +10,10 @@ export class MenuRepository extends Repository<Menu> {
         const menus = await this.find({
             where: {
                 parentId: 0,
-            }
+            },
+            order: {
+                position: "ASC",
+            },
         });
         for (let element of menus) {
             const parent = new MenuRo();
@@ -18,6 +21,7 @@ export class MenuRepository extends Repository<Menu> {
             parent.icon = element.icon;
             parent.label = element.label;
             parent.expanded = true; // sub-menu always expanded
+            parent.position = element.position;
 
             // Get menu child
             const items = await this.find({

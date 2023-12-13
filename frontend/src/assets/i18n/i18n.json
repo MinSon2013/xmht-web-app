@@ -158,7 +158,13 @@
         "SAVE_FILE": "Lưu file",
         "CHANGE_PASSWORD": "Thay đổi mật khẩu",
         "NOT_FOUND": "Không tìm thấy dữ liệu người dùng",
-        "PASSWORD_WRONG": "Mật khẩu cũ chưa đúng"
+        "PASSWORD_WRONG": "Mật khẩu cũ chưa đúng",
+        "ADD_DISTRICT": "Thêm mới khu vực",
+        "MODIFIED_DISTRICT": "Cập nhật thông tin khu vực",
+        "DELETE_DISTRICT": "Xóa thông tin khu vực",
+        "ADD_STORE": "Thêm mới cửa hàng",
+        "MODIFIED_STORE": "Cập nhật thông tin cửa hàng",
+        "DELETE_STORE": "Xóa thông tin cửa hàng"
     },
     "HEADER": {
         "MENU_1": "Thay đổi mật khẩu",
@@ -192,5 +198,17 @@
         "TITLE_MODIFIED": "Cập nhật thông tin khu vực",
         "DISTRICT_NAME": "Tên khu vực",
         "PROVINCE": "Tỉnh/Thành phố"
+    },
+    "STORE": {
+        "TITLE": "Danh sách cửa hàng",
+        "TITLE_ADD": "Thêm mới cửa hàng",
+        "TITLE_MODIFIED": "Cập nhật thông tin cửa hàng",
+        "STORE_NAME": "Tên cửa hàng",
+        "PROVINCE": "Tỉnh/Thành phố",
+        "AGENCY_NAME": "Nhà phân phối",
+        "DISTRICT_NAME": "Khu vực",
+        "SELECT_AGENCY": "Chọn Nhà phân phối",
+        "SELECT_DISTRICT": "Chọn Khu vực",
+        "SELECT_PROVINCE": "Chọn tỉnh/Thành phố"
     }
 }

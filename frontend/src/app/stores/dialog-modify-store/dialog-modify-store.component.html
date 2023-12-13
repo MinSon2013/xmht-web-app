@@ -1,0 +1,98 @@
+<div class="container bg-white">
+    <h2 class="header">{{ header }}</h2>
+    <mat-dialog-content class="form-create shadow-md rounded px-8 pt-6 pb-8">
+        <!-- Agency -->
+        <div class="mb-3 row field p-top" [hidden]="!isAdmin">
+            <span class="col-5 text-label" for="agency">
+                {{'STORE.AGENCY_NAME' | translate}}
+                <label class="require">*</label>
+            </span>
+            <select
+                class="col-7 form-select appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                [(ngModel)]="agencySelected" required>
+                <option [ngValue]="null" [disabled]="true" [selected]="true">
+                    -- {{'STORE.SELECT_AGENCY' | translate}} --
+                </option>
+                <option [ngValue]="item" *ngFor="let item of agencyList">{{item.fullName}}</option>
+            </select>
+        </div>
+
+        <!-- Add element -->
+        <div *ngFor="let item of elementList">
+
+            <!-- District -->
+            <div class="mb-3 row field p-top">
+                <span class="col-5 text-label" for="district">
+                    {{'STORE.DISTRICT_NAME' | translate}}
+                    <label class="require">*</label>
+                </span>
+                <select
+                    class="col-7 form-select appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    [(ngModel)]="districtSelected" (ngModelChange)="onChangeDistrict($event)" required>
+                    <option [ngValue]="null" [disabled]="true" [selected]="true">
+                        -- {{'STORE.SELECT_DISTRICT' | translate}} --
+                    </option>
+                    <option [ngValue]="item" *ngFor="let item of districtList">{{item.name}}</option>
+                </select>
+            </div>
+
+            <!-- Province -->
+            <div class="mb-3 row field p-top">
+                <span class="col-5 text-label" for="province">
+                    {{'STORE.PROVINCE' | translate}}
+                    <label class="require">*</label>
+                </span>
+                <select
+                    class="col-7 form-select appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    [(ngModel)]="provinceSelected" (ngModelChange)="onChangeProvince($event)" required>
+                    <option [ngValue]="null" [disabled]="true" [selected]="true">
+                        -- {{'STORE.SELECT_PROVINCE' | translate}} --
+                    </option>
+                    <option [ngValue]="item" *ngFor="let item of provinceList">{{item.label}}</option>
+                </select>
+            </div>
+
+            <!-- Store name -->
+            <div class="mb-3 row field">
+                <span class="col-5 text-label" for="storeName">
+                    {{ "STORE.STORE_NAME" | translate }}
+                    <label class="require">*</label>
+                </span>
+                <input matInput
+                    class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="storeName" type="text" placeholder="" maxlength="100" [(ngModel)]="store.storeName"
+                    [ngModelOptions]="{ standalone: true }" />
+            </div>
+        </div>
+
+        <!-- Action Add or Sub element -->
+        <div class="mb-3 row field action-button">
+            <button class="btn-sub" (click)="onSubElement()" *ngIf="elementList.length > 1">
+                <mat-icon aria-hidden="false" aria-label="Sub icon" fontSet="fas" fontIcon="fa-minus"
+                    class="fa-minus"></mat-icon>
+            </button>
+            <button class="btn-add" (click)="onAddElement()">
+                <mat-icon aria-hidden="false" aria-label="Add icon" fontSet="fas" fontIcon="fa-plus"
+                    class="fa-plus"></mat-icon>
+            </button>
+        </div>
+
+
+        <div *ngIf="error || (error !== null && error.length !== 0)">
+            <div class="col-5"></div>
+            <div class="custom-span">
+                <span class="span">{{ error }}</span>
+            </div>
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+        <button mat-button mat-dialog-close class="btn-cancel py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            (click)="onCancel()">
+            {{ "BUTTON.CANCEL" | translate }}
+        </button>
+        <button mat-button class="btn-save py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button"
+            (click)="onSubmit()">
+            {{ "BUTTON.SAVE" | translate }}
+        </button>
+    </mat-dialog-actions>
+</div>

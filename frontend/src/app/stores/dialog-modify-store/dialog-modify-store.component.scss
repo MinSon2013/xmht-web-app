@@ -72,6 +72,18 @@
         opacity: 0.75;
         font-size: 0.75em;
     }
+
+    select {
+        width: 58%;
+    }
+
+    .action-button {
+        button {
+            width: 48px;
+            background-color: royalblue;
+            color: white;
+        }
+    }
 }
 
 @media only screen and (max-width:600px) {

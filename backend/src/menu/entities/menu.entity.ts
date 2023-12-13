@@ -5,18 +5,21 @@ export class Menu {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({name: 'parent_id'}) 
+  @Column({ name: 'parent_id' })
   parentId: number;
 
-  @Column({name: 'route_link', length: 100})
+  @Column({ name: 'route_link', length: 100 })
   routeLink: string;
 
-  @Column({ length: 200})
+  @Column({ length: 200 })
   label: string;
 
-  @Column({ length: 100})
+  @Column({ length: 100 })
   icon: string;
 
-  @Column({name: 'is_admin', type: 'tinyint'})
+  @Column({ name: 'is_admin', type: 'tinyint' })
   isAdmin: boolean;
+
+  @Column({ name: 'position', default: 0 })
+  position: number;
 }

@@ -6,4 +6,5 @@ export class MenuRo {
   icon: string;
   items: MenuRo[] = [];
   expanded?: boolean;
+  position: number;
 }

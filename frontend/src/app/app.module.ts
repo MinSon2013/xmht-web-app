@@ -51,6 +51,7 @@ import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { StoresComponent } from './stores/stores.component';
 import { DistrictComponent } from './district/district.component';
 import { DialogModifyDistrictComponent } from './district/dialog-modify-district/dialog-modify-district.component';
+import { DialogModifyStoreComponent } from './stores/dialog-modify-store/dialog-modify-store.component';
 
 const config: SocketIoConfig = { url: `${environment.apiUrl}`, options: {} };
 
@@ -91,6 +92,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     StoresComponent,
     DistrictComponent,
     DialogModifyDistrictComponent,
+    DialogModifyStoreComponent,
   ],
   imports: [
     BrowserModule,

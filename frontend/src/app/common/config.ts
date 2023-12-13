@@ -12,7 +12,9 @@ export const CONFIG = {
         STATISTICS: 'statistics',
         DELIVERY: 'delivery',
         MENU: 'menu',
-        USER: 'users'
+        USER: 'users',
+        DISTRICT: 'district',
+        STORE: 'store'
     },
     LOCAL_STORAGE: {
         ORDER_LIST: 'orderList',

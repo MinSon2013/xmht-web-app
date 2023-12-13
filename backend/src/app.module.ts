@@ -12,6 +12,8 @@ import Joi from 'joi';
 import { NotificationModule } from './notification/notification.module';
 import { EventsModule } from './events/events.module';
 import { AuthMiddleware } from './middleware/auth.middleware';
+import { DistrictModule } from './district/district.module';
+import { StoreModule } from './store/store.module';
 
 
 @Module({
@@ -49,6 +51,8 @@ import { AuthMiddleware } from './middleware/auth.middleware';
     UserModule,
     NotificationModule,
     EventsModule,
+    DistrictModule,
+    StoreModule,
   ],
   providers: [],
 })
