@@ -72,6 +72,8 @@ export class NotifyComponent implements OnInit {
           const agency = this.agencyList.find(x => x.id === el.sender);
           if (agency) {
             el.confirmName = agency.fullName;
+          } else if (this.isAdmin) {
+            el.confirmName = this.helper.getInfoName();
           } else {
             el.confirmName = '';
           }

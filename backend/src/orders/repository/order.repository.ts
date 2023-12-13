@@ -390,7 +390,6 @@ export class OrderRepository extends Repository<Order> {
         notifyDto.filePath = '';
         notifyDto.mimeType = '';
         notifyDto.agencyList.push(modifyOrderDto.notifyReceiver === 0 ? adminId : modifyOrderDto.notifyReceiver);
-        notifyDto.createdDate = modifyOrderDto.createdDate ? modifyOrderDto.createdDate : moment(new Date).format('HH:mm DD/MM/YYYY');
         notifyDto.sender = modifyOrderDto.id !== 0 ? modifyOrderDto.agencyUpdated : modifyOrderDto.sender;
         notifyDto.notificationType = this.NOTIFY_TYPE_GENERAL;
         notifyDto.updatedDate = moment(new Date).format('HH:mm DD/MM/YYYY');
@@ -399,6 +398,7 @@ export class OrderRepository extends Repository<Order> {
         if (k === 'UPDATE') {
             await notificationService.updateNotifyOrder(notifyDto);
         } else if (k === 'CREATE') {
+            notifyDto.createdDate = moment(new Date).format('HH:mm DD/MM/YYYY');
             await notificationService.create(notifyDto);
         }
     }
