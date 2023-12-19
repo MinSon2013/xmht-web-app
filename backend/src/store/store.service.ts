@@ -16,7 +16,12 @@ export class StoreService {
     ) { }
 
     async findAll(): Promise<Store[]> {
-        return await this.storeRepo.getAll();
+        return await this.storeRepo.createQueryBuilder()
+            .groupBy("agency_id")
+            .addGroupBy("district_id")
+            .addGroupBy("province_id")
+            .addGroupBy("id")
+            .getMany();
     }
 
     async findOne(id: number): Promise<Store> {

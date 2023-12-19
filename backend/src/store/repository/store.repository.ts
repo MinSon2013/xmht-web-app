@@ -10,10 +10,6 @@ export class StoreRepository extends Repository<Store> {
         super();
     }
 
-    async getAll(): Promise<Store[]> {
-        return await this.find();
-    }
-
     async getOne(id: number): Promise<Store> {
         return await this.findOne({
             where: {
