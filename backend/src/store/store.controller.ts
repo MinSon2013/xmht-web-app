@@ -9,9 +9,10 @@ export class StoreController {
   constructor(private readonly storeService: StoreService) { }
 
   @UseGuards(JwtAuthGuard)
-  @Get()
-  findAll(): Promise<Store[]> {
-    return this.storeService.findAll()
+  @Get(':userId/:agencyId')
+  getAll(@Param('userId', ParseIntPipe) userId: number,
+    @Param('agencyId', ParseIntPipe) agencyId: number): Promise<any> {
+    return this.storeService.findAll(userId, agencyId);
   }
 
   @UseGuards(JwtAuthGuard)

@@ -15,13 +15,29 @@ export class StoreService {
         private readonly authService: AuthService,
     ) { }
 
-    async findAll(): Promise<Store[]> {
-        return await this.storeRepo.createQueryBuilder()
-            .groupBy("agency_id")
-            .addGroupBy("district_id")
-            .addGroupBy("province_id")
-            .addGroupBy("id")
-            .getMany();
+    async findAll(userId: number, agencyId: number): Promise<Store[]> {
+        const userEntity = await this.userService.getOne(userId);
+        if (userEntity) {
+            if (!userEntity.isAdmin && !userEntity.isStocker) {
+                return await this.storeRepo.createQueryBuilder()
+                    .where("agency_id = :agencyId", { agencyId })
+                    .groupBy("agency_id")
+                    .addGroupBy("district_id")
+                    .addGroupBy("province_id")
+                    .addGroupBy("id")
+                    .getMany();
+            } else {
+                return await this.storeRepo.createQueryBuilder()
+                    .groupBy("agency_id")
+                    .addGroupBy("district_id")
+                    .addGroupBy("province_id")
+                    .addGroupBy("id")
+                    .getMany();
+            }
+        } else {
+            return [];
+        }
+
     }
 
     async findOne(id: number): Promise<Store> {

@@ -2,17 +2,21 @@ import { Injectable } from "@angular/core";
 import { CONFIG } from "../common/config";
 import { WebRequestService } from "./web-request.service";
 import { Store } from "../models/store";
+import { Helper } from "../helpers/helper";
 
 @Injectable({ providedIn: 'root' })
 export class StoreService {
     readonly url: string = CONFIG.URL.STORE;
+    readonly helper = new Helper();
 
     constructor(
         private webrequestService: WebRequestService,
     ) { }
 
     getStoreList() {
-        return this.webrequestService.get(this.url);
+        const userId = this.helper.getUserId();
+        const agencyId = this.helper.getAgencyId();
+        return this.webrequestService.get(this.url + `/${userId}/${agencyId}`);
     }
 
     create(obj: Store) {
