@@ -17,66 +17,84 @@
             </select>
         </div>
 
-        <!-- Add element -->
-        <div *ngFor="let item of elementList">
-
-            <!-- District -->
-            <div class="mb-3 row field p-top">
-                <span class="col-5 text-label" for="district">
-                    {{'STORE.DISTRICT_NAME' | translate}}
-                    <label class="require">*</label>
-                </span>
-                <select
-                    class="col-7 form-select appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    [(ngModel)]="districtSelected" (ngModelChange)="onChangeDistrict($event)" required>
-                    <option [ngValue]="null" [disabled]="true" [selected]="true">
-                        -- {{'STORE.SELECT_DISTRICT' | translate}} --
-                    </option>
-                    <option [ngValue]="item" *ngFor="let item of districtList">{{item.name}}</option>
-                </select>
-            </div>
-
-            <!-- Province -->
-            <div class="mb-3 row field p-top">
-                <span class="col-5 text-label" for="province">
-                    {{'STORE.PROVINCE' | translate}}
-                    <label class="require">*</label>
-                </span>
-                <select
-                    class="col-7 form-select appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    [(ngModel)]="provinceSelected" (ngModelChange)="onChangeProvince($event)" required>
-                    <option [ngValue]="null" [disabled]="true" [selected]="true">
-                        -- {{'STORE.SELECT_PROVINCE' | translate}} --
-                    </option>
-                    <option [ngValue]="item" *ngFor="let item of provinceList">{{item.label}}</option>
-                </select>
-            </div>
-
-            <!-- Store name -->
-            <div class="mb-3 row field">
-                <span class="col-5 text-label" for="storeName">
-                    {{ "STORE.STORE_NAME" | translate }}
-                    <label class="require">*</label>
-                </span>
-                <input matInput
-                    class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="storeName" type="text" placeholder="" maxlength="100" [(ngModel)]="store.storeName"
-                    [ngModelOptions]="{ standalone: true }" />
-            </div>
+        <!-- District -->
+        <div class="mb-3 row field p-top">
+            <span class="col-5 text-label" for="district">
+                {{'STORE.DISTRICT_NAME' | translate}}
+                <label class="require">*</label>
+            </span>
+            <select
+                class="col-7 form-select appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                [(ngModel)]="districtSelected" (ngModelChange)="onChangeDistrict($event)" required>
+                <option [ngValue]="null" [disabled]="true" [selected]="true">
+                    -- {{'STORE.SELECT_DISTRICT' | translate}} --
+                </option>
+                <option [ngValue]="item" *ngFor="let item of districtList">{{item.name}}</option>
+            </select>
         </div>
 
-        <!-- Action Add or Sub element -->
-        <div class="mb-3 row field action-button">
-            <button class="btn-sub" (click)="onSubElement()" *ngIf="elementList.length > 1">
-                <mat-icon aria-hidden="false" aria-label="Sub icon" fontSet="fas" fontIcon="fa-minus"
-                    class="fa-minus"></mat-icon>
-            </button>
-            <button class="btn-add" (click)="onAddElement()">
-                <mat-icon aria-hidden="false" aria-label="Add icon" fontSet="fas" fontIcon="fa-plus"
-                    class="fa-plus"></mat-icon>
-            </button>
+        <!-- Province -->
+        <div class="mb-3 row field p-top">
+            <span class="col-5 text-label" for="province">
+                {{'STORE.PROVINCE' | translate}}
+                <label class="require">*</label>
+            </span>
+            <select
+                class="col-7 form-select appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                [(ngModel)]="provinceSelected" (ngModelChange)="onChangeProvince($event)" required>
+                <option [ngValue]="null" [disabled]="true" [selected]="true">
+                    -- {{'STORE.SELECT_PROVINCE' | translate}} --
+                </option>
+                <option [ngValue]="item" *ngFor="let item of provinceList">{{item.label}}</option>
+            </select>
         </div>
 
+        <!-- Store name -->
+        <div class="mb-3 row field">
+            <span class="col-5 text-label" for="storeName">
+                {{ "STORE.STORE_NAME" | translate }}
+                <label class="require">*</label>
+            </span>
+            <input matInput
+                class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="storeName" type="text" placeholder="" maxlength="100" [(ngModel)]="store.storeName"
+                [ngModelOptions]="{ standalone: true }" />
+        </div>
+
+        <!-- Address -->
+        <div class="mb-3 row field">
+            <span class="col-5 text-label" for="address">
+                {{ "STORE.ADDRESS" | translate }}
+                <label class="require">*</label>
+            </span>
+            <input matInput
+                class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="address" type="text" placeholder="" maxlength="255" [(ngModel)]="store.address"
+                [ngModelOptions]="{ standalone: true }" />
+        </div>
+
+        <!-- Phone-->
+        <div class="mb-3 row field">
+            <span class="col-5 text-label" for="phone">
+                {{ "STORE.PHONE" | translate }}
+                <label class="require">*</label>
+            </span>
+            <input matInput
+                class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="phone" type="text" placeholder="" maxlength="11" minlength="10" [(ngModel)]="store.phone"
+                [ngModelOptions]="{ standalone: true }" (keydown)="onKeyPress($event)" />
+        </div>
+
+        <!-- Note -->
+        <div class="mb-3 row field">
+            <span class="col-5 text-label" for="note">
+                {{ "STORE.NOTE" | translate }}
+            </span>
+            <textarea
+                class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="note" type="text" placeholder="" maxlength="255" [(ngModel)]="store.note"
+                [ngModelOptions]="{standalone: true}"></textarea>
+        </div>
 
         <div *ngIf="error || (error !== null && error.length !== 0)">
             <div class="col-5"></div>

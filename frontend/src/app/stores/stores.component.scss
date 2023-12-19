@@ -18,7 +18,7 @@
 }
 
 .table-container {
-    padding: 1rem 8rem;
+    padding: 1rem;
 
     table {
         width: 100%;
@@ -46,18 +46,16 @@
             white-space: pre-wrap;
             background: #90bdf5;
             color: rgb(0, 0, 0);
-            border: 1px solid rgb(228, 222, 222);
-            //text-align: center;
+            border-right: 1px solid grey;
             font-size: 12pt;
             width: 1%;
 
         }
 
         td {
-            border: 1px solid rgb(224, 222, 222);
+            border: 1px solid grey;
             text-align: left;
             font-size: 11pt;
-            // /text-align: center;
 
             .no-data {
                 padding: 0px 0.5rem;
@@ -67,6 +65,20 @@
         tr:hover {
             background-color: #e6e6e6;
             cursor: pointer;
+        }
+
+        th,
+        td {
+            //vertical-align: top;
+            padding: 6px;
+        }
+
+        .w-8rem {
+            min-width: 8rem;
+        }
+
+        .w-9rem {
+            min-width: 9rem;
         }
     }
 
@@ -107,22 +119,22 @@
 }
 
 .action-add {
-    background: royalblue;
-    border: 1px solid royalblue;
-    border-radius: 4px;
     margin-bottom: 1rem;
-    margin-right: 8rem;
-    width: 8rem;
+    margin-right: 1rem;
     cursor: pointer;
     overflow: auto;
     float: right;
 
-    .btn-add {
+    .btn-add,
+    .btn-report {
+        border: 1px solid royalblue;
+        width: 8rem;
         color: white;
-        background-color: transparent;
-        border: none;
+        background-color: royalblue;
         padding-left: 8px;
         padding-top: 8px;
+        text-align: justify;
+        border-radius: 4px;
 
         .fa-plus {
             color: #fff;
@@ -133,6 +145,15 @@
             margin-left: 5px;
             position: absolute;
         }
+
+        mat-icon {
+            padding-top: 3px;
+            padding-left: 4px;
+        }
+    }
+
+    .btn-report {
+        margin-right: 1rem;
     }
 }
 

@@ -123,6 +123,18 @@ export class Helper {
     return true;
   }
 
+
+  isUser(): boolean {
+    const info = localStorage.getItem(CONFIG.LOCAL_STORAGE.LOGIN_INFO);
+    if (info) {
+      const json = JSON.parse(info) as LoginInfo;
+      if (!json.isUser) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   getInfoName(): string {
     const info = localStorage.getItem(CONFIG.LOCAL_STORAGE.LOGIN_INFO);
     if (info) {
@@ -427,6 +439,34 @@ export class Helper {
 
   showWarning(toastr: ToastrService, msg: string, title?: string) {
     toastr.warning(msg);
+  }
+
+  public isKeyPressedNumeric(event: any, inputVal: any): boolean {
+    let input = inputVal.value;
+    input = input + event.key;
+    if (input.length >= 2) {
+      var txtVal = input;
+      return !!/^\d*\.?\d{0,18}$/.test(txtVal);
+    }
+
+    const charCode = this.getCharCode(event);
+    const charStr = event.key ? event.key : String.fromCharCode(charCode);
+    return this.isCharNumeric(charStr);
+  }
+
+  private getCharCode(event: any): any {
+    event = event || window.event;
+    return (typeof event.which == "undefined") ? event.keyCode : event.which;
+  }
+
+  private isCharNumeric(charStr: any): boolean {
+    let validation = false;
+    if (charStr == ".") {
+      return validation;
+    } else {
+      validation = !!/\d/.test(charStr);
+    }
+    return validation;
   }
 }
 

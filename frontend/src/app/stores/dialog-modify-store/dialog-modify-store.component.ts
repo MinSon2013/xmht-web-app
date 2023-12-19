@@ -1,5 +1,4 @@
 import { Component, Inject } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
@@ -7,7 +6,6 @@ import { Cities, MSG_STATUS } from '../../constants/const-data';
 import { Helper } from '../../helpers/helper';
 import { Store } from '../../models/store';
 import { StoreService } from '../../services/store.service';
-import { DistrictService } from '../../services/district.service';
 
 @Component({
   selector: 'app-dialog-modify-store',
@@ -22,6 +20,7 @@ export class DialogModifyStoreComponent {
 
   error: any = '';
   provinceError: string = '';
+
   agencySelected: any = null;
   agencyList: any[] = [];
 
@@ -38,75 +37,52 @@ export class DialogModifyStoreComponent {
     districtId: 0,
     provinceId: 0,
     updateDate: '',
+    address: '',
+    phone: '',
+    note: '',
     userId: this.helper.getUserId(),
   };
 
-  storesFormControl = new FormControl<Store[]>([]);
-  elementList: number[] = [1];
-
   constructor(
     public dialogRef: MatDialogRef<DialogModifyStoreComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: Store,
+    @Inject(MAT_DIALOG_DATA) public data: Store | any,
     public translate: TranslateService,
     private toastr: ToastrService,
     private storeService: StoreService,
-    private districtService: DistrictService,
   ) { }
 
   ngOnInit(): void {
+    this.districtList = this.data.districtList;
     this.agencyList = this.helper.getAgencyList();
-    this.getDistrictData();
-    if (this.data && this.data.id !== 0) {
-      this.translate.get('STORE.TITLE_MODIFIED').subscribe(data => { this.header = data });
-      // this.district.id = this.data.id;
-      // this.district.name = this.data.name;
-      // this.district.provinceId = this.data.provinceId;
-      // const list = this.district.provinceId.split(',');
-      // if (list.length > 0) {
-      //   list.forEach(id => {
-      //     const item = this.cities.find(x => x.id === Number(id));
-      //     if (item) {
-      //       this.storesFormControl.value?.push(item);
-      //     }
-      //   });
-      // }
+    if (this.data.row && this.data.row.id !== 0) {
+      this.translate.get('STORE.TITLE_MODIFIED').subscribe(x => { this.header = x });
+      this.store.id = this.data.row.id;
+      this.store.storeName = this.data.row.storeName;
+      this.store.address = this.data.row.address;
+      this.store.phone = this.data.row.phone;
+      this.store.note = this.data.row.note;
+      this.store.agencyId = this.data.row.agencyId;
+      this.store.districtId = this.data.row.districtId;
+      this.store.provinceId = this.data.row.provinceId;
+      this.agencySelected = this.agencyList.find(x => x.id === this.data.row.agencyId);
+      this.districtSelected = this.districtList.find(x => x.id === this.data.row.districtId);
+      this.getProvinceList();
+      this.provinceSelected = this.provinceList.find(x => x.id === this.data.row.provinceId);
     } else {
-      this.storesFormControl = new FormControl<Store[] | null>(null);
-      this.translate.get('STORE.TITLE_ADD').subscribe(data => { this.header = data });
+      this.translate.get('STORE.TITLE_ADD').subscribe(x => { this.header = x });
     }
-  }
-
-  getDistrictData() {
-    this.districtService.getDistrictList().subscribe((response: any) => {
-      if (response.length > 0) {
-        this.districtList = response;
-      } else {
-        this.districtList = [];
-      }
-    });
   }
 
   onSubmit() {
     if (this.validForm()) {
-      const provinces = this.storesFormControl.value ? this.storesFormControl.value : [];
-      const provinceId: number[] = [];
-      provinces.forEach(x => {
-        provinceId.push(x.id);
-      });
-      // this.district.provinceId = provinceId.toString();
-      // provinceId.forEach(id => {
-      //   const item = this.cities.find(x => x.id === Number(id));
-      //   if (item) {
-      //     this.district.provinceList.push(item.label);
-      //   }
-      // });
-      // this.store.updateDate = moment().format('HH:mm DD/MM/YYYY');
+      this.store.agencyId = this.agencySelected.id;
+      this.store.districtId = this.districtSelected.id
+      this.store.provinceId = this.provinceSelected.id;;
+      this.store.userId = this.helper.getUserId();
       if (this.store.id === 0) {
         this.storeService.create(this.store).subscribe((response: any) => {
           if (response) {
-            // this.district.id = response.id;
-            // this.district.name = response.name;
-            // this.district.provinceId = response.provinceId;
+            this.store.id = response.id;
             this.helper.showSuccess(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.ADD_STORE', MSG_STATUS.SUCCESS));
             this.dialogRef.close(this.store);
           } else {
@@ -136,7 +112,23 @@ export class DialogModifyStoreComponent {
       isValidForm = false;
     }
 
-    if (this.storesFormControl.value?.length === 0 || !this.storesFormControl.value) {
+    if (this.store.address.length === 0) {
+      isValidForm = false;
+    }
+
+    if (this.store.phone.length === 0) {
+      isValidForm = false;
+    }
+
+    if (!this.agencySelected || this.agencySelected.id === 0) {
+      isValidForm = false;
+    }
+
+    if (!this.districtSelected || this.districtSelected.id === 0) {
+      isValidForm = false;
+    }
+
+    if (!this.provinceSelected || this.provinceSelected.value === 0) {
       isValidForm = false;
     }
 
@@ -150,18 +142,21 @@ export class DialogModifyStoreComponent {
     return isValidForm;
   }
 
-  onAddElement() {
-    this.elementList.push(this.elementList.length + 1);
-  }
+  onChangeAgency(event: any) {
 
-  onSubElement() {
-    if (this.elementList.length > 1) {
-      this.elementList.pop();
-    }
   }
 
   onChangeDistrict(event: any) {
-    const provinId: string[] = this.districtSelected.provinceId.split(',');
+    this.provinceList = [];
+    this.getProvinceList();
+  }
+
+  onChangeProvince(event: any) {
+
+  }
+
+  getProvinceList() {
+    const provinId: string[] = this.districtSelected?.provinceId.split(',') || [];
     provinId.forEach(id => {
       const item = this.cities.find(x => x.id === Number(id));
       if (item) {
@@ -170,8 +165,15 @@ export class DialogModifyStoreComponent {
     });
   }
 
-  onChangeProvince(event: any) {
-
+  onKeyPress(params: any) {
+    const inputVal = <HTMLInputElement>document.getElementById("phone");
+    if (params.key === 'Backspace') {
+      return true;
+    }
+    else if (!this.helper.isKeyPressedNumeric(params, inputVal)) {
+      return false;
+    }
+    return true;
   }
 
 }

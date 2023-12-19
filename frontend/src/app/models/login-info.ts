@@ -5,4 +5,5 @@ export interface LoginInfo {
     userId: number;
     userName: string;
     isStocker: boolean;
+    isUser: boolean;
 }

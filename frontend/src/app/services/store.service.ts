@@ -17,21 +17,29 @@ export class StoreService {
 
     create(obj: Store) {
         const payload = {
-            // name: obj.name,
-            // province: obj.province,
-            // userId: obj.userId,
-            // updateDate: obj.updateDate
+            storeName: obj.storeName,
+            agencyId: obj.agencyId,
+            districtId: obj.districtId,
+            provinceId: obj.provinceId,
+            address: obj.address,
+            phone: obj.phone,
+            note: obj.note,
+            userId: obj.userId,
         };
         return this.webrequestService.post(this.url, payload);
     }
 
     update(obj: Store) {
         const payload = {
-            // id: obj.id,
-            // name: obj.name,
-            // province: obj.province,
-            // userId: obj.userId,
-            // updateDate: obj.updateDate
+            id: obj.id,
+            storeName: obj.storeName,
+            agencyId: obj.agencyId,
+            districtId: obj.districtId,
+            provinceId: obj.provinceId,
+            address: obj.address,
+            phone: obj.phone,
+            note: obj.note,
+            userId: obj.userId,
         };
         return this.webrequestService.put(this.url, payload);
     }

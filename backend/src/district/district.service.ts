@@ -1,6 +1,6 @@
 import { forwardRef, Injectable, Inject } from '@nestjs/common';
 import { UserService } from '../user/user.service';
-import { DeleteResult, Not, UpdateResult } from 'typeorm';
+import { DeleteResult, UpdateResult } from 'typeorm';
 import { AuthService } from '../auth/auth.service';
 import { District } from './entities/district.entity';
 import { ModifyDistrictDto } from './dto/modify-district.dto';
@@ -19,8 +19,8 @@ export class DistrictService {
         return await this.districtRepo.getAll();
     }
 
-    async findOne(userId: number): Promise<District> {
-        return await this.districtRepo.getOne(userId);
+    async findOne(id: number): Promise<District> {
+        return await this.districtRepo.getOne(id);
     }
 
     async create(modifyDistrictDto: ModifyDistrictDto): Promise<District> {

@@ -13,10 +13,13 @@ ALTER TABLE `district`
  CREATE TABLE `store` (
   `id` int(11) NOT NULL,
   `agency_id` int(11) NOT NULL,
-  `store_name` VARCHAR(255) NOT NULL,
   `district_id` int(11) NOT NULL,
   `province_id` int(3) NOT NULL,
-  `updated_date` varchar(18) NOT NULL,
+  `store_name` VARCHAR(100) NOT NULL,
+  `address` varchar(255) NOT NULL,
+  `phone` varchar(12) NOT NULL,
+  `note` varchar(255),
+  `updated_date` varchar(18),
   `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 

@@ -132,7 +132,8 @@
         "WAITING": "Chờ giải quyết",
         "AGREE": "Đồng ý đơn",
         "RECEIVED": "Đã giao",
-        "CANCELED": "Đã hủy"
+        "CANCELED": "Đã hủy",
+        "REPORT": "Báo cáo"
     },
     "DIALOG_DELETE": {
         "TITLE": "Xác nhận xóa",
@@ -207,6 +208,9 @@
         "PROVINCE": "Tỉnh/Thành phố",
         "AGENCY_NAME": "Nhà phân phối",
         "DISTRICT_NAME": "Khu vực",
+        "ADDRESS": "Địa chỉ",
+        "PHONE": "Điện thoại",
+        "NOTE": "Ghi chú",
         "SELECT_AGENCY": "Chọn Nhà phân phối",
         "SELECT_DISTRICT": "Chọn Khu vực",
         "SELECT_PROVINCE": "Chọn tỉnh/Thành phố"

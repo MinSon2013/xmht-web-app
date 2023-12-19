@@ -14,6 +14,8 @@ import { OrderAddComponent } from './orders/order-add/order-add.component';
 import { PrintPdfComponent } from './orders/print-pdf/print-pdf.component';
 import { StoresComponent } from './stores/stores.component';
 import { DistrictComponent } from './district/district.component';
+import { UserComponent } from './user/user.component';
+import { ReportComponent } from './report/report.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -33,6 +35,8 @@ const routes: Routes = [
   { path: 'print', component: PrintPdfComponent, canActivate: [AuthGuardGuard] },
   { path: 'store', component: StoresComponent, canActivate: [AuthGuardGuard] },
   { path: 'district', component: DistrictComponent, canActivate: [AuthGuardGuard] },
+  { path: 'user', component: UserComponent, canActivate: [AuthGuardGuard] },
+  { path: 'report', component: ReportComponent, canActivate: [AuthGuardGuard] },
   { path: '**', component: PageNotFoundComponent, canActivate: [AuthGuardGuard] },
 ];
 

@@ -17,10 +17,10 @@ export class DistrictRepository extends Repository<District> {
         return await this.find();
     }
 
-    async getOne(userId: number): Promise<District> {
+    async getOne(id: number): Promise<District> {
         return await this.findOne({
             where: {
-                userId
+                id
             },
         })
     }

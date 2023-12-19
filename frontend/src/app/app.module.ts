@@ -52,6 +52,9 @@ import { StoresComponent } from './stores/stores.component';
 import { DistrictComponent } from './district/district.component';
 import { DialogModifyDistrictComponent } from './district/dialog-modify-district/dialog-modify-district.component';
 import { DialogModifyStoreComponent } from './stores/dialog-modify-store/dialog-modify-store.component';
+import { UserComponent } from './user/user.component';
+import { DialogModifyUserComponent } from './user/dialog-modify-user/dialog-modify-user.component';
+import { ReportComponent } from './report/report.component';
 
 const config: SocketIoConfig = { url: `${environment.apiUrl}`, options: {} };
 
@@ -93,6 +96,9 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     DistrictComponent,
     DialogModifyDistrictComponent,
     DialogModifyStoreComponent,
+    UserComponent,
+    DialogModifyUserComponent,
+    ReportComponent,
   ],
   imports: [
     BrowserModule,
