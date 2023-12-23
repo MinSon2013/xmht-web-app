@@ -71,7 +71,7 @@
         </th>
         <td mat-cell *matCellDef="let element"
           class="col-content {{ element.isViewed === 0 || !element.isViewed ? 'bold' : '' }}">
-          <span class="width-300">{{ element.shortContents }}</span>
+          <span class="width-300">{{ element.showContent }}</span>
           <span class="show-content-detail" (click)="showDetail(element)">{{element.showLabel}}</span>
         </td>
       </ng-container>

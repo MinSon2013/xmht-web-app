@@ -145,8 +145,8 @@ export class DialogDetailNotifyComponent implements OnInit {
       this.notify.fileName = this.getFilename(this.notify.fileName);
       this.notify.fileName = this.toNonAccentVietnamese(this.notify.fileName);
       this.notify.agencyId = this.agencySelected.id;
-      this.notify.shortContents = this.convertToPlain(this.notify.contents);
-      this.notify.contents = this.notify.shortContents;
+      this.notify.shortContents = this.notify.contents;
+      //this.notify.shortContents = this.convertToPlain(this.notify.contents);
       this.notify.sender = this.agencyId;
       this.notify.agencyList = [];
       if (this.notify.agencyId === 0) {

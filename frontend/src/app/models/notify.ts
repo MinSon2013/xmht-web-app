@@ -22,4 +22,5 @@ export interface Notify {
     showDetail: boolean;
     showLabel: string;
     confirmName?: string;
+    showContent?: string
 }

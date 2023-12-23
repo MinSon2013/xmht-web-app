@@ -63,8 +63,9 @@ export class NotifyComponent implements OnInit {
       if (response.notifyList.length > 0) {
         this.dataSource.data = response.notifyList.length > 0 ? response.notifyList : [];
         this.dataSource.data.forEach(el => {
-          if (el.shortContents.length > this.MAX_LENGTH_SHORT_CONTENT) {
-            el.shortContents = el.shortContents.substring(0, (this.MAX_LENGTH_SHORT_CONTENT - 1));
+          el.showContent = this.convertHtmlToText(el.shortContents);
+          if (el.showContent.length > this.MAX_LENGTH_SHORT_CONTENT) {
+            el.showContent = el.showContent.substring(0, (this.MAX_LENGTH_SHORT_CONTENT - 1));
             el.showLabel = "...[Chi tiết]";
             el.showDetail = false;
           }
@@ -116,6 +117,13 @@ export class NotifyComponent implements OnInit {
         this.hasData = true;
       }
     });
+  }
+
+  private convertHtmlToText(html: string) {
+    let text = html.replaceAll("<p>", "");
+    text = text.replaceAll("</p>", "\n");
+    text = text.replace(/<\/?[^>]+(>|$)/g, "")
+    return text;
   }
 
   onLoadNotify(key: number) {
