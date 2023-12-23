@@ -57,14 +57,12 @@
             white-space: pre;
             background: #90bdf5;
             color: rgb(0, 0, 0);
-            border-right: 1px solid rgb(228, 222, 222);
             font-size: 11pt;
             width: auto;
             text-align: center;
         }
 
         td {
-            border: 1px solid rgb(224, 222, 222);
             font-size: 11pt;
             width: 10%;
             text-align: center;
@@ -80,7 +78,7 @@
         }
 
         .mat-mdc-row .mat-mdc-cell {
-            border-bottom: 1px solid rgb(203, 201, 201);
+            border-bottom: 1px solid transparent;
             border-top: 1px solid transparent;
         }
 
@@ -162,6 +160,10 @@
 
         .bold {
             font-weight: 500;
+        }
+
+        .del-action {
+            background: whitesmoke;
         }
     }
 }

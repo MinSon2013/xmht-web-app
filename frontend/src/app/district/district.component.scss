@@ -46,18 +46,13 @@
             white-space: pre-wrap;
             background: #90bdf5;
             color: rgb(0, 0, 0);
-            border: 1px solid rgb(228, 222, 222);
-            //text-align: center;
             font-size: 12pt;
             width: 1%;
-
         }
 
         td {
-            border: 1px solid rgb(224, 222, 222);
             text-align: left;
             font-size: 11pt;
-            // /text-align: center;
 
             .no-data {
                 padding: 0px 0.5rem;
@@ -71,7 +66,7 @@
     }
 
     .mat-mdc-row .mat-mdc-cell {
-        border-bottom: 1px solid grey;
+        border-bottom: 1px solid transparent;
         border-top: 1px solid transparent;
     }
 

@@ -5,7 +5,7 @@
     padding-bottom: 1rem !important;
 }
 
-.container{
+.container {
     height: 100vh;
     min-width: 100%;
     margin-top: 4rem;
@@ -44,29 +44,32 @@
         th {
             white-space: pre-wrap;
             background: #90bdf5;
-            color:rgb(0, 0, 0);
-            border:1px solid rgb(228, 222, 222);
-            //text-align: center;
+            color: rgb(0, 0, 0);
             font-size: 12pt;
-           width: 1%;
-           
+            width: 1%;
         }
-        td{
-            border:1px solid rgb(224, 222, 222);
+
+        td {
             text-align: left;
             font-size: 11pt;
-            // /text-align: center;
-        
         }
-        
-        tr:hover{
-            background-color:#e6e6e6;
-            cursor:pointer;
+
+        tr:hover {
+            background-color: #e6e6e6;
+            cursor: pointer;
+        }
+
+        .w20 {
+            min-width: 20rem;
+        }
+
+        .break-space {
+            white-space: break-spaces;
         }
     }
 
     .mat-mdc-row .mat-mdc-cell {
-        border-bottom: 1px solid grey;
+        border-bottom: 1px solid transparent;
         border-top: 1px solid transparent;
     }
 
@@ -178,5 +181,5 @@
                 margin-bottom: 0.5rem !important;
             }
         }
-    } 
+    }
 }

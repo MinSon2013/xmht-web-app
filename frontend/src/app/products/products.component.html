@@ -13,33 +13,38 @@
 
       <!-- id Column -->
       <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by number">{{'PRODUCT.ID' | translate}}</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by number">{{'PRODUCT.ID' |
+          translate}}</th>
         <td mat-cell *matCellDef="let element">{{element.id}}</td>
       </ng-container>
 
       <!-- productName Column -->
       <ng-container matColumnDef="productName">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by productName">{{'PRODUCT.NAME' | translate}}</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by productName">
+          {{'PRODUCT.NAME' | translate}}</th>
         <td mat-cell *matCellDef="let element" class="nowrap">{{element.name}}</td>
       </ng-container>
 
       <!-- quantity Column -->
       <ng-container matColumnDef="quantity">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by quantity">{{'PRODUCT.QUANTITY_INVENTORY' | translate}}<br />(tấn)
+        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by quantity">
+          {{'PRODUCT.QUANTITY_INVENTORY' | translate}}<br />(tấn)
         </th>
         <td mat-cell *matCellDef="let element">{{element.quantity}}</td>
       </ng-container>
 
       <!-- price Column -->
       <ng-container matColumnDef="price">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by price">{{'PRODUCT.PRICE' | translate}}<br />(VND)
+        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by price">{{'PRODUCT.PRICE' |
+          translate}}<br />(VND)
         </th>
         <td mat-cell *matCellDef="let element">{{element.price}}</td>
       </ng-container>
 
       <!-- note Column -->
       <ng-container matColumnDef="note">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by note">{{'PRODUCT.NOTE' | translate}}</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by note">{{'PRODUCT.NOTE' |
+          translate}}</th>
         <td mat-cell class="wrap-text" *matCellDef="let element">{{element.note}}</td>
       </ng-container>
 
@@ -57,10 +62,7 @@
       </ng-container>
 
       <ng-container matColumnDef="no-data">
-        <td
-          mat-header-cell
-          *matHeaderCellDef
-          [attr.colspan]="colspan">
+        <td mat-header-cell *matHeaderCellDef [attr.colspan]="colspan">
           {{'MESSAGE.NO_DATA' | translate}}
         </td>
       </ng-container>
@@ -70,7 +72,8 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
     </table>
-    <mat-paginator *ngIf="hasData" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Select page of periodic elements">
+    <mat-paginator *ngIf="hasData" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+      aria-label="Select page of periodic elements">
     </mat-paginator>
   </div>
 </div>

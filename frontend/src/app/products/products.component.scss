@@ -14,7 +14,8 @@
 .header {
     text-align: center;
     padding: 2rem 0;
-    color: #1F497D;;
+    color: #1F497D;
+    ;
 }
 
 .table-container {
@@ -28,7 +29,7 @@
         margin-bottom: 20px;
         display: block;
         overflow-x: auto;
-       // text-align: center;
+        // text-align: center;
 
         .wrap-text {
             white-space: break-spaces;
@@ -45,30 +46,31 @@
         th {
             white-space: pre;
             background: #90bdf5;
-            color:rgb(0, 0, 0);
-            border:1px solid rgb(228, 222, 222);
+            color: rgb(0, 0, 0);
             font-size: 12pt;
             text-align: center;
             width: 1%;
-           
         }
-        td{
-            border:1px solid rgb(224, 222, 222);
+
+        td {
             text-align: center;
             font-size: 11pt;
             text-align: center;
             width: 25;
-        
         }
-        
-        tr:hover{
-            background-color:#e6e6e6;
-            cursor:pointer;
+
+        tr:hover {
+            background-color: #e6e6e6;
+            cursor: pointer;
+        }
+
+        .del-action {
+            background: whitesmoke;
         }
     }
 
     .mat-mdc-row .mat-mdc-cell {
-        border-bottom: 1px solid grey;
+        border-bottom: 1px solid transparent;
         border-top: 1px solid transparent;
     }
 
@@ -159,37 +161,12 @@
                 display: block !important;
             }
         }
-    } 
+    }
 }
 
 @media only screen and (max-width:400px) {
     .container {
-      //  padding-left: 2rem !important;
-        padding-top: 1rem !important;
-
-        .header {
-          padding: 2rem 0 1rem 0 !important;
-            font-size: calc(1.2rem + 0.3vw) !important;
-            font-weight: 600;
-        }
-
-        .action-add {
-            margin-right: 0 !important;
-        }
-
-        .table-container {
-            padding: 0 !important;
-
-            table {
-                margin-bottom: 0.5rem !important;
-                display: block !important;
-            }
-        }
-    }  
-}
-@media only screen and (max-width:600px) {
-    .container {
-      //  padding-left: 2rem !important;
+        //  padding-left: 2rem !important;
         padding-top: 1rem !important;
 
         .header {
@@ -210,5 +187,31 @@
                 display: block !important;
             }
         }
-    }  
+    }
+}
+
+@media only screen and (max-width:600px) {
+    .container {
+        //  padding-left: 2rem !important;
+        padding-top: 1rem !important;
+
+        .header {
+            padding: 2rem 0 1rem 0 !important;
+            font-size: calc(1.2rem + 0.3vw) !important;
+            font-weight: 600;
+        }
+
+        .action-add {
+            margin-right: 0 !important;
+        }
+
+        .table-container {
+            padding: 0 !important;
+
+            table {
+                margin-bottom: 0.5rem !important;
+                display: block !important;
+            }
+        }
+    }
 }
