@@ -48,9 +48,11 @@
             color: rgb(0, 0, 0);
             font-size: 12pt;
             width: 1%;
+            border: 1px solid whitesmoke;
         }
 
         td {
+            border-right: 1px solid whitesmoke;
             text-align: left;
             font-size: 11pt;
 
@@ -79,12 +81,13 @@
     }
 
     .mat-mdc-row .mat-mdc-cell {
-        border-bottom: 1px solid transparent;
-        border-top: 1px solid transparent;
+        border-bottom: 1px solid whitesmoke;
+        border-top: 1px solid whitesmoke;
     }
 
     .mat-mdc-row:hover .mat-mdc-cell {
         border-color: currentColor;
+        border-right: 1px solid whitesmoke;
     }
 
     .demo-row-is-clicked {

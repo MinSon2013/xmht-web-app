@@ -60,6 +60,7 @@
             font-size: 11pt;
             width: auto;
             text-align: center;
+            border-right: 1px solid whitesmoke;
         }
 
         td {
@@ -78,11 +79,13 @@
         }
 
         .mat-mdc-row .mat-mdc-cell {
-            border-bottom: 1px solid transparent;
-            border-top: 1px solid transparent;
+            border-bottom: 1px solid whitesmoke;
+            border-top: 1px solid whitesmoke;
         }
 
-        .mat-mdc-row:hover .mat-mdc-cell {}
+        .mat-mdc-row:hover .mat-mdc-cell {
+            border-right: 1px solid whitesmoke;
+        }
 
         .row-is-clicked {
             font-weight: bold;
