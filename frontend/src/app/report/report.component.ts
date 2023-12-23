@@ -41,6 +41,7 @@ export class ReportComponent implements OnInit {
   isUser = true;
   agencyList: any[] = [];
   districtList: any[] = [];
+  districtSelected: any = null;
   cities = Cities;
   storeList: any[] = [];
 
@@ -131,32 +132,6 @@ export class ReportComponent implements OnInit {
           row.filePath = result.filePath;
           row.attachFile = result.attachFile;
           row.updateDate = result.updateDate;
-          // const agency = this.agencyList.find(x => x.id === Number(row.agencyId));
-          // if (agency) {
-          //   row.agencyName = agency.fullName;
-          // }
-
-          // const district = this.districtList.find(x => x.id === Number(row.districtId));
-          // if (district) {
-          //   row.districtName = district.name;
-          // }
-
-          // const province = this.cities.find(x => x.id === Number(row.provinceId));
-          // if (province) {
-          //   row.provinceName = province.label;
-          // }
-
-          // const store = this.storeList.find(x => x.id === Number(row.storeId));
-          // if (province) {
-          //   row.storeName = store.storeName;
-          // }
-          // this.cacheSpan('id', (d: { id: number; }) => d.id);
-          // this.cacheSpan('updateDate', (d: { id: number; updateDate: string; }) => d.id + d.updateDate);
-          // this.cacheSpan('provinceName', (d: { id: number; updateDate: string; provinceName: string; }) => d.id + d.updateDate + d.provinceName);
-
-          // // this.cacheSpan('id', (d: { id: string; }) => d.id);
-          // // this.cacheSpan('updateDate', (d: { id: string; updateDate: string; }) => d.id + d.updateDate);
-          // // this.cacheSpan('provinceName', (d: { id: string; updateDate: string; provinceName: string; }) => d.id + d.updateDate + d.provinceName);
           this.convertData();
         } else {
           this.spans = [];
@@ -273,8 +248,13 @@ export class ReportComponent implements OnInit {
 
   onSearch() {
     this.spans = [];
-    const date = moment(this.date.value).format('DD/MM/YYYY');
-    this.reportService.search(date).subscribe((response: any) => {
+    const districtId = this.districtSelected ? this.districtSelected.id : 0;
+    let date = '';
+    if (this.date.value) {
+      date = moment(this.date.value).format('DD/MM/YYYY');
+    }
+
+    this.reportService.search(districtId, date).subscribe((response: any) => {
       if (response.length > 0) {
         this.dataSource.data = response;
         this.dataSource.paginator = this.paginator;

@@ -187,8 +187,11 @@
     margin: 1rem;
     border: 1px solid gray;
     border-radius: 4px;
-    padding: 0.5rem;
     text-align: -webkit-right;
+
+    .pad {
+        padding: 1rem 0;
+    }
 
     .mb-3 {
         width: fit-content;
@@ -209,6 +212,12 @@
         ::ng-deep .mat-mdc-form-field-bottom-align {
             display: none;
         }
+    }
+
+    select {
+        margin: auto 0;
+        width: 50% !important;
+        min-height: 40px;
     }
 }
 

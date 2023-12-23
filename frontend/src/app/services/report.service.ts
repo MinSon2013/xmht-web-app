@@ -66,11 +66,12 @@ export class ReportService {
         return this.webrequestService.download(CONFIG.URL.REPORTS + `/download?reportId=${id.toString()}`);
     }
 
-    search(date: string) {
+    search(districtId: number, date: string) {
         const payload = {
             date,
             agencyId: this.helper.getAgencyId(),
             userId: this.helper.getUserId(),
+            districtId,
         };
         return this.webrequestService.post(this.url + `/search`, payload);
     }

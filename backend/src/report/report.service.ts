@@ -18,7 +18,7 @@ export class ReportService {
         private readonly notificationService: NotificationService,
     ) { }
 
-    async findAll(userId: number, agencyId: number, date?: string): Promise<Reports[]> {
+    async findAll(userId: number, agencyId: number, searchDto?: SearchDto): Promise<Reports[]> {
         const userEntity = await this.userService.getOne(userId);
         if (userEntity) {
             let sql = this.reportRepo.createQueryBuilder()
@@ -26,19 +26,23 @@ export class ReportService {
                 .groupBy("update_date")
                 .addGroupBy("district_id")
                 .addGroupBy("province_id")
-                .addGroupBy("id");
+                .addGroupBy("id")
+                .where("1 = 1");
 
-            if (date) {
-                date = '%' + date;
-                sql = sql.where("update_date LIKE :updateDate", { updateDate: date });
-                if (!userEntity.isAdmin && !userEntity.isStocker) {
-                    sql = sql.andWhere("agency_id = :agencyId", { agencyId });
+            if (!userEntity.isAdmin && !userEntity.isStocker) {
+                sql = sql.andWhere("agency_id = :agencyId", { agencyId });
+            }
+
+            if (searchDto) {
+                if (searchDto.date.length > 0) {
+                    searchDto.date = '%' + searchDto.date;
+                    sql = sql.andWhere("update_date LIKE :updateDate", { updateDate: searchDto.date });
                 }
-            } else {
-                if (!userEntity.isAdmin && !userEntity.isStocker) {
-                    sql = sql.where("agency_id = :agencyId", { agencyId });
+                if (searchDto.districtId !== 0) {
+                    sql = sql.andWhere("district_id = :districtId", { districtId: searchDto.districtId });
                 }
             }
+
             return await sql.getMany();
         } else {
             return [];
@@ -86,6 +90,6 @@ export class ReportService {
     }
 
     async search(searchDto: SearchDto): Promise<Reports[]> {
-        return await this.findAll(searchDto.userId, searchDto.agencyId, searchDto.date);
+        return await this.findAll(searchDto.userId, searchDto.agencyId, searchDto);
     }
 }

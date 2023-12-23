@@ -3,26 +3,39 @@
 
     <div
         class="action-search shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-        <div class="mb-3 row">
-            <span class="text-label" for="receivedDate">
-                {{'REPORT.SELECT_DATE' | translate}}
-            </span>
-            <mat-form-field appearance="fill" class="border rounded">
-                <mat-label>Chọn ngày</mat-label>
-                <input matInput [matDatepicker]="picker" [formControl]="date">
-                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-            </mat-form-field>
-
-            <button type="submit" class="btn-search" (click)="onSearch()">
-                <mat-icon aria-hidden="false" aria-label="Search icon" fontSet="fas" fontIcon="fa-magnifying-glass"
-                    class="fa-search"></mat-icon>
-                <label>{{ "BUTTON.SEARCH" | translate }}</label>
-            </button>
+        <div class="row pad">
+            <div class="col-6 row">
+                <span class="col-6" for="district">{{ "REPORT.SELECT_DISTRICT" | translate }}</span>
+                <select class="col-6" [(ngModel)]="districtSelected" required>
+                    <option [ngValue]="null" [disabled]="true" [selected]="true">
+                        -- {{ "REPORT.SELECT_DISTRICT" | translate }} --
+                    </option>
+                    <option [ngValue]="item" *ngFor="let item of districtList">
+                        {{ item.name }}
+                    </option>
+                </select>
+            </div>
+            <div class="col-6 row">
+                <span class="text-label" for="receivedDate">
+                    {{'REPORT.SELECT_DATE' | translate}}
+                </span>
+                <mat-form-field appearance="fill" class="border rounded">
+                    <mat-label>Chọn ngày</mat-label>
+                    <input matInput [matDatepicker]="picker" [formControl]="date">
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+            </div>
         </div>
     </div>
 
     <div class="action-add row">
+        <button type="submit" class="btn-search" (click)="onSearch()">
+            <mat-icon aria-hidden="false" aria-label="Search icon" fontSet="fas" fontIcon="fa-magnifying-glass"
+                class="fa-search"></mat-icon>
+            <label>{{ "BUTTON.SEARCH" | translate }}</label>
+        </button>
+
         <button class="btn-report" (click)="onReport()" [hidden]="!isUser" [hidden]="true">
             <mat-icon aria-hidden="false" aria-label="Report icon" fontSet="fas" fontIcon="fa-file-lines"
                 class="fa-file-lines"></mat-icon>
