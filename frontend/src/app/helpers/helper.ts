@@ -11,6 +11,7 @@ import { ProductOrder } from "../models/product-order";
 import { User } from "../models/user";
 import jwt_decode from "jwt-decode";
 import { STATUS } from "../constants/const-data";
+import { Store } from "../models/store";
 
 export interface INavbarData {
   routeLink: string;

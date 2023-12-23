@@ -250,5 +250,38 @@ export class NotificationService {
     return await sql.execute();
   }
 
+  async modifyNotifyReport(body: NotificationDto, key: string) {
+    const notify = new Notification();
+    notify.contents = body.contents;
+    notify.fileName = body.fileName;
+    notify.note = body.note;
+    notify.isPublished = body.isPublished;
+    notify.mimeType = body.mimeType ? body.mimeType : '';
+    notify.filePath = body.filePath ? body.filePath : '';
+    notify.shortContents = body.shortContents;
+    notify.sender = body.sender;
+    notify.notificationType = body.notificationType;
+    notify.updatedDate = body.updatedDate;
+    notify.orderId = body.orderId;
+    notify.statusOrder = body.statusOrder;
+    notify.reportId = body.reportId;
+
+    if (key === 'CREATE') {
+      notify.createdDate = moment(new Date).format('HH:mm:ss DD/MM/YYYY');
+      await this.notifyRepo.save(notify);
+      const adminId = await this.agencyService.getAgencyIdOfAdmin();
+      const notifyAgency: NotificationAgency = {
+        id: 0,
+        agencyId: adminId,
+        notificationId: notify.id,
+        isViewed: false,
+      };
+      await this.notifyAgencyRepo.save(notifyAgency);
+    } else {
+      const notifyEntity = await this.notifyRepo.getOne(notify.reportId);
+      await this.notifyRepo.update(notifyEntity.id, notify);
+    }
+  }
+
 }
 

@@ -14,6 +14,7 @@ import { EventsModule } from './events/events.module';
 import { AuthMiddleware } from './middleware/auth.middleware';
 import { DistrictModule } from './district/district.module';
 import { StoreModule } from './store/store.module';
+import { ReportModule } from './report/report.module';
 
 
 @Module({
@@ -53,6 +54,7 @@ import { StoreModule } from './store/store.module';
     EventsModule,
     DistrictModule,
     StoreModule,
+    ReportModule,
   ],
   providers: [],
 })
@@ -67,6 +69,10 @@ export class AppModule {
         },
         {
           path: '/notification/download',
+          method: RequestMethod.GET
+        },
+        {
+          path: '/reports/download',
           method: RequestMethod.GET
         },
       )

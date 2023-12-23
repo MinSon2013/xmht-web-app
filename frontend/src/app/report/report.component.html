@@ -1,1 +1,157 @@
-<p>report works!</p>
+<div class="bg-white container">
+    <h2 class="header">{{'REPORT.TITLE' | translate}}</h2>
+
+    <div
+        class="action-search shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        <div class="mb-3 row">
+            <span class="text-label" for="receivedDate">
+                {{'REPORT.SELECT_DATE' | translate}}
+            </span>
+            <mat-form-field appearance="fill" class="border rounded">
+                <mat-label>Chọn ngày</mat-label>
+                <input matInput [matDatepicker]="picker" [formControl]="date">
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+
+            <button type="submit" class="btn-search" (click)="onSearch()">
+                <mat-icon aria-hidden="false" aria-label="Search icon" fontSet="fas" fontIcon="fa-magnifying-glass"
+                    class="fa-search"></mat-icon>
+                <label>{{ "BUTTON.SEARCH" | translate }}</label>
+            </button>
+        </div>
+    </div>
+
+    <div class="action-add row">
+        <button class="btn-report" (click)="onReport()" [hidden]="!isUser" [hidden]="true">
+            <mat-icon aria-hidden="false" aria-label="Report icon" fontSet="fas" fontIcon="fa-file-lines"
+                class="fa-file-lines"></mat-icon>
+            <label class="pad-label">{{'BUTTON.REPORT' | translate}}</label>
+        </button>
+
+        <button class="btn-add" (click)="onEdit(null)" [hidden]="isStocker">
+            <mat-icon aria-hidden="false" aria-label="Add icon" fontSet="fas" fontIcon="fa-plus"
+                class="fa-plus"></mat-icon>
+            <label class="pad-label">{{'BUTTON.ADD' | translate}}</label>
+        </button>
+    </div>
+
+    <div class="table-container">
+        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+
+            <!-- rowId Column -->
+            <ng-container matColumnDef="rowId">
+                <th mat-header-cell *matHeaderCellDef>
+                    {{'REPORT.ID' | translate}}</th>
+                <td mat-cell *matCellDef="let element; let i = index" [attr.rowspan]="getRowSpan('rowId', i)"
+                    [style.display]="getRowSpan('rowId', i) ? '' : 'none'">
+                    {{element.rowId}}
+                </td>
+            </ng-container>
+
+            <!-- updateDate Column -->
+            <ng-container matColumnDef="updateDateVisisble">
+                <th mat-header-cell *matHeaderCellDef class="w-8rem">
+                    {{'REPORT.UPDATE_DATE' | translate}}</th>
+                <td mat-cell *matCellDef="let element; let i = index"
+                    [attr.rowspan]="getRowSpan('updateDateVisisble', i)"
+                    [style.display]="getRowSpan('updateDateVisisble', i) ? '' : 'none'">
+                    {{element.updateDateVisisble}}
+                </td>
+            </ng-container>
+
+            <!-- provinceName Column -->
+            <ng-container matColumnDef="provinceName">
+                <th mat-header-cell *matHeaderCellDef class="w-8rem">
+                    {{'REPORT.PROVINCE' | translate}}
+                </th>
+                <td mat-cell class="wrap-text" *matCellDef="let element; let i = index"
+                    [attr.rowspan]="getRowSpan('provinceName', i)"
+                    [style.display]="getRowSpan('provinceName', i) ? '' : 'none'">
+                    {{element.provinceName}}
+                </td>
+            </ng-container>
+
+            <!-- storeName Column -->
+            <ng-container matColumnDef="storeName">
+                <th mat-header-cell *matHeaderCellDef class="w-8rem">
+                    {{'REPORT.STORE_NAME' | translate}}</th>
+                <td mat-cell class="wrap-text" *matCellDef="let element">
+                    {{element.storeName}}
+                </td>
+            </ng-container>
+
+            <!-- agencyName Column -->
+            <ng-container matColumnDef="agencyName">
+                <th mat-header-cell *matHeaderCellDef class="w-8rem">
+                    {{'REPORT.AGENCY_NAME' | translate}}</th>
+                <td mat-cell *matCellDef="let element">
+                    {{element.agencyName}}
+                </td>
+            </ng-container>
+
+            <!-- storeInformation Column -->
+            <ng-container matColumnDef="storeInformation">
+                <th mat-header-cell *matHeaderCellDef class="w-9rem">
+                    {{'REPORT.INFORMATION' | translate}}</th>
+                <td mat-cell class="wrap-text" *matCellDef="let element">
+                    {{element.storeInformation}}
+                </td>
+            </ng-container>
+
+            <!-- reportContent Column -->
+            <ng-container matColumnDef="reportContent">
+                <th mat-header-cell *matHeaderCellDef class="w-9rem">
+                    {{'REPORT.CONTENT' | translate}}</th>
+                <td mat-cell class="wrap-text" *matCellDef="let element">
+                    {{element.reportContent}}
+                </td>
+            </ng-container>
+
+            <!-- attachFile Column -->
+            <ng-container matColumnDef="attachFile">
+                <th mat-header-cell *matHeaderCellDef class="w-8rem">
+                    {{'REPORT.ATTACH_FILE' | translate}}</th>
+                <td mat-cell class="wrap-text" *matCellDef="let element" class="focus" (click)="onDownload(element)">
+                    {{element.attachFile}}
+                    <a download="{{ element.attachFile }}"></a>
+                </td>
+            </ng-container>
+
+            <!-- note Column -->
+            <ng-container matColumnDef="note">
+                <th mat-header-cell *matHeaderCellDef class="w-8rem">
+                    {{'REPORT.NOTE' | translate}}</th>
+                <td mat-cell class="wrap-text" *matCellDef="let element">
+                    {{element.note}}
+                </td>
+            </ng-container>
+
+            <!-- delete action Column -->
+            <ng-container matColumnDef="deleteAction">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Các thao tác</th>
+                <td mat-cell *matCellDef="let element">
+                    <div class="center">
+                        <mat-icon aria-hidden="false" aria-label="Trash icon" fontSet="fas" fontIcon="fa-pen"
+                            class="fa-pen" (click)="onEdit(element)"></mat-icon>
+                        <mat-icon aria-hidden="false" aria-label="Trash icon" fontSet="fas" fontIcon="fa-trash"
+                            class="fa-trash" (click)="onDelete(element)" [hidden]="isStocker"></mat-icon>
+                    </div>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="no-data">
+                <td mat-header-cell *matHeaderCellDef [attr.colspan]="colspan">
+                    <span class="no-data">{{'MESSAGE.NO_DATA' | translate}}</span>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matHeaderRowDef="['no-data']" class="text-center" [hidden]="hasData"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <mat-paginator *ngIf="hasData" [pageSizeOptions]="[20, 50, 100]" showFirstLastButtons
+            aria-label="Select page of periodic elements">
+        </mat-paginator>
+    </div>
+</div>

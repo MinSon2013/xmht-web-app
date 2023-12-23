@@ -37,19 +37,18 @@ export class StoreService {
         } else {
             return [];
         }
-
     }
 
     async findOne(id: number): Promise<Store> {
         return await this.storeRepo.getOne(id);
     }
 
-    async create(modifyDistrictDto: ModifyStoreDto): Promise<Store> {
-        return await this.storeRepo.createStore(modifyDistrictDto);
+    async create(modifyStoreDto: ModifyStoreDto): Promise<Store> {
+        return await this.storeRepo.createStore(modifyStoreDto);
     }
 
-    async update(modifyDistrictDto: ModifyStoreDto): Promise<UpdateResult> {
-        return await this.storeRepo.updateStore(modifyDistrictDto);
+    async update(modifyStoreDto: ModifyStoreDto): Promise<UpdateResult> {
+        return await this.storeRepo.updateStore(modifyStoreDto);
     }
 
     async delete(id: number): Promise<DeleteResult> {

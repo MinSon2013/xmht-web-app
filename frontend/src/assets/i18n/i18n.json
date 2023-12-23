@@ -165,7 +165,10 @@
         "DELETE_DISTRICT": "Xóa thông tin khu vực",
         "ADD_STORE": "Thêm mới cửa hàng",
         "MODIFIED_STORE": "Cập nhật thông tin cửa hàng",
-        "DELETE_STORE": "Xóa thông tin cửa hàng"
+        "DELETE_STORE": "Xóa thông tin cửa hàng",
+        "ADD_REPORT": "Thêm mới cửa hàng",
+        "MODIFIED_REPORT": "Cập nhật thông tin cửa hàng",
+        "DELETE_REPORT": "Xóa thông tin cửa hàng"
     },
     "HEADER": {
         "MENU_1": "Thay đổi mật khẩu",
@@ -214,5 +217,27 @@
         "SELECT_AGENCY": "Chọn Nhà phân phối",
         "SELECT_DISTRICT": "Chọn Khu vực",
         "SELECT_PROVINCE": "Chọn tỉnh/Thành phố"
+    },
+    "REPORT": {
+        "TITLE": "Báo cáo",
+        "TITLE_ADD": "Thêm báo cáo",
+        "TITLE_MODIFIED": "Cập nhật thông tin báo cáo",
+        "ID": "STT",
+        "UPDATE_DATE": "Ngày/tháng/năm",
+        "STORE_NAME": "Cửa hàng",
+        "DISTRICT_NAME": "Khu vực",
+        "PROVINCE": "Tỉnh/Khu vực",
+        "PROVINCE_1": "Tỉnh/Thành phố",
+        "AGENCY_NAME": "Nhà phân phối",
+        "INFORMATION": "Thông tin cửa hàng",
+        "CONTENT": "Nội dung báo cáo",
+        "NOTE": "Ghi chú",
+        "FILE": "Tệp đính kèm",
+        "ATTACH_FILE": "Tệp đính kèm",
+        "SELECT_AGENCY": "Chọn Nhà phân phối",
+        "SELECT_DISTRICT": "Chọn Khu vực",
+        "SELECT_PROVINCE": "Chọn tỉnh/Thành phố",
+        "SELECT_STORE": "Chọn cửa hàng",
+        "SELECT_DATE": "Chọn ngày"
     }
 }

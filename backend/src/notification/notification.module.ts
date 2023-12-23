@@ -23,11 +23,11 @@ import { UserService } from '../user/user.service';
     AuthModule,
     PassportModule.register({ defaultStrategy: 'jwt' })
   ],
-  providers: [NotificationService, 
+  providers: [NotificationService,
     ConfigService,
     UserService,
     AgencyService,
-    ],
+  ],
   controllers: [NotificationController],
   exports: [TypeOrmModule, NotificationService],
 })

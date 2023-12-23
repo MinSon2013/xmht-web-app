@@ -1,0 +1,130 @@
+<div class="container bg-white">
+    <h2 class="header">{{ header }}</h2>
+    <mat-dialog-content class="form-create shadow-md rounded px-8 pt-6 pb-8">
+        <!-- Agency -->
+        <div class="mb-3 row field p-top" [hidden]="!isAdmin">
+            <span class="col-5 text-label" for="agency">
+                {{'REPORT.AGENCY_NAME' | translate}}
+                <label class="require">*</label>
+            </span>
+            <select
+                class="col-7 form-select appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                [(ngModel)]="agencySelected" required>
+                <option [ngValue]="null" [disabled]="true" [selected]="true">
+                    -- {{'REPORT.SELECT_AGENCY' | translate}} --
+                </option>
+                <option [ngValue]="item" *ngFor="let item of agencyList">{{item.fullName}}</option>
+            </select>
+        </div>
+
+        <!-- District -->
+        <div class="mb-3 row field p-top">
+            <span class="col-5 text-label" for="district">
+                {{'REPORT.DISTRICT_NAME' | translate}}
+                <label class="require">*</label>
+            </span>
+            <select
+                class="col-7 form-select appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                [(ngModel)]="districtSelected" (ngModelChange)="onChangeDistrict($event)" required>
+                <option [ngValue]="null" [disabled]="true" [selected]="true">
+                    -- {{'REPORT.SELECT_DISTRICT' | translate}} --
+                </option>
+                <option [ngValue]="item" *ngFor="let item of districtList">{{item.name}}</option>
+            </select>
+        </div>
+
+        <!-- Province -->
+        <div class="mb-3 row field p-top">
+            <span class="col-5 text-label" for="province">
+                {{'REPORT.PROVINCE_1' | translate}}
+                <label class="require">*</label>
+            </span>
+            <select
+                class="col-7 form-select appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                [(ngModel)]="provinceSelected" (ngModelChange)="onChangeProvince($event)" required>
+                <option [ngValue]="null" [disabled]="true" [selected]="true">
+                    -- {{'REPORT.SELECT_PROVINCE' | translate}} --
+                </option>
+                <option [ngValue]="item" *ngFor="let item of provinceList">{{item.label}}</option>
+            </select>
+        </div>
+
+        <!-- Store -->
+        <div class="mb-3 row field p-top">
+            <span class="col-5 text-label" for="storeName">
+                {{'REPORT.STORE_NAME' | translate}}
+                <label class="require">*</label>
+            </span>
+            <select
+                class="col-7 form-select appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                [(ngModel)]="storeSelected" (ngModelChange)="onChangeStore($event)" required>
+                <option [ngValue]="null" [disabled]="true" [selected]="true">
+                    -- {{'REPORT.SELECT_STORE' | translate}} --
+                </option>
+                <option [ngValue]="item" *ngFor="let item of storeDistrictList">{{item.storeName}}</option>
+            </select>
+        </div>
+
+        <!-- storeInformation -->
+        <div class="mb-3 row field">
+            <span class="col-5 text-label" for="storeInformation">
+                {{ "REPORT.INFORMATION" | translate }}
+                <label class="require">*</label>
+            </span>
+            <textarea matInput
+                class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="address" type="text" placeholder="" [(ngModel)]="report.storeInformation"
+                [ngModelOptions]="{ standalone: true }"></textarea>
+        </div>
+
+        <!-- reportContent-->
+        <div class="mb-3 row field">
+            <span class="col-5 text-label" for="reportContent">
+                {{ "REPORT.CONTENT" | translate }}
+                <label class="require">*</label>
+            </span>
+            <textarea matInput
+                class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="phone" type="text" placeholder="" [(ngModel)]="report.reportContent"
+                [ngModelOptions]="{ standalone: true }"></textarea>
+        </div>
+
+        <!-- File -->
+        <div class="mb-3 row field">
+            <span class="col-5 text-label" for="fileName">
+                {{'REPORT.FILE' | translate}}
+            </span>
+            <input matInput
+                class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="fileName" type="file" placeholder="" (change)="onFileChange($event)" />
+        </div>
+
+        <!-- Note -->
+        <div class="mb-3 row field">
+            <span class="col-5 text-label" for="note">
+                {{ "REPORT.NOTE" | translate }}
+            </span>
+            <textarea
+                class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="note" type="text" placeholder="" maxlength="255" [(ngModel)]="report.note"
+                [ngModelOptions]="{standalone: true}"></textarea>
+        </div>
+
+        <div *ngIf="error || (error !== null && error.length !== 0)">
+            <div class="col-5"></div>
+            <div class="custom-span">
+                <span class="span">{{ error }}</span>
+            </div>
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+        <button mat-button mat-dialog-close class="btn-cancel py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            (click)="onCancel()">
+            {{ "BUTTON.CANCEL" | translate }}
+        </button>
+        <button mat-button class="btn-save py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button"
+            (click)="onSubmit()">
+            {{ "BUTTON.SAVE" | translate }}
+        </button>
+    </mat-dialog-actions>
+</div>

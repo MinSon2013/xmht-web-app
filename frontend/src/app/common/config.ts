@@ -14,7 +14,9 @@ export const CONFIG = {
         MENU: 'menu',
         USER: 'users',
         DISTRICT: 'district',
-        STORE: 'store'
+        STORE: 'store',
+        REPORT: 'report',
+        REPORTS: 'reports',
     },
     LOCAL_STORAGE: {
         ORDER_LIST: 'orderList',

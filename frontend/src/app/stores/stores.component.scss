@@ -125,8 +125,7 @@
     overflow: auto;
     float: right;
 
-    .btn-add,
-    .btn-report {
+    .btn-add {
         border: 1px solid royalblue;
         width: 8rem;
         color: white;
@@ -150,10 +149,6 @@
             padding-top: 3px;
             padding-left: 4px;
         }
-    }
-
-    .btn-report {
-        margin-right: 1rem;
     }
 }
 

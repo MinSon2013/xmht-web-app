@@ -15,4 +15,5 @@ export class NotificationDto {
   updatedDate: string;
   orderId?: number;
   statusOrder?: string;
+  reportId?: number;
 }

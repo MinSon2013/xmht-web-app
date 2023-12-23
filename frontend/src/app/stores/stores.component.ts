@@ -162,9 +162,9 @@ export class StoresComponent implements OnInit {
     });
   }
 
-  onReport() {
-    this.router.navigate(['report']);
-  }
+  // onReport() {
+  //   this.router.navigate(['report']);
+  // }
 
   cacheSpan(key: string, accessor: any) {
     for (let i = 0; i < this.dataSource.data.length;) {

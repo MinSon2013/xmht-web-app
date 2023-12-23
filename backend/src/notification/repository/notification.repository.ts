@@ -17,6 +17,14 @@ export class NotificationRepository extends Repository<Notification> {
         return await this.querySql(agencyId);
     }
 
+    async getOne(reportId: number): Promise<Notification> {
+        return await this.findOne({
+            where: {
+                reportId
+            },
+        })
+    }
+
     private async querySql(agencyId: number) {
         let sql = this.createQueryBuilder('n')
             .select('n')

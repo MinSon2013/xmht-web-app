@@ -77,7 +77,7 @@ export class DialogModifyStoreComponent {
     if (this.validForm()) {
       this.store.agencyId = this.agencySelected.id;
       this.store.districtId = this.districtSelected.id
-      this.store.provinceId = this.provinceSelected.id;;
+      this.store.provinceId = this.provinceSelected.id;
       this.store.userId = this.helper.getUserId();
       if (this.store.id === 0) {
         this.storeService.create(this.store).subscribe((response: any) => {

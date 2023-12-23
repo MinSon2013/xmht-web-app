@@ -2,12 +2,6 @@
     <h2 class="header">{{'STORE.TITLE' | translate}}</h2>
 
     <div class="action-add row">
-        <button class="btn-report" (click)="onReport()" [hidden]="!isUser">
-            <mat-icon aria-hidden="false" aria-label="Report icon" fontSet="fas" fontIcon="fa-file-lines"
-                class="fa-file-lines"></mat-icon>
-            <label class="pad-label">{{'BUTTON.REPORT' | translate}}</label>
-        </button>
-
         <button class="btn-add" (click)="onEdit(null)" [hidden]="isStocker">
             <mat-icon aria-hidden="false" aria-label="Add icon" fontSet="fas" fontIcon="fa-plus"
                 class="fa-plus"></mat-icon>
