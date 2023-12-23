@@ -45,7 +45,7 @@ export class ReportComponent implements OnInit {
   cities = Cities;
   storeList: any[] = [];
 
-  date = new FormControl(new Date());
+  date = new FormControl(null);
 
   constructor(public dialog: MatDialog,
     private reportService: ReportService,
@@ -244,6 +244,10 @@ export class ReportComponent implements OnInit {
 
   onDownload(row: any) {
     this.reportService.downloadFile(row.id)
+  }
+
+  onSelected(event: any) {
+    this.onSearch();
   }
 
   onSearch() {

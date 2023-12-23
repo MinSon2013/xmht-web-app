@@ -131,11 +131,12 @@
 }
 
 .action-add {
-    margin-bottom: 1rem;
-    margin-right: 1rem;
+    margin-top: 0.5rem;
     cursor: pointer;
     overflow: auto;
     float: right;
+    display: block;
+    width: 38%;
 
     .btn-add,
     .btn-report,
@@ -188,15 +189,7 @@
     border: 1px solid gray;
     border-radius: 4px;
     text-align: -webkit-right;
-
-    .pad {
-        padding: 1rem 0;
-    }
-
-    .mb-3 {
-        width: fit-content;
-        padding-top: 0.5rem;
-    }
+    padding: 1rem;
 
     span {
         text-align: end;
