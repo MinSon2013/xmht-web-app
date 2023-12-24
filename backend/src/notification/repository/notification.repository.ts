@@ -51,7 +51,7 @@ export class NotificationRepository extends Repository<Notification> {
             item.createdDate = x.n_created_date;
             item.mimeType = x.n_mime_type;
             item.filePath = x.n_file_path;
-            item.shortContents = x.n_short_contents;
+
             item.sender = x.n_sender;
             item.updatedDate = x.n_updated_date;
             item.notificationType = x.n_notification_type;
@@ -139,7 +139,6 @@ export class NotificationRepository extends Repository<Notification> {
         notify.createdDate = modifyDto.createdDate;
         notify.mimeType = modifyDto.mimeType;
         notify.filePath = modifyDto.filePath;
-        notify.shortContents = modifyDto.shortContents;
         notify.sender = modifyDto.sender;
         notify.notificationType = modifyDto.notificationType;
         notify.updatedDate = modifyDto.updatedDate;

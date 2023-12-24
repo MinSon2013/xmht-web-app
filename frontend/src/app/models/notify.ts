@@ -7,7 +7,6 @@ export interface Notify {
     note: string;
     isPublished: boolean;
     createdDate: string,
-    shortContents: string;
     agencyName?: string;
     mimeType: string;
     filePath?: string;

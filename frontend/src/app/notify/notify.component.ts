@@ -63,7 +63,7 @@ export class NotifyComponent implements OnInit {
       if (response.notifyList.length > 0) {
         this.dataSource.data = response.notifyList.length > 0 ? response.notifyList : [];
         this.dataSource.data.forEach(el => {
-          el.showContent = this.convertHtmlToText(el.shortContents);
+          el.showContent = this.convertHtmlToText(el.contents);
           if (el.showContent.length > this.MAX_LENGTH_SHORT_CONTENT) {
             el.showContent = el.showContent.substring(0, (this.MAX_LENGTH_SHORT_CONTENT - 1));
             el.showLabel = "...[Chi tiết]";
@@ -261,19 +261,16 @@ export class NotifyComponent implements OnInit {
   }
 
   showDetail(element: any) {
+    element.showContent = this.convertHtmlToText(element.contents);
     if (element.showDetail) {
-      if (element.shortContents.length > this.MAX_LENGTH_SHORT_CONTENT) {
+      if (element.showContent.length > this.MAX_LENGTH_SHORT_CONTENT) {
         element.showLabel = "...[Chi tiết]";
         element.showDetail = false;
-        element.shortContents = element.shortContents.substring(0, (this.MAX_LENGTH_SHORT_CONTENT - 1));
-      } else {
-        element.shortContents = element.contents;
+        element.showContent = element.showContent.substring(0, (this.MAX_LENGTH_SHORT_CONTENT - 1));
       }
-
     } else {
       element.showLabel = "[Ẩn bớt]";
       element.showDetail = true;
-      element.shortContents = element.contents;
     }
   }
 

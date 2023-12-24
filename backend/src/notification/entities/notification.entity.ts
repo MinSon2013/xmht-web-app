@@ -8,9 +8,6 @@ export class Notification {
   @Column({ type: 'text' })
   contents: string;
 
-  @Column({ name: 'short_contents', length: 100 })
-  shortContents: string;
-
   @Column({ type: 'text' })
   note: string;
 

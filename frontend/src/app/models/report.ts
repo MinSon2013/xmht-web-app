@@ -19,4 +19,7 @@ export interface Reports {
     file?: any;
     fileName?: string;
     rowId?: number;
+    showDetail?: boolean;
+    showLabel?: string;
+    showContent?: string
 }

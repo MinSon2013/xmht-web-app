@@ -64,7 +64,6 @@ export class ReportRepository extends Repository<Reports> {
     async createNotify(modifyReportDto, contents: string, notificationService: NotificationService, k: string) {
         const notifyDto = new NotificationDto();
         notifyDto.contents = contents;
-        notifyDto.shortContents = contents;
         notifyDto.isPublished = true;
         notifyDto.agencyList = [];
         notifyDto.note = '';

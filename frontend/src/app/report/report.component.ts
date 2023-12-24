@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { DialogDeleteConfirmComponent } from '../common/dialog-delete-confirm/dialog-delete-confirm.component';
 import { Cities, SERVICE_TYPE } from '../constants/const-data';
 import { MatDialog } from '@angular/material/dialog';
@@ -15,11 +15,15 @@ import { Reports } from '../models/report';
 import { ReportService } from '../services/report.service';
 import * as moment from 'moment';
 import { FormControl } from '@angular/forms';
+import { CustomPaginator } from '../common/custom-paginator';
 
 @Component({
   selector: 'app-report',
   templateUrl: './report.component.html',
-  styleUrls: ['./report.component.scss']
+  styleUrls: ['./report.component.scss'],
+  providers: [
+    { provide: MatPaginatorIntl, useValue: CustomPaginator() }
+  ]
 })
 export class ReportComponent implements OnInit {
 
@@ -46,6 +50,7 @@ export class ReportComponent implements OnInit {
   storeList: any[] = [];
 
   date = new FormControl(null);
+  MAX_LENGTH_SHORT_CONTENT: number = 80;
 
   constructor(public dialog: MatDialog,
     private reportService: ReportService,
@@ -198,6 +203,12 @@ export class ReportComponent implements OnInit {
     let r = 0;
     let upd = '';
     this.dataSource.data.forEach(element => {
+      if (element.reportContent.length > this.MAX_LENGTH_SHORT_CONTENT) {
+        element.showContent = element.reportContent.substring(0, (this.MAX_LENGTH_SHORT_CONTENT - 1));
+        element.showLabel = "...[Chi tiết]";
+        element.showDetail = false;
+      }
+
       element.updateDateVisisble = element.updateDate.split(' ')[1];
       if (upd.length === 0) {
         element.rowId = 1;
@@ -269,6 +280,23 @@ export class ReportComponent implements OnInit {
         this.hasData = false;
       }
     });
+  }
+
+  showDetail(element: any) {
+    if (element.showDetail) {
+      if (element.reportContent.length > this.MAX_LENGTH_SHORT_CONTENT) {
+        element.showLabel = "...[Chi tiết]";
+        element.showDetail = false;
+        element.showContent = element.reportContent.substring(0, (this.MAX_LENGTH_SHORT_CONTENT - 1));
+      } else {
+        element.showContent = element.reportContent;
+      }
+
+    } else {
+      element.showLabel = " [Ẩn bớt]";
+      element.showDetail = true;
+      element.showContent = element.reportContent;
+    }
   }
 
 }

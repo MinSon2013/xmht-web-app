@@ -46,7 +46,6 @@ export class NotificationService {
       item.createdDate = x.n_created_date;
       item.mimeType = x.n_mime_type;
       item.filePath = x.n_file_path;
-      item.shortContents = x.n_short_contents;
       item.sender = x.n_sender;
       item.notificationType = x.n_notification_type;
       item.orderId = x.n_order_id;
@@ -154,7 +153,6 @@ export class NotificationService {
     notify.createdDate = modifyDto.createdDate;
     notify.mimeType = modifyDto.mimeType ? modifyDto.mimeType : '';
     notify.filePath = modifyDto.filePath ? modifyDto.filePath : '';
-    notify.shortContents = modifyDto.shortContents;
     notify.sender = modifyDto.sender;
     notify.notificationType = modifyDto.notificationType;
     notify.updatedDate = moment(new Date).format('HH:mm DD/MM/YYYY');
@@ -229,7 +227,6 @@ export class NotificationService {
         statusOrder: body.statusOrder,
         orderId: body.orderId,
         contents: body.contents,
-        shortContents: body.shortContents,
         sender: body.sender,
       });
 
@@ -258,7 +255,7 @@ export class NotificationService {
     notify.isPublished = body.isPublished;
     notify.mimeType = body.mimeType ? body.mimeType : '';
     notify.filePath = body.filePath ? body.filePath : '';
-    notify.shortContents = body.shortContents;
+
     notify.sender = body.sender;
     notify.notificationType = body.notificationType;
     notify.updatedDate = body.updatedDate;

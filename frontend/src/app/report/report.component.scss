@@ -58,6 +58,22 @@
             .no-data {
                 padding: 0px 0.5rem;
             }
+
+            .col-content {
+                min-width: 30px;
+                max-width: 300px;
+            }
+
+            .show-content-detail {
+                color: rgb(8, 140, 8);
+                font-weight: 500;
+                font-style: italic;
+            }
+
+            .show-content-detail:hover {
+                cursor: pointer;
+                color: rgb(9, 203, 2);
+            }
         }
 
         tr:hover {

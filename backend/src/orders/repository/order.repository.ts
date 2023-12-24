@@ -382,7 +382,6 @@ export class OrderRepository extends Repository<Order> {
         const adminId = modifyOrderDto.adminId || modifyOrderDto.stockerId;
         const notifyDto = new NotificationDto();
         notifyDto.contents = contents;
-        notifyDto.shortContents = contents;
         notifyDto.isPublished = true;
         notifyDto.agencyList = [];
         notifyDto.note = '';

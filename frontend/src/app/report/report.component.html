@@ -114,8 +114,9 @@
             <ng-container matColumnDef="reportContent">
                 <th mat-header-cell *matHeaderCellDef class="w-15rem">
                     {{'REPORT.CONTENT' | translate}}</th>
-                <td mat-cell class="wrap-text" *matCellDef="let element">
-                    {{element.reportContent}}
+                <td mat-cell class="wrap-text col-content" *matCellDef="let element">
+                    <span class="width-300">{{ element.showContent }}</span>
+                    <span class="show-content-detail" (click)="showDetail(element)">{{element.showLabel}}</span>
                 </td>
             </ng-container>
 

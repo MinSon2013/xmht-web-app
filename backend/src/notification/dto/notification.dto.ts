@@ -1,7 +1,6 @@
 export class NotificationDto {
   id?: number;
   contents: string;
-  shortContents: string;
   fileName: string;
   note: string;
   isPublished: boolean;
