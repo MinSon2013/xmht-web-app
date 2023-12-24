@@ -50,6 +50,6 @@ export class AgencyService {
     }
 
     changePasswordAdmin(password: string) {
-        return this.webrequestService.post(CONFIG.URL.USER + '/change/password/admin', {password});
+        return this.webrequestService.post(CONFIG.URL.USER + '/change/password/admin', { password });
     }
 }

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { MenuRepository } from './repository/menu.repository';
 import { MenuRo } from './ro/menu.ro';
+import { MenuDto } from './dto/menu.dto';
 
 @Injectable()
 export class MenuService {
@@ -8,8 +9,8 @@ export class MenuService {
         public readonly menuRepo: MenuRepository,
     ) { }
 
-    async findAll(isAdmin: boolean): Promise<MenuRo[]> {
-        return this.menuRepo.getAll(isAdmin);
+    async findAll(body: MenuDto): Promise<MenuRo[]> {
+        return this.menuRepo.getAll(body);
     }
 
 }

@@ -22,4 +22,7 @@ export class Menu {
 
   @Column({ name: 'position', default: 0 })
   position: number;
+
+  @Column({ name: 'role', default: 0 })
+  role: number;
 }

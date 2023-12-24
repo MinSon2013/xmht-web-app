@@ -34,3 +34,6 @@ WHERE `route_link` = 'notification';
 UPDATE menu
 SET `position` = 20
 WHERE `route_link` = 'logout';
+
+ALTER TABLE menu
+ADD `role` int(2) DEFAULT 0;

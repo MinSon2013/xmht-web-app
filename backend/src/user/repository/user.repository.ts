@@ -5,7 +5,6 @@ import { AuthService } from '../../auth/auth.service';
 import { UserRoleDto } from '../dto/user-role.dto';
 import { UserDistrict } from '../entities/user-district.entity';
 import { AgencyService } from '../../agency/agency.service';
-import moment from 'moment';
 import { UserDistrictRepository } from './user-district.repository';
 import { UserRo } from '../dto/user.ro';
 import { Agency } from '../../agency/entities/agency.entity';

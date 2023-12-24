@@ -7,4 +7,5 @@ export class MenuRo {
   items: MenuRo[] = [];
   expanded?: boolean;
   position: number;
+  role: number;
 }

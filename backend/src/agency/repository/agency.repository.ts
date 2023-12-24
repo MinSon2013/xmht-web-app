@@ -121,4 +121,18 @@ export class AgencyRepository extends Repository<Agency> {
             .where("user_id = :userId", { userId })
             .execute();
     }
+
+    public async getAgencyList() {
+        const res = await this.createQueryBuilder('a')
+            .leftJoin(Users, 'u', 'u.id = a.user_id')
+            .where('u.is_admin IS TRUE')
+            .orWhere('u.role > 0')
+            .getMany();
+
+        const ids: number[] = [];
+        res.forEach(element => {
+            ids.push(element.id);
+        });
+        return ids;
+    }
 }

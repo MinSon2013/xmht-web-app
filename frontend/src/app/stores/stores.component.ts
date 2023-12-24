@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { CustomPaginator } from '../common/custom-paginator';
 import { DialogDeleteConfirmComponent } from '../common/dialog-delete-confirm/dialog-delete-confirm.component';
-import { Cities, SERVICE_TYPE } from '../constants/const-data';
+import { Cities, SERVICE_TYPE, USER_AREA_MANAGER } from '../constants/const-data';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
@@ -35,12 +35,11 @@ export class StoresComponent implements OnInit {
 
   helper = new Helper();
   hasData: boolean = true;
-  isStocker: boolean = this.helper.isStocker();
-  // isUser: boolean = this.helper.isUser();
   isUser = true;
   agencyList: any[] = [];
   districtList: any[] = [];
   cities = Cities;
+  isHiddenAddButton: boolean = true;
 
   constructor(public dialog: MatDialog,
     private storeService: StoreService,
@@ -49,9 +48,13 @@ export class StoresComponent implements OnInit {
   ) {
     this.getDistrict();
     this.agencyList = this.helper.getAgencyList();
+    this.isHiddenAddButton = (this.helper.isAdmin() || this.helper.getRole() === USER_AREA_MANAGER) ? false : true;
   }
 
   ngOnInit(): void {
+    if (this.isHiddenAddButton) {
+      this.displayedColumns = ['agencyName', 'districtName', 'provinceName', 'storeName', 'address', 'phone'];
+    }
     this.colspan = this.displayedColumns.length;
     this.getData();
   }

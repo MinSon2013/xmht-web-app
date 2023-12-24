@@ -124,7 +124,6 @@ export class Helper {
     return true;
   }
 
-
   isUser(): boolean {
     const info = localStorage.getItem(CONFIG.LOCAL_STORAGE.LOGIN_INFO);
     if (info) {
@@ -159,6 +158,15 @@ export class Helper {
     if (info) {
       const json = JSON.parse(info) as LoginInfo;
       return Number(json.agencyId);
+    }
+    return 0;
+  }
+
+  getRole() {
+    const info = localStorage.getItem(CONFIG.LOCAL_STORAGE.LOGIN_INFO);
+    if (info) {
+      const json = JSON.parse(info) as LoginInfo;
+      return Number(json.userRole);
     }
     return 0;
   }

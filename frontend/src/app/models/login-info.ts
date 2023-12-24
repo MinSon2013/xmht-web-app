@@ -6,4 +6,5 @@ export interface LoginInfo {
     userName: string;
     isStocker: boolean;
     isUser: boolean;
+    userRole: number;
 }

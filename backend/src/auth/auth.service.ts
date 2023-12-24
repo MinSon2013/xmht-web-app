@@ -29,7 +29,7 @@ export class AuthService {
     ) { }
 
     async getDataToResponse(user: Users, jwt: string) {
-        const menuList = await this.menuService.findAll(user.isAdmin || user.isStocker);
+        const menuList = await this.menuService.findAll({ isAdmin: user.isAdmin, role: user.role });
         let userList = await this.userService.findAll();
         const deliveryList = await this.deliveryService.findAll();
         let agencyList = await this.agencyService.findAll();
@@ -37,12 +37,12 @@ export class AuthService {
         const productList = await this.productService.getAllProduct();
         const admin = userList.find(x => x.isAdmin === true);
         const stocker = userList.find(x => x.isStocker === true);
-        if (!user.isAdmin && !user.isStocker) {
-            agencyList = [agencyList.find(x => x.userId !== admin.id && x.userId !== stocker.id && x.userId === user.id)];
-            userList = userList.filter(x => x.isAdmin === false && x.isStocker === false && x.id === user.id);
+        if (!user.isAdmin && user.role === 0) {
+            agencyList = [agency];
+            userList = userList.filter(x => !x.isAdmin && user.role === 0 && x.id === user.id);
         } else {
-            agencyList = agencyList.filter(x => x.userId !== admin.id && x.userId !== stocker.id);
-            userList = userList.filter(x => x.isAdmin === false && x.isStocker === false);
+            //agencyList = agencyList.filter(x => x.userId !== admin.id && x.userId !== stocker.id);
+            userList = userList.filter(x => !x.isAdmin === false && user.role === 0);
         }
         return {
             loginInfo: {
@@ -52,6 +52,7 @@ export class AuthService {
                 accountName: agency ? agency.fullName : '',
                 agencyId: agency ? agency.id : 0,
                 isStocker: user.isStocker,
+                userRole: user.role,
             },
             menuList,
             userList,

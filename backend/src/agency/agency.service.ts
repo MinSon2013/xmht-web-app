@@ -17,10 +17,10 @@ export class AgencyService {
     ) { }
 
     async findAll(): Promise<Agency[]> {
-        const adminId = await this.getAgencyIdOfAdmin()
-        return await this.agencyRepo.find({
-            where: { id: Not(adminId) }
-        });
+        const ids = await this.agencyRepo.getAgencyList();
+        return await this.agencyRepo.createQueryBuilder()
+            .where('id NOT IN (:ids)', { ids })
+            .getMany();
     }
 
     async findOne(userId: number): Promise<Agency> {

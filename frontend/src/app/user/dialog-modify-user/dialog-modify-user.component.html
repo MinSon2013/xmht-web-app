@@ -96,10 +96,10 @@
     <mat-dialog-actions>
         <button mat-button mat-dialog-close class="btn-cancel py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             (click)="onCancel()">
-            {{ isStocker ? ("BUTTON.CLOSE" | translate): ("BUTTON.CANCEL" | translate)}}
+            {{ "BUTTON.CANCEL" | translate}}
         </button>
         <button mat-button class="btn-save py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button"
-            (click)="onSubmit()" [hidden]="isStocker">
+            (click)="onSubmit()">
             {{ "BUTTON.SAVE" | translate }}
         </button>
     </mat-dialog-actions>

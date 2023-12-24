@@ -37,7 +37,6 @@ export class DialogModifyUserComponent implements OnInit {
   hidden: boolean = true;
 
   helper = new Helper();
-  isStocker: boolean = this.helper.isStocker();
   isEdit: boolean = false;
 
   constructor(

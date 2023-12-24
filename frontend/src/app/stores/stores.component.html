@@ -1,8 +1,8 @@
 <div class="bg-white container">
     <h2 class="header">{{'STORE.TITLE' | translate}}</h2>
 
-    <div class="action-add row">
-        <button class="btn-add" (click)="onEdit(null)" [hidden]="isStocker">
+    <div class="action-add row" [hidden]="isHiddenAddButton">
+        <button class="btn-add" (click)="onEdit(null)">
             <mat-icon aria-hidden="false" aria-label="Add icon" fontSet="fas" fontIcon="fa-plus"
                 class="fa-plus"></mat-icon>
             <label class="pad-label">{{'BUTTON.ADD' | translate}}</label>
@@ -81,7 +81,7 @@
                         <mat-icon aria-hidden="false" aria-label="Trash icon" fontSet="fas" fontIcon="fa-pen"
                             class="fa-pen" (click)="onEdit(element)"></mat-icon>
                         <mat-icon aria-hidden="false" aria-label="Trash icon" fontSet="fas" fontIcon="fa-trash"
-                            class="fa-trash" (click)="onDelete(element)" [hidden]="isStocker"></mat-icon>
+                            class="fa-trash" (click)="onDelete(element)"></mat-icon>
                     </div>
                 </td>
             </ng-container>

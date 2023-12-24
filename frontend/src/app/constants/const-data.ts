@@ -123,3 +123,7 @@ export const USER_ROLE = [
     label: 'Quản lý khu vực',
   },
 ]
+
+export const STOCKER = 1;
+export const USER_SALESMAN = 2;
+export const USER_AREA_MANAGER = 3;
