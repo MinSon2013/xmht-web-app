@@ -200,22 +200,28 @@ export class DialogModifyReportComponent {
 
   onChangeDistrict(event: any) {
     this.agencyList = [];
-    const agencyIds = this.storeList.filter(x => x.districtId === event.id);
+    let agencyIds = this.storeList.filter(x => x.districtId === event.id);
     agencyIds.forEach(y => {
       const agency = this.agencyListClone.find(i => i.id === y.agencyId);
       if (agency) {
         this.agencyList.push(agency);
       }
     });
+    this.agencyList = this.agencyList.filter(function (elem, index, self) {
+      return index === self.indexOf(elem);
+    });
     this.provinceList = [];
     this.getProvinceList();
+    this.storeDistrictList = [];
   }
 
   onChangeProvince(event: any) {
     this.storeDistrictList = this.storeList.filter(x => x.provinceId === this.provinceSelected.id);
   }
 
-  onChangeStore(event: any) { }
+  onChangeStore(event: any) {
+    this.report.storeInformation = this.getStoreInformation(event.id);
+  }
 
   getProvinceList() {
     const provinId: string[] = this.districtSelected?.provinceId.split(',') || [];
@@ -237,7 +243,6 @@ export class DialogModifyReportComponent {
     }
     return true;
   }
-
 
   getFilename(fullPath: string) {
     return fullPath.replace(/^.*[\\\/]/, '');
@@ -278,6 +283,15 @@ export class DialogModifyReportComponent {
     str = str.replace(/\u0300|\u0301|\u0303|\u0309|\u0323/g, ""); // Huyền sắc hỏi ngã nặng 
     str = str.replace(/\u02C6|\u0306|\u031B/g, ""); // Â, Ê, Ă, Ơ, Ư
     return str;
+  }
+
+  private getStoreInformation(id: number) {
+    let inform = '';
+    const store = this.storeList.find(x => x.id === id);
+    if (store) {
+      inform = `${store.address}. \nSĐT: ${store.phone}`
+    }
+    return inform;
   }
 
 }
