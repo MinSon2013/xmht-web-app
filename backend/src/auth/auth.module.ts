@@ -18,6 +18,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { MenuModule } from '../menu/menu.module';
+import { UserDistrictRepository } from '../user/repository/user-district.repository';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { MenuModule } from '../menu/menu.module';
       DeliveryRepository,
       ProductRepository,
       ProductOrderRepository,
+      UserDistrictRepository,
     ]),
     PassportModule,
     JwtModule.registerAsync({

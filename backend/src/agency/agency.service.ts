@@ -10,6 +10,7 @@ import { AuthService } from '../auth/auth.service';
 export class AgencyService {
     constructor(
         public readonly agencyRepo: AgencyRepository,
+        @Inject(forwardRef(() => UserService))
         private readonly userService: UserService,
         @Inject(forwardRef(() => AuthService))
         private readonly authService: AuthService,
@@ -18,7 +19,7 @@ export class AgencyService {
     async findAll(): Promise<Agency[]> {
         const adminId = await this.getAgencyIdOfAdmin()
         return await this.agencyRepo.find({
-            where: {id: Not(adminId)}
+            where: { id: Not(adminId) }
         });
     }
 
@@ -48,5 +49,13 @@ export class AgencyService {
 
     async getAgencyIdOfStocker() {
         return await this.agencyRepo.getAgencyIdOfStocker();
+    }
+
+    async createAgencyForUserRole(userId: number, name: string): Promise<Agency> {
+        return await this.agencyRepo.createAgencyForUserRole(userId, name);
+    }
+
+    async updateAgencyForUserRole(userId: number, name: string): Promise<Agency> {
+        return await this.agencyRepo.updateAgencyForUserRole(userId, name);
     }
 }

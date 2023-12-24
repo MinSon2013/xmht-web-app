@@ -84,7 +84,7 @@ export class AgencyRepository extends Repository<Agency> {
         return admin.agencyId;
     }
 
-    public async getAgencyIdOfStocker() { 
+    public async getAgencyIdOfStocker() {
         const stocker = await this.createQueryBuilder()
             .select('a.id as agencyId')
             .from(Agency, 'a')
@@ -104,5 +104,21 @@ export class AgencyRepository extends Repository<Agency> {
         agency.userId = modifyAgencyDto.userId;
         agency.phone = modifyAgencyDto.phone;
         return agency;
+    }
+
+    async createAgencyForUserRole(userId: number, name: string): Promise<Agency> {
+        const agencyEntity = new Agency();
+        agencyEntity.userId = userId;
+        agencyEntity.fullName = name;
+        const agency = await this.save(agencyEntity);
+        return agency;
+    }
+
+    async updateAgencyForUserRole(userId: number, name: string): Promise<any> {
+        return await this.createQueryBuilder()
+            .update(Agency)
+            .set({ fullName: name })
+            .where("user_id = :userId", { userId })
+            .execute();
     }
 }

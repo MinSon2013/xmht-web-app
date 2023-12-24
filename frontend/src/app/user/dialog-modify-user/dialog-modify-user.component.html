@@ -1,1 +1,106 @@
-<p>dialog-modify-user works!</p>
+<div class="container bg-white">
+    <h2 class="header">{{ header }}</h2>
+    <mat-dialog-content class="form-create shadow-md rounded px-8 pt-6 pb-8">
+        <!-- Username -->
+        <div class="mb-3 row field p-top" [hidden]="isEdit">
+            <span class="col-5 text-label" for="accountName">
+                {{ "USER.USERNAME" | translate }}
+                <label class="require">*</label>
+            </span>
+            <input matInput
+                class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="accountName" type="text" placeholder="" maxlength="200" [(ngModel)]="user.username"
+                [ngModelOptions]="{ standalone: true }" [errorStateMatcher]="matcher" />
+        </div>
+
+        <!-- Fullname -->
+        <div class="mb-3 row field">
+            <span class="col-5 text-label" for="fullName">
+                {{ "USER.NAME" | translate }}
+                <label class="require">*</label>
+            </span>
+            <input matInput
+                class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="fullName" type="text" placeholder="" maxlength="200" [(ngModel)]="user.fullName"
+                [ngModelOptions]="{ standalone: true }" [errorStateMatcher]="matcher" />
+        </div>
+
+        <!-- Password -->
+        <div class="mb-3 row field" [hidden]="isEdit">
+            <span class="col-5 text-label" for="password">
+                {{ "USER.PASSWORD" | translate }}
+                <label class="require">*</label>
+            </span>
+            <input matInput class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:shadow-outline {{
+            errorPassword.length !== 0 ? 'focus-p' : ''}}" id="password" type="password" placeholder="********"
+                maxlength="30" minlength="8" [(ngModel)]="user.password" [ngModelOptions]="{ standalone: true }"
+                [errorStateMatcher]="matcher" />
+        </div>
+
+        <!-- Confirm password -->
+        <div class="mb-3 row field" [hidden]="isEdit">
+            <span class="col-5 text-label" for="confirmPassword">
+                {{ "USER.CONFIRM_PASSWORD" | translate }}
+                <label class="require">*</label>
+            </span>
+            <input matInput class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:shadow-outline {{
+            errorPassword.length !== 0 ? 'focus-p' : '' }}" id="confirmPassword" type="password" placeholder="********"
+                maxlength="30" minlength="8" [(ngModel)]="user.confirmPassword" [ngModelOptions]="{ standalone: true }"
+                [errorStateMatcher]="matcher" />
+        </div>
+
+        <div class="mb-3 row field" *ngIf="errorPassword || (errorPassword !== null && errorPassword.length !== 0)">
+            <div class="notification">
+                <span class="span">{{ errorPassword }}</span>
+            </div>
+        </div>
+
+        <!-- Role -->
+        <div class="mb-3 row field">
+            <span class="col-5 text-label" for="contract">
+                {{ "USER.ROLE" | translate }}
+                <label class="require">*</label>
+            </span>
+            <select
+                class="col-7 form-select appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                [(ngModel)]="roleSelected" (ngModelChange)="onChangeRole($event)" required>
+                <option [ngValue]="null" [disabled]="true" [selected]="true">
+                    -- {{'USER.SELECT_ROLE' | translate}} --
+                </option>
+                <option [ngValue]="item" *ngFor="let item of roleList">{{item.label}}</option>
+            </select>
+        </div>
+
+        <!-- District -->
+        <div class="mb-3 row field" [hidden]="hidden">
+            <span class="col-5 text-label" for="note">
+                {{ "USER.DISTRICT" | translate }}
+            </span>
+            <select
+                class="col-7 form-select appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                [(ngModel)]="districtSelected" (ngModelChange)="onChangeDistrict($event)" required>
+                <option [ngValue]="null" [disabled]="true" [selected]="true">
+                    -- {{'REPORT.SELECT_DISTRICT' | translate}} --
+                </option>
+                <option [ngValue]="item" *ngFor="let item of districtList">{{item.name}}</option>
+            </select>
+        </div>
+
+        <div *ngIf="error || (error !== null && error.length !== 0)">
+            <div class="col-5"></div>
+            <div class="notification">
+                <span class="span">{{ error }}</span>
+            </div>
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+        <button mat-button mat-dialog-close class="btn-cancel py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            (click)="onCancel()">
+            {{ isStocker ? ("BUTTON.CLOSE" | translate): ("BUTTON.CANCEL" | translate)}}
+        </button>
+        <button mat-button class="btn-save py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button"
+            (click)="onSubmit()" [hidden]="isStocker">
+            {{ "BUTTON.SAVE" | translate }}
+        </button>
+    </mat-dialog-actions>
+</div>

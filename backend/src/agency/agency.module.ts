@@ -15,7 +15,7 @@ import { PassportModule } from '@nestjs/passport';
       AgencyRepository,
     ]),
     forwardRef(() => AuthModule),
-    UserModule,
+    forwardRef(() => UserModule),
     PassportModule.register({ defaultStrategy: 'jwt' })
   ],
   providers: [

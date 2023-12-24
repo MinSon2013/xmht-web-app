@@ -5,21 +5,24 @@ export class Users {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ length: 200 }) 
+  @Column({ length: 200 })
   username: string;
 
-  @Column({ length: 500 }) 
+  @Column({ length: 500 })
   password: string;
 
-  @Column({name: 'is_admin'}) 
+  @Column({ name: 'is_admin' })
   isAdmin: boolean;
 
-  @Column() 
+  @Column()
   token: string;
 
-  @Column({name: 'expires_at'}) 
+  @Column({ name: 'expires_at' })
   expiresAt: number;
 
-  @Column({name: 'is_stocker'}) 
+  @Column({ name: 'is_stocker' })
   isStocker: boolean;
+
+  @Column({ name: 'role' })
+  role: number;
 }

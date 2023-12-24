@@ -19,6 +19,7 @@ import { ProductOrderRepository } from '../orders/repository/product-order.repos
 import { MenuRepository } from '../menu/repository/menu.repository';
 import { DeliveryRepository } from '../delivery/repository/delivery.repository';
 import { JwtService } from '@nestjs/jwt';
+import { UserDistrictRepository } from '../user/repository/user-district.repository';
 
 @Module({
     imports: [
@@ -32,6 +33,7 @@ import { JwtService } from '@nestjs/jwt';
             ProductOrderRepository,
             MenuRepository,
             DeliveryRepository,
+            UserDistrictRepository,
         ]),
     ],
     providers: [

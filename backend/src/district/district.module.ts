@@ -7,12 +7,15 @@ import { PassportModule } from '@nestjs/passport';
 import { DistrictController } from './district.controller';
 import { DistrictRepository } from './repository/district.repository';
 import { DistrictService } from './district.service';
+import { AgencyService } from '../agency/agency.service';
+import { AgencyRepository } from '../agency/repository/agency.repository';
 
 @Module({
   controllers: [DistrictController],
   imports: [
     TypeOrmModule.forFeature([
       DistrictRepository,
+      AgencyRepository,
     ]),
     forwardRef(() => AuthModule),
     UserModule,
@@ -21,6 +24,7 @@ import { DistrictService } from './district.service';
   providers: [
     DistrictService,
     UserService,
+    AgencyService,
   ],
   exports: [TypeOrmModule]
 })

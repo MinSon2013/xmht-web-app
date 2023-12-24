@@ -168,7 +168,10 @@
         "DELETE_STORE": "Xóa thông tin cửa hàng",
         "ADD_REPORT": "Thêm mới cửa hàng",
         "MODIFIED_REPORT": "Cập nhật thông tin cửa hàng",
-        "DELETE_REPORT": "Xóa thông tin cửa hàng"
+        "DELETE_REPORT": "Xóa thông tin cửa hàng",
+        "ADD_USER": "Thêm mới USER",
+        "MODIFIED_USER": "Cập nhật thông tin USER",
+        "DELETE_USER": "Xóa thông tin USER"
     },
     "HEADER": {
         "MENU_1": "Thay đổi mật khẩu",
@@ -239,5 +242,19 @@
         "SELECT_PROVINCE": "Chọn tỉnh/Thành phố",
         "SELECT_STORE": "Chọn cửa hàng",
         "SELECT_DATE": "Chọn ngày"
+    },
+    "USER": {
+        "TITLE_LIST": "Danh sách User",
+        "TITLE_ADD": "Thêm mới User",
+        "TITLE_MODIFIED": "Cập nhật thông tin User",
+        "ID": "Mã số",
+        "USERNAME": "Tên đăng nhập",
+        "PASSWORD": "Mật khẩu",
+        "NAME": "Tên hiển thị",
+        "CONFIRM_PASSWORD": "Nhập lại mật khẩu",
+        "ROLE": "Vai trò",
+        "DISTRICT": "Khu vực",
+        "SELECT_ROLE": "Chọn vai trò",
+        "SELECT_DISTRICT": "Chọn khu vực"
     }
 }

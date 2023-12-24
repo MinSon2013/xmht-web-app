@@ -10,7 +10,7 @@ export class UserService {
         private webrequestService: WebRequestService,
     ) { }
 
-    getUserList(){
+    getUserList() {
         return this.webrequestService.get(this.url);
     }
 
@@ -31,5 +31,35 @@ export class UserService {
 
     changePassword(payload: any) {
         return this.webrequestService.put(this.url + '/changepassword', payload);
+    }
+
+    getUserRoleList() {
+        return this.webrequestService.get(CONFIG.URL.USER_ROLE);
+    }
+
+    createUserRole(obj: any) {
+        const payload = {
+            username: obj.username,
+            password: obj.password,
+            isAdmin: false,
+            role: obj.role,
+            districtId: obj.districtId,
+            fullName: obj.fullName,
+        };
+        return this.webrequestService.post(CONFIG.URL.USER_ROLE, payload);
+    }
+
+    updateUserRole(obj: any) {
+        const payload = {
+            id: obj.id,
+            role: obj.role,
+            districtId: obj.districtId,
+            fullName: obj.fullName,
+        };
+        return this.webrequestService.put(CONFIG.URL.USER_ROLE, payload);
+    }
+
+    deleteUserRole(id: number) {
+        return this.webrequestService.delete(CONFIG.URL.USER_ROLE + `/${id}`);
     }
 }

@@ -16,6 +16,7 @@ import { NotificationAgencyRepository } from '../notification/repository/notific
 import { ProductsModule } from '../products/products.module';
 import { AuthModule } from '../auth/auth.module';
 import { PassportModule } from '@nestjs/passport';
+import { UserDistrictRepository } from '../user/repository/user-district.repository';
 
 @Module({
   controllers: [OrdersController],
@@ -28,6 +29,7 @@ import { PassportModule } from '@nestjs/passport';
       NotificationAgencyRepository,
       AgencyRepository,
       UserRepository,
+      UserDistrictRepository,
     ]),
     AuthModule,
     ProductsModule,

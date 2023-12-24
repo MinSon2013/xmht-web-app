@@ -7,12 +7,15 @@ import { PassportModule } from '@nestjs/passport';
 import { StoreController } from './store.controller';
 import { StoreRepository } from './repository/store.repository';
 import { StoreService } from './store.service';
+import { AgencyRepository } from '../agency/repository/agency.repository';
+import { AgencyService } from '../agency/agency.service';
 
 @Module({
   controllers: [StoreController],
   imports: [
     TypeOrmModule.forFeature([
       StoreRepository,
+      AgencyRepository,
     ]),
     forwardRef(() => AuthModule),
     UserModule,
@@ -21,6 +24,7 @@ import { StoreService } from './store.service';
   providers: [
     StoreService,
     UserService,
+    AgencyService,
   ],
   exports: [TypeOrmModule]
 })

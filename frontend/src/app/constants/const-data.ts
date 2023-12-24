@@ -96,6 +96,7 @@ export const SERVICE_TYPE = {
   NOTIFYSERVICE: 4,
   DISTRICTSERVICE: 5,
   STORESERVICE: 6,
+  USERSERVICE: 7,
 }
 
 
@@ -104,3 +105,21 @@ export const NOTIFY_TYPE = {
   COUPON: 2,
   UNREAD: 3,
 }
+
+export const USER_ROLE = [
+  {
+    value: 1,
+    role: 'STOCKER',
+    label: 'Thủ kho',
+  },
+  {
+    value: 2,
+    role: 'USER_SALESMAN',
+    label: 'Người bán hàng',
+  },
+  {
+    value: 3,
+    role: 'USER_AREA_MANAGER',
+    label: 'Quản lý khu vực',
+  },
+]

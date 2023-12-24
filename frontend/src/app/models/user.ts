@@ -5,4 +5,10 @@ export interface User {
     isAdmin: boolean,
     token?: string,
     expiresAt?: number
+    isStocker?: boolean;
+    role: number;
+    roleLabel?: string;
+    districtId?: number;
+    districtName?: string;
+    fullName?: string;
 }

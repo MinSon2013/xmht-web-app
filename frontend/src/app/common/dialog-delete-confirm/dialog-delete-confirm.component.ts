@@ -4,7 +4,6 @@ import { ToastrService } from 'ngx-toastr';
 import { Helper } from '../../helpers/helper';
 import { MSG_STATUS, SERVICE_TYPE } from '../../constants/const-data';
 import { AgencyService } from '../../services/agency.service';
-import { OrderService } from '../../services/order.service';
 import { ProductService } from '../../services/product.service';
 import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '../../services/notification.service';
@@ -12,6 +11,7 @@ import { SocketService } from '../../services/socket.service';
 import { tap } from 'rxjs';
 import { DistrictService } from '../../services/district.service';
 import { StoreService } from '../../services/store.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-dialog-delete-confirm',
@@ -26,13 +26,13 @@ export class DialogDeleteConfirmComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private productService: ProductService,
     private agencyService: AgencyService,
-    private orderService: OrderService,
     private notifyService: NotificationService,
     private toastr: ToastrService,
     public translate: TranslateService,
     private socketService: SocketService,
     private districtService: DistrictService,
     private storeService: StoreService,
+    private userService: UserService,
   ) { }
 
   ngOnInit(): void { }
@@ -69,6 +69,11 @@ export class DialogDeleteConfirmComponent implements OnInit {
       case SERVICE_TYPE.STORESERVICE:
         this.storeService.delete(data.id).subscribe((response) => {
           this.onResponse(data.id, 'MESSAGE.DELETE_STORE', response);
+        });
+        break;
+      case SERVICE_TYPE.USERSERVICE:
+        this.userService.deleteUserRole(data.id).subscribe((response) => {
+          this.onResponse(data.id, 'MESSAGE.DELETE_USER', response);
         });
         break;
     }

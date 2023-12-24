@@ -6,7 +6,7 @@ import { User } from '../../models/user';
 import { TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import { Helper } from '../../helpers/helper';
-import { MSG_STATUS } from '../../constants/const-data';
+import { MSG_STATUS, USER_ROLE } from '../../constants/const-data';
 import { AgencyService } from '../../services/agency.service';
 import { UserService } from '../../services/user.service';
 
@@ -34,10 +34,14 @@ export class DialogDetailAgencyComponent implements OnInit {
     confirmPassword: '',
     email: '',
     userId: 0,
+    role: '',
   };
 
   helper = new Helper();
   isStocker: boolean = this.helper.isStocker();
+
+  userRole = USER_ROLE;
+  roleSelected: any = null;
 
   constructor(
     public dialogRef: MatDialogRef<DialogDetailAgencyComponent>,
@@ -70,6 +74,7 @@ export class DialogDetailAgencyComponent implements OnInit {
 
   onSubmit() {
     if (this.validForm()) {
+      this.agency.role = this.roleSelected?.label;
       if (this.agency.id === 0) {
         this.agencyService.create(this.agency).subscribe((response: any) => {
           if (response) {
@@ -82,6 +87,7 @@ export class DialogDetailAgencyComponent implements OnInit {
               username: this.agency.accountName,
               password: this.agency.password,
               isAdmin: false,
+              role: this.roleSelected?.label,
             };
             this.helper.addUser(user);
 

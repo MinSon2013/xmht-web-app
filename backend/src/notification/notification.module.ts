@@ -11,6 +11,7 @@ import { AgencyRepository } from '../agency/repository/agency.repository';
 import { AuthModule } from '../auth/auth.module';
 import { UserRepository } from '../user/repository/user.repository';
 import { UserService } from '../user/user.service';
+import { UserDistrictRepository } from '../user/repository/user-district.repository';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { UserService } from '../user/user.service';
       NotificationAgencyRepository,
       AgencyRepository,
       UserRepository,
+      UserDistrictRepository,
     ]),
     AuthModule,
     PassportModule.register({ defaultStrategy: 'jwt' })
