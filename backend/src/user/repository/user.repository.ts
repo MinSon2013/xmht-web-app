@@ -142,6 +142,14 @@ export class UserRepository extends Repository<Users> {
         return await this.delete(id);
     }
 
+    async deleteUserRole(id: number, agencyService: AgencyService): Promise<DeleteResult> {
+        const res = await this.delete(id);
+        if (res) {
+            await agencyService.deleteAgencyForUserRole(id);
+        }
+        return res;
+    }
+
     private async usernameExists(username: string): Promise<boolean> {
         const user = await this.findOne({ username });
         if (user) {

@@ -66,7 +66,7 @@ export class NotificationService {
       item.id = el.na_id;
       item.agencyId = el.na_agency_id;
       item.notificationId = el.na_notification_id;
-      item.isViewed = el.na_is_viewed,
+      item.isViewed = el.na_is_viewed === 1 ? true : false,
         res2.push(item);
     });
 

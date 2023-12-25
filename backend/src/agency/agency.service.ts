@@ -58,4 +58,8 @@ export class AgencyService {
     async updateAgencyForUserRole(userId: number, name: string): Promise<Agency> {
         return await this.agencyRepo.updateAgencyForUserRole(userId, name);
     }
+
+    async deleteAgencyForUserRole(userId: number): Promise<DeleteResult> {
+        return await this.agencyRepo.deleteAgencyForUserRole(userId);
+    }
 }

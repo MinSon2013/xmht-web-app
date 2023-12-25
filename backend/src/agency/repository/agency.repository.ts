@@ -122,6 +122,13 @@ export class AgencyRepository extends Repository<Agency> {
             .execute();
     }
 
+    async deleteAgencyForUserRole(userId: number): Promise<DeleteResult> {
+        return await this.createQueryBuilder()
+            .delete()
+            .where("user_id = :userId", { userId })
+            .execute();
+    }
+
     public async getAgencyList() {
         const res = await this.createQueryBuilder('a')
             .leftJoin(Users, 'u', 'u.id = a.user_id')

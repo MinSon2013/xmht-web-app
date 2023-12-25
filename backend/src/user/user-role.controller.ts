@@ -28,7 +28,7 @@ export class UserRoleController {
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  deleteUser(@Param('id') id: number) {
+  delete(@Param('id') id: number) {
     return this.userService.deleteUserRole(id);
   }
 

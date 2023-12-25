@@ -69,7 +69,7 @@ export class UserService {
     }
 
     async deleteUserRole(id: number): Promise<DeleteResult> {
-        const result = await this.userRepo.deleteUser(id);
+        const result = await this.userRepo.deleteUserRole(id, this.agencyService,);
         if (result) {
             await this.repo.deleteUserDistrict(id);
         }
