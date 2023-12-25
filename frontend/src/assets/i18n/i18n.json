@@ -175,7 +175,18 @@
     },
     "HEADER": {
         "MENU_1": "Thay đổi mật khẩu",
-        "MENU_2": "Đăng xuất"
+        "MENU_2": "Đăng xuất",
+        "MENU_GROUP_ORDER": "Thông tin đặt hàng",
+        "MENU_GROUP_MANAGE": "Quản lý",
+        "MENU_GROUP_REPORT": "Báo cáo",
+        "MENU_GROUP_STATISTICS": "Thống kê",
+        "MENU_ITEM_ORDER_LIST": "Danh sách đơn hàng",
+        "MENU_ITEM_ADD_ORDER": "Tạo đơn hàng",
+        "MENU_ITEM_PRODUCT": "Quản lý sản phẩm",
+        "MENU_ITEM_AGENCY": "Quản lý NPP",
+        "MENU_ITEM_STORE": "Quản lý cửa hàng",
+        "MENU_ITEM_DISTRICT": "Quản lý khu vực",
+        "MENU_ITEM_USER": "Quản lý User"
     },
     "CHANGE_PASSWORD": {
         "OLD_PASSWORD": "Mật khẩu cũ",

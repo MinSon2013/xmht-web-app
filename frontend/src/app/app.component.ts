@@ -5,10 +5,10 @@ import { Helper } from './helpers/helper';
 import { LoginService } from './services/login.service';
 import { BnNgIdleService } from 'bn-ng-idle';
 
-interface SideNavToggle {
-  screenWidth: number;
-  collapsed: boolean;
-}
+// interface SideNavToggle {
+//   screenWidth: number;
+//   collapsed: boolean;
+// }
 
 @Component({
   selector: 'app-root',
@@ -16,8 +16,8 @@ interface SideNavToggle {
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  isSideNavCollapsed = false;
-  screenWidth = 0;
+  // isSideNavCollapsed = false;
+  // screenWidth = 0;
   isAuthenticated: boolean = false;
   helper = new Helper();
   location!: Location;
@@ -29,10 +29,10 @@ export class AppComponent implements OnInit {
     translate.setDefaultLang('i18n');
   }
 
-  onToggleSideNav(data: SideNavToggle): void {
-    this.screenWidth = data.screenWidth;
-    this.isSideNavCollapsed = data.collapsed;
-  }
+  // onToggleSideNav(data: SideNavToggle): void {
+  //   this.screenWidth = data.screenWidth;
+  //   this.isSideNavCollapsed = data.collapsed;
+  // }
 
   ngOnInit() {
     this.helper.checkSession();

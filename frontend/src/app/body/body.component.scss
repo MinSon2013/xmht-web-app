@@ -1,15 +1,14 @@
 .body {
-     margin-top: 4rem;
-     margin-left: 3rem;
+    //  margin-top: 4rem;
+    //  margin-left: 3rem;
     z-index: 0;
     position: relative;
     top: 0;
     transition: all .5s ease;
     background: white;
     padding-top: 0;
-    padding-left: 1.5rem;
-    padding-right: -2rem;
-    //padding-bottom: 1rem;
+    // padding-left: 1.5rem;
+    // padding-right: -2rem;
     height: 94%;
 }
 
@@ -42,27 +41,27 @@ p {
     }
 }
 
-.mat-toolbar { 
+.mat-toolbar {
     background: none;
 }
 
 @media only screen and (max-width:600px) {
     .body-md-screen {
         width: 80% !important;
-     
+
     }
 }
 
 @media only screen and (max-width:400px) {
     .body-md-screen {
         width: 80% !important;
-        
+
     }
 }
 
 @media only screen and (max-width:200px) {
     .body-md-screen {
         width: 80% !important;
-        
+
     }
 }
