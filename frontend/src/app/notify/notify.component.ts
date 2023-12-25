@@ -37,6 +37,11 @@ export class NotifyComponent implements OnInit {
   arrDelete: number[] = [];
   MAX_LENGTH_SHORT_CONTENT: number = 50;
 
+  isBadgeHidden1: boolean = true;
+  isBadgeHidden2: boolean = true;
+  badgeNumber1: number = 0;
+  badgeNumber2: number = 0;
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -105,6 +110,15 @@ export class NotifyComponent implements OnInit {
               el.agencyId = item.agencyId;
             }
           }
+
+          if (el.notificationType === NOTIFY_TYPE.COUPON && !el.isViewed) {
+            this.badgeNumber2 = this.badgeNumber2 + 1;
+            this.isBadgeHidden2 = false;
+          }
+          if (el.notificationType === NOTIFY_TYPE.GENERAL && !el.isViewed) {
+            this.badgeNumber1 = this.badgeNumber1 + 1;
+            this.isBadgeHidden1 = false;
+          }
         });
       } else {
         this.dataSource.data = [];
@@ -130,14 +144,12 @@ export class NotifyComponent implements OnInit {
     switch (key) {
       case 1:
         this.getData();
+
         break;
       case 2:
         const arr1 = this.dataSourceClone.data.filter(x => x.notificationType === NOTIFY_TYPE.COUPON);
         this.dataSource.data = arr1;
-        break;
-      case 3:
-        const arr2 = this.dataSourceClone.data.filter(x => x.isViewed !== true);
-        this.dataSource.data = arr2;
+        this.isBadgeHidden2 = true;
         break;
     }
 

@@ -6,9 +6,10 @@
 }
 
 .container {
-    height: 100vh;
+    height: auto;
     min-width: 100%;
     margin-top: 4rem;
+    padding-bottom: 2rem;
 }
 
 .header {
@@ -121,17 +122,14 @@
     margin-bottom: 1rem;
     margin-right: 1rem;
     cursor: pointer;
-    overflow: auto;
     float: right;
 
     .btn-add {
         border: 1px solid royalblue;
-        width: 8rem;
+        width: 145px;
         color: white;
         background-color: royalblue;
-        padding-left: 8px;
-        padding-top: 8px;
-        text-align: justify;
+        padding: 1.25rem;
         border-radius: 4px;
 
         .fa-plus {
@@ -141,12 +139,6 @@
 
         .pad-label {
             margin-left: 5px;
-            position: absolute;
-        }
-
-        mat-icon {
-            padding-top: 3px;
-            padding-left: 4px;
         }
     }
 }

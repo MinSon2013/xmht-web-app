@@ -2,8 +2,8 @@
     <h2 class="header">{{'REPORT.TITLE' | translate}}</h2>
 
     <div
-        class="pad row action-search shadow appearance-none border rounded w-full text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-        <div class="col-4 row">
+        class="div-search pad row action-search shadow appearance-none border rounded w-full text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        <div class="w-auto row">
             <span class="col-6" for="district">{{ "REPORT.SELECT_DISTRICT" | translate }}</span>
             <select class="col-6" [(ngModel)]="districtSelected" (ngModelChange)="onSelected($event)" required>
                 <option [ngValue]="null" [disabled]="true" [selected]="true">
@@ -14,7 +14,7 @@
                 </option>
             </select>
         </div>
-        <div class="col-4 row">
+        <div class="w-auto ml-1 row">
             <span class="text-label" for="receivedDate">
                 {{'REPORT.SELECT_DATE' | translate}}
             </span>
@@ -25,24 +25,17 @@
                 <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
         </div>
-
-        <div class="action-add col-4 row">
-            <button type="submit" class="btn-search" (click)="onSearch()">
+        <div class="action-add w-auto row">
+            <button mat-raised-button type="submit" class="btn-search" (click)="onSearch()">
                 <mat-icon aria-hidden="false" aria-label="Search icon" fontSet="fas" fontIcon="fa-magnifying-glass"
                     class="fa-search"></mat-icon>
                 <label>{{ "BUTTON.SEARCH" | translate }}</label>
             </button>
 
-            <!-- <button class="btn-report" (click)="onReport()" [hidden]="!isUser" [hidden]="true">
-                <mat-icon aria-hidden="false" aria-label="Report icon" fontSet="fas" fontIcon="fa-file-lines"
-                    class="fa-file-lines"></mat-icon>
-                <label class="pad-label">{{'BUTTON.REPORT' | translate}}</label>
-            </button> -->
-
-            <button class="btn-add" (click)="onEdit(null)" [hidden]="isStocker">
+            <button mat-raised-button class="btn-add" (click)="onEdit(null)" [hidden]="isStocker">
                 <mat-icon aria-hidden="false" aria-label="Add icon" fontSet="fas" fontIcon="fa-plus"
                     class="fa-plus"></mat-icon>
-                <label class="pad-label">{{'BUTTON.ADD' | translate}}</label>
+                <label>{{'BUTTON.ADD' | translate}}</label>
             </button>
         </div>
     </div>

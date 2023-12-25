@@ -191,10 +191,11 @@
     </div>
   </mat-dialog-content>
   <mat-dialog-actions>
-    <button mat-button class="btn-cancel py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+    <button mat-raised-button mat-button class="btn-cancel py-2 px-4 rounded focus:outline-none focus:shadow-outline"
       (click)="onCancel()">{{'BUTTON.CANCEL' | translate}}</button>
-    <button mat-button class="btn-save py-2 px-4 rounded focus:outline-none focus:shadow-outline {{loading ? 'disable' : ''}}" type="button"
-      (click)="onSubmit()" [disabled]="loading">{{'BUTTON.SAVE' | translate }}
+    <button mat-raised-button mat-button
+      class="btn-save py-2 px-4 rounded focus:outline-none focus:shadow-outline {{loading ? 'disable' : ''}}"
+      type="button" (click)="onSubmit()" [disabled]="loading">{{'BUTTON.SAVE' | translate }}
     </button>
   </mat-dialog-actions>
 </div>

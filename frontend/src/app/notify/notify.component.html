@@ -3,20 +3,20 @@
 
   <div class="action-add">
     <div class="div-notify-type">
-      <button (click)="onLoadNotify(1)" class="btn1">
-        <mat-icon aria-hidden="false" matBadge="" matBadgeColor="warn" aria-label="Add icon" fontSet="fas"
-          fontIcon="fa-home" class="fa-home"></mat-icon>
+      <button mat-raised-button class="btn1" matBadge="{{badgeNumber1}}" matBadgeColor="warn"
+        [matBadgeHidden]="isBadgeHidden1" matBadgePosition="after" (click)="onLoadNotify(1)">
+        <mat-icon aria-hidden="false" aria-label="Add icon" fontSet="fas" fontIcon="fa-home" class="fa-home"></mat-icon>
         <label class="pad-label">{{ "NOTIFY.COMMON" | translate }}</label>
       </button>
 
-      <button (click)="onLoadNotify(2)" class="btn2">
-        <mat-icon aria-hidden="false" matBadge="" matBadgeColor="warn" aria-label="Add icon" fontSet="fas"
-          fontIcon="fa-gift" class="fa-gift"></mat-icon>
+      <button mat-raised-button class="btn2" matBadge="{{badgeNumber2}}" matBadgeColor="warn"
+        [matBadgeHidden]="isBadgeHidden2" matBadgePosition="after" (click)="onLoadNotify(2)">
+        <mat-icon aria-hidden="false" aria-label="Add icon" fontSet="fas" fontIcon="fa-gift" class="fa-gift"></mat-icon>
         <label class="pad-label">{{ "NOTIFY.COUPON" | translate }}</label>
       </button>
     </div>
 
-    <button class="btn-add" (click)="onEdit(null)" *ngIf="isAdmin">
+    <button mat-raised-button class="btn-add" (click)="onEdit(null)" *ngIf="isAdmin">
       <mat-icon aria-hidden="false" aria-label="Add icon" fontSet="fas" fontIcon="fa-plus" class="fa-plus"></mat-icon>
       <label class="pad-label">{{ "BUTTON.ADD" | translate }}</label>
     </button>
@@ -48,7 +48,7 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by updatedDate" class="w10">
           {{ "NOTIFY.CREATEDDATE" | translate }}
         </th>
-        <td mat-cell *matCellDef="let element" class="{{ element.isViewed === 0 || !element.isViewed ? 'bold' : '' }}">
+        <td mat-cell *matCellDef="let element" class="{{ !element.isViewed ? 'bold' : '' }}">
           {{ element.updatedDate }}
         </td>
       </ng-container>
@@ -58,8 +58,7 @@
         <th mat-header-cell *matHeaderCellDef sortActionDescription="Sort by agencyName" class="w20">
           {{ "NOTIFY.AGENCY" | translate }}
         </th>
-        <td mat-cell *matCellDef="let element" class="nowrap"
-          class="{{ element.isViewed === 0 || !element.isViewed ? 'bold' : '' }}">
+        <td mat-cell *matCellDef="let element" class="nowrap" class="{{ !element.isViewed ? 'bold' : '' }}">
           {{ element.agencyName }}
         </td>
       </ng-container>
@@ -69,8 +68,7 @@
         <th mat-header-cell *matHeaderCellDef sortActionDescription="Sort by contents" class="w30">
           {{ "NOTIFY.CONTENT" | translate }}
         </th>
-        <td mat-cell *matCellDef="let element"
-          class="col-content {{ element.isViewed === 0 || !element.isViewed ? 'bold' : '' }}">
+        <td mat-cell *matCellDef="let element" class="col-content {{ !element.isViewed ? 'bold' : '' }}">
           <span class="width-300">{{ element.showContent }}</span>
           <span class="show-content-detail" (click)="showDetail(element)">{{element.showLabel}}</span>
         </td>
@@ -81,8 +79,8 @@
         <th mat-header-cell *matHeaderCellDef sortActionDescription="Sort by fileName" class="pre-line w10">
           {{ "NOTIFY.FILENAME" | translate }}
         </th>
-        <td mat-cell *matCellDef="let element"
-          class="focus {{ element.isViewed === 0 || !element.isViewed ? 'bold' : '' }}" (click)="onDownload(element)">
+        <td mat-cell *matCellDef="let element" class="focus {{ !element.isViewed ? 'bold' : '' }}"
+          (click)="onDownload(element)">
           {{ element.fileName }}
           <a download="{{ element.fileName }}"></a>
         </td>
@@ -93,8 +91,7 @@
         <th mat-header-cell *matHeaderCellDef sortActionDescription="Sort by confirmer" class="pre-line width-110">
           {{ "NOTIFY.CONFIRMER" | translate }}
         </th>
-        <td mat-cell class="wrap-text" *matCellDef="let element"
-          class="{{ element.isViewed === 0 || !element.isViewed ? 'bold' : '' }}">
+        <td mat-cell class="wrap-text" *matCellDef="let element" class="{{ !element.isViewed ? 'bold' : '' }}">
           {{ element.confirmName }}
         </td>
       </ng-container>
@@ -104,8 +101,7 @@
         <th mat-header-cell *matHeaderCellDef sortActionDescription="Sort by statusOrder" class="pre-line w20">
           {{ "NOTIFY.STATUS_ORDER" | translate }}
         </th>
-        <td mat-cell class="wrap-text" *matCellDef="let element"
-          class="{{ element.isViewed === 0 || !element.isViewed ? 'bold' : '' }}">
+        <td mat-cell class="wrap-text" *matCellDef="let element" class="{{ !element.isViewed ? 'bold' : '' }}">
           {{ element.statusOrder }}
         </td>
       </ng-container>

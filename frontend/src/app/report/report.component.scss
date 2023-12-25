@@ -6,9 +6,10 @@
 }
 
 .container {
-    height: 100vh;
+    height: auto;
     min-width: 100%;
     margin-top: 4rem;
+    padding-bottom: 2rem;
 }
 
 .header {
@@ -146,57 +147,58 @@
     }
 }
 
+.div-search {
+    padding: 1rem 0;
+
+    .w-auto {
+        width: auto;
+
+        span {
+            margin-top: auto;
+            margin-bottom: auto;
+        }
+    }
+
+    .ml-1 {
+        margin-left: 1rem;
+    }
+}
+
 .action-add {
     margin-top: 0.5rem;
     cursor: pointer;
-    overflow: auto;
     float: right;
     display: block;
-    width: 38%;
+    padding-left: 3rem;
+    margin: auto 0;
 
     .btn-add,
-    .btn-report,
     .btn-search {
         border: 1px solid royalblue;
-        width: 8rem;
         color: white;
         background-color: royalblue;
-        padding-left: 8px;
-        padding-top: 8px;
+        padding: 1.25rem;
         text-align: justify;
         border-radius: 4px;
+        width: 145px;
 
         .fa-plus {
             color: #fff;
-            font-size: 20px;
+            font-size: 18px;
         }
 
-        .pad-label {
-            margin-left: 5px;
-            position: absolute;
+        .fa-search {
+            color: #fff;
+            font-size: 17px;
         }
 
-        mat-icon {
-            padding-top: 3px;
-            padding-left: 4px;
+        label {
+            padding-left: 5px;
         }
     }
 
     .btn-search {
         margin-right: 1rem;
-    }
-
-    .btn-search {
-        .fa-search {
-            color: #fff;
-            font-size: 18px;
-            padding-top: 3px;
-        }
-
-        label {
-            padding-left: 5px;
-            position: absolute;
-        }
     }
 }
 
@@ -205,7 +207,6 @@
     border: 1px solid gray;
     border-radius: 4px;
     text-align: -webkit-right;
-    padding: 1rem;
 
     span {
         text-align: end;

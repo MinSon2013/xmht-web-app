@@ -70,12 +70,13 @@
         </div>
     </mat-dialog-content>
     <mat-dialog-actions>
-        <button mat-button class="btn-cancel py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        <button mat-button mat-raised-button
+            class="btn-cancel py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             (click)="onCancel()">{{'BUTTON.CLOSE' | translate}}</button>
-        <button mat-button *ngIf="(isAdmin && isEdit)"
-            class="btn-save py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        <button mat-button mat-raised-button *ngIf="(isAdmin && isEdit)"
+            class="btn-draf py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             (click)="onSubmit(false)">{{'BUTTON.DRAFT' | translate}}</button>
-        <button mat-button *ngIf="(isAdmin && isEdit)"
+        <button mat-button mat-raised-button *ngIf="(isAdmin && isEdit)"
             class="btn-save py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button"
             (click)="onSubmit(true)">{{ 'BUTTON.SENT' | translate }}
         </button>

@@ -208,10 +208,13 @@
             <div class="col-6 notification"> <span class="span">{{error}}</span></div>
         </div>
         <div class="btn-container mt-5">
-            <button mat-button class="btn-cancel py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                (click)="onCancel()">{{ isStocker ? ("BUTTON.CLOSE" | translate): ("BUTTON.CANCEL" | translate)}}</button>
-            <button mat-button class="btn-save py-2 px-4 rounded focus:outline-none focus:shadow-outline {{loading ? 'disable' : ''}}" type="button"
-                (click)="onSubmit()" [disabled]="loading" [hidden]="isStocker">{{'BUTTON.ORDER'| translate }}
+            <button mat-raised-button mat-button
+                class="btn-cancel py-2 px-4 rounded focus:outline-none focus:shadow-outline" (click)="onCancel()">{{
+                isStocker ? ("BUTTON.CLOSE" | translate): ("BUTTON.CANCEL" | translate)}}</button>
+            <button mat-raised-button mat-button
+                class="btn-save py-2 px-4 rounded focus:outline-none focus:shadow-outline {{loading ? 'disable' : ''}}"
+                type="button" (click)="onSubmit()" [disabled]="loading" [hidden]="isStocker">{{'BUTTON.ORDER'| translate
+                }}
             </button>
         </div>
     </mat-dialog-content>

@@ -30,7 +30,8 @@
         margin-top: 1rem;
     }
 
-    .btn-save {
+    .btn-save,
+    .btn-draf {
         color: white !important;
         background-color: royalblue;
         border-color: royalblue;
@@ -40,6 +41,10 @@
         color: black;
         background-color: #dadada;
         border-color: #dadada;
+    }
+
+    .btn-cancel,
+    .btn-draf {
         margin-right: 1rem;
     }
 

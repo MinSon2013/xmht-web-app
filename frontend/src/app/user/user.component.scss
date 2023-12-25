@@ -6,9 +6,10 @@
 }
 
 .container {
-    height: 100vh;
+    height: auto;
     min-width: 100%;
     margin-top: 4rem;
+    padding-bottom: 2rem;
 }
 
 .header {
@@ -113,22 +114,19 @@
 }
 
 .action-add {
-    background: royalblue;
-    border: 1px solid royalblue;
-    border-radius: 4px;
-    margin-bottom: 1rem;
-    margin-right: 1rem;
-    width: 8rem;
+    padding-right: 1rem;
+    width: 100%;
     cursor: pointer;
-    overflow: auto;
-    float: right;
+    text-align: right;
 
     .btn-add {
         color: white;
         background-color: transparent;
-        border: none;
-        padding-left: 8px;
-        padding-top: 8px;
+        padding: 1.25rem;
+        width: 145px;
+        background: royalblue;
+        border: 1px solid royalblue;
+        border-radius: 4px;
 
         .fa-plus {
             color: #fff;
@@ -137,7 +135,10 @@
 
         .pad-label {
             margin-left: 5px;
-            position: absolute;
+        }
+
+        .pad-label:hover {
+            cursor: pointer;
         }
     }
 }

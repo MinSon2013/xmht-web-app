@@ -2,7 +2,7 @@
   <h2 class="header">{{'PRODUCT.TITLE_LIST' | translate}}</h2>
 
   <div class="action-add" [hidden]="isStocker">
-    <button class="btn-add" (click)="onEdit(null)">
+    <button mat-raised-button class="btn-add" (click)="onEdit(null)">
       <mat-icon aria-hidden="false" aria-label="Add icon" fontSet="fas" fontIcon="fa-plus" class="fa-plus"></mat-icon>
       <label class="pad-label">{{'BUTTON.ADD' | translate}}</label>
     </button>

@@ -58,7 +58,16 @@
         .demo-section+.demo-section {
             margin-top: 16px;
         }
-        
+
+        ::ng-deep .mat-badge-content {
+            width: 8px;
+            height: 8px;
+            line-height: 8px;
+            color: red;
+            right: 0 !important;
+            top: -8px !important;
+        }
+
         .fa-bell {
             margin-left: 1.5rem;
             color: white;
