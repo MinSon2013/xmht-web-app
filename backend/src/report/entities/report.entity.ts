@@ -17,6 +17,9 @@ export class Reports {
   @Column({ name: 'store_id' })
   storeId: number;
 
+  @Column({ name: 'other_store_name', length: 200 })
+  otherStoreName: string;
+
   @Column({ name: 'store_information' })
   storeInformation: string;
 

@@ -13,4 +13,5 @@ export class ModifyReportDto {
   userId: number;
   createDate?: string;
   accountName?: string;
+  otherStoreName?: string;
 }

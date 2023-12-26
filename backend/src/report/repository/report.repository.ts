@@ -50,8 +50,7 @@ export class ReportRepository extends Repository<Reports> {
         report.storeId = modifyReportDto.storeId;
         report.storeInformation = modifyReportDto.storeInformation;
         report.reportContent = modifyReportDto.reportContent;
-        // report.attachFile = modifyReportDto.attachFile;
-        // report.filePath = modifyReportDto.filePath;
+        report.otherStoreName = modifyReportDto.otherStoreName;
         report.note = modifyReportDto.note;
         if (key === 'CREATE') {
             report.createDate = moment(new Date).format('HH:mm:ss DD/MM/YYYY');

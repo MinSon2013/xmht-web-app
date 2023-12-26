@@ -22,4 +22,5 @@ export interface Reports {
     showDetail?: boolean;
     showLabel?: string;
     showContent?: string
+    otherStoreName?: string;
 }
