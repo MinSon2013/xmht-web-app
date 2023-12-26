@@ -32,6 +32,7 @@ ALTER TABLE `store`
   `district_id` int(11) NOT NULL,
   `province_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
+  `other_store_name` varchar(200) DEFAULT NULL,
   `store_information` text,
   `report_content` text,
   `note` text,
