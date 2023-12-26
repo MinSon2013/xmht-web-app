@@ -8,11 +8,11 @@
             <h6 class="cd text-right">{{confirmedDate}}</h6>
         </div>
     </div>
-    <div class="row">
+    <div class="row" style="margin-bottom: 1rem;">
         <div class="col-4">
             <img src="../../assets/images/logo_1.png" class="logo" />
         </div>
-       <!--  <br/><br/> -->
+        <!--  <br/><br/> -->
         <div class="col-8">
             <h3 class="fw-600 t3-margin top">{{'PRINT_PDF.TITLE_3' | translate}}</h3>
         </div>
@@ -53,8 +53,8 @@
                 {{'PRINT_PDF.TON' | translate}}
             </th>
             <td mat-cell *matCellDef="let element; let i = index" class="center border-lr"
-            [attr.rowspan]="getRowSpan('ton', i)"
-            [style.display]="getRowSpan('ton', i) ? '' : 'none'"> {{element.ton}} </td>
+                [attr.rowspan]="getRowSpan('ton', i)" [style.display]="getRowSpan('ton', i) ? '' : 'none'">
+                {{element.ton}} </td>
         </ng-container>
 
         <!-- Amount Column -->
@@ -69,15 +69,13 @@
                 {{'ORDER.NOTE' | translate}}
             </th>
             <td mat-cell *matCellDef="let element; let i = index" class="align-left border-lr"
-                [attr.rowspan]="getRowSpan('note', i)"
-                [style.display]="getRowSpan('note', i) ? '' : 'none'"> {{element.note}} </td>
+                [attr.rowspan]="getRowSpan('note', i)" [style.display]="getRowSpan('note', i) ? '' : 'none'">
+                {{element.note}} </td>
         </ng-container>
 
         <!-- Footer row sum label -->
         <ng-container matColumnDef="footer-row-label">
-            <th mat-footer-cell *matFooterCellDef 
-                class="center fw-600 border-b"
-                [attr.colspan]="3">
+            <th mat-footer-cell *matFooterCellDef class="center fw-600 border-b" [attr.colspan]="3">
                 {{'PRINT_PDF.SUM' | translate}}
             </th>
         </ng-container>
@@ -91,7 +89,7 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
-   <!--  <br/> -->
+    <!--  <br/> -->
     <span class="label fw-600">{{'PRINT_PDF.TEXT' | translate}}{{numberToText}}</span>
     <h6 class="sd text-right">{{shippingDate}}</h6>
     <div class="row footer">

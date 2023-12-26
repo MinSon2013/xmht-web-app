@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { SidenavComponent } from './sidenav/sidenav.component';
 import { BodyComponent } from './body/body.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ProductsComponent } from './products/products.component';
@@ -13,7 +12,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { MaterialModule } from './common/material.module';
 import { OrderListComponent } from './orders/order-list.component';
 import { LoginComponent } from './login/login.component';
-import { SublevelMenuComponent } from './sidenav/sublevel-menu.component';
 import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
@@ -70,7 +68,6 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
 @NgModule({
   declarations: [
     AppComponent,
-    SidenavComponent,
     BodyComponent,
     DashboardComponent,
     ProductsComponent,
@@ -79,7 +76,6 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     OrderListComponent,
     OrderAddComponent,
     LoginComponent,
-    SublevelMenuComponent,
     PageNotFoundComponent,
     LogoutComponent,
     DialogDetailOrderComponent,

@@ -364,11 +364,11 @@ export class OrderRepository extends Repository<Order> {
             const proList = data.filter(x => x.order_id === el.id);
             if (proList.length > 0) {
                 proList.forEach(i => {
+                    const prod = productList.find(x => x.id === i.productOrder_product_id);
                     const item2 = {
                         id: i.productOrder_product_id,
                         quantity: i.productOrder_quantity,
-                        // name: productList.find(x => x.id === i.productOrder_product_id),
-                        name: productList.find(x => x.id === i.productOrder_product_id).name,
+                        name: prod ? prod.name : '',
                     }
                     el.products.push(item2);
                 });

@@ -34,6 +34,7 @@ export class DistrictComponent implements OnInit {
   hasData: boolean = false;
   cities: Pickup[] = Cities;
   isHiddenAddButton: boolean = true;
+  length: number = 0;
 
   constructor(public dialog: MatDialog,
     private districtService: DistrictService,
@@ -78,6 +79,7 @@ export class DistrictComponent implements OnInit {
     } else {
       this.hasData = true;
     }
+    this.length = this.dataSource.data.length;
   }
 
   ngAfterViewInit() {
@@ -128,6 +130,7 @@ export class DistrictComponent implements OnInit {
         } else {
           this.hasData = true;
         }
+        this.length = this.dataSource.data.length;
       }
     });
   }

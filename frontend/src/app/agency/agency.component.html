@@ -90,7 +90,7 @@
       <tr mat-row *matHeaderRowDef="['no-data']" class="text-center" [hidden]="hasData"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
-    <mat-paginator *ngIf="hasData" [pageSizeOptions]="[20, 50, 100]" showFirstLastButtons
+    <mat-paginator *ngIf="hasData" [pageSizeOptions]="[10, 20, 50, 100]" showFirstLastButtons
       aria-label="Select page of periodic elements">
     </mat-paginator>
   </div>

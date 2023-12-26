@@ -37,6 +37,7 @@ export class UserComponent implements OnInit {
   districtList: any[] = [];
   roleSelected: any = null;
   roleList = USER_ROLE;
+  length: number = 0;
 
   constructor(public dialog: MatDialog,
     private districtService: DistrictService,
@@ -87,6 +88,7 @@ export class UserComponent implements OnInit {
     } else {
       this.hasData = true;
     }
+    this.length = this.dataSource.data.length;
   }
 
   ngAfterViewInit() {
@@ -140,6 +142,7 @@ export class UserComponent implements OnInit {
         } else {
           this.hasData = true;
         }
+        this.length = this.dataSource.data.length;
       }
     });
   }

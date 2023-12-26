@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Helper } from '../helpers/helper';
 import { NotificationService } from '../services/notification.service';
@@ -16,9 +16,9 @@ import { DialogChangePasswordComponent } from './dialog-change-password/dialog-c
 })
 
 export class HeaderComponent implements OnInit {
-  @Input() collapsed = false;
-  @Input() screenWidth = 0;
-  @ViewChild('clickMenuTrigger') clickMenuTrigger!: MatMenuTrigger;
+  @ViewChild('subMenuTrigger') subMenuTrigger!: MatMenuTrigger;
+  @ViewChild('menuTrigger1') menuTrigger1!: MatMenuTrigger;
+  @ViewChild('menuTrigger2') menuTrigger2!: MatMenuTrigger;
 
   helper = new Helper();
   agency: string = '';
@@ -73,26 +73,34 @@ export class HeaderComponent implements OnInit {
     });
   }
 
-  getHeadClass(): string {
-    let styleClass = '';
-    if (this.collapsed && this.screenWidth > 768) {
-      styleClass = 'head-trimmed';
-    } else if (this.collapsed
-      && this.screenWidth <= 768
-      && this.screenWidth > 0) {
-      styleClass = 'head-md-screen';
-    }
-    return styleClass;
-  }
-
   onClick() {
     this.router.navigateByUrl('notification');
   }
 
+  onRouterLink(key: string) {
+    this.router.navigateByUrl(key);
+  }
+
   openHeaderMenu() {
     if (!this.isAdmin) {
-      this.clickMenuTrigger.openMenu();
+      this.subMenuTrigger.openMenu();
     }
+  }
+
+  openSubMenu(submenu: MatMenuTrigger, key: number) {
+    submenu.openMenu();
+    if (key === 1) {
+      this.closeSubMenu(this.menuTrigger2);
+    }
+    if (key === 2) {
+      this.closeSubMenu(this.menuTrigger1);
+    }
+
+    this.closeSubMenu(this.subMenuTrigger);
+  }
+
+  closeSubMenu(submenu: MatMenuTrigger) {
+    submenu.closeMenu();
   }
 
   onLogOut() {
@@ -104,8 +112,7 @@ export class HeaderComponent implements OnInit {
       data: { userId: this.helper.getUserId() },
     });
     dialogRef.afterClosed().subscribe(result => {
-      
-    });
 
+    });
   }
 }

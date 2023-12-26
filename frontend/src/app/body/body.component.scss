@@ -1,25 +1,11 @@
 .body {
-    //  margin-top: 4rem;
-    //  margin-left: 3rem;
     z-index: 0;
     position: relative;
     top: 0;
     transition: all .5s ease;
     background: white;
     padding-top: 0;
-    // padding-left: 1.5rem;
-    // padding-right: -2rem;
     height: 94%;
-}
-
-.body-trimmed {
-    width: calc(100% - 14.5625rem);
-    margin-left: 14.5625rem !important;
-}
-
-.body-md-screen {
-    width: calc(100% - 5rem);
-    margin-left: 5rem;
 }
 
 p {
@@ -45,23 +31,8 @@ p {
     background: none;
 }
 
-@media only screen and (max-width:600px) {
-    .body-md-screen {
-        width: 80% !important;
+@media only screen and (max-width:600px) {}
 
-    }
-}
+@media only screen and (max-width:400px) {}
 
-@media only screen and (max-width:400px) {
-    .body-md-screen {
-        width: 80% !important;
-
-    }
-}
-
-@media only screen and (max-width:200px) {
-    .body-md-screen {
-        width: 80% !important;
-
-    }
-}
+@media only screen and (max-width:200px) {}

@@ -7,9 +7,7 @@
         "PASSWORD": "Mật khẩu"
     },
     "DASHBOARD": {
-        "MENU_TITLE": "Trang chủ",
-        "BAR_CHART_TITLE": "Thống kê đơn hàng theo tháng",
-        "PIE_CHART_TITLE": "Thống kê tổng số lượng được đặt hàng của từng loại sản phẩm"
+        "MENU_TITLE": "Trang chủ"
     },
     "ORDER": {
         "MENU_TITLE": "Đơn đặt hàng",
@@ -19,11 +17,9 @@
         "TITLE_DETAIL": "Chi tiết đơn hàng",
         "SEARCH_ID": "Mã số đơn hàng",
         "ID": "Mã số",
-        "ID_2": "đơn hàng",
         "AGENCY": "Nhà phân phối",
         "CONTRACT": "Hợp đồng",
         "CREATEDDATE": "Ngày tạo đơn",
-        "SEARCH_RECEIVEDDATE": "Ngày nhận \n dự kiến",
         "RECEIVEDDATE1": "Ngày nhận",
         "RECEIVEDDATE2": "dự kiến",
         "LABEL_RECEIVEDDATE": "Ngày nhận \n dự kiến",
@@ -112,7 +108,8 @@
     },
     "STATISTICS": {
         "CHOOSE_DATE": "Chọn tháng và năm ",
-        "NO_DATA": "Không có dữ liệu để hiển thị"
+        "BAR_CHART_TITLE": "Thống kê đơn hàng theo tháng",
+        "PIE_CHART_TITLE": "Thống kê tổng số lượng được đặt hàng của từng loại sản phẩm"
     },
     "LOGOUT": "Đăng xuất",
     "BUTTON": {

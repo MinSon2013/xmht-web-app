@@ -32,7 +32,6 @@ export class ReportComponent implements OnInit {
   clickedRows = new Set<Store>();
   colspan: number = 0;
   spanningColumns = ['rowId', 'updateDateVisisble', 'provinceName'];
-  // spanningColumns = ['id', 'updateDate', 'provinceName'];
   spans: any[] = [];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -40,8 +39,6 @@ export class ReportComponent implements OnInit {
 
   helper = new Helper();
   hasData: boolean = true;
-  isStocker: boolean = this.helper.isStocker();
-  // isUser: boolean = this.helper.isUser();
   isUser = true;
   agencyList: any[] = [];
   districtList: any[] = [];
@@ -115,6 +112,7 @@ export class ReportComponent implements OnInit {
     );
     const dialogRef = this.dialog.open(DialogModifyReportComponent, {
       data: { row, districtList: this.districtList, storeList: this.storeList },
+      panelClass: 'my-panel',
     });
 
     elements.forEach(el => {

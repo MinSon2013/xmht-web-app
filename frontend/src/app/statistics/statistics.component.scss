@@ -18,7 +18,7 @@
         .column {
             min-width: 100px;
             height: 400px;
-            
+
         }
     }
 
@@ -44,16 +44,15 @@
     .action-search {
         border: 1px solid gray;
         border-radius: 4px;
-    
+
         .action-submit {
-    
             margin-bottom: 1rem;
             margin-top: 1rem;
             margin-right: 1rem;
             width: 100%;
             cursor: pointer;
             text-align: right;
-    
+
             .btn-search {
                 background: royalblue !important;
                 border: 1px solid royalblue !important;
@@ -66,6 +65,7 @@
                 padding-right: 1rem;
                 cursor: pointer;
                 width: 145px;
+                height: 40px;
 
                 .fa-search {
                     color: #fff;
@@ -78,28 +78,28 @@
                 }
             }
         }
-    
+
         span {
             text-align: end;
             font-weight: 700;
             margin: auto 0;
         }
-    
+
         div {
             margin-top: 6px;
         }
-    
+
         .select-1 {
             width: 58% !important;
         }
-    
+
         select {
             width: 50% !important;
         }
-    
+
         mat-form-field {
             padding: 0;
-    
+
             ::ng-deep .mat-mdc-form-field-bottom-align {
                 display: none;
             }
@@ -125,19 +125,19 @@
 @media only screen and (max-width:600px) {
     .container {
         padding: 0.5rem;
-       // padding-left: 2rem !important;
+        // padding-left: 2rem !important;
         padding-top: 1rem !important;
 
         .action-search {
             padding-right: 0.5rem !important;
             padding-left: 0.5rem !important;
             margin-top: 1.5rem !important;
-        
+
             .row {
                 --mdb-gutter-x: 0rem !important;
                 display: block;
             }
-        
+
             .col-5,
             .col-6,
             .col-7,
@@ -145,16 +145,16 @@
             .select-1 {
                 width: 100% !important;
             }
-        
+
             .action-submit {
                 margin-bottom: 0.5rem;
                 margin-top: 1rem;
                 margin-right: 0.5rem;
-        
+
                 .btn-search {
                     padding-left: 6px;
                     padding-top: 2px;
-        
+
                     .fa-search {
                         font-size: 16px;
                         padding-top: 8px;
@@ -201,12 +201,12 @@
             padding-right: 0.5rem !important;
             padding-left: 0.5rem !important;
             margin-top: 1.5rem !important;
-        
+
             .row {
                 --mdb-gutter-x: 0rem !important;
                 display: block;
             }
-        
+
             .col-5,
             .col-6,
             .col-7,
@@ -214,16 +214,16 @@
             .select-1 {
                 width: 100% !important;
             }
-        
+
             .action-submit {
                 margin-bottom: 0.5rem;
                 margin-top: 1rem;
                 margin-right: 0.5rem;
-        
+
                 .btn-search {
                     padding-left: 6px;
                     padding-top: 2px;
-        
+
                     .fa-search {
                         font-size: 16px;
                         padding-top: 8px;

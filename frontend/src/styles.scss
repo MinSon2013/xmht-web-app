@@ -55,6 +55,10 @@ body {
 }
 
 .cdk-overlay-container .cdk-overlay-pane {
-    background: white;
-    background-color: white;
+    background: transparent;
+    background-color: transparent;
+
+    .mat-mdc-dialog-container .mdc-dialog__surface {
+        border-radius: 0.5rem;
+    }
 }
