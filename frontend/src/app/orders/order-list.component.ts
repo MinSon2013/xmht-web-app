@@ -104,6 +104,7 @@ export class OrderListComponent implements OnInit {
         this.dataSource.data = response.length > 0 ? response : [];
         this.dataSource.data.forEach(x => {
           x.agencyName = this.agencyList.find(i => i.id === x.agencyId)?.fullName;
+          x.products.sort((a, b) => (a.id < b.id ? -1 : 1));
         });
         if (this.isStocker) {
           this.dataSource.data = this.dataSource.data.filter(
