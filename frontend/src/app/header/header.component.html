@@ -1,6 +1,6 @@
 <div class="head">
     <mat-toolbar color="" class="">
-        <mat-toolbar-row style="background-color: #1F497D;">
+        <mat-toolbar-row>
             <div class="head-content row">
                 <div class="head-content-left col-5">
                     <img alt="XMHT" width="64" height="64" src="./assets/images/logo.png"
@@ -25,11 +25,8 @@
                             <button mat-menu-item (click)="onChangePassword()">
                                 <mat-icon aria-hidden="false" aria-label="User icon" fontSet="fas"
                                     fontIcon="fa-lock"></mat-icon>
-                                {{ "HEADER.MENU_1" | translate }}</button>
-                            <button mat-menu-item (click)="onLogOut()">
-                                <mat-icon aria-hidden="false" aria-label="Logout icon" fontSet="fas"
-                                    fontIcon="fa-right-from-bracket"></mat-icon>
-                                {{ "HEADER.MENU_2" | translate }}</button>
+                                {{ "HEADER.MENU_1" | translate }}
+                            </button>
                         </span>
                     </mat-menu>
 
@@ -43,14 +40,16 @@
                 </div>
             </div>
         </mat-toolbar-row>
-        <mat-toolbar-row style="background-color: #1F497D; justify-content: flex-end;">
+        <mat-toolbar-row class="row2">
             <div class="sub-menu align-end">
                 <a mat-button [matMenuTriggerFor]="menu1" #menuTrigger1="matMenuTrigger"
-                    (mouseover)="openSubMenu(menuTrigger1, 1)" class="menu-item">
+                    (click)="openSubMenu(menuTrigger1, 1)" class="menu-item">
+                    <mat-icon aria-hidden="false" fontSet="fas" fontIcon="fa-caret-down" class="fa-icon"></mat-icon>
                     {{ "HEADER.MENU_GROUP_ORDER" | translate }}
                 </a>
                 <a mat-button [matMenuTriggerFor]="menu2" #menuTrigger2="matMenuTrigger"
-                    (mouseover)="openSubMenu(menuTrigger2, 2)" class="menu-item">
+                    (click)="openSubMenu(menuTrigger2, 2)" class="menu-item">
+                    <mat-icon aria-hidden="false" fontSet="fas" fontIcon="fa-caret-down" class="fa-icon"></mat-icon>
                     {{ "HEADER.MENU_GROUP_MANAGE" | translate }}
                 </a>
                 <a mat-button [routerLink]="'/statistics'" class="menu-item">
@@ -58,7 +57,7 @@
                 </a>
                 <a mat-button [routerLink]="'/report'" class="menu-item"> {{ "HEADER.MENU_GROUP_REPORT" | translate
                     }} </a>
-                <a mat-button [routerLink]="'/logout'" [hidden]="!isAdmin" class="menu-item">
+                <a mat-button [routerLink]="" class="menu-item" (click)="onLogOut()">
                     {{ "HEADER.MENU_2" | translate }}
                 </a>
 
