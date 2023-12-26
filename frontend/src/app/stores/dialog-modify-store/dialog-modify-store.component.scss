@@ -106,9 +106,8 @@
         .col-5,
         .col-6,
         .col-7,
-        .col-9,
-        select {
-            width: 100% !important;
+        .col-9 {
+            width: 100%;
         }
 
         input,
@@ -125,6 +124,11 @@
 
         .mat-mdc-dialog-actions {
             margin-right: 0 !important;
+        }
+
+        select {
+            width: 98% !important;
+            margin-left: 1rem !important;
         }
     }
 }
@@ -149,9 +153,8 @@
         .col-5,
         .col-6,
         .col-7,
-        .col-9,
-        select {
-            width: 100% !important;
+        .col-9 {
+            width: 100%;
         }
 
         input,
@@ -168,6 +171,11 @@
 
         .mat-mdc-dialog-actions {
             margin-right: 0 !important;
+        }
+
+        select {
+            width: 98% !important;
+            margin-left: 1rem !important;
         }
     }
 }
