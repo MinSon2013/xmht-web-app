@@ -284,7 +284,7 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by productName">
           {{ "ORDER.PRODUCT" | translate }}
         </th>
-        <td mat-cell class="wrap-text" *matCellDef="let element" class="nowrap">
+        <td mat-cell class="wrap-text" *matCellDef="let element" class="nowrap" style="text-align: start;">
           <span *ngFor="let i of element.products" class="{{
               element.isViewed === 0 &&
               (element.sender !== element.agencyId ||
