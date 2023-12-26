@@ -23,7 +23,7 @@
             </div>
         </div>
 
-      <!-- <div class="row" *ngIf="isAdmin"> -->
+        <!-- <div class="row" *ngIf="isAdmin"> -->
         <div class="row" *ngIf="isAdmin || isStocker">
             <div class="col-6 row">
                 <span class="col-6" for="agency">{{ "ORDER.AGENCY" | translate }}</span>
@@ -50,7 +50,7 @@
         </div>
 
         <!-- <div class="row" *ngIf="isAdmin"> -->
-            <div class="row" *ngIf="isAdmin || isStocker">
+        <div class="row" *ngIf="isAdmin || isStocker">
             <div class="col-6 row">
                 <span class="col-6" for="status">{{ "ORDER.STATUS" | translate }}</span>
                 <select class="col-6 form-select" [(ngModel)]="selectedStatus">
@@ -66,7 +66,7 @@
         </div>
 
         <!-- <div class="row" *ngIf="!isAdmin"> -->
-            <div class="row" *ngIf="!isAdmin && !isStocker">
+        <div class="row" *ngIf="!isAdmin && !isStocker">
             <div class="col-6 row">
                 <span class="col-6" for="status">{{ "ORDER.STATUS" | translate }}</span>
                 <select class="col-6 form-select" [(ngModel)]="selectedStatus">
@@ -102,18 +102,18 @@
 
     <div class="row chart">
         <div class="col-6 bar-chart">
-            <h4>{{'DASHBOARD.BAR_CHART_TITLE' | translate}}</h4>
+            <h4>{{'STATISTICS.BAR_CHART_TITLE' | translate}}</h4>
             <div style="display: block;">
-                <canvas class="column" baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions"
-                    [plugins]="barChartPlugins" [legend]="barChartLegend">
+                <canvas class="column" baseChart [datasets]="barChartData" [labels]="barChartLabels"
+                    [options]="barChartOptions" [plugins]="barChartPlugins" [legend]="barChartLegend">
                 </canvas>
             </div>
         </div>
 
         <div class="col-6 pie-chart">
-            <h4>{{'DASHBOARD.PIE_CHART_TITLE' | translate}}</h4>
+            <h4>{{'STATISTICS.PIE_CHART_TITLE' | translate}}</h4>
             <div style="display: block;">
-                <h6 *ngIf="pieChartData.datasets[0].data.length === 0" class="no-data">{{'STATISTICS.NO_DATA' |
+                <h6 *ngIf="pieChartData.datasets[0].data.length === 0" class="no-data">{{'MESSAGE.NO_DATA' |
                     translate}}</h6>
                 <canvas class="pie" baseChart [data]="pieChartData" [type]="pieChartType"
                     (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)" [options]="pieChartOptions"

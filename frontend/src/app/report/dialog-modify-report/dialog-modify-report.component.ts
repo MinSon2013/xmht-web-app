@@ -18,6 +18,7 @@ export class DialogModifyReportComponent {
   header: string = '';
   helper = new Helper();
   isAdmin: boolean = this.helper.isAdmin();
+  showOtherStore: boolean = true;
   cities = Cities;
 
   error: any = '';
@@ -46,6 +47,7 @@ export class DialogModifyReportComponent {
     provinceId: 0,
     storeInformation: '',
     reportContent: '',
+    otherStoreName: '',
     attachFile: '',
     filePath: '',
     note: '',
@@ -79,9 +81,11 @@ export class DialogModifyReportComponent {
       this.report.districtId = this.data.row.districtId;
       this.report.provinceId = this.data.row.provinceId;
       this.report.storeId = this.data.row.storeId;
+      this.report.otherStoreName = this.data.row.otherStoreName;
       this.report.filePath = this.data.row.filePath;
       this.report.attachFile = this.data.row.attachFile;
-      this.agencySelected = this.agencyList.find(x => x.id === this.data.row.agencyId);
+      const agency = this.agencyList.find(x => x.id === this.data.row.agencyId);
+      this.agencySelected = agency ? agency : null;
       this.districtSelected = this.districtList.find(x => x.id === this.data.row.districtId);
       this.getProvinceList();
       this.provinceSelected = this.provinceList.find(x => x.id === this.data.row.provinceId);
@@ -90,14 +94,20 @@ export class DialogModifyReportComponent {
     } else {
       this.translate.get('REPORT.TITLE_ADD').subscribe(x => { this.header = x });
     }
+
+    if (!this.agencySelected) {
+      this.showOtherStore = true;
+    } else {
+      this.showOtherStore = false;
+    }
   }
 
   onSubmit() {
     if (this.validForm()) {
-      this.report.agencyId = this.agencySelected.id;
+      this.report.agencyId = this.agencySelected ? this.agencySelected.id : 0;
       this.report.districtId = this.districtSelected.id
       this.report.provinceId = this.provinceSelected.id;
-      this.report.storeId = this.storeSelected.id;
+      this.report.storeId = this.storeSelected ? this.storeSelected.id : 0;
       this.report.attachFile = this.getFilename(this.report.attachFile);
       this.report.attachFile = this.toNonAccentVietnamese(this.report.attachFile);
       this.report.userId = this.helper.getUserId();
@@ -166,10 +176,6 @@ export class DialogModifyReportComponent {
       isValidForm = false;
     }
 
-    if (!this.agencySelected || this.agencySelected.id === 0) {
-      isValidForm = false;
-    }
-
     if (!this.districtSelected || this.districtSelected.id === 0) {
       isValidForm = false;
     }
@@ -178,7 +184,7 @@ export class DialogModifyReportComponent {
       isValidForm = false;
     }
 
-    if (!this.storeSelected || this.storeSelected.id === 0) {
+    if (this.report.otherStoreName?.length === 0 && (!this.storeSelected || this.storeSelected.id === 0)) {
       isValidForm = false;
     }
 
@@ -192,15 +198,16 @@ export class DialogModifyReportComponent {
     return isValidForm;
   }
 
-  onChangeAgency(event: any) {
-    this.districtList = this.districtListClone.filter(x => x.agencyId === event.id);
-    this.provinceList = [];
-    this.storeDistrictList = [];
-  }
-
   onChangeDistrict(event: any) {
     this.agencyList = [];
-    let agencyIds = this.storeList.filter(x => x.districtId === event.id);
+    this.provinceList = [];
+    this.storeDistrictList = [];
+    this.getProvinceList();
+  }
+
+  onChangeProvince(event: any) {
+    this.agencyList = [];
+    let agencyIds = this.storeList.filter(x => x.provinceId === event.id);
     agencyIds.forEach(y => {
       const agency = this.agencyListClone.find(i => i.id === y.agencyId);
       if (agency) {
@@ -210,13 +217,19 @@ export class DialogModifyReportComponent {
     this.agencyList = this.agencyList.filter(function (elem, index, self) {
       return index === self.indexOf(elem);
     });
-    this.provinceList = [];
-    this.getProvinceList();
-    this.storeDistrictList = [];
   }
 
-  onChangeProvince(event: any) {
-    this.storeDistrictList = this.storeList.filter(x => x.provinceId === this.provinceSelected.id);
+  onChangeAgency(event: any) {
+    if (event) {
+      this.storeDistrictList = this.storeList.filter(x =>
+        x.agencyId === event.id
+        && x.provinceId === this.provinceSelected.id
+        && x.districtId === this.districtSelected.id);
+      this.showOtherStore = false;
+    } else {
+      this.storeDistrictList = [];
+      this.showOtherStore = true;
+    }
   }
 
   onChangeStore(event: any) {

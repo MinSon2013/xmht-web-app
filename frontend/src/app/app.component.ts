@@ -5,19 +5,12 @@ import { Helper } from './helpers/helper';
 import { LoginService } from './services/login.service';
 import { BnNgIdleService } from 'bn-ng-idle';
 
-interface SideNavToggle {
-  screenWidth: number;
-  collapsed: boolean;
-}
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  isSideNavCollapsed = false;
-  screenWidth = 0;
   isAuthenticated: boolean = false;
   helper = new Helper();
   location!: Location;
@@ -27,11 +20,6 @@ export class AppComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private bnIdle: BnNgIdleService) {
     translate.setDefaultLang('i18n');
-  }
-
-  onToggleSideNav(data: SideNavToggle): void {
-    this.screenWidth = data.screenWidth;
-    this.isSideNavCollapsed = data.collapsed;
   }
 
   ngOnInit() {
@@ -44,7 +32,6 @@ export class AppComponent implements OnInit {
 
     this.bnIdle.startWatching(600).subscribe((isTimedOut: boolean) => {
       if (isTimedOut) {
-        //console.log('session expired');
         window.location.reload();
       }
     });

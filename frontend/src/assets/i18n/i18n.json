@@ -7,9 +7,7 @@
         "PASSWORD": "Mật khẩu"
     },
     "DASHBOARD": {
-        "MENU_TITLE": "Trang chủ",
-        "BAR_CHART_TITLE": "Thống kê đơn hàng theo tháng",
-        "PIE_CHART_TITLE": "Thống kê tổng số lượng được đặt hàng của từng loại sản phẩm"
+        "MENU_TITLE": "Trang chủ"
     },
     "ORDER": {
         "MENU_TITLE": "Đơn đặt hàng",
@@ -19,11 +17,9 @@
         "TITLE_DETAIL": "Chi tiết đơn hàng",
         "SEARCH_ID": "Mã số đơn hàng",
         "ID": "Mã số",
-        "ID_2": "đơn hàng",
         "AGENCY": "Nhà phân phối",
         "CONTRACT": "Hợp đồng",
         "CREATEDDATE": "Ngày tạo đơn",
-        "SEARCH_RECEIVEDDATE": "Ngày nhận \n dự kiến",
         "RECEIVEDDATE1": "Ngày nhận",
         "RECEIVEDDATE2": "dự kiến",
         "LABEL_RECEIVEDDATE": "Ngày nhận \n dự kiến",
@@ -112,7 +108,8 @@
     },
     "STATISTICS": {
         "CHOOSE_DATE": "Chọn tháng và năm ",
-        "NO_DATA": "Không có dữ liệu để hiển thị"
+        "BAR_CHART_TITLE": "Thống kê đơn hàng theo tháng",
+        "PIE_CHART_TITLE": "Thống kê tổng số lượng được đặt hàng của từng loại sản phẩm"
     },
     "LOGOUT": "Đăng xuất",
     "BUTTON": {
@@ -175,7 +172,18 @@
     },
     "HEADER": {
         "MENU_1": "Thay đổi mật khẩu",
-        "MENU_2": "Đăng xuất"
+        "MENU_2": "Đăng xuất",
+        "MENU_GROUP_ORDER": "Thông tin đặt hàng",
+        "MENU_GROUP_MANAGE": "Quản lý",
+        "MENU_GROUP_REPORT": "Báo cáo",
+        "MENU_GROUP_STATISTICS": "Thống kê",
+        "MENU_ITEM_ORDER_LIST": "Danh sách đơn hàng",
+        "MENU_ITEM_ADD_ORDER": "Tạo đơn hàng",
+        "MENU_ITEM_PRODUCT": "Quản lý sản phẩm",
+        "MENU_ITEM_AGENCY": "Quản lý NPP",
+        "MENU_ITEM_STORE": "Quản lý cửa hàng",
+        "MENU_ITEM_DISTRICT": "Quản lý khu vực",
+        "MENU_ITEM_USER": "Quản lý User"
     },
     "CHANGE_PASSWORD": {
         "OLD_PASSWORD": "Mật khẩu cũ",

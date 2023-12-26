@@ -1,22 +1,6 @@
 <div class="container bg-white">
     <h2 class="header">{{ header }}</h2>
     <mat-dialog-content class="form-create shadow-md rounded px-8 pt-6 pb-8">
-        <!-- Agency -->
-        <div class="mb-3 row field p-top" [hidden]="!isAdmin">
-            <span class="col-5 text-label" for="agency">
-                {{'REPORT.AGENCY_NAME' | translate}}
-                <label class="require">*</label>
-            </span>
-            <select
-                class="col-7 form-select appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                [(ngModel)]="agencySelected" required>
-                <option [ngValue]="null" [disabled]="true" [selected]="true">
-                    -- {{'REPORT.SELECT_AGENCY' | translate}} --
-                </option>
-                <option [ngValue]="item" *ngFor="let item of agencyList">{{item.fullName}}</option>
-            </select>
-        </div>
-
         <!-- District -->
         <div class="mb-3 row field p-top">
             <span class="col-5 text-label" for="district">
@@ -49,20 +33,43 @@
             </select>
         </div>
 
+        <!-- Agency -->
+        <div class="mb-3 row field p-top" [hidden]="!isAdmin">
+            <span class="col-5 text-label" for="agency">
+                {{'REPORT.AGENCY_NAME' | translate}}
+            </span>
+            <select
+                class="col-7 form-select appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                [(ngModel)]="agencySelected" (ngModelChange)="onChangeAgency($event)" required>
+                <option [ngValue]="null" [selected]="true">
+                    -- {{'REPORT.SELECT_AGENCY' | translate}} --
+                </option>
+                <option [ngValue]="item" *ngFor="let item of agencyList">{{item.fullName}}</option>
+            </select>
+        </div>
+
         <!-- Store -->
         <div class="mb-3 row field p-top">
             <span class="col-5 text-label" for="storeName">
                 {{'REPORT.STORE_NAME' | translate}}
                 <label class="require">*</label>
             </span>
-            <select
-                class="col-7 form-select appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                [(ngModel)]="storeSelected" (ngModelChange)="onChangeStore($event)" required>
-                <option [ngValue]="null" [disabled]="true" [selected]="true">
-                    -- {{'REPORT.SELECT_STORE' | translate}} --
-                </option>
-                <option [ngValue]="item" *ngFor="let item of storeDistrictList">{{item.storeName}}</option>
-            </select>
+            <div class="p0 col-7">
+                <select [hidden]="showOtherStore"
+                    class="select-store form-select appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    [(ngModel)]="storeSelected" (ngModelChange)="onChangeStore($event)" required>
+                    <option [ngValue]="null" [disabled]="true" [selected]="true">
+                        -- {{'REPORT.SELECT_STORE' | translate}} --
+                    </option>
+                    <option [ngValue]="item" *ngFor="let item of storeDistrictList">{{item.storeName}}</option>
+                </select>
+
+                <input matInput [hidden]="!showOtherStore"
+                    class="other-store appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="otherStoreName" type="text" placeholder="" maxlength="200" [(ngModel)]="report.otherStoreName"
+                    [ngModelOptions]="{ standalone: true }" />
+
+            </div>
         </div>
 
         <!-- storeInformation -->

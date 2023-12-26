@@ -1,7 +1,7 @@
 .container {
     padding-left: 8rem;
     padding-right: 8rem;
-    padding-top: 2rem;
+    padding-top: 4rem;
     margin: 0 !important;
     width: 100%;
     min-width: 100%;
@@ -34,17 +34,17 @@
     }
 
     .block {
-       display: block;
+        display: block;
     }
 
     table {
-    //   width: 100%;
         border: 1px solid grey;
         border-bottom: 1.05px solid grey;
         margin-bottom: 20px;
         overflow-x: auto;
         white-space: nowrap;
         width: 10%;
+
         .nowrap {
             white-space: pre;
         }
@@ -164,7 +164,7 @@
 
     .container {
         padding-left: 2rem !important;
-        padding-top: 1rem !important;
+        padding-top: 2.25rem !important;
         padding-right: 0.5rem !important;
     }
 
@@ -174,10 +174,12 @@
 
     .logo {
         max-height: 3rem !important;
-      
-      
+
+
         .footer {
             display: block !important;
-        }  margin: 0 0.5rem !important;
+        }
+
+        margin: 0 0.5rem !important;
     }
 }

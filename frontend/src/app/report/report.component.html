@@ -1,42 +1,44 @@
 <div class="bg-white container">
     <h2 class="header">{{'REPORT.TITLE' | translate}}</h2>
 
-    <div
-        class="div-search pad row action-search shadow appearance-none border rounded w-full text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-        <div class="w-auto row">
-            <span class="col-6" for="district">{{ "REPORT.SELECT_DISTRICT" | translate }}</span>
-            <select class="col-6" [(ngModel)]="districtSelected" (ngModelChange)="onSelected($event)" required>
-                <option [ngValue]="null" [disabled]="true" [selected]="true">
-                    -- {{ "REPORT.SELECT_DISTRICT" | translate }} --
-                </option>
-                <option [ngValue]="item" *ngFor="let item of districtList">
-                    {{ item.name }}
-                </option>
-            </select>
-        </div>
-        <div class="w-auto ml-1 row">
-            <span class="text-label" for="receivedDate">
-                {{'REPORT.SELECT_DATE' | translate}}
-            </span>
-            <mat-form-field appearance="fill" class="border rounded">
-                <mat-label>Chọn ngày</mat-label>
-                <input matInput [matDatepicker]="picker" [formControl]="date">
-                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-            </mat-form-field>
-        </div>
-        <div class="action-add w-auto row">
-            <button mat-raised-button type="submit" class="btn-search" (click)="onSearch()">
-                <mat-icon aria-hidden="false" aria-label="Search icon" fontSet="fas" fontIcon="fa-magnifying-glass"
-                    class="fa-search"></mat-icon>
-                <label>{{ "BUTTON.SEARCH" | translate }}</label>
-            </button>
+    <div class="action-search">
+        <div
+            class="div-search p1 row shadow appearance-none border rounded w-full text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            <div class="w-auto row">
+                <span class="col-6" for="district">{{ "REPORT.SELECT_DISTRICT" | translate }}</span>
+                <select class="col-6" [(ngModel)]="districtSelected" (ngModelChange)="onSelected($event)" required>
+                    <option [ngValue]="null" [disabled]="true" [selected]="true">
+                        -- {{ "REPORT.SELECT_DISTRICT" | translate }} --
+                    </option>
+                    <option [ngValue]="item" *ngFor="let item of districtList">
+                        {{ item.name }}
+                    </option>
+                </select>
+            </div>
+            <div class="w-auto ml-1 row">
+                <span class="text-label" for="receivedDate">
+                    {{'REPORT.SELECT_DATE' | translate}}
+                </span>
+                <mat-form-field appearance="fill" class="border rounded">
+                    <mat-label>Chọn ngày</mat-label>
+                    <input matInput [matDatepicker]="picker" [formControl]="date">
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="action-add w-auto row">
+                <button mat-raised-button type="submit" class="btn-search" (click)="onSearch()">
+                    <mat-icon aria-hidden="false" aria-label="Search icon" fontSet="fas" fontIcon="fa-magnifying-glass"
+                        class="fa-search"></mat-icon>
+                    <label>{{ "BUTTON.SEARCH" | translate }}</label>
+                </button>
 
-            <button mat-raised-button class="btn-add" (click)="onEdit(null)" [hidden]="isStocker">
-                <mat-icon aria-hidden="false" aria-label="Add icon" fontSet="fas" fontIcon="fa-plus"
-                    class="fa-plus"></mat-icon>
-                <label>{{'BUTTON.ADD' | translate}}</label>
-            </button>
+                <button mat-raised-button class="btn-add" (click)="onEdit(null)">
+                    <mat-icon aria-hidden="false" aria-label="Add icon" fontSet="fas" fontIcon="fa-plus"
+                        class="fa-plus"></mat-icon>
+                    <label>{{'BUTTON.ADD' | translate}}</label>
+                </button>
+            </div>
         </div>
     </div>
 
@@ -45,7 +47,7 @@
 
             <!-- rowId Column -->
             <ng-container matColumnDef="rowId">
-                <th mat-header-cell *matHeaderCellDef>
+                <th mat-header-cell *matHeaderCellDef class="w3">
                     {{'REPORT.ID' | translate}}</th>
                 <td mat-cell *matCellDef="let element; let i = index" [attr.rowspan]="getRowSpan('rowId', i)"
                     [style.display]="getRowSpan('rowId', i) ? '' : 'none'">
@@ -55,7 +57,7 @@
 
             <!-- updateDate Column -->
             <ng-container matColumnDef="updateDateVisisble">
-                <th mat-header-cell *matHeaderCellDef class="w-8rem">
+                <th mat-header-cell *matHeaderCellDef class="w9">
                     {{'REPORT.UPDATE_DATE' | translate}}</th>
                 <td mat-cell *matCellDef="let element; let i = index"
                     [attr.rowspan]="getRowSpan('updateDateVisisble', i)"
@@ -66,7 +68,7 @@
 
             <!-- provinceName Column -->
             <ng-container matColumnDef="provinceName">
-                <th mat-header-cell *matHeaderCellDef class="w-8rem">
+                <th mat-header-cell *matHeaderCellDef class="w8">
                     {{'REPORT.PROVINCE' | translate}}
                 </th>
                 <td mat-cell class="wrap-text" *matCellDef="let element; let i = index"
@@ -78,16 +80,17 @@
 
             <!-- storeName Column -->
             <ng-container matColumnDef="storeName">
-                <th mat-header-cell *matHeaderCellDef class="w-8rem">
+                <th mat-header-cell *matHeaderCellDef class="w8">
                     {{'REPORT.STORE_NAME' | translate}}</th>
                 <td mat-cell class="wrap-text" *matCellDef="let element">
                     {{element.storeName}}
+                    {{element.otherStoreName}}
                 </td>
             </ng-container>
 
             <!-- agencyName Column -->
             <ng-container matColumnDef="agencyName">
-                <th mat-header-cell *matHeaderCellDef class="w-8rem">
+                <th mat-header-cell *matHeaderCellDef class="w9">
                     {{'REPORT.AGENCY_NAME' | translate}}</th>
                 <td mat-cell *matCellDef="let element">
                     {{element.agencyName}}
@@ -96,7 +99,7 @@
 
             <!-- storeInformation Column -->
             <ng-container matColumnDef="storeInformation">
-                <th mat-header-cell *matHeaderCellDef class="w-15rem">
+                <th mat-header-cell *matHeaderCellDef class="w15">
                     {{'REPORT.INFORMATION' | translate}}</th>
                 <td mat-cell class="wrap-text" *matCellDef="let element">
                     {{element.storeInformation}}
@@ -105,7 +108,7 @@
 
             <!-- reportContent Column -->
             <ng-container matColumnDef="reportContent">
-                <th mat-header-cell *matHeaderCellDef class="w-15rem">
+                <th mat-header-cell *matHeaderCellDef class="w15">
                     {{'REPORT.CONTENT' | translate}}</th>
                 <td mat-cell class="wrap-text col-content" *matCellDef="let element">
                     <span class="width-300">{{ element.showContent }}</span>
@@ -115,7 +118,7 @@
 
             <!-- attachFile Column -->
             <ng-container matColumnDef="attachFile">
-                <th mat-header-cell *matHeaderCellDef class="w-8rem">
+                <th mat-header-cell *matHeaderCellDef class="w8">
                     {{'REPORT.ATTACH_FILE' | translate}}</th>
                 <td mat-cell class="wrap-text" *matCellDef="let element" class="focus" (click)="onDownload(element)">
                     {{element.attachFile}}
@@ -125,7 +128,7 @@
 
             <!-- note Column -->
             <ng-container matColumnDef="note">
-                <th mat-header-cell *matHeaderCellDef class="w-8rem">
+                <th mat-header-cell *matHeaderCellDef class="w8">
                     {{'REPORT.NOTE' | translate}}</th>
                 <td mat-cell class="wrap-text" *matCellDef="let element">
                     {{element.note}}
@@ -140,7 +143,7 @@
                         <mat-icon aria-hidden="false" aria-label="Trash icon" fontSet="fas" fontIcon="fa-pen"
                             class="fa-pen" (click)="onEdit(element)"></mat-icon>
                         <mat-icon aria-hidden="false" aria-label="Trash icon" fontSet="fas" fontIcon="fa-trash"
-                            class="fa-trash" (click)="onDelete(element)" [hidden]="isStocker"></mat-icon>
+                            class="fa-trash" (click)="onDelete(element)"></mat-icon>
                     </div>
                 </td>
             </ng-container>
@@ -155,7 +158,7 @@
             <tr mat-row *matHeaderRowDef="['no-data']" class="text-center" [hidden]="hasData"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
-        <mat-paginator *ngIf="hasData" [pageSizeOptions]="[20, 50, 100]" showFirstLastButtons
+        <mat-paginator *ngIf="hasData" [pageSizeOptions]="[10, 20, 50, 100]" showFirstLastButtons
             aria-label="Select page of periodic elements">
         </mat-paginator>
     </div>

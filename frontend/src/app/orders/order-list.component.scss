@@ -6,7 +6,7 @@
 }
 
 .bg-white {
-    margin-top: 4rem;
+    margin-top: 7rem;
 }
 
 .header {
@@ -266,7 +266,7 @@
 }
 
 .action-search {
-    margin: 0 2rem;
+    margin: 0 1rem;
     border: 1px solid gray;
     border-radius: 4px;
 
@@ -290,6 +290,7 @@
             padding-right: 1rem;
             cursor: pointer;
             width: 145px;
+            height: 40px;
 
             .fa-search {
                 color: #fff;
@@ -335,7 +336,7 @@
     }
 }
 
-@media only screen and (max-width:1000px) {
+@media only screen and (max-width: 1000px) {
     .bg-white {
         //padding-left: 1.5rem !important;
     }
@@ -419,7 +420,7 @@
     }
 }
 
-@media only screen and (max-width:800px) {
+@media only screen and (max-width: 800px) {
     .bg-white {
         //padding-left: 1.5rem !important;
     }
@@ -507,7 +508,7 @@
     }
 }
 
-@media only screen and (max-width:600px) {
+@media only screen and (max-width: 600px) {
     .bg-white {
         //padding-left: 1.5rem !important;
     }
@@ -612,9 +613,9 @@
     }
 }
 
-@media only screen and (max-width:400px) {
+@media only screen and (max-width: 400px) {
     .bg-white {
-        //padding-top: 1rem !important;
+        margin-top: 5.15rem !important;
     }
 
     .header {
@@ -647,12 +648,13 @@
             margin-right: 0.5rem;
 
             .btn-search {
-                padding-left: 6px;
-                padding-top: 2px;
+                padding-left: 10px;
+                padding-top: 1px;
+                width: 130px !important;
 
                 .fa-search {
-                    font-size: 16px;
-                    padding-top: 8px;
+                    font-size: 14px;
+                    padding-top: 1px !important;
                 }
             }
         }
@@ -660,30 +662,30 @@
 
     .action-add {
         margin-top: 1rem;
-        margin-bottom: 0.75rem;
+        margin-bottom: 0 !important;
         margin-right: 1rem !important;
         width: 7.5rem;
 
         .btn-add {
             padding-left: 6px;
             padding-top: 6px;
+            margin-top: 0.5rem !important;
 
             .fa-plus {
-                font-size: 18px;
-                padding-top: 2px;
+                font-size: 16px !important;
+                padding-top: 0 !important;
             }
 
             .pad-label {
-                font-size: 12pt;
+                font-size: 11pt !important;
             }
         }
     }
 
     .table-container {
-        //  padding: 1rem 0.5rem;
-
         table {
             margin-bottom: 0rem;
+            max-height: 400px !important;
 
             .sticky-col {
                 background-color: white !important;
@@ -697,6 +699,14 @@
 
     .action-export {
         margin-right: 1rem !important;
+
+        mat-icon {
+            font-size: 16px !important;
+        }
+
+        label {
+            font-size: 11pt !important;
+        }
     }
 
     .created-date {
@@ -714,106 +724,9 @@
         .btn-trigger {
             width: 7rem !important;
         }
-    }
-}
 
-@media only screen and (max-width:200px) {
-    .header {
-        padding: 2rem 0 1rem 0 !important;
-        font-size: calc(1.2rem + 0.3vw) !important;
-        font-weight: 600;
-    }
-
-    .action-search {
-        padding-right: 0.5rem !important;
-        padding-left: 0.5rem !important;
-        margin: 0 0.5rem;
-
-        .row {
-            --mdb-gutter-x: 0rem !important;
-            display: block;
-        }
-
-        .col-5,
-        .col-6,
-        .col-7,
-        .select,
-        .select-1 {
-            width: 100% !important;
-        }
-
-        .action-submit {
-            margin-bottom: 0.5rem;
-            margin-top: 1rem;
-            margin-right: 0.5rem;
-
-            .btn-search {
-                padding-left: 6px;
-                padding-top: 2px;
-
-                .fa-search {
-                    font-size: 16px;
-                    padding-top: 8px;
-                }
-            }
-        }
-    }
-
-    .action-add {
-        margin-top: 1rem;
-        margin-bottom: 0.75rem;
-        margin-right: 1rem;
-        width: 7.5rem;
-
-        .btn-add {
-            padding-left: 6px;
-            padding-top: 6px;
-
-            .fa-plus {
-                font-size: 18px;
-                padding-top: 2px;
-            }
-
-            .pad-label {
-                font-size: 12pt;
-            }
-        }
-    }
-
-    .table-container {
-        padding: 1rem 0.5rem;
-
-        table {
-            margin-bottom: 0rem;
-
-            .sticky-col {
-                background-color: white !important;
-            }
-        }
-
-        .bold {
-            font-size: 12pt;
-        }
-    }
-
-    .action-export {
-        margin-right: 1rem !important;
-    }
-
-    .created-date {
-        margin-top: 1.5rem !important;
-    }
-
-    .action-group {
-        margin-right: 1rem !important;
-        margin-left: 1rem !important;
-
-        .btn3 {
-            margin-top: 6px !important;
-        }
-
-        .btn-trigger {
-            width: 7rem !important;
+        .btn4 {
+            margin-top: 4px;
         }
     }
 }

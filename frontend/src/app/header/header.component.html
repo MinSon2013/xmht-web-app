@@ -1,29 +1,113 @@
-<div class="head" [ngClass]="getHeadClass()">
-    <div class="head-content row">
-        <div class="head-content-left col-5">
-            <h5 class="span">{{ "TITLE_APP" | translate }}</h5>
-        </div>
-        <div class="head-content-right col-7">
-            <div class="user {{isAdmin ? '' : 'cursor'}}" (click)="openHeaderMenu()">
-                <mat-icon aria-hidden="false" aria-label="User icon" fontSet="fas" fontIcon="fa-user" class="fa-user"></mat-icon>
-                <p class="agency">{{agency}}</p>
-            </div>
-            <span [matMenuTriggerFor]="clickMenu" #clickMenuTrigger="matMenuTrigger"></span>
-            <mat-menu #clickMenu="matMenu">
-                <button mat-menu-item (click)="onChangePassword()">
-                    <mat-icon aria-hidden="false" aria-label="User icon" fontSet="fas" fontIcon="fa-lock"></mat-icon>
-                    {{ "HEADER.MENU_1" | translate }}</button>
-                <button mat-menu-item (click)="onLogOut()">
-                    <mat-icon aria-hidden="false" aria-label="Logout icon" fontSet="fas" fontIcon="fa-right-from-bracket"></mat-icon>
-                    {{ "HEADER.MENU_2" | translate }}</button>
-            </mat-menu>
+<div class="head">
+    <mat-toolbar color="" class="">
+        <mat-toolbar-row>
+            <div class="head-content row">
+                <div class="head-content-left col-5">
+                    <img alt="XMHT" width="64" height="64" src="./assets/images/logo.png"
+                        (click)="onRouterLink('dashboard')">
+                    <h5 class="span" (click)="onRouterLink('dashboard')">{{ "TITLE_APP" | translate }}</h5>
+                </div>
+                <div class="head-content-right col-7">
+                    <div class="user {{isAdmin ? '' : 'cursor'}}" (mouseover)="subMenuTrigger.openMenu()"
+                        [hidden]="isAdmin">
+                        <mat-icon aria-hidden="false" aria-label="User icon" fontSet="fas" fontIcon="fa-user"
+                            class="fa-user"></mat-icon>
+                        <p class="agency">{{agency}}</p>
+                    </div>
+                    <div class="user {{isAdmin ? '' : 'cursor'}}" [hidden]="!isAdmin">
+                        <mat-icon aria-hidden="false" aria-label="User icon" fontSet="fas" fontIcon="fa-user"
+                            class="fa-user"></mat-icon>
+                        <p class="agency">{{agency}}</p>
+                    </div>
+                    <span [matMenuTriggerFor]="subMenu" #subMenuTrigger="matMenuTrigger"></span>
+                    <mat-menu #subMenu="matMenu">
+                        <span (mouseleave)="subMenuTrigger.closeMenu()">
+                            <button mat-menu-item (click)="onChangePassword()">
+                                <mat-icon aria-hidden="false" aria-label="User icon" fontSet="fas"
+                                    fontIcon="fa-lock"></mat-icon>
+                                {{ "HEADER.MENU_1" | translate }}
+                            </button>
+                        </span>
+                    </mat-menu>
 
-            <div class="demo-section">
-                <mat-icon matBadge="{{badgeNumber}}" matBadgeColor="warn" [matBadgeHidden]="isBadgeHidden" 
-                (click)="onClick()" fontSet="fas" fontIcon="fa-bell" class="fa-bell"></mat-icon>
-                <span class="cdk-visually-hidden">
-                </span>
+                    <!-- Notification -->
+                    <div class="demo-section">
+                        <mat-icon matBadge="{{badgeNumber}}" matBadgeColor="warn" [matBadgeHidden]="isBadgeHidden"
+                            (click)="onClick()" fontSet="fas" fontIcon="fa-bell" class="fa-bell"></mat-icon>
+                        <span class="cdk-visually-hidden">
+                        </span>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
+        </mat-toolbar-row>
+        <mat-toolbar-row class="row2">
+            <div class="sub-menu align-end">
+                <a mat-button [matMenuTriggerFor]="menu1" #menuTrigger1="matMenuTrigger"
+                    (click)="openSubMenu(menuTrigger1, 1)" class="menu-item">
+                    <mat-icon aria-hidden="false" fontSet="fas" fontIcon="fa-caret-down" class="fa-icon"></mat-icon>
+                    {{ "HEADER.MENU_GROUP_ORDER" | translate }}
+                </a>
+                <a mat-button [matMenuTriggerFor]="menu2" #menuTrigger2="matMenuTrigger"
+                    (click)="openSubMenu(menuTrigger2, 2)" class="menu-item">
+                    <mat-icon aria-hidden="false" fontSet="fas" fontIcon="fa-caret-down" class="fa-icon"></mat-icon>
+                    {{ "HEADER.MENU_GROUP_MANAGE" | translate }}
+                </a>
+                <a mat-button [routerLink]="'/statistics'" class="menu-item">
+                    {{ "HEADER.MENU_GROUP_STATISTICS" | translate }}
+                </a>
+                <a mat-button [routerLink]="'/report'" class="menu-item"> {{ "HEADER.MENU_GROUP_REPORT" | translate
+                    }} </a>
+                <a mat-button [routerLink]="" class="menu-item" (click)="onLogOut()">
+                    {{ "HEADER.MENU_2" | translate }}
+                </a>
+
+                <!-- Order menu -->
+                <mat-menu #menu1="matMenu" [overlapTrigger]="false">
+                    <span (mouseleave)="closeSubMenu(menuTrigger1)">
+                        <button mat-menu-item (click)="onRouterLink('orders/list')">
+                            <mat-icon aria-hidden="false" aria-label="List icon" fontSet="fas"
+                                fontIcon="fa-list"></mat-icon>
+                            <span>{{ "HEADER.MENU_ITEM_ORDER_LIST" | translate }}</span>
+                        </button>
+                        <button mat-menu-item (click)="onRouterLink('orders/add')">
+                            <mat-icon aria-hidden="false" aria-label="Add icon" fontSet="fas"
+                                fontIcon="fa-plus"></mat-icon>
+                            <span>{{ "HEADER.MENU_ITEM_ADD_ORDER" | translate }}</span>
+                        </button>
+                    </span>
+                </mat-menu>
+
+                <!-- Manage menu -->
+                <mat-menu #menu2="matMenu" [overlapTrigger]="false">
+                    <span (mouseleave)="closeSubMenu(menuTrigger2)">
+                        <button mat-menu-item (click)="onRouterLink('products')">
+                            <mat-icon aria-hidden="false" aria-label="Manage icon" fontSet="fas"
+                                fontIcon="fa-box-open"></mat-icon>
+                            <span>{{ "HEADER.MENU_ITEM_PRODUCT" | translate }}</span>
+                        </button>
+                        <button mat-menu-item (click)="onRouterLink('agency')">
+                            <mat-icon aria-hidden="false" aria-label="Agency icon" fontSet="fas"
+                                fontIcon="fa-user"></mat-icon>
+                            <span>{{ "HEADER.MENU_ITEM_AGENCY" | translate }}</span>
+                        </button>
+                        <button mat-menu-item (click)="onRouterLink('store')">
+                            <mat-icon aria-hidden="false" aria-label="Shop icon" fontSet="fas"
+                                fontIcon="fa-shop"></mat-icon>
+                            <span>{{ "HEADER.MENU_ITEM_STORE" | translate }}</span>
+                        </button>
+                        <button mat-menu-item (click)="onRouterLink('district')">
+                            <mat-icon aria-hidden="false" aria-label="Building icon" fontSet="fas"
+                                fontIcon="fa-building"></mat-icon>
+                            <span>{{ "HEADER.MENU_ITEM_DISTRICT" | translate }}</span>
+                        </button>
+                        <button mat-menu-item (click)="onRouterLink('user')">
+                            <mat-icon aria-hidden="false" aria-label="User icon" fontSet="fas"
+                                fontIcon="fa-user-gear"></mat-icon>
+                            <span>{{ "HEADER.MENU_ITEM_USER" | translate }}</span>
+                        </button>
+                    </span>
+                </mat-menu>
+            </div>
+        </mat-toolbar-row>
+    </mat-toolbar>
 </div>
