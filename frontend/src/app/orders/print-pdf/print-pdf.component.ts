@@ -12,6 +12,7 @@ import { OrderService } from '../../services/order.service';
 import {Location} from '@angular/common';
 import { NumToVietnameseText } from '../../common/num-to-vietnamese-text';
 import * as moment from 'moment';
+import { Order } from '../../models/order';
 
 @Component({
   selector: 'app-print-pdf',
@@ -107,7 +108,7 @@ export class PrintPdfComponent implements OnInit {
     this.orderService.getOrderList().subscribe((response: any) => {
       if (response.length > 0) {
         const orderList = response;
-        const order = orderList.find((x: any) => x.id === this.data.id);
+        const order: Order = orderList.find((x: Order) => x.id === this.data.id);
 
         if (order.confirmedDate.length > 0) {
           const k = order.confirmedDate.split(' ');
@@ -118,7 +119,7 @@ export class PrintPdfComponent implements OnInit {
         }
         this.driver = order.driver;
         this.licensePlates = order.licensePlates;
-        this.productTotal = order.productTotal;
+        this.productTotal = order.productTotal + '';
         this.numberToText = this.numToText.toVietnamese(this.productTotal) + this.numToText.convertDecimal(this.productTotal, 'tấn');
 
         if (order.shippingDate.length > 0) {
@@ -138,10 +139,10 @@ export class PrintPdfComponent implements OnInit {
         }
         const _data = data;
         let idx = 0;
-        order.products.forEach((x: { id: number; name: string; quantity: number; }) => {
+        order.products.sort((a, b) => (a.id < b.id ? -1 : 1));
+        order.products.forEach(x => {
           idx = idx + 1;
-          data = {no: idx + '', category: x.name, amount: x.quantity.toString(), note: order.note, ton: 'Tấn'};
-          //data = {no: x.id.toString(), category: x.name, amount: x.quantity.toString(), note: order.note, ton: 'Tấn'};
+          data = { no: idx + '', category: x.name, amount: x.quantity.toString(), note: order.note, ton: 'Tấn' };
           arrays.push(data);
         });
         arrays.sort((a, b) => {
