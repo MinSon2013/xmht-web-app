@@ -124,9 +124,9 @@
 
 @media only screen and (max-width:600px) {
     .container {
-        padding: 0.5rem;
-        // padding-left: 2rem !important;
-        padding-top: 1rem !important;
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
+        padding-top: 0 !important;
 
         .action-search {
             padding-right: 0.5rem !important;
@@ -154,10 +154,11 @@
                 .btn-search {
                     padding-left: 6px;
                     padding-top: 2px;
+                    width: 140px;
 
                     .fa-search {
                         font-size: 16px;
-                        padding-top: 8px;
+                        padding-top: 1px;
                     }
                 }
             }
@@ -193,9 +194,8 @@
 
 @media only screen and (max-width:400px) {
     .container {
-        padding: 0.5rem;
-        padding-left: 2rem !important;
-        padding-top: 1rem !important;
+        padding-left: 0.5rem !important;
+        padding-top: 0 !important;
 
         .action-search {
             padding-right: 0.5rem !important;
@@ -223,10 +223,11 @@
                 .btn-search {
                     padding-left: 6px;
                     padding-top: 2px;
+                    width: 135px;
 
                     .fa-search {
                         font-size: 16px;
-                        padding-top: 8px;
+                        padding-top: 1px;
                     }
                 }
             }

@@ -165,8 +165,7 @@
 
 @media only screen and (max-width:400px) {
     .container {
-        //  padding-left: 2rem !important;
-        padding-top: 1rem !important;
+        margin-top: 5rem !important;
 
         .header {
             padding: 2rem 0 1rem 0 !important;
@@ -176,6 +175,8 @@
 
         .action-add {
             margin-right: 0 !important;
+            padding-right: 0 !important;
+            padding-bottom: 0.5rem !important;
         }
 
         .table-container {
@@ -191,8 +192,8 @@
 
 @media only screen and (max-width:600px) {
     .container {
-        //  padding-left: 2rem !important;
-        padding-top: 1rem !important;
+        margin-top: 5rem !important;
+        padding-left: 1rem !important;
 
         .header {
             padding: 2rem 0 1rem 0 !important;
@@ -202,6 +203,8 @@
 
         .action-add {
             margin-right: 0 !important;
+            padding-right: 0 !important;
+            padding-bottom: 0.5rem !important;
         }
 
         .table-container {

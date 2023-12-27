@@ -107,6 +107,7 @@ export class OrderAddComponent implements OnInit {
       };
       list.push(item);
     });
+    list.sort((a, b) => (a.id < b.id ? -1 : 1));
     this.order.products = list;
   }
 
