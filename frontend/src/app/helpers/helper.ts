@@ -75,16 +75,16 @@ export class Helper {
 
   checkSession() {
     let appHeader = document.getElementById('app-header');
-    let appSidenav = document.getElementById('app-sidenav');
+    // let appSidenav = document.getElementById('app-sidenav');
     let appLogin = document.getElementById('login-container');
     if (localStorage.getItem(CONFIG.LOCAL_STORAGE.ACCESS_TOKEN)) {
       appHeader ? appHeader.hidden = false : '';
-      appSidenav ? appSidenav.hidden = false : '';
+      //  appSidenav ? appSidenav.hidden = false : '';
       appLogin ? appLogin.hidden = true : '';
       return true;
     } else {
       appHeader ? appHeader.hidden = true : '';
-      appSidenav ? appSidenav.hidden = true : '';
+      // appSidenav ? appSidenav.hidden = true : '';
       appLogin ? appLogin.hidden = false : '';
       return false;
     }
@@ -113,33 +113,11 @@ export class Helper {
     return true;
   }
 
-  isStocker(): boolean {
+  getFullName(): string {
     const info = localStorage.getItem(CONFIG.LOCAL_STORAGE.LOGIN_INFO);
     if (info) {
       const json = JSON.parse(info) as LoginInfo;
-      if (!json.isStocker) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  isUser(): boolean {
-    const info = localStorage.getItem(CONFIG.LOCAL_STORAGE.LOGIN_INFO);
-    if (info) {
-      const json = JSON.parse(info) as LoginInfo;
-      if (!json.isUser) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  getInfoName(): string {
-    const info = localStorage.getItem(CONFIG.LOCAL_STORAGE.LOGIN_INFO);
-    if (info) {
-      const json = JSON.parse(info) as LoginInfo;
-      return json.accountName;
+      return json.fullName;
     }
     return '';
   }
@@ -162,22 +140,22 @@ export class Helper {
     return 0;
   }
 
-  getRole() {
+  getAgencyName(): string {
+    const info = localStorage.getItem(CONFIG.LOCAL_STORAGE.LOGIN_INFO);
+    if (info) {
+      const json = JSON.parse(info) as LoginInfo;
+      return json.agencyName;
+    }
+    return '';
+  }
+
+  getUserRole() {
     const info = localStorage.getItem(CONFIG.LOCAL_STORAGE.LOGIN_INFO);
     if (info) {
       const json = JSON.parse(info) as LoginInfo;
       return Number(json.userRole);
     }
     return 0;
-  }
-
-  getMenuList(): INavbarData[] {
-    let menuList: INavbarData[] = [];
-    let jsonString = localStorage.getItem(CONFIG.LOCAL_STORAGE.MENU_LIST);
-    if (jsonString) {
-      menuList = JSON.parse(jsonString) as INavbarData[];
-    }
-    return menuList;
   }
 
   getDeliveryList(): Delivery[] {
@@ -188,6 +166,8 @@ export class Helper {
     }
     return deliveryList;
   }
+
+  // START ------------------------------------------
 
   setOrderList(data: any[]) {
     localStorage.setItem(CONFIG.LOCAL_STORAGE.ORDER_LIST, JSON.stringify(data));
@@ -277,12 +257,6 @@ export class Helper {
     let jsonString = localStorage.getItem(CONFIG.LOCAL_STORAGE.AGENCY_LIST);
     if (jsonString) {
       agencyList = JSON.parse(jsonString) as Agency[];
-      const userList = this.getUserList();
-      agencyList.forEach(element => {
-        const user = userList.find(x => x.id === element.userId);
-        element.accountName = user ? user.username : '';
-        element.password = user ? user.password : '';
-      });
     }
     return agencyList;
   }
@@ -295,9 +269,10 @@ export class Helper {
           element.address = obj.address;
           element.contract = obj.contract;
           element.email = obj.email;
-          element.fullName = obj.fullName;
+          element.agencyName = obj.agencyName;
           element.note = obj.note;
           element.phone = obj.phone;
+          element.userId = obj.userId;
         }
       });
       localStorage.setItem(CONFIG.LOCAL_STORAGE.AGENCY_LIST, JSON.stringify(agencyList));
@@ -395,30 +370,13 @@ export class Helper {
     localStorage.setItem(CONFIG.LOCAL_STORAGE.PRODUCT_ORDER_LIST, JSON.stringify(productOrderList));
   }
 
-  getUserList(): User[] {
-    let userList: User[] = [];
-    let jsonString = localStorage.getItem(CONFIG.LOCAL_STORAGE.USER_LIST);
-    if (jsonString) {
-      userList = JSON.parse(jsonString) as User[];
-    }
-    return userList;
-  }
-
   setAgencyList(agencyList: Agency[]) {
-    const userList = this.getUserList();
-    agencyList.forEach(element => {
-      const user = userList.find(x => x.id === element.userId);
-      element.accountName = user ? user.username : '';
-      element.password = user ? user.password : '';
-    });
     localStorage.setItem(CONFIG.LOCAL_STORAGE.AGENCY_LIST, JSON.stringify(agencyList));
   }
 
-  addUser(data: User) {
-    let userList = this.getUserList();
-    userList = [data].concat(userList);
-    localStorage.setItem(CONFIG.LOCAL_STORAGE.USER_LIST, JSON.stringify(userList));
-  }
+
+  // END ------------------------------------------
+
 
   getMessage(translate: TranslateService, key: string, status: number, content?: string): string {
     let msg: string = '';
@@ -476,6 +434,18 @@ export class Helper {
       validation = !!/\d/.test(charStr);
     }
     return validation;
+  }
+
+  public onlyNumberKey(event: any) {
+    var ASCIICode = (event.which) ? event.which : event.keyCode;
+    if (ASCIICode > 31
+      && (ASCIICode < 48 || ASCIICode > 57)
+      && (ASCIICode < 96 || ASCIICode > 105)
+      && ASCIICode !== 110
+      && ASCIICode !== 190) {
+      return false;
+    }
+    return true;
   }
 }
 

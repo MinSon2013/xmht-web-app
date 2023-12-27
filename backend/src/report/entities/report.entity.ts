@@ -8,6 +8,9 @@ export class Reports {
   @Column({ name: 'agency_id' })
   agencyId: number;
 
+  @Column({ name: 'user_id' })
+  userId: number;
+
   @Column({ name: 'district_id' })
   districtId: number;
 
@@ -44,6 +47,6 @@ export class Reports {
   @Column({ length: 255 })
   note: string;
 
-  @Column({ name: 'user_id' })
-  userId: number;
+  @Column({ name: 'updated_by_user_id' })
+  updatedByUserId: number;
 }

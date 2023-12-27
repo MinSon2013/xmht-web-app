@@ -8,7 +8,7 @@ import { CustomPaginator } from '../common/custom-paginator';
 import { DialogDeleteConfirmComponent } from '../common/dialog-delete-confirm/dialog-delete-confirm.component';
 import { ProductService } from '../services/product.service';
 import { DialogDetailProductComponent } from './dialog-detail-product/dialog-detail-product.component';
-import { SERVICE_TYPE } from '../constants/const-data';
+import { SERVICE_TYPE, STOCKER, USER_AREA_MANAGER } from '../constants/const-data';
 import { Helper } from '../helpers/helper';
 
 @Component({
@@ -25,12 +25,11 @@ export class ProductsComponent implements OnInit {
   dataSource = new MatTableDataSource<Product>();
   clickedRows = new Set<Product>();
   colspan: number = 0;
-
-  helper = new Helper();
-
   hasData: boolean = false;
-
-  isStocker: boolean = this.helper.isStocker();
+  helper = new Helper();
+  role: number = this.helper.getUserRole();
+  isStocker: boolean = this.role === STOCKER;
+  hidden: boolean = (this.role === USER_AREA_MANAGER || this.isStocker);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -74,7 +73,7 @@ export class ProductsComponent implements OnInit {
     const dialogRef = this.dialog.open(DialogDetailProductComponent, {
       data: row,
     });
-    
+
     elements.forEach(el => {
       el.style.position = 'fixed';
     });

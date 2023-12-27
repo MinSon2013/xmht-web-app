@@ -39,7 +39,7 @@ export class DistrictComponent implements OnInit {
   constructor(public dialog: MatDialog,
     private districtService: DistrictService,
   ) {
-    this.isHiddenAddButton = (this.helper.isAdmin() || this.helper.getRole() === USER_AREA_MANAGER) ? false : true;
+    this.isHiddenAddButton = (this.helper.isAdmin() || this.helper.getUserRole() === USER_AREA_MANAGER) ? false : true;
   }
 
   ngOnInit(): void {

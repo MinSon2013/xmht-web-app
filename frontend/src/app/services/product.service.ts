@@ -27,7 +27,7 @@ export class ProductService {
             agencyId: Number(obj.agencyId),
             productId: Number(obj.productId),
             status: Number(obj.status),
-            userId: this.helper.getAgencyId(),
+            userId: this.helper.getUserId(),
         };
         return this.webrequestService.post(this.url1, payload);
     }
@@ -41,7 +41,8 @@ export class ProductService {
             name: obj.name,
             quantity: obj.quantity,
             price: obj.price,
-            note: obj.note
+            note: obj.note,
+            updatedByUserId: obj.updatedByUserId,
         };
         return this.webrequestService.post(this.url, payload);
     }
@@ -52,7 +53,8 @@ export class ProductService {
             name: obj.name,
             quantity: obj.quantity,
             price: obj.price,
-            note: obj.note
+            note: obj.note,
+            updatedByUserId: obj.updatedByUserId,
         };
         return this.webrequestService.put(this.url, payload);
     }

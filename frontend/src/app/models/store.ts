@@ -9,6 +9,7 @@ export interface Store {
     updateDate: string;
     userId: number;
     note: string;
+    updatedByUserId: number;
     provinceName?: string;
     agencyName?: string;
     districtName?: string;

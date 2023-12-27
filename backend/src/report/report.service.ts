@@ -7,6 +7,7 @@ import { Reports } from './entities/report.entity';
 import { ModifyReportDto } from './dto/modify-report.dto';
 import { NotificationService } from '../notification/notification.service';
 import { SearchDto } from './dto/search.dto';
+import { STOCKER } from '../config/constant';
 
 @Injectable()
 export class ReportService {
@@ -29,7 +30,7 @@ export class ReportService {
                 .addGroupBy("id")
                 .where("1 = 1");
 
-            if (!userEntity.isAdmin && !userEntity.isStocker) {
+            if (!userEntity.isAdmin && userEntity.role !== STOCKER) {
                 sql = sql.andWhere("agency_id = :agencyId", { agencyId });
             }
 

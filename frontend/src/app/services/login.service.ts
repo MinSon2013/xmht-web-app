@@ -28,8 +28,6 @@ export class LoginService {
                     // Lưu session vào storage
                     localStorage.setItem(CONFIG.LOCAL_STORAGE.ACCESS_TOKEN, response.body.accessToken ? response.body.accessToken : '1');
                     localStorage.setItem(CONFIG.LOCAL_STORAGE.LOGIN_INFO, JSON.stringify(response.body.loginInfo));
-                    localStorage.setItem(CONFIG.LOCAL_STORAGE.MENU_LIST, JSON.stringify(response.body.menuList));
-                    localStorage.setItem(CONFIG.LOCAL_STORAGE.USER_LIST, JSON.stringify(response.body.userList));
                     localStorage.setItem(CONFIG.LOCAL_STORAGE.DELIVERY_LIST, JSON.stringify(response.body.deliveryList));
                     localStorage.setItem(CONFIG.LOCAL_STORAGE.AGENCY_LIST, JSON.stringify(response.body.agencyList));
                     localStorage.setItem(CONFIG.LOCAL_STORAGE.PRODUCT_LIST, JSON.stringify(response.body.productList));

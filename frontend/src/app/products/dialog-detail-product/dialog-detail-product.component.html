@@ -6,7 +6,7 @@
                 {{'PRODUCT.NAME' | translate}}
                 <label class="require">*</label>
             </span>
-            <input matInput [disabled]="isStocker"
+            <input matInput [disabled]="hidden"
                 class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="productName" type="text" placeholder="" maxlength="200" [(ngModel)]="product.name"
                 [ngModelOptions]="{standalone: true}" [errorStateMatcher]="matcher" />
@@ -16,7 +16,7 @@
                 {{'PRODUCT.QUANTITY_WAREHOUSE' | translate}}
                 <label class="require">*</label>
             </span>
-            <input matInput [disabled]="isStocker"
+            <input matInput [disabled]="hidden"
                 class="col-4 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="quantity" type="number" placeholder="" min="0" max="999999" [(ngModel)]="product.quantity"
                 [ngModelOptions]="{standalone: true}" [errorStateMatcher]="matcher" />
@@ -27,7 +27,7 @@
                 {{'PRODUCT.PRICE' | translate}}
                 <label class="require">*</label>
             </span>
-            <input matInput [disabled]="isStocker"
+            <input matInput [disabled]="hidden"
                 class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="price" type="number" placeholder="" min="0" max="99999999" [(ngModel)]="product.price"
                 [ngModelOptions]="{standalone: true}" [errorStateMatcher]="matcher" />
@@ -36,7 +36,7 @@
             <span class="col-5 text-label" for="note">
                 {{'PRODUCT.NOTE' | translate}}
             </span>
-            <textarea [disabled]="isStocker"
+            <textarea [disabled]="hidden"
                 class="col-7 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="note" type="text" placeholder="" maxlength="1000" [(ngModel)]="product.note"
                 [ngModelOptions]="{standalone: true}"></textarea>
@@ -48,9 +48,9 @@
     <mat-dialog-actions>
         <button mat-raised-button mat-button mat-dialog-close
             class="btn-cancel py-2 px-4 rounded focus:outline-none focus:shadow-outline" (click)="onCancel()">{{
-            isStocker ? ("BUTTON.CLOSE" | translate): ("BUTTON.CANCEL" | translate)}}</button>
+            hidden ? ("BUTTON.CLOSE" | translate): ("BUTTON.CANCEL" | translate)}}</button>
         <button mat-raised-button mat-button class="btn-save py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            type="button" (click)="onSubmit()" [hidden]="isStocker">{{'BUTTON.SAVE' | translate }}
+            type="button" (click)="onSubmit()" [hidden]="hidden">{{'BUTTON.SAVE' | translate }}
         </button>
     </mat-dialog-actions>
 </div>

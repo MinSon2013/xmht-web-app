@@ -10,3 +10,7 @@ ADD `role` int(2) DEFAULT 0;
 
 ALTER TABLE `user_district`
   ADD PRIMARY KEY (`id`);
+  
+UPDATE users
+SET role = 1
+WHERE username = 'thukho';

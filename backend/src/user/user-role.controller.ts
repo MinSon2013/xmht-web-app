@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nes
 import { UserService } from './user.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { UserRoleDto } from './dto/user-role.dto';
-import { UserRo } from './dto/user.ro';
+import { UserRo } from './ro/user.ro';
 
 @Controller('user-role')
 export class UserRoleController {

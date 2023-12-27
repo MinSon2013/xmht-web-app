@@ -40,7 +40,7 @@ export class DialogDetailOrderComponent implements OnInit {
   error1: any = '';
   deliveryError: any = '';
   pickupError: any = '';
-  transportError: any = ''; 
+  transportError: any = '';
   receiptError: any = '';
   helper = new Helper();
   isAdmin: boolean = this.helper.isAdmin();
@@ -51,7 +51,7 @@ export class DialogDetailOrderComponent implements OnInit {
   productList: any[] = [];
   transport: any[] = Transports;
   status: any[] = STATUS;
-  receipt: any[] = RECEIPT; 
+  receipt: any[] = RECEIPT;
   agencyList: any[] = [];
 
   pickupSelected: any = null;
@@ -59,7 +59,7 @@ export class DialogDetailOrderComponent implements OnInit {
   transportSelected: any = null;
   statusSelected: any = {};
   agencySelected: any = null;
-  receiptSelected: any = null; 
+  receiptSelected: any = null;
 
   order: Order = {
     id: 0,
@@ -70,7 +70,7 @@ export class DialogDetailOrderComponent implements OnInit {
     driver: '',
     note: '',
     transport: 0,
-    receipt: 0, 
+    receipt: 0,
     licensePlates: '',
     receivedDate: '',
     status: 0,
@@ -80,8 +80,9 @@ export class DialogDetailOrderComponent implements OnInit {
     agencyName: '',
     approvedNumber: '',
     editer: '',
-    confirmedDate: '', 
-    shippingDate: '', 
+    confirmedDate: '',
+    shippingDate: '',
+    updatedByUserId: this.helper.getUserId(),
   };
 
   date = new Date();
@@ -112,11 +113,11 @@ export class DialogDetailOrderComponent implements OnInit {
       this.order.driver = this.data.driver;
       this.order.note = this.data.note;
       this.order.transport = this.data.transport;
-      this.order.receipt = this.data.receipt; 
+      this.order.receipt = this.data.receipt;
       this.order.licensePlates = this.data.licensePlates;
       this.order.receivedDate = this.data.receivedDate;
-      this.order.confirmedDate = this.data.confirmedDate; 
-      this.order.shippingDate = this.data.shippingDate; 
+      this.order.confirmedDate = this.data.confirmedDate;
+      this.order.shippingDate = this.data.shippingDate;
       this.order.status = this.data.status;
       this.order.note = this.data.note;
       this.order.contract = this.data.contract;
@@ -136,8 +137,8 @@ export class DialogDetailOrderComponent implements OnInit {
       this.transportSelected = transport ? transport : { id: null, label: '' };
       const agency = this.agencyList.find(x => x.id === this.order.agencyId);
       this.agencySelected = agency ? agency : { id: null, label: '' };
-      const receipt = this.receipt.find(x => x.value === this.order.receipt); 
-      this.receiptSelected = receipt ? receipt : { id: null, label: '' }; 
+      const receipt = this.receipt.find(x => x.value === this.order.receipt);
+      this.receiptSelected = receipt ? receipt : { id: null, label: '' };
       this.setProductOrder();
 
       // set valuefor receivedDate picker
@@ -181,7 +182,7 @@ export class DialogDetailOrderComponent implements OnInit {
       this.order.deliveryId = Number(this.deliverySelected.id);
       this.order.pickupId = Number(this.pickupSelected.id);
       this.order.transport = Number(this.transportSelected.id);
-      this.order.receipt = Number(this.receiptSelected.value); 
+      this.order.receipt = Number(this.receiptSelected.value);
       this.order.products = this.order.products.filter(x => x.quantity && x.quantity.toString() !== '0' && x.quantity.toString() !== '');
       this.order.receivedDate = moment(this.testForm.value.date).format("DD/MM/YYYY");
       this.order.agencyId = this.agencySelected.id;
@@ -197,13 +198,13 @@ export class DialogDetailOrderComponent implements OnInit {
       } else {
         this.order.notifyReceiver = 0;
       }
-      this.order.agencyUpdated = this.agencyId;
-      this.order.editer = this.helper.getInfoName();
-      if (this.order.status === STATUS[1].value) { 
+      this.order.userUpdated = this.helper.getUserId();
+      this.order.editer = this.helper.getFullName();
+      if (this.order.status === STATUS[1].value) {
         this.order.confirmedDate = moment().format('HH:mm DD/MM/YYYY');
         this.order.shippingDate = '';
       }
-      if (this.order.status === STATUS[3].value) { 
+      if (this.order.status === STATUS[3].value) {
         this.order.shippingDate = moment().format('HH:mm DD/MM/YYYY');
       }
       this.socketService.updatedOrder(this.order).pipe(
@@ -256,7 +257,7 @@ export class DialogDetailOrderComponent implements OnInit {
       || !this.deliverySelected
       || !this.pickupSelected
       || !this.transportSelected
-      || !this.receiptSelected 
+      || !this.receiptSelected
       || this.order.licensePlates.length === 0
       || this.order.driver.length === 0) {
       isValidForm = false;
@@ -277,7 +278,7 @@ export class DialogDetailOrderComponent implements OnInit {
       this.transportError = "Vui lòng chọn phương tiện vận chuyển";
       document.getElementById("transport")?.focus();
     }
-    if (!this.receiptSelected) { 
+    if (!this.receiptSelected) {
       isValidForm = false;
       this.receiptError = "Vui lòng chọn phương thức nhận";
       document.getElementById("receipt")?.focus();
@@ -322,7 +323,7 @@ export class DialogDetailOrderComponent implements OnInit {
     }
   }
 
-  onChangeReceipt(event: any) { 
+  onChangeReceipt(event: any) {
     if (!this.receiptSelected) {
       this.receiptError = "Vui lòng chọn phương thức nhận";
       document.getElementById("receipt")?.focus();
@@ -332,14 +333,6 @@ export class DialogDetailOrderComponent implements OnInit {
   }
 
   onlyNumberKey(event: any) {
-    var ASCIICode = (event.which) ? event.which : event.keyCode;
-    if (ASCIICode > 31 
-      && (ASCIICode < 48 || ASCIICode > 57)
-      && (ASCIICode < 96 || ASCIICode > 105)
-      && ASCIICode !== 110
-      && ASCIICode !== 190) {
-      return false;
-    }
-    return true;
+    return this.helper.onlyNumberKey(event);
   }
 }

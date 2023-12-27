@@ -6,7 +6,7 @@ import { UserRoleDto } from '../dto/user-role.dto';
 import { UserDistrict } from '../entities/user-district.entity';
 import { AgencyService } from '../../agency/agency.service';
 import { UserDistrictRepository } from './user-district.repository';
-import { UserRo } from '../dto/user.ro';
+import { UserRo } from '../ro/user.ro';
 import { Agency } from '../../agency/entities/agency.entity';
 
 @EntityRepository(Users)
@@ -32,7 +32,7 @@ export class UserRepository extends Repository<Users> {
         raw.forEach(element => {
             const item: UserRo = {
                 id: element.u_id,
-                username: element.u_username,
+                userName: element.u_username,
                 isAdmin: element.u_is_admin,
                 role: element.u_role,
                 districtId: element.ud_district_id,
@@ -86,9 +86,9 @@ export class UserRepository extends Repository<Users> {
                 const userEntity = new Users();
                 userEntity.isAdmin = userDto.isAdmin;
                 userEntity.password = userDto.password;
-                userEntity.username = userDto.username;
+                userEntity.userName = userDto.username;
+                userEntity.fullName = userDto.fullName;
                 userEntity.role = userDto.role;
-                userEntity.isStocker = userDto.role === 1 ? true : false;
                 const user = await this.save(userEntity);
 
                 // Create agency for user
@@ -129,6 +129,14 @@ export class UserRepository extends Repository<Users> {
         }
     }
 
+    async updateAgencyRole(userId: number, role: number) {
+        return await this.createQueryBuilder()
+            .update(Users)
+            .set({ role: role })
+            .where("id = :id", { id: userId })
+            .execute();
+    }
+
     async updatePassword(id: number, password: string, authService: AuthService): Promise<UpdateResult> {
         const passwordHash: string = await authService.hashPassword(password);
         return await this.createQueryBuilder()
@@ -150,8 +158,12 @@ export class UserRepository extends Repository<Users> {
         return res;
     }
 
-    private async usernameExists(username: string): Promise<boolean> {
-        const user = await this.findOne({ username });
+    private async usernameExists(userName: string): Promise<boolean> {
+        const user = await this.findOne({
+            where: {
+                userName
+            }
+        });
         if (user) {
             return true;
         } else {
@@ -175,6 +187,24 @@ export class UserRepository extends Repository<Users> {
             }
         } else {
             throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // Sync database
+    async syncUser(userId: number, fname: string, role: number) {
+        if (role > 0) {
+            const x = await this.createQueryBuilder()
+                .update(Users)
+                .set({ fullName: fname, role: role })
+                .where("id = :userId", { userId })
+                .execute();
+            return x;
+        } else {
+            return await this.createQueryBuilder()
+                .update(Users)
+                .set({ fullName: fname })
+                .where("id = :userId", { userId })
+                .execute();
         }
     }
 

@@ -5,6 +5,7 @@ import { ModifyAgencyDto } from './dto/modify-agency.dto';
 import { Agency } from './entities/agency.entity';
 import { AgencyRepository } from './repository/agency.repository';
 import { AuthService } from '../auth/auth.service';
+import { AgencyRo } from './ro/agency.ro';
 
 @Injectable()
 export class AgencyService {
@@ -16,14 +17,15 @@ export class AgencyService {
         private readonly authService: AuthService,
     ) { }
 
-    async findAll(): Promise<Agency[]> {
-        const ids = await this.agencyRepo.getAgencyList();
-        return await this.agencyRepo.createQueryBuilder()
-            .where('id NOT IN (:ids)', { ids })
-            .getMany();
+    async findAll(): Promise<AgencyRo[]> {
+        return await this.agencyRepo.getAgencyList();
     }
 
-    async findOne(userId: number): Promise<Agency> {
+    async findAll1(): Promise<Agency[]> { /////
+        return await this.agencyRepo.findAll();
+    }
+
+    async findOne(userId: number): Promise<AgencyRo> {
         return await this.agencyRepo.getOne(userId);
     }
 
@@ -31,7 +33,7 @@ export class AgencyService {
         return await this.agencyRepo.getAgencyName(id);
     }
 
-    async create(modifyAgencyDto: ModifyAgencyDto): Promise<Agency> {
+    async create(modifyAgencyDto: ModifyAgencyDto): Promise<AgencyRo> {
         return await this.agencyRepo.createAgency(modifyAgencyDto, this.userService);
     }
 
@@ -47,9 +49,9 @@ export class AgencyService {
         return await this.agencyRepo.getAgencyIdOfAdmin();
     }
 
-    async getAgencyIdOfStocker() {
-        return await this.agencyRepo.getAgencyIdOfStocker();
-    }
+    // async getAgencyIdOfStocker() {
+    //     return await this.agencyRepo.getAgencyIdOfStocker();
+    // }
 
     async createAgencyForUserRole(userId: number, name: string): Promise<Agency> {
         return await this.agencyRepo.createAgencyForUserRole(userId, name);

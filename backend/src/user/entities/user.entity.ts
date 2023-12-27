@@ -5,10 +5,13 @@ export class Users {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ length: 200 })
-  username: string;
+  @Column({ name: 'full_name', length: 200 })
+  fullName: string;
 
-  @Column({ length: 500 })
+  @Column({ name: 'username', length: 200 })
+  userName: string;
+
+  @Column({ name: 'password', length: 500 })
   password: string;
 
   @Column({ name: 'is_admin' })
@@ -20,9 +23,12 @@ export class Users {
   @Column({ name: 'expires_at' })
   expiresAt: number;
 
-  @Column({ name: 'is_stocker' })
-  isStocker: boolean;
-
   @Column({ name: 'role' })
   role: number;
+
+  @Column({ name: 'updated_date', length: 20 })
+  updatedDate: string;
+
+  @Column({ name: 'updated_by_user_id' })
+  updatedByUserId: number;
 }

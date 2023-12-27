@@ -32,7 +32,8 @@ export class ReportService {
             filePath: obj.filePath,
             note: obj.note,
             userId: obj.userId,
-            accountName: this.helper.getInfoName(),
+            fullName: this.helper.getFullName(),
+            updatedByUserId: this.helper.getUserId(),
         };
         return this.webrequestService.post(this.url, payload);
     }
@@ -51,7 +52,8 @@ export class ReportService {
             filePath: obj.filePath,
             note: obj.note,
             userId: obj.userId,
-            accountName: this.helper.getInfoName(),
+            fullName: this.helper.getFullName(),
+            updatedByUserId: this.helper.getUserId(),
         };
         return this.webrequestService.put(this.url, payload);
     }

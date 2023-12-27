@@ -1,12 +1,15 @@
 export interface Agency {
     id: number;
     userId: number,
-    fullName: string;
+    agencyName: string;
     address: string;
     phone: string
     note: string;
     email: string;
-    accountName: string,
-    password: string,
     contract: string,
+    userName: string,
+    password: string,
+    confirmPassword: '',
+    role?: number;
+    updatedByUserId?: number;
 }

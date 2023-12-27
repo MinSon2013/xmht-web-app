@@ -22,7 +22,7 @@ export class DialogModifyUserComponent implements OnInit {
   matcher = new MyErrorStateMatcher();
   user = {
     id: 0,
-    username: '',
+    userName: '',
     password: '',
     confirmPassword: '',
     role: 0,
@@ -72,18 +72,22 @@ export class DialogModifyUserComponent implements OnInit {
         this.userService.createUserRole(this.user).subscribe((response: any) => {
           if (response) {
             this.user.id = response.id;
+
+
+
             this.helper.addAgency(this.user);
 
-            const user: User = {
-              id: response.userId,
-              username: this.user.username,
-              password: this.user.password,
-              isAdmin: false,
-              role: this.roleSelected?.value,
-              districtId: this.user.districtId,
-              fullName: this.user.fullName,
-            };
-            this.helper.addUser(user);
+            // const user: User = {
+            //   id: response.userId,
+            //   username: this.user.username,
+            //   password: this.user.password,
+            //   isAdmin: false,
+            //   role: this.roleSelected?.value,
+            //   districtId: this.user.districtId,
+            //   fullName: this.user.fullName,
+            //   updatedByUserId: this.helper.getUserId(),
+            // };
+            // //this.helper.addUser(user);
 
             this.helper.showSuccess(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.ADD_USER', MSG_STATUS.SUCCESS));
             this.dialogRef.close(this.user);
@@ -117,7 +121,7 @@ export class DialogModifyUserComponent implements OnInit {
 
   validForm(): boolean {
     let isValidForm: boolean = true;
-    if (this.user.username.length === 0 && !this.isEdit) {
+    if (this.user.userName.length === 0 && !this.isEdit) {
       isValidForm = false;
     }
     if (this.user.fullName.length === 0) {
@@ -167,12 +171,16 @@ export class DialogModifyUserComponent implements OnInit {
     }
   }
 
+  // onlyNumberKey(event: any) {
+  //   var ASCIICode = (event.which) ? event.which : event.keyCode;
+  //   if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57)) {
+  //     return false;
+  //   }
+  //   return true;
+  // }
+
   onlyNumberKey(event: any) {
-    var ASCIICode = (event.which) ? event.which : event.keyCode;
-    if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57)) {
-      return false;
-    }
-    return true;
+    return this.helper.onlyNumberKey(event);
   }
 
   onChangeRole(event: any) {

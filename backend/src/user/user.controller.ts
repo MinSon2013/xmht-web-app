@@ -3,6 +3,7 @@ import { UserService } from './user.service';
 import { Users } from './entities/user.entity';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { UserRoleDto } from './dto/user-role.dto';
 
 @Controller('users')
 export class UsersController {
@@ -22,13 +23,13 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() user: Users) {
+  create(@Body() user: UserRoleDto) {
     return this.userService.createUser(user);
   }
 
   @UseGuards(JwtAuthGuard)
   @Put()
-  updatePassword(@Body() user: Users) {
+  updatePassword(@Body() user: UserRoleDto) {
     return this.userService.updateUserPassword(user.id, user.password);
   }
 

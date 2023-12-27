@@ -19,7 +19,7 @@ export class DistrictService {
         const payload = {
             name: obj.name,
             provinceId: obj.provinceId,
-            userId: obj.userId
+            updatedByUserId: obj.updatedByUserId,
         };
         return this.webrequestService.post(this.url, payload);
     }
@@ -29,7 +29,7 @@ export class DistrictService {
             id: obj.id,
             name: obj.name,
             provinceId: obj.provinceId,
-            userId: obj.userId
+            updatedByUserId: obj.updatedByUserId,
         };
         return this.webrequestService.put(this.url, payload);
     }

@@ -5,7 +5,7 @@ export interface Order {
     pickupId: number, // Nơi giao hàng
     productTotal: number,
     transport: number, // Phương tiện vận chuyển (1: bộ, 2: thủy, 3: hàng không)
-    receipt: number, 
+    receipt: number,
     licensePlates: string, // Biển số
     driver: string,
     receivedDate: string,
@@ -23,15 +23,16 @@ export interface Order {
     isViewed?: boolean;
     sender?: number;
     notifyReceiver?: number;
-    agencyUpdated?: number;
-    approvedNumber: number|string;
+    userUpdated?: number;
+    approvedNumber: number | string;
     editer: string;
-    confirmedDate: string, 
-    shippingDate: string, 
+    confirmedDate: string,
+    shippingDate: string,
+    updatedByUserId: number;
 }
 
 export interface ProductItem {
     id: number,
     name: string,
-    quantity: number|string,
+    quantity: number | string,
 }

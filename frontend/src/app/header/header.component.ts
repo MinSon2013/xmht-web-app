@@ -8,6 +8,7 @@ import { MatMenuTrigger } from '@angular/material/menu';
 import { TranslateService } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogChangePasswordComponent } from './dialog-change-password/dialog-change-password.component';
+import { AGENCY, ROLE, USER_AREA_MANAGER, USER_ROLE } from '../constants/const-data';
 
 @Component({
   selector: 'app-header',
@@ -21,12 +22,15 @@ export class HeaderComponent implements OnInit {
   @ViewChild('menuTrigger2') menuTrigger2!: MatMenuTrigger;
 
   helper = new Helper();
-  agency: string = '';
+  agencyName: string = '';
   isBadgeHidden: boolean = true;
   badgeNumber: number = 0;
   agencyId: number = this.helper.getAgencyId();
   isAdmin: boolean = this.helper.isAdmin();
+  role: number = this.helper.getUserRole();
   navigateComponent: string = 'logout';
+
+  hidden: boolean = !this.isAdmin && !ROLE.includes(this.role);
 
   constructor(private router: Router,
     public notifyService: NotificationService,
@@ -37,7 +41,12 @@ export class HeaderComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.agency = this.helper.getInfoName();
+    if (this.role === AGENCY) {
+      this.agencyName = this.helper.getAgencyName();
+    } else {
+      this.agencyName = this.helper.getFullName();
+    }
+
     this.getBadgeNumber();
     this.emitSocket();
   }

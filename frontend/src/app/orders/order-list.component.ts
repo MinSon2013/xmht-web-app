@@ -9,7 +9,7 @@ import { Order } from '../models/order';
 import { DialogDetailOrderComponent } from './dialog-detail-order/dialog-detail-order.component';
 import { Helper } from '../helpers/helper';
 import { DialogConfirmOrderComponent } from './dialog-confirm-order/dialog-confirm-order.component';
-import { Cities, SERVICE_TYPE, STATUS } from '../constants/const-data';
+import { Cities, ROLE, SERVICE_TYPE, STATUS, STOCKER, USER_AREA_MANAGER } from '../constants/const-data';
 import { CustomPaginator } from '../common/custom-paginator';
 import * as moment from 'moment';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -46,8 +46,12 @@ export class OrderListComponent implements OnInit {
   status: any[] = STATUS;
   helper = new Helper();
   isAdmin: boolean = this.helper.isAdmin();
-  isStocker: boolean = this.helper.isStocker();
   agencyId: number = this.helper.getAgencyId();
+  role: number = this.helper.getUserRole();
+  isStocker: boolean = this.role === STOCKER;
+  hidden: boolean = this.role === USER_AREA_MANAGER || this.isStocker;
+  isUserRole: boolean = ROLE.includes(this.role);
+  isAllRole: boolean = this.isUserRole || this.isAdmin;
 
   agencySelected: any = null;
   productSelected: any = null;
@@ -84,7 +88,7 @@ export class OrderListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.isAdmin || this.isStocker) {
+    if (this.isAllRole) {
       this.displayedColumns = ['approvedNumber', 'agencyName', 'contract', 'createdDate', 'receivedDate', 'confirmedDate', 'shippingDate', 'deliveryId', 'pickupId', 'productName', 'quantity', 'productTotal', 'licensePlates', 'driver', 'status', 'deleteAction'];
     }
     this.colspan = this.displayedColumns.length;

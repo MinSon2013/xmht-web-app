@@ -26,7 +26,7 @@
       </div>
     </div>
 
-    <div class="row" *ngIf="isAdmin || isStocker">
+    <div class="row" *ngIf="isAllRole">
       <div class="col-6 row">
         <span class="col-6" for="agency">{{ "ORDER.AGENCY" | translate }}</span>
         <select class="col-6 form-select" [(ngModel)]="agencySelected" required>
@@ -53,7 +53,7 @@
       </div>
     </div>
 
-    <div class="row" *ngIf="isAdmin || isStocker">
+    <div class="row" *ngIf="isAllRole">
       <div class="col-6 row">
         <span class="col-6" for="status">{{ "ORDER.STATUS" | translate }}</span>
         <select class="col-6 form-select" [(ngModel)]="selectedStatus">
@@ -68,7 +68,7 @@
       <div class="col-6"></div>
     </div>
 
-    <div class="row" *ngIf="!isAdmin && !isStocker">
+    <div class="row" *ngIf="!isAdmin && !isUserRole">
       <div class="col-6 row">
         <span class="col-6" for="status">{{ "ORDER.STATUS" | translate }}</span>
         <select class="col-6 form-select" [(ngModel)]="selectedStatus">
@@ -118,7 +118,7 @@
       </button>
     </div>
 
-    <div class="action-add" [hidden]="isStocker">
+    <div class="action-add" [hidden]="hidden">
       <button mat-raised-button class="btn-add" (click)="onAdd()">
         <mat-icon aria-hidden="false" aria-label="Add icon" fontSet="fas" fontIcon="fa-plus" class="fa-plus"></mat-icon>
         <label class="pad-label">{{ "BUTTON.ADD" | translate }}</label>
@@ -145,7 +145,7 @@
       </ng-container>
 
       <!-- AgencyNAme Column -->
-      <ng-container matColumnDef="agencyName" *ngIf="isAdmin || isStocker" [sticky]="sticky">
+      <ng-container matColumnDef="agencyName" *ngIf="isAllRole" [sticky]="sticky">
         <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by agencyName" class="nowrap">
           {{ "ORDER.AGENCY" | translate }}
         </th>

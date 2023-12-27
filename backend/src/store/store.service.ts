@@ -5,6 +5,7 @@ import { AuthService } from '../auth/auth.service';
 import { StoreRepository } from './repository/store.repository';
 import { Store } from './entities/store.entity';
 import { ModifyStoreDto } from './dto/modify-store.dto';
+import { STOCKER } from '../config/constant';
 
 @Injectable()
 export class StoreService {
@@ -18,7 +19,7 @@ export class StoreService {
     async findAll(userId: number, agencyId: number): Promise<Store[]> {
         const userEntity = await this.userService.getOne(userId);
         if (userEntity) {
-            if (!userEntity.isAdmin && !userEntity.isStocker) {
+            if (!userEntity.isAdmin && userEntity.role !== STOCKER) {
                 return await this.storeRepo.createQueryBuilder()
                     .where("agency_id = :agencyId", { agencyId })
                     .groupBy("agency_id")

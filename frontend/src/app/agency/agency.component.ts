@@ -8,7 +8,7 @@ import { CustomPaginator } from '../common/custom-paginator';
 import { DialogDeleteConfirmComponent } from '../common/dialog-delete-confirm/dialog-delete-confirm.component';
 import { DialogDetailAgencyComponent } from './dialog-detail-agency/dialog-detail-agency.component';
 import { AgencyService } from '../services/agency.service';
-import { SERVICE_TYPE } from '../constants/const-data';
+import { SERVICE_TYPE, STOCKER, USER_AREA_MANAGER } from '../constants/const-data';
 import { Helper } from '../helpers/helper';
 
 @Component({
@@ -21,7 +21,8 @@ import { Helper } from '../helpers/helper';
 })
 export class AgencyComponent implements OnInit {
 
-  displayedColumns: string[] = ['id', 'fullName', 'address', 'phone', 'email', 'accountName', 'contract', 'note', 'deleteAction'];
+  displayedColumns: string[] = ['id', 'agencyName', 'address', 'phone', 'email', 'contract', 'note', 'deleteAction'];
+  // displayedColumns: string[] = ['id', 'agencyName', 'address', 'phone', 'email', 'userName', 'contract', 'note', 'deleteAction'];
   dataSource = new MatTableDataSource<Agency>();
   clickedRows = new Set<Agency>();
   colspan: number = 0;
@@ -31,7 +32,8 @@ export class AgencyComponent implements OnInit {
 
   helper = new Helper();
   hasData: boolean = false;
-  isStocker: boolean = this.helper.isStocker();
+  role: number = this.helper.getUserRole();
+  hidden: boolean = (this.role === USER_AREA_MANAGER || this.role === STOCKER);
 
   constructor(public dialog: MatDialog,
     private agencyService: AgencyService,
@@ -40,26 +42,20 @@ export class AgencyComponent implements OnInit {
   ngOnInit(): void {
     this.colspan = this.displayedColumns.length;
     const agencyList = this.helper.getAgencyList();
-    const userList = this.helper.getUserList();
     if (agencyList.length === 0) {
       this.agencyService.getAgencyList().subscribe((response: any) => {
         if (response.length > 0) {
           this.dataSource.data = response.reverse();
-          this.dataSource.data.forEach(element => {
-            const user = userList.find(x => x.id === element.userId);
-            element.accountName = user ? user.username : '';
-            element.password = user ? user.password : '';
-          });
           this.helper.setAgencyList(this.dataSource.data.reverse());
         } else {
           this.dataSource.data = [];
         }
+        this.hideShowNoDataRow();
       });
     } else {
       this.dataSource.data = agencyList.reverse();
+      this.hideShowNoDataRow();
     }
-
-    this.hideShowNoDataRow();
   }
 
   hideShowNoDataRow() {
@@ -99,6 +95,7 @@ export class AgencyComponent implements OnInit {
           row.note = result.note;
           row.email = result.email;
           row.contract = result.contract;
+          row.accountName = result.accountName;
           row.password = result.password.length !== 0 ? result.password : row.password;
         } else {
           this.dataSource.data = [result, ...this.dataSource.data];

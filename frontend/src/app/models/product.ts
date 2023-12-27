@@ -6,4 +6,5 @@ export interface Product {
     note: string,
     createdDate?: string,
     updatedDate?: string,
+    updatedByUserId: number;
 }

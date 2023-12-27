@@ -53,6 +53,7 @@ export class DialogModifyReportComponent {
     note: '',
     userId: this.helper.getUserId(),
     updateDate: '',
+    updatedByUserId: this.helper.getUserId(),
   };
 
   file: any;

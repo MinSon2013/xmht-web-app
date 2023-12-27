@@ -39,12 +39,13 @@ export class ReportComponent implements OnInit {
 
   helper = new Helper();
   hasData: boolean = true;
-  isUser = true;
   agencyList: any[] = [];
   districtList: any[] = [];
   districtSelected: any = null;
   cities = Cities;
   storeList: any[] = [];
+
+  role: number = this.helper.getUserRole();
 
   date = new FormControl(null);
   MAX_LENGTH_SHORT_CONTENT: number = 80;

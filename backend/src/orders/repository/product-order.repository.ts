@@ -8,7 +8,7 @@ import { SearchOrderDto } from '../dto/search-order.dto';
 @EntityRepository(ProductOrder)
 export class ProductOrderRepository extends Repository<ProductOrder> {
 
-  async sumProduct(body: SearchOrderDto, adminId: number, stockerId: number): Promise<ProductRo[]> {
+  async sumProduct(body: SearchOrderDto, adminId: number, stockerId?: number): Promise<ProductRo[]> {
     let res: ProductRo[] = [];
     let sql = this.createQueryBuilder('po')
       .select('SUM(po.quantity)', 'total')

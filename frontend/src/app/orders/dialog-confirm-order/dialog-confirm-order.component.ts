@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Cities, MSG_STATUS, RECEIPT, STATUS, Transports } from '../../constants/const-data';
+import { Cities, MSG_STATUS, RECEIPT, STATUS, STOCKER, Transports } from '../../constants/const-data';
 import { Order } from '../../models/order';
 import { Helper } from '../../helpers/helper';
 import { TranslateService } from '@ngx-translate/core';
@@ -15,6 +15,7 @@ import * as moment from 'moment';
 })
 export class DialogConfirmOrderComponent implements OnInit {
 
+  helper: Helper = new Helper();
   order: Order = {
     id: 0,
     createdDate: '',
@@ -26,7 +27,7 @@ export class DialogConfirmOrderComponent implements OnInit {
     driver: '',
     note: '',
     transport: 0,
-    receipt: 0, 
+    receipt: 0,
     selectedTransport: '',
     licensePlates: '',
     receivedDate: '',
@@ -37,8 +38,9 @@ export class DialogConfirmOrderComponent implements OnInit {
     agencyName: '',
     approvedNumber: 0,
     editer: '',
-    confirmedDate: '', 
-    shippingDate: '', 
+    confirmedDate: '',
+    shippingDate: '',
+    updatedByUserId: this.helper.getUserId(),
   };
 
   cities: any[] = Cities;
@@ -46,18 +48,18 @@ export class DialogConfirmOrderComponent implements OnInit {
   productList: any[] = [];
   transport: any[] = Transports;
   status: any[] = STATUS;
-  receipt: any[] = RECEIPT; 
+  receipt: any[] = RECEIPT;
   agencyList: any[] = [];
 
-  helper: Helper = new Helper();
   isAdmin: boolean = this.helper.isAdmin();
-  isStocker: boolean = this.helper.isStocker();
+  role: number = this.helper.getUserRole();
+  isStocker: boolean = this.role === STOCKER;
   agencyId: number = this.helper.getAgencyId();
   selectedStatus: any = {};
   selectedDelivery: any = {};
   selectedPickup: any = {};
   selectedTransport: any = {};
-  selectedReceipt: any = null; 
+  selectedReceipt: any = null;
 
   constructor(public dialogRef: MatDialogRef<DialogConfirmOrderComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Order,
@@ -80,7 +82,7 @@ export class DialogConfirmOrderComponent implements OnInit {
       this.order.driver = this.data.driver;
       this.order.note = this.data.note;
       this.order.transport = this.data.transport;
-      this.order.receipt = this.data.receipt; 
+      this.order.receipt = this.data.receipt;
       this.order.licensePlates = this.data.licensePlates;
       this.order.receivedDate = this.data.receivedDate;
       this.order.status = this.data.status;
@@ -90,8 +92,8 @@ export class DialogConfirmOrderComponent implements OnInit {
       this.order.sender = this.data.sender;
       this.order.isViewed = this.data.isViewed;
       this.order.agencyId = this.data.agencyId;
-      this.order.confirmedDate = this.data.confirmedDate; 
-      this.order.shippingDate = this.data.shippingDate; 
+      this.order.confirmedDate = this.data.confirmedDate;
+      this.order.shippingDate = this.data.shippingDate;
       this.order.approvedNumber = this.data.approvedNumber !== 0 ? this.data.approvedNumber : 0;
       this.order.agencyName = this.agencyList.find(x => x.id === this.data.agencyId).fullName;
       const status = this.status.find(x => x.value === this.order.status);
@@ -102,8 +104,8 @@ export class DialogConfirmOrderComponent implements OnInit {
       this.selectedPickup = pickup ? pickup : { id: null, label: '' };
       const transport = this.transport.find(x => x.id === this.order.transport);
       this.selectedTransport = transport ? transport : { id: null, label: '' };
-      const receipt = this.receipt.find(x => x.value === this.order.receipt); 
-      this.selectedReceipt = receipt ? receipt : { id: null, label: '' }; 
+      const receipt = this.receipt.find(x => x.value === this.order.receipt);
+      this.selectedReceipt = receipt ? receipt : { id: null, label: '' };
     }
   }
 
@@ -116,7 +118,7 @@ export class DialogConfirmOrderComponent implements OnInit {
         this.order.isViewed = false;
       }
     }
-    if (this.order.status === STATUS[3].value) { 
+    if (this.order.status === STATUS[3].value) {
       this.order.shippingDate = moment().format('HH:mm DD/MM/YYYY');
     }
 
@@ -126,7 +128,7 @@ export class DialogConfirmOrderComponent implements OnInit {
       status: this.order.status,
       sender: this.agencyId,
       agencyId: this.order.agencyId,
-      agencyUpdated: this.agencyId,
+      userUpdated: this.helper.getUserId(),
       shippingDate: this.order.shippingDate,
       note: this.order.note,
     };

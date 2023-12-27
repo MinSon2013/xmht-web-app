@@ -5,7 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { CustomPaginator } from '../common/custom-paginator';
 import { DialogDeleteConfirmComponent } from '../common/dialog-delete-confirm/dialog-delete-confirm.component';
-import { SERVICE_TYPE, USER_ROLE } from '../constants/const-data';
+import { SERVICE_TYPE, STOCKER, USER_ROLE } from '../constants/const-data';
 import { Helper } from '../helpers/helper';
 import { DialogModifyUserComponent } from './dialog-modify-user/dialog-modify-user.component';
 import { DistrictService } from '../services/district.service';
@@ -33,6 +33,8 @@ export class UserComponent implements OnInit {
   helper = new Helper();
   hasData: boolean = false;
   isAdmin: boolean = this.helper.isAdmin();
+  role: number = this.helper.getUserRole();
+  isStocker: boolean = this.role === STOCKER;
 
   districtList: any[] = [];
   roleSelected: any = null;
@@ -55,6 +57,10 @@ export class UserComponent implements OnInit {
     this.userService.getUserRoleList().subscribe((response: any) => {
       if (response.length > 0) {
         this.dataSource.data = response;
+        if (!this.isAdmin && !this.isStocker) {
+          const userId = this.helper.getUserId();
+          this.dataSource.data = this.dataSource.data.filter(x => x.id === userId);
+        }
         this.convertData();
       } else {
         this.dataSource.data = [];

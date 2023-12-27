@@ -32,7 +32,6 @@ export class NotifyComponent implements OnInit {
   agencyList: Agency[] = [];
   agencyId: number = 0;
   checkedAll: boolean = false;
-  isStocker: boolean = this.helper.isStocker();
 
   arrDelete: number[] = [];
   MAX_LENGTH_SHORT_CONTENT: number = 50;
@@ -77,9 +76,9 @@ export class NotifyComponent implements OnInit {
 
           const agency = this.agencyList.find(x => x.id === el.sender);
           if (agency) {
-            el.confirmName = agency.fullName;
+            el.confirmName = agency.agencyName;
           } else if (this.isAdmin) {
-            el.confirmName = this.helper.getInfoName();
+            el.confirmName = this.helper.getFullName();
           } else {
             el.confirmName = '';
           }
@@ -93,7 +92,7 @@ export class NotifyComponent implements OnInit {
             }
             const item = this.agencyList.find(x => x.id === agencyId);
             if (item) {
-              el.agencyName = item.fullName;
+              el.agencyName = item.agencyName;
             } else {
               el.agencyName = '';
             }

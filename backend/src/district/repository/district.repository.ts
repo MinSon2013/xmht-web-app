@@ -1,13 +1,11 @@
 import { DeleteResult, EntityRepository, Repository, UpdateResult } from 'typeorm'
-import { UserService } from '../../user/user.service';
-import { Users } from '../../user/entities/user.entity';
-import { AuthService } from '../../auth/auth.service';
 import { District } from '../entities/district.entity';
 import { ModifyDistrictDto } from '../dto/modify-district.dto';
-import moment from 'moment';
+import { Helper } from '../../shared/helper';
 
 @EntityRepository(District)
 export class DistrictRepository extends Repository<District> {
+    private readonly helper = new Helper();
 
     constructor() {
         super();
@@ -41,12 +39,12 @@ export class DistrictRepository extends Repository<District> {
         return await this.delete(id);
     }
 
-    private mappingDistrict(modifyDistrictDto: ModifyDistrictDto): District {
-        const district = new District();
-        district.name = modifyDistrictDto.name;
-        district.userId = modifyDistrictDto.userId;
-        district.provinceId = modifyDistrictDto.provinceId;
-        district.updatedDate = moment(new Date).format('HH:mm DD/MM/YYYY');
-        return district;
+    private mappingDistrict(modifiedDto: ModifyDistrictDto): District {
+        const entity = new District();
+        entity.name = modifiedDto.name;
+        entity.provinceId = modifiedDto.provinceId;
+        entity.updatedByUserId = modifiedDto.updatedByUserId;
+        entity.updatedDate = this.helper.getUpdateDate(2);
+        return entity;
     }
 }

@@ -4,7 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import { Helper } from '../../helpers/helper';
 import { MyErrorStateMatcher } from '../../orders/order-add/order-add.component';
-import { MSG_STATUS, NOTIFY_TYPE } from '../../constants/const-data';
+import { MSG_STATUS, NOTIFY_TYPE, ROLE, STOCKER } from '../../constants/const-data';
 import { Notify } from '../../models/notify';
 import { NotificationService } from '../../services/notification.service';
 import * as moment from 'moment';
@@ -27,14 +27,15 @@ export class DialogDetailNotifyComponent implements OnInit {
 
   helper = new Helper();
   isAdmin: boolean = new Helper().isAdmin();
-  loginId: number = new Helper().getAgencyId();
+  loginId: number = new Helper().getUserId();
   agencyList: any[] = [];
   agencyListSelectOption: any[] = [];
   agencySelected: any = null;
   isEdit: boolean = true;
   agencyId: number = this.helper.getAgencyId();
-
-  isStocker: boolean = this.helper.isStocker();
+  role: number = this.helper.getUserRole();
+  hidden: boolean = !this.isAdmin && !ROLE.includes(this.role);
+  isStocker: boolean = this.role === STOCKER;
 
   editor = new Editor;
   toolbar: Toolbar = [

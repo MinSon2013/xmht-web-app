@@ -9,7 +9,7 @@ import { MatSort } from '@angular/material/sort';
 import { NgxPrintElementService } from 'ngx-print-element';
 import { TranslateService } from '@ngx-translate/core';
 import { OrderService } from '../../services/order.service';
-import {Location} from '@angular/common';
+import { Location } from '@angular/common';
 import { NumToVietnameseText } from '../../common/num-to-vietnamese-text';
 import * as moment from 'moment';
 import { Order } from '../../models/order';
@@ -64,7 +64,7 @@ export class PrintPdfComponent implements OnInit {
     if (!this.data.agencyId) {
       this.location.back();
     } else {
-      this.agency = this.agencyList.find(y => y.id === this.data.agencyId)!.fullName;
+      this.agency = this.agencyList.find(y => y.id === this.data.agencyId)!.agencyName;
       this.translate.get('TITLE_APP').subscribe(x => {
         this.header = x;
       });
@@ -130,7 +130,7 @@ export class PrintPdfComponent implements OnInit {
         }
 
         const arrays: any[] = [];
-        let data: {no: string, category: string, amount: string, note: string, ton: string} = {
+        let data: { no: string, category: string, amount: string, note: string, ton: string } = {
           no: '',
           category: '',
           amount: '',
@@ -146,8 +146,8 @@ export class PrintPdfComponent implements OnInit {
           arrays.push(data);
         });
         arrays.sort((a, b) => {
-          return a.no-b.no;
-          });
+          return a.no - b.no;
+        });
         this.dataSource.data = arrays;
         this.cacheSpan(arrays, 'ton', (d: { ton: any; }) => d.ton);
         this.cacheSpan(arrays, 'note', (d: { ton: any; }) => d.ton);
@@ -182,13 +182,13 @@ export class PrintPdfComponent implements OnInit {
 
       // Iterate through the remaining rows to see how many match
       // the current value as retrieved through the accessor.
-      for (let j = i + 1; j < data.length; j++) {        
+      for (let j = i + 1; j < data.length; j++) {
         if (currentValue !== accessor(data[j])) {
           break;
         }
 
         count++;
-      } 
+      }
 
       if (!this.spans[i]) {
         this.spans[i] = {};

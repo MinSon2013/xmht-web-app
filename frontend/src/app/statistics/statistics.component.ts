@@ -8,7 +8,7 @@ import { FormControl } from '@angular/forms';
 import { ProductService } from '../services/product.service';
 import { TranslateService } from '@ngx-translate/core';
 import { FormGroup } from '@angular/forms';
-import { STATUS } from '../constants/const-data';
+import { ROLE, STATUS, STOCKER, USER_AREA_MANAGER } from '../constants/const-data';
 import * as moment from 'moment';
 
 export interface Label { }
@@ -25,7 +25,7 @@ export interface ChartDataSets {
   styleUrls: ['./statistics.component.scss']
 })
 export class StatisticsComponent implements OnInit {
-[x: string]: any;
+  [x: string]: any;
   helper: Helper = new Helper();
   orderList: any[] = [];
   productList: any[] = [];
@@ -91,7 +91,11 @@ export class StatisticsComponent implements OnInit {
   selectedStatus: any = null;
   status: any[] = STATUS;
   isAdmin: boolean = this.helper.isAdmin();
-  isStocker: boolean = this.helper.isStocker();
+  role: number = this.helper.getUserRole();
+  isStocker: boolean = this.role === STOCKER;
+  hidden: boolean = this.role === USER_AREA_MANAGER || this.isStocker;
+  isUserRole: boolean = ROLE.includes(this.role);
+  isAllRole: boolean = this.isUserRole || this.isAdmin;
   agencyList: any[] = [];
 
   constructor(

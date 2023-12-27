@@ -17,14 +17,16 @@ export class AgencyService {
 
     create(obj: Agency) {
         const payload = {
-            fullName: obj.fullName,
+            agencyName: obj.agencyName,
             address: obj.address,
             phone: obj.phone,
             note: obj.note,
             email: obj.email,
-            accountName: obj.accountName,
+            userName: obj.userName,
             password: obj.password,
-            contract: obj.contract
+            contract: obj.contract,
+            role: obj.role,
+            updatedByUserId: obj.updatedByUserId,
         };
         return this.webrequestService.post(this.url, payload);
     }
@@ -32,15 +34,16 @@ export class AgencyService {
     update(obj: Agency) {
         const payload = {
             id: obj.id,
-            fullName: obj.fullName,
+            agencyName: obj.agencyName,
             address: obj.address,
             phone: obj.phone,
             note: obj.note,
             email: obj.email,
-            accountName: obj.accountName,
+            userName: obj.userName,
             password: obj.password,
             contract: obj.contract,
-            userId: obj.userId
+            role: obj.role,
+            updatedByUserId: obj.updatedByUserId,
         };
         return this.webrequestService.put(this.url, payload);
     }

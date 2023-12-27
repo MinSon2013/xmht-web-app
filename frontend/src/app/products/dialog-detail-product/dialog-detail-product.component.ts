@@ -6,7 +6,7 @@ import { Helper } from '../../helpers/helper';
 import { Product } from '../../models/product';
 import { MyErrorStateMatcher } from '../../orders/order-add/order-add.component';
 import { ProductService } from '../../services/product.service';
-import { MSG_STATUS } from '../../constants/const-data';
+import { MSG_STATUS, STOCKER, USER_AREA_MANAGER } from '../../constants/const-data';
 
 @Component({
   selector: 'app-dialog-detail-product',
@@ -17,16 +17,20 @@ export class DialogDetailProductComponent implements OnInit {
   header: string = '';
   error: any = '';
   matcher = new MyErrorStateMatcher();
+
+  helper = new Helper();
   product = {
     id: 0,
     name: '',
     quantity: 0,
     price: 0,
     note: '',
+    updatedByUserId: this.helper.getUserId(),
   };
 
-  helper = new Helper();
-  isStocker: boolean = this.helper.isStocker();
+  role: number = this.helper.getUserRole();
+  isStocker: boolean = this.role === STOCKER;
+  hidden: boolean = (this.role === USER_AREA_MANAGER || this.isStocker);
 
   constructor(
     public dialogRef: MatDialogRef<DialogDetailProductComponent>,

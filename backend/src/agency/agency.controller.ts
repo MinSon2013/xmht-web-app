@@ -3,6 +3,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { AgencyService } from './agency.service';
 import { ModifyAgencyDto } from './dto/modify-agency.dto';
 import { Agency } from './entities/agency.entity';
+import { AgencyRo } from './ro/agency.ro';
 
 @Controller('agency')
 export class AgencyController {
@@ -10,13 +11,13 @@ export class AgencyController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  findAll(): Promise<Agency[]> {
+  findAll(): Promise<AgencyRo[]> {
     return this.agencyService.findAll()
   }
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  get(@Param('id', ParseIntPipe) id: number): Promise<Agency> {
+  get(@Param('id', ParseIntPipe) id: number): Promise<AgencyRo> {
     return this.agencyService.findOne(id);
   }
 

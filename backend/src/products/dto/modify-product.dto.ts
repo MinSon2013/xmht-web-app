@@ -4,4 +4,5 @@ export class ProductDto {
   quantity: number;
   price: number;
   note: string;
+  updatedByUserId: string;
 }

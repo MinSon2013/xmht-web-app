@@ -18,7 +18,8 @@ export class NotificationService {
   ) { }
 
   async getAll(agencyId?: number, isAdmin?: boolean): Promise<any> {
-    const stockerId = await this.agencyService.getAgencyIdOfStocker();
+    //const stockerId = await this.agencyService.getAgencyIdOfStocker();
+    const stockerId = 99;
     let sql = this.notifyRepo
       .createQueryBuilder('n')
       .select('n')

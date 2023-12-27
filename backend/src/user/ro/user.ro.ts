@@ -1,6 +1,6 @@
 export interface UserRo {
     id: number;
-    username: string;
+    userName: string;
     isAdmin: boolean;
     role: number;
     districtId: number;

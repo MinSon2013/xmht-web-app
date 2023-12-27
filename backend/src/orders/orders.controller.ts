@@ -16,11 +16,11 @@ export class OrdersController {
     return this.ordersService.findAll(userId);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Post('/statistics')
-  getDataByMonthYear(@Body() body: StatisticsDto) {
-    return this.ordersService.findByMonthYear(body);
-  }
+  // @UseGuards(JwtAuthGuard)
+  // @Post('/statistics')
+  // getDataByMonthYear(@Body() body: StatisticsDto) {
+  //   return this.ordersService.findByMonthYear(body);
+  // }
 
   @UseGuards(JwtAuthGuard)
   @Get(':id/:userId')

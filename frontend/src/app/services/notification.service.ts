@@ -30,7 +30,6 @@ export class NotificationService {
     }
 
     create(obj: any): Observable<any> {
-        const agencyId = this.helper.getAgencyId();
         const payload = {
             agencyList: obj.agencyList,
             contents: obj.contents,
@@ -41,13 +40,12 @@ export class NotificationService {
             filePath: '',
             mimeType: '',
             isViewed: false,
-            sender: agencyId,
+            sender: this.helper.getUserId(),
         };
         return this.webrequestService.post(this.url, payload);
     }
 
     update(obj: any): Observable<any> {
-        const agencyId = this.helper.getAgencyId();
         const payload = {
             id: obj.id,
             agencyList: obj.agencyList,
@@ -57,7 +55,7 @@ export class NotificationService {
             createdDate: obj.createdDate,
             fileName: obj.fileName,
             isViewed: true,
-            sender: agencyId,
+            sender: this.helper.getUserId(),
         };
         return this.webrequestService.put(this.url, payload);
     }
@@ -84,7 +82,6 @@ export class NotificationService {
     }
 
     deleteMany(id: number[]) {
-        const strId = id.toString();
         const payload = { id };
         return this.webrequestService.deleteAll(this.url + `/deleteall`, payload);
     }

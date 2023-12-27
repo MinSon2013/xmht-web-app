@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Cities, MSG_STATUS, RECEIPT, STATUS, Transports } from '../../constants/const-data'; 
+import { Cities, MSG_STATUS, RECEIPT, STATUS, STOCKER, Transports } from '../../constants/const-data';
 import { Order, ProductItem } from '../../models/order';
 import { FormControl, FormGroupDirective, NgForm } from '@angular/forms';
 import { Helper } from '../../helpers/helper';
@@ -34,23 +34,25 @@ export class OrderAddComponent implements OnInit {
   transport: any[] = Transports;
   status: any[] = STATUS;
   agencyList: any[] = [];
-  receipt: any[] = RECEIPT; 
+  receipt: any[] = RECEIPT;
 
   error: any = '';
   error1: any = '';
   deliveryError: any = '';
   pickupError: any = '';
   transportError: any = '';
-  receiptError: any = ''; 
-  isAdmin: boolean = new Helper().isAdmin();
-  isStocker: boolean = new Helper().isStocker();
+  receiptError: any = '';
+  helper = new Helper();
+  isAdmin: boolean = this.helper.isAdmin();
+  role: number = this.helper.getUserRole();
+  isStocker: boolean = this.role === STOCKER;
 
   selectedStatus: any = { value: 1, label: '' };
   pickupSelected: any = null;
   deliverySelected: any = null;
   transportSelected: any = null;
   agencySelected: any = null;
-  receiptSelected: any = null; 
+  receiptSelected: any = null;
 
   order: Order = {
     id: 0,
@@ -61,7 +63,7 @@ export class OrderAddComponent implements OnInit {
     driver: '',
     note: '',
     transport: 0,
-    receipt: 0, 
+    receipt: 0,
     licensePlates: '',
     receivedDate: '',
     status: 0,
@@ -71,12 +73,12 @@ export class OrderAddComponent implements OnInit {
     agencyName: '',
     approvedNumber: 0,
     editer: '',
-    confirmedDate: '', 
-    shippingDate: '', 
+    confirmedDate: '',
+    shippingDate: '',
+    updatedByUserId: this.helper.getUserId(),
   };
 
   date = new FormControl(new Date());
-  helper = new Helper();
   loading: boolean = false;
 
   constructor(public router: Router,
@@ -118,7 +120,7 @@ export class OrderAddComponent implements OnInit {
       this.order.deliveryId = Number(this.deliverySelected.id);
       this.order.pickupId = Number(this.pickupSelected.id);
       this.order.transport = Number(this.transportSelected.id);
-      this.order.receipt = Number(this.receiptSelected.value); 
+      this.order.receipt = Number(this.receiptSelected.value);
       this.order.receivedDate = moment(this.date.value).format('DD/MM/YYYY');
       if (this.isAdmin) {
         this.order.agencyId = this.agencySelected !== null ? this.agencySelected.id : 0;
@@ -130,10 +132,10 @@ export class OrderAddComponent implements OnInit {
       this.order.sender = this.helper.getAgencyId();
       this.order.products = this.order.products.filter(x => x.quantity.toString() !== '0' && x.quantity.toString() !== '');
 
-      if (this.order.status === STATUS[1].value) { 
-        this.order.confirmedDate = moment().format('HH:mm DD/MM/YYYY'); 
+      if (this.order.status === STATUS[1].value) {
+        this.order.confirmedDate = moment().format('HH:mm DD/MM/YYYY');
       }
-      if (this.order.status === STATUS[3].value) { 
+      if (this.order.status === STATUS[3].value) {
         this.order.shippingDate = moment().format('HH:mm DD/MM/YYYY');
       }
       console.log(this.order)
@@ -171,7 +173,7 @@ export class OrderAddComponent implements OnInit {
       || !this.deliverySelected
       || !this.pickupSelected
       || !this.transportSelected
-      || !this.receiptSelected 
+      || !this.receiptSelected
       || this.order.licensePlates.length === 0
       || this.order.driver.length === 0) {
       isValidForm = false;
@@ -200,7 +202,7 @@ export class OrderAddComponent implements OnInit {
       this.transportError = "Vui lòng chọn phương tiện vận chuyển";
       document.getElementById("transport")?.focus();
     }
-    if (!this.receiptSelected) { 
+    if (!this.receiptSelected) {
       isValidForm = false;
       this.receiptError = "Vui lòng chọn phương thức nhận";
       document.getElementById("receipt")?.focus();
@@ -245,7 +247,7 @@ export class OrderAddComponent implements OnInit {
     }
   }
 
-  onChangerReceipt(event: any) { 
+  onChangerReceipt(event: any) {
     if (!this.receiptSelected) {
       this.receiptError = "Vui lòng chọn phương thức nhận";
       document.getElementById("receipt")?.focus();
@@ -255,14 +257,6 @@ export class OrderAddComponent implements OnInit {
   }
 
   onlyNumberKey(event: any) {
-    var ASCIICode = (event.which) ? event.which : event.keyCode;
-    if (ASCIICode > 31 
-      && (ASCIICode < 48 || ASCIICode > 57)
-      && (ASCIICode < 96 || ASCIICode > 105)
-      && ASCIICode !== 110
-      && ASCIICode !== 190) {
-      return false;
-    }
-    return true;
+    return this.helper.onlyNumberKey(event);
   }
 }

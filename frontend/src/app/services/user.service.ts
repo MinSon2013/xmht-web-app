@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CONFIG } from '../common/config';
 import { WebRequestService } from './web-request.service';
+import { Helper } from '../helpers/helper';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -16,11 +17,15 @@ export class UserService {
 
     create(obj: any) {
         const payload = {
-            username: obj.username,
+            userName: obj.userName,
             password: obj.password,
-            isAdmin: obj.isAdmin,
-            token: obj.token,
-            expiresAt: obj.expiresAt
+            isAdmin: false,
+            // token: obj.token,
+            // expiresAt: obj.expiresAt,
+            role: obj.role,
+            districtId: obj.districtId,
+            fullName: obj.fullName,
+            updatedByUserId: new Helper().getUserId(),
         };
         return this.webrequestService.post(this.url, payload);
     }
@@ -39,12 +44,13 @@ export class UserService {
 
     createUserRole(obj: any) {
         const payload = {
-            username: obj.username,
+            userName: obj.userName,
             password: obj.password,
             isAdmin: false,
             role: obj.role,
             districtId: obj.districtId,
             fullName: obj.fullName,
+            updatedByUserId: new Helper().getUserId(),
         };
         return this.webrequestService.post(CONFIG.URL.USER_ROLE, payload);
     }
@@ -55,6 +61,7 @@ export class UserService {
             role: obj.role,
             districtId: obj.districtId,
             fullName: obj.fullName,
+            updatedByUserId: new Helper().getUserId(),
         };
         return this.webrequestService.put(CONFIG.URL.USER_ROLE, payload);
     }

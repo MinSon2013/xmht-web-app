@@ -10,6 +10,7 @@ import { ProductOrderRepository } from './product-order.repository';
 import { SearchOrderDto } from '../dto/search-order.dto';
 import { NotificationDto } from '../../notification/dto/notification.dto';
 import moment from 'moment';
+import { Users } from '../../user/entities/user.entity';
 
 @EntityRepository(Order)
 export class OrderRepository extends Repository<Order> {
@@ -19,18 +20,16 @@ export class OrderRepository extends Repository<Order> {
         super();
     }
 
-    async getOrderList(userId: number,
+    async getOrderList(agencyId: number,
         productService: ProductsService,
         productOrderRepo: ProductOrderRepository,
-        adminId: number,
-        stockerId: number,
     ): Promise<Order[]> {
         let response: Order[] = [];
         let orderList: any;
-        if (userId !== adminId && userId !== stockerId) {
+        if (agencyId !== 0) {
             orderList = await this.find({
                 where: {
-                    agencyId: userId
+                    agencyId
                 }
             });
         } else {
@@ -59,27 +58,26 @@ export class OrderRepository extends Repository<Order> {
         return response;
     }
 
-    async findByMonthYear(body: StatisticsDto) {
-        let response: Order[] = [];
-        let orderList: any;
-        let length = body.dateTime.length;
-        let query = this.createQueryBuilder('order')
-            .select('order.created_date as createdDate')
-            .where('RIGHT(order.created_date, :length) = :dateTime', { length, dateTime: body.dateTime });
+    // async findByMonthYear(body: StatisticsDto) {
+    //     let response: Order[] = [];
+    //     let orderList: any;
+    //     let length = body.dateTime.length;
+    //     let query = this.createQueryBuilder('order')
+    //         .select('order.created_date as createdDate')
+    //         .where('RIGHT(order.created_date, :length) = :dateTime', { length, dateTime: body.dateTime });
 
-        if (body.userId !== body.adminId && body.userId !== body.stockerId) {
-            query = query.andWhere('order.agency_id = :agencyId', { agencyId: body.userId })
-
-        }
-        response = await query.getRawMany();
-        return response;
-    }
+    //     if (body.agencyId !== 0) {
+    //         query = query.andWhere('order.agency_id = :agencyId', { agencyId: body.agencyId })
+    //     }
+    //     response = await query.getRawMany();
+    //     return response;
+    // }
 
     async getOne(id: number, userId: number,
         productService: ProductsService,
         productOrderRepo: ProductOrderRepository,
         adminId: number,
-        stockerId: number,
+        stockerId?: number,
     ): Promise<Order> {
         let response = new Order();
         let orderList: any;
@@ -129,7 +127,7 @@ export class OrderRepository extends Repository<Order> {
         await productOrderRepo.save(entities);
 
         // tao thong bao
-        const agencyName = await agencyService.getName(modifyOrderDto.sender);
+        const agencyName = await agencyService.getName(modifyOrderDto.sender);//////////
         let contents = `${agencyName} đã tạo đơn hàng mới`;
         modifyOrderDto.id = order.id;
         await this.createNotify(modifyOrderDto, contents, notificationService, 'CREATE');
@@ -247,7 +245,7 @@ export class OrderRepository extends Repository<Order> {
         modifyOrderDto.sender = body.sender;
         modifyOrderDto.agencyId = body.agencyId;
         modifyOrderDto.notifyReceiver = body.agencyId;
-        modifyOrderDto.agencyUpdated = body.agencyUpdated;
+        modifyOrderDto.userUpdated = body.userUpdated;
         modifyOrderDto.id = body.id;
         modifyOrderDto.status = body.status;
         await this.createNotify(modifyOrderDto, contents, notificationService, 'UPDATE');
@@ -270,7 +268,7 @@ export class OrderRepository extends Repository<Order> {
         return await this.delete(id);
     }
 
-    async search(searchOderDto: SearchOrderDto, productService: ProductsService, adminId: number, stockerId: number): Promise<Order[]> {
+    async search(searchOderDto: SearchOrderDto, productService: ProductsService, _agencyId: number): Promise<Order[]> {
         let response: Order[] = [];
         const productList = await productService.getAllProduct();
 
@@ -280,15 +278,13 @@ export class OrderRepository extends Repository<Order> {
             .leftJoin(ProductOrder, 'productOrder', 'productOrder.order_id = order.id')
             .where('1=1');
 
-        if (searchOderDto.userId && searchOderDto.userId !== adminId && searchOderDto.userId !== stockerId) {
-            sql = sql.andWhere('order.agencyId = :agencyId', { agencyId: searchOderDto.userId })
+        if (_agencyId > 0) {
+            sql = sql.andWhere('order.agencyId = :agencyId', { agencyId: _agencyId })
+        } else if (searchOderDto.agencyId) {
+            sql = sql.andWhere('order.agency_id = :agencyId', { agencyId: searchOderDto.agencyId })
         }
         if (searchOderDto.orderId && searchOderDto.orderId !== 0) {
             sql = sql.andWhere('order.approved_number = :orderId', { orderId: searchOderDto.orderId })
-        }
-        /* if (searchOderDto.agencyId && searchOderDto.agencyId !== adminId && searchOderDto.userId !== stockerId) { */
-        if (searchOderDto.agencyId && searchOderDto.agencyId !== adminId && searchOderDto.agencyId !== stockerId) {
-            sql = sql.andWhere('order.agency_id = :agencyId', { agencyId: searchOderDto.agencyId })
         }
         if (searchOderDto.status && searchOderDto.status !== 0) {
             sql = sql.andWhere('order.status = :status', { status: searchOderDto.status })
@@ -389,7 +385,7 @@ export class OrderRepository extends Repository<Order> {
         notifyDto.filePath = '';
         notifyDto.mimeType = '';
         notifyDto.agencyList.push(modifyOrderDto.notifyReceiver === 0 ? adminId : modifyOrderDto.notifyReceiver);
-        notifyDto.sender = modifyOrderDto.id !== 0 ? modifyOrderDto.agencyUpdated : modifyOrderDto.sender;
+        notifyDto.sender = modifyOrderDto.id !== 0 ? modifyOrderDto.userUpdated : modifyOrderDto.sender;
         notifyDto.notificationType = this.NOTIFY_TYPE_GENERAL;
         notifyDto.updatedDate = moment(new Date).format('HH:mm DD/MM/YYYY');
         notifyDto.orderId = modifyOrderDto.id;

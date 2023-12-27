@@ -1,0 +1,4 @@
+﻿backend/src/main.ts
+backend/.env
+backend/uploadedFiles
+frontend/src/environments/environment.ts

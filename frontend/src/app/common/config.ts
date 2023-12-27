@@ -25,13 +25,10 @@ export const CONFIG = {
         PRODUCT_LIST: 'productList',
         PRODUCT_SUM: 'productSum',
         PRODUCT_ORDER_LIST: 'productOrderList',
-        USER_LIST: 'userList',
         DELIVERY_LIST: 'deliveryList',
-        MENU_LIST: 'menuList',
         LOGIN_INFO: 'loginInfo',
         TOKEN: 'token',
         IS_ADMIN: 'is_admin',
-        IS_LOGIN: 'is_login',
         ACCESS_TOKEN: 'accessToken'
     }
 }

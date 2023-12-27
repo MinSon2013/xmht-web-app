@@ -5,19 +5,20 @@
                 <div class="head-content-left col-5">
                     <img alt="XMHT" width="64" height="64" src="./assets/images/logo.png"
                         (click)="onRouterLink('dashboard')">
-                    <h5 class="span" (click)="onRouterLink('dashboard')">{{ "TITLE_APP" | translate }}</h5>
+                    <h5 class="span" (click)="onRouterLink('dashboard')">
+                        {{ "TITLE_APP" | translate }}</h5>
                 </div>
                 <div class="head-content-right col-7">
                     <div class="user {{isAdmin ? '' : 'cursor'}}" (mouseover)="subMenuTrigger.openMenu()"
                         [hidden]="isAdmin">
                         <mat-icon aria-hidden="false" aria-label="User icon" fontSet="fas" fontIcon="fa-user"
                             class="fa-user"></mat-icon>
-                        <p class="agency">{{agency}}</p>
+                        <p class="agency">{{agencyName}}</p>
                     </div>
                     <div class="user {{isAdmin ? '' : 'cursor'}}" [hidden]="!isAdmin">
                         <mat-icon aria-hidden="false" aria-label="User icon" fontSet="fas" fontIcon="fa-user"
                             class="fa-user"></mat-icon>
-                        <p class="agency">{{agency}}</p>
+                        <p class="agency">{{agencyName}}</p>
                     </div>
                     <span [matMenuTriggerFor]="subMenu" #subMenuTrigger="matMenuTrigger"></span>
                     <mat-menu #subMenu="matMenu">
@@ -55,8 +56,8 @@
                 <a mat-button [routerLink]="'/statistics'" class="menu-item">
                     {{ "HEADER.MENU_GROUP_STATISTICS" | translate }}
                 </a>
-                <a mat-button [routerLink]="'/report'" class="menu-item"> {{ "HEADER.MENU_GROUP_REPORT" | translate
-                    }} </a>
+                <a mat-button [routerLink]="'/report'" class="menu-item" [hidden]="hidden">
+                    {{ "HEADER.MENU_GROUP_REPORT" | translate }} </a>
                 <a mat-button [routerLink]="" class="menu-item" (click)="onLogOut()">
                     {{ "HEADER.MENU_2" | translate }}
                 </a>
@@ -80,27 +81,27 @@
                 <!-- Manage menu -->
                 <mat-menu #menu2="matMenu" [overlapTrigger]="false">
                     <span (mouseleave)="closeSubMenu(menuTrigger2)">
-                        <button mat-menu-item (click)="onRouterLink('products')">
-                            <mat-icon aria-hidden="false" aria-label="Manage icon" fontSet="fas"
-                                fontIcon="fa-box-open"></mat-icon>
-                            <span>{{ "HEADER.MENU_ITEM_PRODUCT" | translate }}</span>
-                        </button>
                         <button mat-menu-item (click)="onRouterLink('agency')">
                             <mat-icon aria-hidden="false" aria-label="Agency icon" fontSet="fas"
                                 fontIcon="fa-user"></mat-icon>
                             <span>{{ "HEADER.MENU_ITEM_AGENCY" | translate }}</span>
                         </button>
-                        <button mat-menu-item (click)="onRouterLink('store')">
+                        <button mat-menu-item (click)="onRouterLink('products')" [hidden]="hidden">
+                            <mat-icon aria-hidden="false" aria-label="Manage icon" fontSet="fas"
+                                fontIcon="fa-box-open"></mat-icon>
+                            <span>{{ "HEADER.MENU_ITEM_PRODUCT" | translate }}</span>
+                        </button>
+                        <button mat-menu-item (click)="onRouterLink('store')" [hidden]="hidden">
                             <mat-icon aria-hidden="false" aria-label="Shop icon" fontSet="fas"
                                 fontIcon="fa-shop"></mat-icon>
                             <span>{{ "HEADER.MENU_ITEM_STORE" | translate }}</span>
                         </button>
-                        <button mat-menu-item (click)="onRouterLink('district')">
+                        <button mat-menu-item (click)="onRouterLink('district')" [hidden]="hidden">
                             <mat-icon aria-hidden="false" aria-label="Building icon" fontSet="fas"
                                 fontIcon="fa-building"></mat-icon>
                             <span>{{ "HEADER.MENU_ITEM_DISTRICT" | translate }}</span>
                         </button>
-                        <button mat-menu-item (click)="onRouterLink('user')">
+                        <button mat-menu-item (click)="onRouterLink('user')" [hidden]="hidden">
                             <mat-icon aria-hidden="false" aria-label="User icon" fontSet="fas"
                                 fontIcon="fa-user-gear"></mat-icon>
                             <span>{{ "HEADER.MENU_ITEM_USER" | translate }}</span>

@@ -38,7 +38,7 @@ export class ProductsService {
 
   async sum(body: SearchOrderDto): Promise<ProductRo[]> {
     const adminId = await this.agencyRepository.getAgencyIdOfAdmin();
-    const stockerId = await this.agencyRepository.getAgencyIdOfStocker();
-    return await this.productOrderRepo.sumProduct(body, adminId, stockerId);
+    //const stockerId = await this.agencyRepository.getAgencyIdOfStocker();
+    return await this.productOrderRepo.sumProduct(body, adminId);
   }
 }

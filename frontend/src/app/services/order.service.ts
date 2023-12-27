@@ -16,15 +16,8 @@ export class OrderService {
         private webrequestService: WebRequestService,
     ) { }
 
-    getOrderList(dateTime?: any) {
-        if (dateTime) {
-            const payload = {
-                dateTime,
-                userId: this.helper.getAgencyId(),
-            };
-            return this.webrequestService.post(this.url + `/statistics`, payload);
-        }
-        return this.webrequestService.get(this.url + `/${this.helper.getAgencyId()}`);
+    getOrderList() {
+        return this.webrequestService.get(this.url + `/${this.helper.getUserId()}`);
     }
 
     search(obj: Search) {
@@ -35,7 +28,7 @@ export class OrderService {
             agencyId: Number(obj.agencyId),
             productId: Number(obj.productId),
             status: Number(obj.status),
-            userId: this.helper.getAgencyId(),
+            userId: this.helper.getUserId(),
         };
         return this.webrequestService.post(this.url1, payload);
     }
@@ -55,7 +48,7 @@ export class OrderService {
             contract: obj.contract,
             agencyId: obj.agencyId,
             products: obj.products,
-            sender: this.helper.getAgencyId(),
+            sender: this.helper.getUserId(),
         };
 
         return this.webrequestService.post(this.url, payload);
@@ -79,7 +72,7 @@ export class OrderService {
             products: obj.products,
             isViewed: obj.isViewed,
             isAdmin: this.helper.isAdmin(),
-            sender: this.helper.getAgencyId(),
+            sender: this.helper.getUserId(),
         };
 
         return this.webrequestService.put(this.url, payload);
@@ -89,7 +82,7 @@ export class OrderService {
         const payload = {
             id: obj.id,
             status: obj.status,
-            sender: this.helper.getAgencyId(),
+            sender: this.helper.getUserId(),
         }
         return this.webrequestService.put(this.url + '/status', payload);
     }

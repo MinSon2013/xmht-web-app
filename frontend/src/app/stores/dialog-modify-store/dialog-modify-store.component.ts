@@ -41,6 +41,7 @@ export class DialogModifyStoreComponent {
     phone: '',
     note: '',
     userId: this.helper.getUserId(),
+    updatedByUserId: this.helper.getUserId(),
   };
 
   constructor(

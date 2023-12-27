@@ -2,7 +2,7 @@ CREATE TABLE `district` (
   `id` int(11) NOT NULL,
   `name` VARCHAR(100) NOT NULL,
   `province_id` varchar(255) NOT NULL,
-  `updated_date` varchar(18) NOT NULL,
+  `updated_date` varchar(20) NOT NULL,
   `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -32,7 +32,6 @@ ALTER TABLE `store`
   `district_id` int(11) NOT NULL,
   `province_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
-  `other_store_name` varchar(200) DEFAULT NULL,
   `store_information` text,
   `report_content` text,
   `note` text,

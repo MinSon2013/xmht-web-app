@@ -10,6 +10,8 @@ export interface Reports {
     filePath?: string;
     note: string;
     updateDate: string;
+    otherStoreName: string;
+    updatedByUserId: number;
     updateDateVisisble?: string;
     userId?: number;
     districtName?: string;
@@ -22,5 +24,4 @@ export interface Reports {
     showDetail?: boolean;
     showLabel?: string;
     showContent?: string
-    otherStoreName?: string;
 }

@@ -5,7 +5,7 @@ export class ModifyOrderDto {
   pickupId: number;
   productTotal: string;
   transport: number;
-  licensePlates: string; 
+  licensePlates: string;
   driver: string;
   receivedDate: string;
   note: string;
@@ -21,16 +21,15 @@ export class ModifyOrderDto {
   agencyName?: string;
   isAdmin?: boolean;
   isViewed?: boolean;
-  sender?: number;
+  sender?: number; // Login userId
   notifyReceiver?: number;
-  agencyUpdated?: number;
+  userUpdated?: number;
   adminId?: number;
   approvedNumber?: number;
   editer: string;
   receipt: number;
   confirmedDate: string;
   shippingDate: string;
-  stockerId?: number; 
 }
 
 export interface ProductItem {

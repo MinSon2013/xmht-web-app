@@ -9,4 +9,5 @@ export class ModifyStoreDto {
   note: string;
   updatedDate: string;
   userId: number;
+  updatedByUserId: string;
 }

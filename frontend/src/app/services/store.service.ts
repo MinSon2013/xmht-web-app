@@ -29,6 +29,7 @@ export class StoreService {
             phone: obj.phone,
             note: obj.note,
             userId: obj.userId,
+            updatedByUserId: this.helper.getUserId(),
         };
         return this.webrequestService.post(this.url, payload);
     }
@@ -44,6 +45,7 @@ export class StoreService {
             phone: obj.phone,
             note: obj.note,
             userId: obj.userId,
+            updatedByUserId: this.helper.getUserId(),
         };
         return this.webrequestService.put(this.url, payload);
     }

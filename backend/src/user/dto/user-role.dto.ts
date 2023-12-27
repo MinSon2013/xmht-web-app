@@ -6,4 +6,5 @@ export interface UserRoleDto {
     role: number;
     districtId: number;
     fullName: string;
+    updatedByUserId: string;
 }

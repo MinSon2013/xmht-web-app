@@ -3,4 +3,5 @@ export class StatisticsDto {
     dateTime: string;
     adminId?: number;
     stockerId?: number;
+    agencyId?: number;
 }

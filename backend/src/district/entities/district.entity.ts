@@ -14,6 +14,9 @@ export class District {
   @Column({ name: 'province_id' })
   provinceId: string;
 
-  @Column({ name: 'updated_date', length: 18 })
+  @Column({ name: 'updated_date', length: 20 })
   updatedDate: string;
+
+  @Column({ name: 'updated_by_user_id' })
+  updatedByUserId: number;
 }

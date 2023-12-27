@@ -7,7 +7,7 @@ import { ChangePasswordDto } from './dto/change-password.dto';
 import { UserRoleDto } from './dto/user-role.dto';
 import { AgencyService } from '../agency/agency.service';
 import { UserDistrictRepository } from './repository/user-district.repository';
-import { UserRo } from './dto/user.ro';
+import { UserRo } from './ro/user.ro';
 
 @Injectable()
 export class UserService {
@@ -28,10 +28,10 @@ export class UserService {
         return await this.userRepo.getOne(id);
     }
 
-    async findByUsername(username: string): Promise<Users> {
+    async findByUsername(userName: string): Promise<Users> {
         return await this.userRepo.findOne({
             where: {
-                username
+                userName
             },
         });
     }
@@ -68,11 +68,19 @@ export class UserService {
         return await this.userRepo.updateUserRole(user, this.authService, this.agencyService, this.repo);
     }
 
+    async updateAgencyRole(userId: number, role: number) {
+        return await this.userRepo.updateAgencyRole(userId, role);
+    }
+
     async deleteUserRole(id: number): Promise<DeleteResult> {
         const result = await this.userRepo.deleteUserRole(id, this.agencyService,);
         if (result) {
             await this.repo.deleteUserDistrict(id);
         }
         return result;
+    }
+
+    async syncUser(userId: number, fname: string, role: number) {
+        return await this.userRepo.syncUser(userId, fname, role);
     }
 }

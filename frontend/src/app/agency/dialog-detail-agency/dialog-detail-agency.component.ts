@@ -2,11 +2,10 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MyErrorStateMatcher } from '../../orders/order-add/order-add.component';
 import { Agency } from '../../models/agency';
-import { User } from '../../models/user';
 import { TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import { Helper } from '../../helpers/helper';
-import { MSG_STATUS, USER_ROLE } from '../../constants/const-data';
+import { AGENCY, MSG_STATUS, STOCKER, USER_AREA_MANAGER } from '../../constants/const-data';
 import { AgencyService } from '../../services/agency.service';
 import { UserService } from '../../services/user.service';
 
@@ -19,29 +18,28 @@ export class DialogDetailAgencyComponent implements OnInit {
   header: string = '';
   error: any = '';
   errorPassword: string = '';
-  disabled: boolean = false;
+  disabledUserName: boolean = false;
+  helper = new Helper();
 
   matcher = new MyErrorStateMatcher();
-  agency = {
+  agency: Agency = {
     id: 0,
-    fullName: '',
+    agencyName: '',
     address: '',
     contract: '',
     phone: '',
     note: '',
-    accountName: '',
+    userName: '',
     password: '',
     confirmPassword: '',
     email: '',
     userId: 0,
-    role: '',
+    role: AGENCY,
+    updatedByUserId: this.helper.getUserId(),
   };
 
-  helper = new Helper();
-  isStocker: boolean = this.helper.isStocker();
-
-  userRole = USER_ROLE;
-  roleSelected: any = null;
+  userRole: number = this.helper.getUserRole();
+  disabled: boolean = (this.userRole === USER_AREA_MANAGER || this.userRole === STOCKER);
 
   constructor(
     public dialogRef: MatDialogRef<DialogDetailAgencyComponent>,
@@ -54,42 +52,33 @@ export class DialogDetailAgencyComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.data && this.data.id !== 0) {
-      this.disabled = true;
+      this.disabledUserName = true;
       this.translate.get('AGENCY.TITLE_MODIFIED').subscribe(data => { this.header = data });
       this.agency.id = this.data.id;
-      this.agency.fullName = this.data.fullName;
+      this.agency.userId = this.data.userId;
+      this.agency.agencyName = this.data.agencyName;
       this.agency.address = this.data.address;
       this.agency.phone = this.data.phone;
       this.agency.note = this.data.note;
-      this.agency.accountName = this.data.accountName;
+      this.agency.userName = this.data.userName;
       this.agency.password = this.data.password;
       this.agency.email = this.data.email;
       this.agency.contract = this.data.contract;
-      this.agency.userId = this.data.userId;
     } else {
       this.translate.get('AGENCY.TITLE_ADD').subscribe(data => { this.header = data });
-      this.disabled = false;
+      this.disabledUserName = false;
     }
   }
 
   onSubmit() {
     if (this.validForm()) {
-      this.agency.role = this.roleSelected?.label;
       if (this.agency.id === 0) {
         this.agencyService.create(this.agency).subscribe((response: any) => {
           if (response) {
             this.agency.id = response.id;
             this.agency.userId = response.userId;
-            this.helper.addAgency(this.agency);
 
-            const user: User = {
-              id: response.userId,
-              username: this.agency.accountName,
-              password: this.agency.password,
-              isAdmin: false,
-              role: this.roleSelected?.label,
-            };
-            this.helper.addUser(user);
+            this.helper.addAgency(this.agency); //--------------------
 
             this.helper.showSuccess(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.ADD_AGENCY', MSG_STATUS.SUCCESS));
             this.dialogRef.close(this.agency);
@@ -100,7 +89,9 @@ export class DialogDetailAgencyComponent implements OnInit {
       } else {
         this.agencyService.update(this.agency).subscribe((response: any) => {
           if (response) {
-            this.helper.updateAgency(this.agency);
+
+            this.helper.updateAgency(this.agency);//--------------------
+
             this.helper.showSuccess(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.MODIFIED_AGENCY', MSG_STATUS.SUCCESS));
             this.dialogRef.close(this.agency);
           } else {
@@ -117,7 +108,7 @@ export class DialogDetailAgencyComponent implements OnInit {
 
   validForm(): boolean {
     let isValidForm: boolean = true;
-    if (this.agency.fullName.length === 0) {
+    if (this.agency.agencyName.length === 0) {
       isValidForm = false;
     }
     if (this.agency.address.length === 0) {
@@ -129,7 +120,7 @@ export class DialogDetailAgencyComponent implements OnInit {
     if (this.agency.email.length === 0) {
       isValidForm = false;
     }
-    if (this.agency.accountName.length === 0) {
+    if (this.agency.userName.length === 0) {
       isValidForm = false;
     }
     if (this.agency.phone.length === 0) {
@@ -165,12 +156,16 @@ export class DialogDetailAgencyComponent implements OnInit {
     }
   }
 
+  // onlyNumberKey(event: any) {
+  //   var ASCIICode = (event.which) ? event.which : event.keyCode;
+  //   if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57)) {
+  //     return false;
+  //   }
+  //   return true;
+  // }
+
   onlyNumberKey(event: any) {
-    var ASCIICode = (event.which) ? event.which : event.keyCode;
-    if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57)) {
-      return false;
-    }
-    return true;
+    return this.helper.onlyNumberKey(event);
   }
 
 }
