@@ -39,7 +39,8 @@ export class UserService {
     }
 
     getUserRoleList() {
-        return this.webrequestService.get(CONFIG.URL.USER_ROLE);
+        // return this.webrequestService.get(CONFIG.URL.USER_ROLE);
+        return this.webrequestService.get(this.url);
     }
 
     createUserRole(obj: any) {
@@ -52,7 +53,8 @@ export class UserService {
             fullName: obj.fullName,
             updatedByUserId: new Helper().getUserId(),
         };
-        return this.webrequestService.post(CONFIG.URL.USER_ROLE, payload);
+        return this.webrequestService.post(this.url, payload);
+        // return this.webrequestService.post(CONFIG.URL.USER_ROLE, payload);
     }
 
     updateUserRole(obj: any) {
@@ -63,10 +65,12 @@ export class UserService {
             fullName: obj.fullName,
             updatedByUserId: new Helper().getUserId(),
         };
-        return this.webrequestService.put(CONFIG.URL.USER_ROLE, payload);
+        return this.webrequestService.put(this.url, payload);
+        // return this.webrequestService.put(CONFIG.URL.USER_ROLE, payload);
     }
 
     deleteUserRole(id: number) {
-        return this.webrequestService.delete(CONFIG.URL.USER_ROLE + `/${id}`);
+        return this.webrequestService.delete(this.url + `/${id}`);
+        // return this.webrequestService.delete(CONFIG.URL.USER_ROLE + `/${id}`);
     }
 }

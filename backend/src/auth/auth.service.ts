@@ -31,7 +31,6 @@ export class AuthService {
         // -- REMOVE ----
         await this.syncDatabase(); //mapping data from agency to user
 
-
         // const foundUser: Users = await this.userService.findByUsername(user.username);
         // if (foundUser) {
         //     const matches: boolean = await this.validatePassword(user.password, foundUser.password);
@@ -126,10 +125,10 @@ export class AuthService {
         const agencyListUser = await this.agencyService.getUserNotAgency();
 
         // get user list
-        const userList = await this.userService.findAll();
+        const userList = await this.userService.getAllUserList();
 
         try {
-            userList.forEach(async el => {
+            for (let el of userList) {
                 // Update user-role, full-name for agency in `users`
                 const f = agencyListNotUser.find(x => x.userId === el.id);
                 if (f) {
@@ -140,12 +139,10 @@ export class AuthService {
                 const ff = agencyListUser.find(y => y.userId === el.id);
                 if (ff) {
                     // delete admin, thukho khoi agency
-                    // if (el.role === 0 || el.role === 1 || el.role === 2 || el.role === 3) {
                     await this.userService.syncUser(el.id, ff.agencyName, 0);
                     await this.agencyService.delete(ff.id);
-                    // }
                 }
-            });
+            }
 
         } catch (err) {
             throw new HttpException('sync fail', HttpStatus.CONFLICT);

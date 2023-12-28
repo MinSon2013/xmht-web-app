@@ -17,6 +17,16 @@ export class UserRepository extends Repository<Users> {
         super();
     }
 
+    //--- REMOVE ---------
+    async getAllUserList(): Promise<UserRO[]> {
+        const raw = await this.createQueryBuilder('u')
+            .leftJoinAndSelect(UserDistrict, 'ud', 'ud.user_id = u.id')
+            .orderBy('u.id', 'ASC')
+            .getRawMany();
+
+        return this.mappingUserRO(raw);
+    }
+
     async getUserList(): Promise<UserRO[]> {
         const raw = await this.createQueryBuilder('u')
             .leftJoinAndSelect(UserDistrict, 'ud', 'ud.user_id = u.id')
@@ -190,20 +200,23 @@ export class UserRepository extends Repository<Users> {
     // REMOVE -----------------------------------
     // Sync database
     async syncUser(userId: number, fname: string, role: number) {
-        if (role > 0) {
-            const x = await this.createQueryBuilder()
-                .update(Users)
-                .set({ fullName: fname, role: role })
-                .where("id = :userId", { userId })
-                .execute();
-            return x;
-        } else {
-            return await this.createQueryBuilder()
-                .update(Users)
-                .set({ fullName: fname })
-                .where("id = :userId", { userId })
-                .execute();
+        try {
+            if (role > 0) {
+                return await this.createQueryBuilder('u').update()
+                    .set({ fullName: fname, role: role })
+                    .where("id = :userId", { userId })
+                    .execute();
+            } else {
+                return await this.createQueryBuilder()
+                    .update()
+                    .set({ fullName: fname })
+                    .where("id = :userId", { userId })
+                    .execute();
+            }
+        } catch (err) {
+            console.log(err)
         }
+
     }
 
 }

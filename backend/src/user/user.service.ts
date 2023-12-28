@@ -21,6 +21,11 @@ export class UserService {
         return await this.userRepo.getUserList();
     }
 
+    //--- REMOVE ----
+    async getAllUserList(): Promise<UserRO[]> {
+        return await this.userRepo.getAllUserList();
+    }
+
     async getOne(id: number): Promise<UserRO> {
         return await this.userRepo.getUserById(id);
     }
