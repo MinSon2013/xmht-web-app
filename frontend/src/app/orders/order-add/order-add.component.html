@@ -92,10 +92,8 @@
                             <input matInput
                                 class="p-quantity col-3 margin appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline {{error1.length !== 0 ? 'focus-i' : ''}}"
                                 id="quantity" type="text" maxlength="5" [(ngModel)]="item.quantity"
-                                [ngModelOptions]="{standalone: true}" [errorStateMatcher]="matcher"
-                                placeholder="0.0"
-                                (keydown)="onlyNumberKey($event)"
-                                (focusout)="focusOut()" />
+                                [ngModelOptions]="{standalone: true}" [errorStateMatcher]="matcher" placeholder="0.0"
+                                (keydown)="onlyNumberKey($event)" (focusout)="focusOut()" />
                             <label class="col-2 label-ton">(tấn)</label>
                         </div>
                     </div>
@@ -123,13 +121,15 @@
                         <label class="require">*</label>
                     </span>
                     <select class="col-7 form-select" id="receipt" [(ngModel)]="receiptSelected"
-                     (ngModelChange)="onChangerReceipt($event)" required>
-                        <option [ngValue]="null" [disabled]="true" [selected]="true">-- {{'ORDER.SELECT_RECEIPT' | translate}}
+                        (ngModelChange)="onChangerReceipt($event)" required>
+                        <option [ngValue]="null" [disabled]="true" [selected]="true">-- {{'ORDER.SELECT_RECEIPT' |
+                            translate}}
                             --</option>
                         <option [ngValue]="item" *ngFor="let item of receipt">{{item.label}}</option>
                     </select>
                 </div>
-                <div class="mb-3 row field" *ngIf="receiptError || (receiptError !== null && receiptError.length !== 0)">
+                <div class="mb-3 row field"
+                    *ngIf="receiptError || (receiptError !== null && receiptError.length !== 0)">
                     <div class="col-5"></div>
                     <div class="col-7 notification"><span class="span">{{receiptError}}</span></div>
                 </div>
@@ -138,14 +138,16 @@
                         {{'ORDER.TRANSPORT' | translate}}
                         <label class="require">*</label>
                     </span>
-                    <select class="col-7 form-select" id="transport" [(ngModel)]="transportSelected" (ngModelChange)="onChangeTransport($event)" required>
+                    <select class="col-7 form-select" id="transport" [(ngModel)]="transportSelected"
+                        (ngModelChange)="onChangeTransport($event)" required>
                         <option [ngValue]="null" [disabled]="true" [selected]="true">-- {{'ORDER.SELECT_TRANSPORT' |
                             translate}}
                             --</option>
                         <option [ngValue]="item" *ngFor="let item of transport">{{item.label}}</option>
                     </select>
                 </div>
-                <div class="mb-3 row field" *ngIf="transportError || (transportError !== null && transportError.length !== 0)">
+                <div class="mb-3 row field"
+                    *ngIf="transportError || (transportError !== null && transportError.length !== 0)">
                     <div class="col-5"></div>
                     <div class="col-7 notification"><span class="span">{{transportError}}</span></div>
                 </div>
@@ -187,7 +189,7 @@
                     </span>
                     <textarea
                         class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="note" type="text" placeholder="" maxlength="1000" [(ngModel)]="order.note"
+                        id="note" type="text" placeholder="" maxlength="500" [(ngModel)]="order.note"
                         [ngModelOptions]="{standalone: true}"></textarea>
                 </div>
             </div>

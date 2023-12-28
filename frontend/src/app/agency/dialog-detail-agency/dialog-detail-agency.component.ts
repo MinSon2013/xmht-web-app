@@ -41,6 +41,8 @@ export class DialogDetailAgencyComponent implements OnInit {
   userRole: number = this.helper.getUserRole();
   disabled: boolean = (this.userRole === USER_AREA_MANAGER || this.userRole === STOCKER);
 
+  isEdit: boolean = false;
+
   constructor(
     public dialogRef: MatDialogRef<DialogDetailAgencyComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Agency,
@@ -64,9 +66,11 @@ export class DialogDetailAgencyComponent implements OnInit {
       this.agency.password = this.data.password;
       this.agency.email = this.data.email;
       this.agency.contract = this.data.contract;
+      this.isEdit = true;
     } else {
       this.translate.get('AGENCY.TITLE_ADD').subscribe(data => { this.header = data });
       this.disabledUserName = false;
+      this.isEdit = false;
     }
   }
 

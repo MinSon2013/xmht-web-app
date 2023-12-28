@@ -8,7 +8,7 @@ export class Agency {
   @Column({ name: 'user_id' })
   userId: number;
 
-  @Column({ name: 'agency_name', length: 200 })
+  @Column({ name: 'agency_name', length: 255 })
   agencyName: string;
 
   @Column({ length: 500 })
@@ -29,6 +29,6 @@ export class Agency {
   @Column({ name: 'updated_date', length: 20 })
   updatedDate: string;
 
-  @Column({ name: 'updated_by_user_id' })
+  @Column({ name: 'updated_by_user_id', default: 0 })
   updatedByUserId: number;
 }

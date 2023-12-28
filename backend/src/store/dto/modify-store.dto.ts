@@ -1,4 +1,4 @@
-export class ModifyStoreDto {
+export class ModifyStoreDTO {
   id?: number;
   agencyId: number;
   districtId: number;
@@ -9,5 +9,5 @@ export class ModifyStoreDto {
   note: string;
   updatedDate: string;
   userId: number;
-  updatedByUserId: string;
+  updatedByUserId: number;
 }

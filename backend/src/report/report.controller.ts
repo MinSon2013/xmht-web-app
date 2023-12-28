@@ -3,8 +3,8 @@ import { UseInterceptors } from '@nestjs/common/decorators/core/use-interceptors
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { ReportService } from './report.service';
 import { Reports } from './entities/report.entity';
-import { ModifyReportDto } from './dto/modify-report.dto';
-import { SearchDto } from './dto/search.dto';
+import { ModifyReportDTO } from './dto/modify-report.dto';
+import { SearchDTO } from './dto/search.dto';
 
 @Controller('report')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -12,10 +12,9 @@ export class ReportController {
   constructor(private readonly reportService: ReportService) { }
 
   @UseGuards(JwtAuthGuard)
-  @Get(':userId/:agencyId')
-  getAll(@Param('userId', ParseIntPipe) userId: number,
-    @Param('agencyId', ParseIntPipe) agencyId: number): Promise<any> {
-    return this.reportService.findAll(userId, agencyId);
+  @Get(':userId')
+  getAll(@Param('userId', ParseIntPipe) userId: number): Promise<any> {
+    return this.reportService.findAll(userId);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -26,13 +25,13 @@ export class ReportController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() modifyReportDto: ModifyReportDto) {
+  create(@Body() modifyReportDto: ModifyReportDTO) {
     return this.reportService.create(modifyReportDto);
   }
 
   @UseGuards(JwtAuthGuard)
   @Put()
-  update(@Body() modifyReportDto: ModifyReportDto) {
+  update(@Body() modifyReportDto: ModifyReportDTO) {
     return this.reportService.update(modifyReportDto);
   }
 
@@ -44,7 +43,7 @@ export class ReportController {
 
   @UseGuards(JwtAuthGuard)
   @Post('/search')
-  search(@Body() searchDto: SearchDto): Promise<Reports[]> {
+  search(@Body() searchDto: SearchDTO): Promise<Reports[]> {
     return this.reportService.search(searchDto);
   }
 }

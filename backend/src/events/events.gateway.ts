@@ -7,14 +7,14 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { ModifyOrderDto } from '../orders/dto/modify-order.dto';
+import { ModifyOrderDTO } from '../orders/dto/modify-order.dto';
 import { NotificationService } from '../notification/notification.service';
 import { OrdersService } from '../orders/orders.service';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { Order } from '../orders/entities/order.entity';
-import { NotificationDto } from '../notification/dto/notification.dto';
+import { NotificationDTO } from '../notification/dto/notification.dto';
 import { Notification } from '../notification/entities/notification.entity';
 
 @WebSocketGateway({ cors: { origin: '*' } })
@@ -46,7 +46,7 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect, 
     try {
       if (!client.handshake.headers.authorization
         || client.handshake.headers.authorization === 'null') {
-          return this.disconnect(client);
+        return this.disconnect(client);
       }
       const decodedToken = await this.verifyJwt(client.handshake.headers.authorization);
       const user = await this.userService.getOne(decodedToken.user.id);
@@ -81,7 +81,7 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect, 
   }
 
   @SubscribeMessage('addOrder')
-  async onAddOrder(client: Socket, payload: ModifyOrderDto) {
+  async onAddOrder(client: Socket, payload: ModifyOrderDTO) {
     console.log('api-gateway: onAddOrder....' + JSON.stringify(client.data))
     const createdOrder = await this.orderService.create(payload);
     await this.server.to(client.id).emit('orderAdded', createdOrder);
@@ -91,7 +91,7 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect, 
   }
 
   @SubscribeMessage('updateOrder')
-  async onUpdateOrder(client: Socket, payload: ModifyOrderDto) {
+  async onUpdateOrder(client: Socket, payload: ModifyOrderDTO) {
     console.log('api-gateway: onUpdateOrder....' + JSON.stringify(client.data))
     const updatedOrder = await this.orderService.update(payload);
     await this.server.to(client.id).emit('orderUpdated', updatedOrder);
@@ -101,7 +101,7 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect, 
   }
 
   @SubscribeMessage('addNotify')
-  async onAddNotify(client: Socket, payload: NotificationDto) {
+  async onAddNotify(client: Socket, payload: NotificationDTO) {
     console.log('api-gateway: onAddNotify....' + JSON.stringify(client.data))
     const createdNotify: Notification = await this.notificationService.create(payload);
     await this.server.to(client.id).emit('notifyAdded', createdNotify);
@@ -112,7 +112,7 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect, 
   }
 
   @SubscribeMessage('updateNotify')
-  async onUpdateNotify(client: Socket, payload: NotificationDto) {
+  async onUpdateNotify(client: Socket, payload: NotificationDTO) {
     console.log('api-gateway: onUpdateNotify....' + JSON.stringify(client.data))
     const updatedNotify = await this.notificationService.update(payload);
     await this.server.to(client.id).emit('notifyUpdated', updatedNotify);
@@ -165,7 +165,7 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect, 
       console.log('notification = ' + notification)
       return this.server.to(client.id).emit('getBadge', notification);
     } else {
-      const notification = await this.notificationService.getBadgeNumber();
+      const notification = await this.notificationService.getBadgeNumber(0);
       console.log('notification = ' + notification)
       return this.server.emit('getBadge', notification);
     }
@@ -176,9 +176,9 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect, 
     console.log('api-gateway: getNotifyList..... + ' + client.data.agencyId)
     let notificationList;
     if (client.data.isAdmin) {
-      notificationList = await this.notificationService.getAll();
+      notificationList = await this.notificationService.getAll(0);
     } else {
-      notificationList = await this.notificationService.getAll(client.data.agencyId, client.data.isAdmin);
+      notificationList = await this.notificationService.getAll(client.data.agencyId);
     }
 
     return this.server.to(client.id).emit('getNotifyList', notificationList);

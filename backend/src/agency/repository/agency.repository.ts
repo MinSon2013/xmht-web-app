@@ -1,11 +1,11 @@
 import { DeleteResult, EntityRepository, Repository, UpdateResult } from 'typeorm'
 import { Agency } from '../entities/agency.entity';
-import { ModifyAgencyDto } from '../dto/modify-agency.dto';
+import { ModifyAgencyDTO } from '../dto/modify-agency.dto';
 import { UserService } from '../../user/user.service';
 import { Users } from '../../user/entities/user.entity';
-import { AuthService } from '../../auth/auth.service';
-import { AgencyRo } from '../ro/agency.ro';
+import { AgencyRO } from '../ro/agency.ro';
 import { Helper } from '../../shared/helper';
+import { UserDTO } from '../../user/dto/user.dto';
 
 @EntityRepository(Agency)
 export class AgencyRepository extends Repository<Agency> {
@@ -15,81 +15,77 @@ export class AgencyRepository extends Repository<Agency> {
         super();
     }
 
-    async findAll(): Promise<Agency[]> {
-        return await this.find();
+    async findAll(): Promise<AgencyRO[]> {
+        return await this.getAgencyList();
     }
 
-    async getOne(userId: number): Promise<AgencyRo> {
+    private async getAgencyList() {
+        const ids = await this.getIdsNotAgency(); // -- REMOVE -----
+        const result = await this.createQueryBuilder('a')
+            .leftJoinAndSelect(Users, 'u', 'u.id = a.user_id')
+            .where('a.id NOT IN (:ids)', { ids })  // -- REMOVE -----
+            .getRawMany();
+
+        const res: AgencyRO[] = [];
+        result.forEach(element => {
+            const item = new AgencyRO();
+            item.id = element.a_id;
+            item.agencyName = element.a_agency_name;
+            item.address = element.a_address;
+            item.contract = element.a_contract;
+            item.note = element.a_note;
+            item.email = element.a_email;
+            item.phone = element.a_phone;
+            item.userId = element.u_id;
+            item.userName = element.u_username;
+            res.push(item);
+        });
+        return res;
+    }
+
+    async getByUserId(userId: number): Promise<AgencyRO> {
         const res = await this.createQueryBuilder('a')
             .leftJoinAndSelect(Users, 'u', 'u.id = a.user_id')
             .where('a.user_id = :userId', { userId })
             .getRawOne();
 
-        const agencyRo = new AgencyRo();
+        const agencyRo = new AgencyRO();
         agencyRo.id = res.a_id;
         agencyRo.agencyName = res.a_agency_name;
         agencyRo.address = res.a_address;
         agencyRo.contract = res.a_contract;
         agencyRo.note = res.a_note;
         agencyRo.email = res.a_email;
-        agencyRo.userId = res.u_id;
         agencyRo.phone = res.a_phone;
+        agencyRo.userId = res.u_id;
         agencyRo.userName = res.u_username;
-        agencyRo.role = res.u_role;
-        agencyRo.isAdmin = res.u_is_admin;
         return agencyRo;
     }
 
-    async getAgencyName(id: number): Promise<string> {
-        const agency = await this.findOne({
-            where: {
-                id
-            },
-        })
-
-        if (agency) {
-            return agency.agencyName;
-        }
-
-        return '';
-    }
-
-    async createAgency(modifyAgencyDto: ModifyAgencyDto, userService: UserService): Promise<AgencyRo> {
-        const userEntity = {
+    async createAgency(modifyAgencyDto: ModifyAgencyDTO, userService: UserService): Promise<AgencyRO> {
+        const userDTO: UserDTO = {
             userName: modifyAgencyDto.userName,
             password: modifyAgencyDto.password,
-            isAdmin: false,
-            token: '',
-            expiresAt: 0,
             role: modifyAgencyDto.role,
+            districtId: 0,
+            fullName: modifyAgencyDto.agencyName,
+            updatedByUserId: modifyAgencyDto.updatedByUserId,
         }
-        const user = await userService.createUser(userEntity);
+        const user = await userService.createUser(userDTO);
 
         const agencyEntity = this.mappingAgency(modifyAgencyDto);
         agencyEntity.userId = user.id;
-        const agency = await this.save(agencyEntity);
-        return this.getOne(agencyEntity.userId);
+        await this.save(agencyEntity);
+        return this.getByUserId(agencyEntity.userId);
     }
 
-    async updateAgency(modifyAgencyDto: ModifyAgencyDto,
-        authService: AuthService,
-        userService: UserService
+    async updateAgency(modifyAgencyDto: ModifyAgencyDTO
     ): Promise<UpdateResult> {
         const agency = this.mappingAgency(modifyAgencyDto);
-        const user: Users = await userService.getOne(modifyAgencyDto.userId);
 
-        // Update role for agency
-        if (user.role === 0) {
-            await userService.updateAgencyRole(modifyAgencyDto.userId, modifyAgencyDto.role);
-        }
+        //// Update user fullname
+        // await userService.updateFullName(modifyAgencyDto.userId, modifyAgencyDto.agencyName);
 
-        if (modifyAgencyDto.password && modifyAgencyDto.password !== user.password) {
-            const matches: boolean = await authService.validatePassword(modifyAgencyDto.password, user.password);
-            if (!matches) {
-                await userService.updateUserPassword(modifyAgencyDto.id, modifyAgencyDto.password);
-            }
-        }
-        agency.userId = user.id;
         return await this.update(modifyAgencyDto.id, agency);
     }
 
@@ -97,15 +93,15 @@ export class AgencyRepository extends Repository<Agency> {
         return await this.delete(id);
     }
 
-    public async getAgencyIdOfAdmin() {
-        const admin = await this.createQueryBuilder()
-            .select('a.id as agencyId')
-            .from(Agency, 'a')
-            .innerJoin(Users, 'u', 'u.id = a.user_id')
-            .where('u.is_admin IS TRUE')
-            .getRawOne();
-        return admin.agencyId;
-    }
+    // public async getAgencyIdOfAdmin() {
+    //     const admin = await this.createQueryBuilder()
+    //         .select('a.id as agencyId')
+    //         .from(Agency, 'a')
+    //         .innerJoin(Users, 'u', 'u.id = a.user_id')
+    //         .where('u.is_admin IS TRUE')
+    //         .getRawOne();
+    //     return admin.agencyId;
+    // }
 
     // public async getAgencyIdOfStocker() {
     //     const stocker = await this.createQueryBuilder()
@@ -117,69 +113,45 @@ export class AgencyRepository extends Repository<Agency> {
     //     return stocker.agencyId;
     // }
 
-    private mappingAgency(modifiedDto: ModifyAgencyDto): Agency {
+    private mappingAgency(modifiedDto: ModifyAgencyDTO): Agency {
         const entity = new Agency();
+        entity.userId = modifiedDto.userId;
         entity.agencyName = modifiedDto.agencyName;
         entity.address = modifiedDto.address;
         entity.contract = modifiedDto.contract;
         entity.note = modifiedDto.note;
         entity.email = modifiedDto.email;
-        entity.userId = modifiedDto.userId;
         entity.phone = modifiedDto.phone;
         entity.updatedByUserId = modifiedDto.updatedByUserId;
         entity.updatedDate = this.helper.getUpdateDate(1);
         return entity;
     }
 
-    async createAgencyForUserRole(userId: number, name: string): Promise<Agency> {
-        const agencyEntity = new Agency();
-        agencyEntity.userId = userId;
-        agencyEntity.agencyName = name;
-        const agency = await this.save(agencyEntity);
-        return agency;
-    }
+    // async createAgencyForUserRole(userId: number, name: string): Promise<Agency> {
+    //     const agencyEntity = new Agency();
+    //     agencyEntity.userId = userId;
+    //     agencyEntity.agencyName = name;
+    //     const agency = await this.save(agencyEntity);
+    //     return agency;
+    // }
 
-    async updateAgencyForUserRole(userId: number, name: string): Promise<any> {
-        return await this.createQueryBuilder()
-            .update(Agency)
-            .set({ agencyName: name })
-            .where("user_id = :userId", { userId })
-            .execute();
-    }
+    // async updateAgencyForUserRole(userId: number, name: string): Promise<any> {
+    //     return await this.createQueryBuilder()
+    //         .update(Agency)
+    //         .set({ agencyName: name })
+    //         .where("user_id = :userId", { userId })
+    //         .execute();
+    // }
 
-    async deleteAgencyForUserRole(userId: number): Promise<DeleteResult> {
-        return await this.createQueryBuilder()
-            .delete()
-            .where("user_id = :userId", { userId })
-            .execute();
-    }
+    // async deleteAgencyForUserRole(userId: number): Promise<DeleteResult> {
+    //     return await this.createQueryBuilder()
+    //         .delete()
+    //         .where("user_id = :userId", { userId })
+    //         .execute();
+    // }
 
-    public async getAgencyList() {
-        const ids = await this.getIdsNotAgency();
-        const result = await this.createQueryBuilder('a')
-            .leftJoinAndSelect(Users, 'u', 'u.id = a.user_id')
-            .where('a.id NOT IN (:ids)', { ids })
-            .getRawMany();
 
-        const res: AgencyRo[] = [];
-        result.forEach(element => {
-            const item = new AgencyRo();
-            item.id = element.a_id;
-            item.agencyName = element.a_agency_name;
-            item.address = element.a_address;
-            item.contract = element.a_contract;
-            item.note = element.a_note;
-            item.email = element.a_email;
-            item.userId = element.u_id;
-            item.phone = element.a_phone;
-            item.userName = element.u_username;
-            item.role = element.u_role;
-            item.isAdmin = element.u_is_admin;
-            res.push(item);
-        });
-        return res;
-    }
-
+    //----- REMOVE ----------
     public async getIdsNotAgency() {
         const res = await this.createQueryBuilder('a')
             .leftJoin(Users, 'u', 'u.id = a.user_id')
@@ -192,5 +164,29 @@ export class AgencyRepository extends Repository<Agency> {
             ids.push(element.id);
         });
         return ids;
+    }
+
+    public async getUserNotAgency() {
+        const res = await this.createQueryBuilder('a')
+            .leftJoinAndSelect(Users, 'u', 'u.id = a.user_id')
+            .where('u.is_admin IS TRUE')
+            .orWhere('u.role IN (1, 2, 3)')
+            .getRawMany();
+
+        const result: AgencyRO[] = [];
+        res.forEach(element => {
+            const item = new AgencyRO();
+            item.id = element.a_id;
+            item.agencyName = element.a_agency_name;
+            item.address = element.a_address;
+            item.contract = element.a_contract;
+            item.note = element.a_note;
+            item.email = element.a_email;
+            item.userId = element.u_id;
+            item.phone = element.a_phone;
+            item.userName = element.u_username;
+            result.push(item);
+        });
+        return result;
     }
 }

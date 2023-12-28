@@ -1,10 +1,9 @@
-export interface UserRoleDto {
+export interface UserDTO {
     id?: number;
-    username: string;
+    userName: string;
     password: string;
-    isAdmin: boolean;
     role: number;
     districtId: number;
     fullName: string;
-    updatedByUserId: string;
+    updatedByUserId: number;
 }

@@ -1,4 +1,4 @@
-export class ModifyAgencyDto {
+export class ModifyAgencyDTO {
   id?: number;
   userId: number;
   agencyName: string;

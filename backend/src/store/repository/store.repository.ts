@@ -1,11 +1,11 @@
 import { DeleteResult, EntityRepository, Repository, UpdateResult } from 'typeorm'
-import { ModifyStoreDto } from '../dto/modify-store.dto';
+import { ModifyStoreDTO } from '../dto/modify-store.dto';
 import { Store } from '../entities/store.entity';
-import moment from 'moment';
+import { Helper } from '../../shared/helper';
 
 @EntityRepository(Store)
 export class StoreRepository extends Repository<Store> {
-
+    private readonly helper = new Helper();
     constructor() {
         super();
     }
@@ -18,14 +18,13 @@ export class StoreRepository extends Repository<Store> {
         })
     }
 
-    async createStore(modifyStoreDto: ModifyStoreDto): Promise<Store> {
+    async createStore(modifyStoreDto: ModifyStoreDTO): Promise<Store> {
         const storeEntity = this.mappingStore(modifyStoreDto);
         const store = await this.save(storeEntity);
         return store;
     }
 
-    async updateStore(modifyStoreDto: ModifyStoreDto
-    ): Promise<UpdateResult> {
+    async updateStore(modifyStoreDto: ModifyStoreDTO): Promise<UpdateResult> {
         const store = this.mappingStore(modifyStoreDto);
         return await this.update(modifyStoreDto.id, store);
     }
@@ -34,7 +33,7 @@ export class StoreRepository extends Repository<Store> {
         return await this.delete(id);
     }
 
-    private mappingStore(modifyStoreDto: ModifyStoreDto): Store {
+    private mappingStore(modifyStoreDto: ModifyStoreDTO): Store {
         const store = new Store();
         store.storeName = modifyStoreDto.storeName;
         store.agencyId = modifyStoreDto.agencyId;
@@ -43,8 +42,8 @@ export class StoreRepository extends Repository<Store> {
         store.address = modifyStoreDto.address;
         store.note = modifyStoreDto.note;
         store.phone = modifyStoreDto.phone;
-        store.updatedDate = moment(new Date).format('HH:mm DD/MM/YYYY');
-        store.userId = modifyStoreDto.userId;
+        store.updatedDate = this.helper.getUpdateDate(2);
+        store.updatedByUserId = modifyStoreDto.updatedByUserId;
         return store;
     }
 }

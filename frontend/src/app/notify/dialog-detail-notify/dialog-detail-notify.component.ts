@@ -32,7 +32,7 @@ export class DialogDetailNotifyComponent implements OnInit {
   agencyListSelectOption: any[] = [];
   agencySelected: any = null;
   isEdit: boolean = true;
-  agencyId: number = this.helper.getAgencyId();
+  agencyId: number = this.helper.getUserId();
   role: number = this.helper.getUserRole();
   hidden: boolean = !this.isAdmin && !ROLE.includes(this.role);
   isStocker: boolean = this.role === STOCKER;
@@ -147,6 +147,7 @@ export class DialogDetailNotifyComponent implements OnInit {
       this.notify.fileName = this.toNonAccentVietnamese(this.notify.fileName);
       this.notify.agencyId = this.agencySelected.id;
       this.notify.sender = this.agencyId;
+      this.notify.userId = this.helper.getUserId();
       this.notify.agencyList = [];
       if (this.notify.agencyId === 0) {
         const res: number[] = [];

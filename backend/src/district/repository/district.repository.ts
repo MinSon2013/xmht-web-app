@@ -1,6 +1,6 @@
 import { DeleteResult, EntityRepository, Repository, UpdateResult } from 'typeorm'
 import { District } from '../entities/district.entity';
-import { ModifyDistrictDto } from '../dto/modify-district.dto';
+import { ModifyDistrictDTO } from '../dto/modify-district.dto';
 import { Helper } from '../../shared/helper';
 
 @EntityRepository(District)
@@ -23,14 +23,13 @@ export class DistrictRepository extends Repository<District> {
         })
     }
 
-    async createDistrict(modifyDistrictDto: ModifyDistrictDto): Promise<District> {
+    async createDistrict(modifyDistrictDto: ModifyDistrictDTO): Promise<District> {
         const districtEntity = this.mappingDistrict(modifyDistrictDto);
         const district = await this.save(districtEntity);
         return district;
     }
 
-    async updateDistrict(modifyDistrictDto: ModifyDistrictDto
-    ): Promise<UpdateResult> {
+    async updateDistrict(modifyDistrictDto: ModifyDistrictDTO): Promise<UpdateResult> {
         const district = this.mappingDistrict(modifyDistrictDto);
         return await this.update(modifyDistrictDto.id, district);
     }
@@ -39,7 +38,7 @@ export class DistrictRepository extends Repository<District> {
         return await this.delete(id);
     }
 
-    private mappingDistrict(modifiedDto: ModifyDistrictDto): District {
+    private mappingDistrict(modifiedDto: ModifyDistrictDTO): District {
         const entity = new District();
         entity.name = modifiedDto.name;
         entity.provinceId = modifiedDto.provinceId;

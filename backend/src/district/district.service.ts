@@ -1,18 +1,13 @@
-import { forwardRef, Injectable, Inject } from '@nestjs/common';
-import { UserService } from '../user/user.service';
+import { Injectable } from '@nestjs/common';
 import { DeleteResult, UpdateResult } from 'typeorm';
-import { AuthService } from '../auth/auth.service';
 import { District } from './entities/district.entity';
-import { ModifyDistrictDto } from './dto/modify-district.dto';
+import { ModifyDistrictDTO } from './dto/modify-district.dto';
 import { DistrictRepository } from './repository/district.repository';
 
 @Injectable()
 export class DistrictService {
     constructor(
         public readonly districtRepo: DistrictRepository,
-        private readonly userService: UserService,
-        @Inject(forwardRef(() => AuthService))
-        private readonly authService: AuthService,
     ) { }
 
     async findAll(): Promise<District[]> {
@@ -23,11 +18,11 @@ export class DistrictService {
         return await this.districtRepo.getOne(id);
     }
 
-    async create(modifyDistrictDto: ModifyDistrictDto): Promise<District> {
+    async create(modifyDistrictDto: ModifyDistrictDTO): Promise<District> {
         return await this.districtRepo.createDistrict(modifyDistrictDto);
     }
 
-    async update(modifyDistrictDto: ModifyDistrictDto): Promise<UpdateResult> {
+    async update(modifyDistrictDto: ModifyDistrictDTO): Promise<UpdateResult> {
         return await this.districtRepo.updateDistrict(modifyDistrictDto);
     }
 

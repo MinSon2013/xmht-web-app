@@ -1,10 +1,9 @@
 import { forwardRef, Injectable, Inject } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { DeleteResult, UpdateResult } from 'typeorm';
-import { AuthService } from '../auth/auth.service';
 import { StoreRepository } from './repository/store.repository';
 import { Store } from './entities/store.entity';
-import { ModifyStoreDto } from './dto/modify-store.dto';
+import { ModifyStoreDTO } from './dto/modify-store.dto';
 import { STOCKER } from '../config/constant';
 
 @Injectable()
@@ -12,8 +11,6 @@ export class StoreService {
     constructor(
         public readonly storeRepo: StoreRepository,
         private readonly userService: UserService,
-        @Inject(forwardRef(() => AuthService))
-        private readonly authService: AuthService,
     ) { }
 
     async findAll(userId: number, agencyId: number): Promise<Store[]> {
@@ -44,11 +41,11 @@ export class StoreService {
         return await this.storeRepo.getOne(id);
     }
 
-    async create(modifyStoreDto: ModifyStoreDto): Promise<Store> {
+    async create(modifyStoreDto: ModifyStoreDTO): Promise<Store> {
         return await this.storeRepo.createStore(modifyStoreDto);
     }
 
-    async update(modifyStoreDto: ModifyStoreDto): Promise<UpdateResult> {
+    async update(modifyStoreDto: ModifyStoreDTO): Promise<UpdateResult> {
         return await this.storeRepo.updateStore(modifyStoreDto);
     }
 

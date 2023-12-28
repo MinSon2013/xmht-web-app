@@ -1,0 +1,36 @@
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { UserService } from './user.service';
+import { JwtAuthGuard } from '../auth/guards/jwt.guard';
+import { UserDTO } from './dto/user.dto';
+import { UserRO } from './ro/user.ro';
+import { DeleteResult, UpdateResult } from 'typeorm';
+
+@Controller('user-role')
+export class UserRoleController {
+  constructor(private readonly userService: UserService) { }
+
+  @UseGuards(JwtAuthGuard)
+  @Get()
+  findAll(): Promise<UserRO[]> {
+    return this.userService.findAll();
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post()
+  create(@Body() user: UserDTO): Promise<UserRO> {
+    return this.userService.createUser(user);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put()
+  update(@Body() user: UserDTO): Promise<UpdateResult> {
+    return this.userService.updateUser(user);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete(':id')
+  delete(@Param('id') id: number): Promise<DeleteResult> {
+    return this.userService.deleteUser(id);
+  }
+
+}

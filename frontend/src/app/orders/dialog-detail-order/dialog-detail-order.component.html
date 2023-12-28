@@ -8,7 +8,7 @@
       </span>
       <input matInput [disabled]="true"
         class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        id="id" type="text" maxlength=10 [(ngModel)]="order.approvedNumber" [ngModelOptions]="{standalone: true}" />
+        id="id" type="text" maxlength="10" [(ngModel)]="order.approvedNumber" [ngModelOptions]="{standalone: true}" />
     </div>
     <div class="mb-3 row field">
       <span class="col-5 text-label" for="createdDate">
@@ -17,7 +17,7 @@
       </span>
       <input matInput [disabled]="true"
         class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        id="createdDate" type="text" maxlength=15 [(ngModel)]="order.createdDate"
+        id="createdDate" type="text" maxlength="20" [(ngModel)]="order.createdDate"
         [ngModelOptions]="{standalone: true}" />
     </div>
     <div class="mb-3 row field" [hidden]="!isAdmin">
@@ -40,7 +40,7 @@
       </span>
       <input matInput [disabled]="true"
         class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        id="contract" type="text" placeholder="" maxlength=50 [(ngModel)]="order.contract"
+        id="contract" type="text" placeholder="" maxlength="200" [(ngModel)]="order.contract"
         [ngModelOptions]="{standalone: true}" [errorStateMatcher]="matcher" />
     </div>
     <div class="mb-3 row field">
@@ -49,7 +49,7 @@
         <label class="require">*</label>
       </span>
       <select class="col-7 form-select {{deliveryError.length !== 0 ? 'focus-d' : ''}}" [(ngModel)]="deliverySelected"
-      (ngModelChange)="onChangeDelivery($event)" required>
+        (ngModelChange)="onChangeDelivery($event)" required>
         <option [ngValue]="null" [disabled]="true" [selected]="true">-- {{'ORDER.CITY' | translate}} --</option>
         <option [ngValue]="item" *ngFor="let item of deliveries">{{item.label}}</option>
       </select>
@@ -64,7 +64,7 @@
         <label class="require">*</label>
       </span>
       <select class="col-7 form-select {{pickupError.length !== 0 ? 'focus-p' : ''}}" [(ngModel)]="pickupSelected"
-      (ngModelChange)="onChangePickup($event)" required>
+        (ngModelChange)="onChangePickup($event)" required>
         <option [ngValue]="null" [disabled]="true" [selected]="true">-- {{'ORDER.CITY' | translate}} --</option>
         <option [ngValue]="item" *ngFor="let item of cities">{{item.label}}</option>
       </select>
@@ -85,11 +85,8 @@
             id="name" type="text" [(ngModel)]="item.name" [ngModelOptions]="{standalone: true}" />
           <input matInput
             class="p-quantity col-3 margin appearance-none border rounded w-full py-2 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline {{error1.length !== 0 ? 'focus-i' : ''}}"
-            id="quantity" type="text" maxlength="5" [(ngModel)]="item.quantity"
-            [ngModelOptions]="{standalone: true}" [errorStateMatcher]="matcher"
-            placeholder="0.0" 
-            (keydown)="onlyNumberKey($event)"
-            (focusout)="focusOut()" />
+            id="quantity" type="text" maxlength="5" [(ngModel)]="item.quantity" [ngModelOptions]="{standalone: true}"
+            [errorStateMatcher]="matcher" placeholder="0.0" (keydown)="onlyNumberKey($event)" (focusout)="focusOut()" />
           <span class="col-2 label-ton">(tấn)</span>
         </div>
       </div>
@@ -114,7 +111,8 @@
         {{'ORDER.RECEIPT' | translate}}
         <label class="require">*</label>
       </span>
-      <select class="col-7 form-select" [(ngModel)]="receiptSelected" (ngModelChange)="onChangeReceipt($event)" required>
+      <select class="col-7 form-select" [(ngModel)]="receiptSelected" (ngModelChange)="onChangeReceipt($event)"
+        required>
         <option [ngValue]="null" [disabled]="true" [selected]="true">-- {{'ORDER.SELECT_RECEIPT' | translate}} --
         </option>
         <option [ngValue]="item" *ngFor="let item of receipt">{{item.label}}</option>
@@ -125,7 +123,8 @@
         {{'ORDER.TRANSPORT' | translate}}
         <label class="require">*</label>
       </span>
-      <select class="col-7 form-select" [(ngModel)]="transportSelected" (ngModelChange)="onChangeTransport($event)" required>
+      <select class="col-7 form-select" [(ngModel)]="transportSelected" (ngModelChange)="onChangeTransport($event)"
+        required>
         <option [ngValue]="null" [disabled]="true" [selected]="true">-- {{'ORDER.SELECT_TRANSPORT' | translate}} --
         </option>
         <option [ngValue]="item" *ngFor="let item of transport">{{item.label}}</option>
@@ -138,7 +137,7 @@
       </span>
       <input matInput
         class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        id="licensePlates" type="text" placeholder="" maxlength=20 [(ngModel)]="order.licensePlates"
+        id="licensePlates" type="text" placeholder="" maxlength="12" [(ngModel)]="order.licensePlates"
         [ngModelOptions]="{standalone: true}" [errorStateMatcher]="matcher" />
     </div>
     <div class="mb-3 row field">
@@ -171,7 +170,7 @@
       </span>
       <textarea
         class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        id="note" type="text" placeholder="" maxlength="1000" [(ngModel)]="order.note"
+        id="note" type="text" placeholder="" maxlength="500" [(ngModel)]="order.note"
         [ngModelOptions]="{standalone: true}"></textarea>
     </div>
 

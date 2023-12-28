@@ -1,9 +1,10 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
-import { Users } from './entities/user.entity';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { ChangePasswordDto } from './dto/change-password.dto';
-import { UserRoleDto } from './dto/user-role.dto';
+import { UserRO } from './ro/user.ro';
+import { UserDTO } from './dto/user.dto';
+import { UpdateResult } from 'typeorm';
 
 @Controller('users')
 export class UsersController {
@@ -11,32 +12,38 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  findAll(): Promise<Users[]> {
-    return this.userService.findAll()
+  findAll(): Promise<UserRO[]> {
+    return this.userService.findAll();
   }
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  get(@Param('id', ParseIntPipe) id: number): Promise<Users> {
+  get(@Param('id', ParseIntPipe) id: number): Promise<UserRO> {
     return this.userService.getOne(id);
   }
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() user: UserRoleDto) {
+  create(@Body() user: UserDTO): Promise<UserRO> {
     return this.userService.createUser(user);
   }
 
   @UseGuards(JwtAuthGuard)
   @Put()
-  updatePassword(@Body() user: UserRoleDto) {
-    return this.userService.updateUserPassword(user.id, user.password);
+  update(@Body() user: UserDTO): Promise<UpdateResult> {
+    return this.userService.updateUser(user);
   }
+
+  // @UseGuards(JwtAuthGuard)
+  // @Put()
+  // updatePassword(@Body() user: UserDTO) {
+  //   return this.userService.updateUserPassword(user.id, user.password);
+  // }
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
   deleteUser(@Param('id') id: number) {
-    return this.userService.delete(id);
+    return this.userService.deleteUser(id);
   }
 
   @UseGuards(JwtAuthGuard)

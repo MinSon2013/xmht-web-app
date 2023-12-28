@@ -1,4 +1,4 @@
-export class ModifyDistrictDto {
+export class ModifyDistrictDTO {
   id?: number;
   name: string;
   provinceId: string;

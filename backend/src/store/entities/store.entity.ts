@@ -14,7 +14,7 @@ export class Store {
   @Column({ name: 'province_id' })
   provinceId: number;
 
-  @Column({ name: 'store_name', length: 100 })
+  @Column({ name: 'store_name', length: 255 })
   storeName: string;
 
   @Column({ name: 'address', length: 255 })
@@ -29,6 +29,6 @@ export class Store {
   @Column({ name: 'updated_date', length: 18 })
   updatedDate: string;
 
-  @Column({ name: 'user_id' })
-  userId: number;
+  @Column({ name: 'updated_by_user_id', default: 0 })
+  updatedByUserId: number;
 }

@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, UseGuard
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { DistrictService } from './district.service';
 import { District } from './entities/district.entity';
-import { ModifyDistrictDto } from './dto/modify-district.dto';
+import { ModifyDistrictDTO } from './dto/modify-district.dto';
 
 @Controller('district')
 export class DistrictController {
@@ -22,13 +22,13 @@ export class DistrictController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() modifyDistrictDto: ModifyDistrictDto) {
+  create(@Body() modifyDistrictDto: ModifyDistrictDTO) {
     return this.districtService.create(modifyDistrictDto);
   }
 
   @UseGuards(JwtAuthGuard)
   @Put()
-  update(@Body() modifyDistrictDto: ModifyDistrictDto) {
+  update(@Body() modifyDistrictDto: ModifyDistrictDTO) {
     return this.districtService.update(modifyDistrictDto);
   }
 

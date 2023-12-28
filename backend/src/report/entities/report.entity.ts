@@ -8,9 +8,6 @@ export class Reports {
   @Column({ name: 'agency_id' })
   agencyId: number;
 
-  @Column({ name: 'user_id' })
-  userId: number;
-
   @Column({ name: 'district_id' })
   districtId: number;
 
@@ -20,13 +17,13 @@ export class Reports {
   @Column({ name: 'store_id' })
   storeId: number;
 
-  @Column({ name: 'other_store_name', length: 200 })
+  @Column({ name: 'other_store_name', length: 255 })
   otherStoreName: string;
 
-  @Column({ name: 'store_information' })
+  @Column({ name: 'store_information', type: 'text' })
   storeInformation: string;
 
-  @Column({ name: 'report_content' })
+  @Column({ name: 'report_content', type: 'text' })
   reportContent: string;
 
   @Column({ name: 'update_date', length: 20 })
@@ -41,12 +38,12 @@ export class Reports {
   @Column({ name: 'file_path', length: 255 })
   filePath: string;
 
-  @Column({ name: 'mime_type', length: 255 })
+  @Column({ name: 'mime_type', length: 150 })
   mimeType: string;
 
   @Column({ length: 255 })
   note: string;
 
-  @Column({ name: 'updated_by_user_id' })
+  @Column({ name: 'updated_by_user_id', default: 0 })
   updatedByUserId: number;
 }

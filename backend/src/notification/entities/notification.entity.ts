@@ -14,19 +14,19 @@ export class Notification {
   @Column({ type: 'text' })
   contents: string;
 
-  @Column({ name: 'filename' })
+  @Column({ name: 'filename', length: 255 })
   fileName: string;
 
   @Column({ name: 'file_path', type: 'text' })
   filePath: string;
 
-  @Column({ name: 'mime_type' })
+  @Column({ name: 'mime_type', length: 100 })
   mimeType: string;
 
   @Column({ name: 'notification_type', default: 0, type: 'tinyint' })
   notificationType: number;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'varchar', length: 255 })
   note: string;
 
   @Column({ name: 'is_published', default: false, type: 'tinyint' })

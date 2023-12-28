@@ -6,8 +6,8 @@ import { Response } from 'express';
 import { join } from 'path';
 import { createReadStream } from 'fs';
 import { NotificationService } from './notification.service';
-import { NotificationDto } from './dto/notification.dto';
-import { NotificationAgencyDto } from './dto/notification-agency.dto';
+import { NotificationDTO } from './dto/notification.dto';
+import { NotificationAgencyDTO } from './dto/notification-agency.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 
 @Controller('notification')
@@ -15,18 +15,16 @@ import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 export class NotificationController {
   constructor(private readonly notificationService: NotificationService) { }
 
-  @UseGuards(JwtAuthGuard)
-  @Get()
-  findAll(): Promise<any> {
-    return this.notificationService.getAll();
-  }
+  // @UseGuards(JwtAuthGuard)
+  // @Get()
+  // findAll(): Promise<any> {
+  //   return this.notificationService.getAll();
+  // }
 
   @UseGuards(JwtAuthGuard)
-  @Get(':agencyId/:isAdmin')
-  getAll(@Param('agencyId', ParseIntPipe) agencyId: number,
-    @Param('isAdmin', ParseBoolPipe) isAdmin: boolean,
-  ): Promise<any> {
-    return this.notificationService.getAll(agencyId, isAdmin);
+  @Get(':agencyId')
+  getAll(@Param('agencyId', ParseIntPipe) agencyId: number): Promise<any> {
+    return this.notificationService.getAll(agencyId);
   }
 
   // @UseGuards(JwtAuthGuard)
@@ -37,7 +35,7 @@ export class NotificationController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() createNotifyDto: NotificationDto) {
+  create(@Body() createNotifyDto: NotificationDTO) {
     return this.notificationService.create(createNotifyDto);
   }
 
@@ -62,7 +60,7 @@ export class NotificationController {
 
   @UseGuards(JwtAuthGuard)
   @Put()
-  update(@Body() modifyNotifyDto: NotificationDto) {
+  update(@Body() modifyNotifyDto: NotificationDTO) {
     return this.notificationService.update(modifyNotifyDto);
   }
 
@@ -97,7 +95,7 @@ export class NotificationController {
 
   @UseGuards(JwtAuthGuard)
   @Put('/status')
-  updateStatus(@Body() body: NotificationAgencyDto) {
+  updateStatus(@Body() body: NotificationAgencyDTO) {
     return this.notificationService.updateIsView(body);
   }
 }

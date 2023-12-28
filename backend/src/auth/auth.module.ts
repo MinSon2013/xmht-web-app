@@ -24,7 +24,6 @@ import { UserDistrictRepository } from '../user/repository/user-district.reposit
   imports: [
     TypeOrmModule.forFeature([
       UserRepository,
-      MenuRepository,
       AgencyRepository,
       DeliveryRepository,
       ProductRepository,

@@ -4,10 +4,9 @@ import { DeleteResult, UpdateResult } from 'typeorm';
 import { Users } from './entities/user.entity';
 import { UserRepository } from './repository/user.repository';
 import { ChangePasswordDto } from './dto/change-password.dto';
-import { UserRoleDto } from './dto/user-role.dto';
-import { AgencyService } from '../agency/agency.service';
+import { UserDTO } from './dto/user.dto';
 import { UserDistrictRepository } from './repository/user-district.repository';
-import { UserRo } from './ro/user.ro';
+import { UserRO } from './ro/user.ro';
 
 @Injectable()
 export class UserService {
@@ -15,17 +14,19 @@ export class UserService {
     constructor(private userRepo: UserRepository,
         @Inject(forwardRef(() => AuthService))
         private readonly authService: AuthService,
-        @Inject(forwardRef(() => AgencyService))
-        private readonly agencyService: AgencyService,
-        private repo: UserDistrictRepository,
+        private userDistrictRepo: UserDistrictRepository,
     ) { }
 
-    async findAll(): Promise<Users[]> {
-        return await this.userRepo.getAll();
+    async findAll(): Promise<UserRO[]> {
+        return await this.userRepo.getUserList();
     }
 
-    async getOne(id: number): Promise<Users> {
-        return await this.userRepo.getOne(id);
+    async getOne(id: number): Promise<UserRO> {
+        return await this.userRepo.getUserById(id);
+    }
+
+    async getDistrictByUserId(userId: number): Promise<number[]> {
+        return await this.userDistrictRepo.getDistrictByUserId(userId);
     }
 
     async findByUsername(userName: string): Promise<Users> {
@@ -36,15 +37,23 @@ export class UserService {
         });
     }
 
-    async createUser(user: Users | any): Promise<Users> {
-        return await this.userRepo.createUser(user, this.authService)
+    async createUser(user: UserDTO): Promise<UserRO> {
+        return await this.userRepo.createUser(user, this.authService, this.userDistrictRepo);
     }
+
+    async updateUser(user: UserDTO): Promise<UpdateResult> {
+        return await this.userRepo.updateUser(user, this.authService, this.userDistrictRepo);
+    }
+
+    // async updateFullName(userId: number, name: string) {
+    //     return await this.userRepo.updateFullName(userId, name);
+    // }
 
     async updateUserPassword(id: number, password: string): Promise<UpdateResult> {
         return await this.userRepo.updatePassword(id, password, this.authService);
     }
 
-    async delete(id: number): Promise<DeleteResult> {
+    async deleteUser(id: number): Promise<DeleteResult> {
         return await this.userRepo.deleteUser(id);
     }
 
@@ -56,30 +65,16 @@ export class UserService {
         return await this.authService.hashPassword(password);
     }
 
-    async findUserRole(): Promise<UserRo[]> {
-        return await this.userRepo.getUserRole();
-    }
+    // async deleteUserRole(id: number): Promise<DeleteResult> {
+    //     const result = await this.userRepo.deleteUserRole(id, this.agencyService,);
+    //     if (result) {
+    //         await this.repo.deleteUserDistrict(id);
+    //     }
+    //     return result;
+    // }
 
-    async createUserRole(user: UserRoleDto): Promise<Users> {
-        return await this.userRepo.createUserRole(user, this.authService, this.agencyService, this.repo);
-    }
 
-    async updateUserRole(user: UserRoleDto): Promise<Users> {
-        return await this.userRepo.updateUserRole(user, this.authService, this.agencyService, this.repo);
-    }
-
-    async updateAgencyRole(userId: number, role: number) {
-        return await this.userRepo.updateAgencyRole(userId, role);
-    }
-
-    async deleteUserRole(id: number): Promise<DeleteResult> {
-        const result = await this.userRepo.deleteUserRole(id, this.agencyService,);
-        if (result) {
-            await this.repo.deleteUserDistrict(id);
-        }
-        return result;
-    }
-
+    // --- REMOVE --------------
     async syncUser(userId: number, fname: string, role: number) {
         return await this.userRepo.syncUser(userId, fname, role);
     }

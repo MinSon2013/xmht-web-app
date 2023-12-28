@@ -72,7 +72,7 @@ export class OrderAddComponent implements OnInit {
     agencyId: 0,
     agencyName: '',
     approvedNumber: 0,
-    editer: '',
+    editer: this.helper.getFullName(),
     confirmedDate: '',
     shippingDate: '',
     updatedByUserId: this.helper.getUserId(),
@@ -129,7 +129,7 @@ export class OrderAddComponent implements OnInit {
         this.order.agencyId = this.helper.getAgencyId();
         this.order.notifyReceiver = 0;
       }
-      this.order.sender = this.helper.getAgencyId();
+      this.order.sender = this.helper.getUserId();
       this.order.products = this.order.products.filter(x => x.quantity.toString() !== '0' && x.quantity.toString() !== '');
 
       if (this.order.status === STATUS[1].value) {

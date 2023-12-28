@@ -15,8 +15,8 @@ export class ReportService {
 
     getReportList() {
         const userId = this.helper.getUserId();
-        const agencyId = this.helper.getAgencyId();
-        return this.webrequestService.get(this.url + `/${userId}/${agencyId}`);
+        // const agencyId = this.helper.getAgencyId();
+        return this.webrequestService.get(this.url + `/${userId}`);
     }
 
     create(obj: Reports) {

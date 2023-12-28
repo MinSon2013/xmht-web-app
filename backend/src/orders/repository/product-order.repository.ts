@@ -1,15 +1,19 @@
 import { Order } from '../entities/order.entity';
 import { EntityRepository, Repository } from 'typeorm'
 import { Product } from '../../products/entities/product.entity';
-import { ProductRo } from '../../products/ro/product.ro';
+import { ProductRO } from '../../products/ro/product.ro';
 import { ProductOrder } from '../entities/product-order.entity';
-import { SearchOrderDto } from '../dto/search-order.dto';
+import { SearchOrderDTO } from '../dto/search-order.dto';
+import { ADMIN, STOCKER, USER_AREA_MANAGER, USER_SALESMAN } from '../../config/constant';
 
 @EntityRepository(ProductOrder)
 export class ProductOrderRepository extends Repository<ProductOrder> {
+  private readonly ROLE: number[] = [ADMIN, STOCKER, USER_AREA_MANAGER, USER_SALESMAN];
 
-  async sumProduct(body: SearchOrderDto, adminId: number, stockerId?: number): Promise<ProductRo[]> {
-    let res: ProductRo[] = [];
+  // Get product total for order status = 4 (Đã giao hàng)
+  // Screen: Statistics
+  async sumProduct(body: SearchOrderDTO): Promise<ProductRO[]> {
+    let res: ProductRO[] = [];
     let sql = this.createQueryBuilder('po')
       .select('SUM(po.quantity)', 'total')
       .addSelect('p.name', 'name')
@@ -17,13 +21,17 @@ export class ProductOrderRepository extends Repository<ProductOrder> {
       .leftJoin(Order, 'o', 'o.id = po.order_id')
       .where('o.status = 4');
 
-    if (body.userId && body.userId !== adminId && body.userId !== stockerId) {
-      sql = sql.andWhere('o.agencyId = :agencyId', { agencyId: body.userId })
-    }
+    // if (body.userId && body.userId !== adminId && body.userId !== stockerId) {
+    //   // if (body.userId && body.userId !== adminId && body.userId !== stockerId) {
+    //   sql = sql.andWhere('o.agencyId = :agencyId', { agencyId: body.agencyId })
+    // }
     if (body.orderId && body.orderId !== 0) {
-      sql = sql.andWhere('o.approved_number = :orderId', { orderId: body.orderId })
+      sql = sql.andWhere('o.id = :orderId', { orderId: body.orderId })
     }
-    if (body.agencyId && body.agencyId !== adminId && body.userId !== stockerId) {
+    if (body.approvedNumber && body.approvedNumber !== 0) {
+      sql = sql.andWhere('o.approved_number = :approvedNumber', { approvedNumber: body.approvedNumber })
+    }
+    if (body.agencyId && body.agencyId > 0) {
       sql = sql.andWhere('o.agency_id = :agencyId', { agencyId: body.agencyId })
     }
     if (body.status && body.status !== 0) {

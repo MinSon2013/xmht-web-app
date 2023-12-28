@@ -1,4 +1,4 @@
-export class ModifyOrderDto {
+export class ModifyOrderDTO {
   id?: number;
   createdDate: string;
   deliveryId: number;

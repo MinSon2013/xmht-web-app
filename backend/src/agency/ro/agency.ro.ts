@@ -1,4 +1,4 @@
-export class AgencyRo {
+export class AgencyRO {
     id: number;
     userId: number;
     agencyName: string;
@@ -8,7 +8,4 @@ export class AgencyRo {
     email: string;
     contract: string;
     userName: string;
-    role: number;
-    password: string;
-    isAdmin: boolean;
 }

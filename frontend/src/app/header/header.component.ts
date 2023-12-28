@@ -8,7 +8,7 @@ import { MatMenuTrigger } from '@angular/material/menu';
 import { TranslateService } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogChangePasswordComponent } from './dialog-change-password/dialog-change-password.component';
-import { AGENCY, ROLE, USER_AREA_MANAGER, USER_ROLE } from '../constants/const-data';
+import { AGENCY, ROLE } from '../constants/const-data';
 
 @Component({
   selector: 'app-header',

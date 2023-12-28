@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
-import { ModifyStoreDto } from './dto/modify-store.dto';
+import { ModifyStoreDTO } from './dto/modify-store.dto';
 import { Store } from './entities/store.entity';
 import { StoreService } from './store.service';
 
@@ -23,13 +23,13 @@ export class StoreController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() modifyStoreDto: ModifyStoreDto) {
+  create(@Body() modifyStoreDto: ModifyStoreDTO) {
     return this.storeService.create(modifyStoreDto);
   }
 
   @UseGuards(JwtAuthGuard)
   @Put()
-  update(@Body() modifyStoreDto: ModifyStoreDto) {
+  update(@Body() modifyStoreDto: ModifyStoreDTO) {
     return this.storeService.update(modifyStoreDto);
   }
 

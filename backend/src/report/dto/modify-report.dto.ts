@@ -1,4 +1,4 @@
-export class ModifyReportDto {
+export class ModifyReportDTO {
   id?: number;
   agencyId: number;
   districtId: number;
@@ -10,9 +10,9 @@ export class ModifyReportDto {
   filePath: string;
   note: string;
   updatedDate: string;
-  userId: number;
-  createDate?: string;
-  accountName?: string;
-  otherStoreName?: string;
-  updatedByUserId: string;
+  // userId: number;
+  // createDate?: string;
+  fullName?: string;
+  otherStoreName: string;
+  updatedByUserId: number;
 }

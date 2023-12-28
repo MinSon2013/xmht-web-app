@@ -17,7 +17,7 @@ export class Order {
   @Column({ name: 'pickup_id' })
   pickupId: number;
 
-  @Column({ name: 'product_total' })
+  @Column({ name: 'product_total', length: 20 })
   productTotal: string;
 
   @Column()
@@ -64,6 +64,6 @@ export class Order {
   @Column({ name: 'updated_date', length: 20 })
   updatedDate: string;
 
-  @Column({ name: 'updated_by_user_id' })
+  @Column({ name: 'updated_by_user_id', default: 0 })
   updatedByUserId: number;
 }

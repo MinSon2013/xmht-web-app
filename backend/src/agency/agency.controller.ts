@@ -1,9 +1,9 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { AgencyService } from './agency.service';
-import { ModifyAgencyDto } from './dto/modify-agency.dto';
-import { Agency } from './entities/agency.entity';
-import { AgencyRo } from './ro/agency.ro';
+import { ModifyAgencyDTO } from './dto/modify-agency.dto';
+import { AgencyRO } from './ro/agency.ro';
+import { DeleteResult, UpdateResult } from 'typeorm';
 
 @Controller('agency')
 export class AgencyController {
@@ -11,31 +11,31 @@ export class AgencyController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  findAll(): Promise<AgencyRo[]> {
+  findAll(): Promise<AgencyRO[]> {
     return this.agencyService.findAll()
   }
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  get(@Param('id', ParseIntPipe) id: number): Promise<AgencyRo> {
+  get(@Param('id', ParseIntPipe) id: number): Promise<AgencyRO> {
     return this.agencyService.findOne(id);
   }
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() modifyAgencyDto: ModifyAgencyDto) {
+  create(@Body() modifyAgencyDto: ModifyAgencyDTO): Promise<AgencyRO> {
     return this.agencyService.create(modifyAgencyDto);
   }
 
   @UseGuards(JwtAuthGuard)
   @Put()
-  update(@Body() modifyAgencyDto: ModifyAgencyDto) {
+  update(@Body() modifyAgencyDto: ModifyAgencyDTO): Promise<UpdateResult> {
     return this.agencyService.update(modifyAgencyDto);
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  delete(@Param('id') id: number) {
+  delete(@Param('id') id: number): Promise<DeleteResult> {
     return this.agencyService.delete(id);
   }
 }

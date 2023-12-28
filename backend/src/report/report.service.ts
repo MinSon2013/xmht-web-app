@@ -4,10 +4,10 @@ import { DeleteResult, UpdateResult } from 'typeorm';
 import { AuthService } from '../auth/auth.service';
 import { ReportRepository } from './repository/report.repository';
 import { Reports } from './entities/report.entity';
-import { ModifyReportDto } from './dto/modify-report.dto';
+import { ModifyReportDTO } from './dto/modify-report.dto';
 import { NotificationService } from '../notification/notification.service';
-import { SearchDto } from './dto/search.dto';
-import { STOCKER } from '../config/constant';
+import { SearchDTO } from './dto/search.dto';
+import { USER_AREA_MANAGER } from '../config/constant';
 
 @Injectable()
 export class ReportService {
@@ -15,11 +15,10 @@ export class ReportService {
         public readonly reportRepo: ReportRepository,
         private readonly userService: UserService,
         @Inject(forwardRef(() => AuthService))
-        private readonly authService: AuthService,
         private readonly notificationService: NotificationService,
     ) { }
 
-    async findAll(userId: number, agencyId: number, searchDto?: SearchDto): Promise<Reports[]> {
+    async findAll(userId: number, searchDto?: SearchDTO): Promise<Reports[]> {
         const userEntity = await this.userService.getOne(userId);
         if (userEntity) {
             let sql = this.reportRepo.createQueryBuilder()
@@ -30,8 +29,11 @@ export class ReportService {
                 .addGroupBy("id")
                 .where("1 = 1");
 
-            if (!userEntity.isAdmin && userEntity.role !== STOCKER) {
-                sql = sql.andWhere("agency_id = :agencyId", { agencyId });
+            if (userEntity.role === USER_AREA_MANAGER) {
+                const districtIds = await this.userService.getDistrictByUserId(userId);
+                if (districtIds.length > 0) {
+                    sql = sql.andWhere("district_id IN (:districtIds)", { districtIds });
+                }
             }
 
             if (searchDto) {
@@ -55,11 +57,11 @@ export class ReportService {
         return await this.reportRepo.getOne(id);
     }
 
-    async create(modifyReportDto: ModifyReportDto): Promise<Reports> {
+    async create(modifyReportDto: ModifyReportDTO): Promise<Reports> {
         return await this.reportRepo.createReport(modifyReportDto, this.notificationService);
     }
 
-    async update(modifyReportDto: ModifyReportDto): Promise<UpdateResult> {
+    async update(modifyReportDto: ModifyReportDTO): Promise<UpdateResult> {
         return await this.reportRepo.updateReport(modifyReportDto, this.notificationService);
     }
 
@@ -90,7 +92,7 @@ export class ReportService {
         return row;
     }
 
-    async search(searchDto: SearchDto): Promise<Reports[]> {
-        return await this.findAll(searchDto.userId, searchDto.agencyId, searchDto);
+    async search(searchDto: SearchDTO): Promise<Reports[]> {
+        return await this.findAll(searchDto.userId, searchDto);
     }
 }

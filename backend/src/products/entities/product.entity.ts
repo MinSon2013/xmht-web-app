@@ -5,7 +5,7 @@ export class Product {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ length: 300 })
+  @Column({ length: 255 })
   name: string;
 
   @Column()
@@ -17,12 +17,12 @@ export class Product {
   @Column({ length: 500 })
   note: string;
 
-  @Column({ name: 'created_date' })
+  @Column({ name: 'created_date', length: 20 })
   createdDate: string;
 
-  @Column({ name: 'updated_date' })
+  @Column({ name: 'updated_date', length: 20 })
   updatedDate: string;
 
-  @Column({ name: 'updated_by_user_id' })
+  @Column({ name: 'updated_by_user_id', default: 0 })
   updatedByUserId: number;
 }

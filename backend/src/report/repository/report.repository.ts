@@ -1,13 +1,14 @@
 import { DeleteResult, EntityRepository, Repository, UpdateResult } from 'typeorm'
-import moment from 'moment';
 import { Reports } from '../entities/report.entity';
-import { ModifyReportDto } from '../dto/modify-report.dto';
+import { ModifyReportDTO } from '../dto/modify-report.dto';
 import { NotificationService } from '../../notification/notification.service';
-import { NotificationDto } from '../../notification/dto/notification.dto';
+import { NotificationDTO } from '../../notification/dto/notification.dto';
+import { Helper } from '../../shared/helper';
 
 @EntityRepository(Reports)
 export class ReportRepository extends Repository<Reports> {
     private NOTIFY_TYPE_GENERAL = 1;
+    private readonly helper = new Helper();
 
     constructor() {
         super();
@@ -21,19 +22,19 @@ export class ReportRepository extends Repository<Reports> {
         })
     }
 
-    async createReport(modifyReportDto: ModifyReportDto, notificationService: NotificationService): Promise<Reports> {
+    async createReport(modifyReportDto: ModifyReportDTO, notificationService: NotificationService): Promise<Reports> {
         const reportEntity = this.mappingReport(modifyReportDto, 'CREATE');
         const report = await this.save(reportEntity);
         modifyReportDto.id = report.id;
-        let contents = `${modifyReportDto.accountName} đã tạo báo cáo mới`;
+        let contents = `${modifyReportDto.fullName} đã tạo báo cáo mới`;
         await this.createNotify(modifyReportDto, contents, notificationService, 'CREATE');
         return report;
     }
 
-    async updateReport(modifyReportDto: ModifyReportDto, notificationService: NotificationService): Promise<UpdateResult> {
+    async updateReport(modifyReportDto: ModifyReportDTO, notificationService: NotificationService): Promise<UpdateResult> {
         const report = this.mappingReport(modifyReportDto, 'UPDATE');
         const updateReport = await this.update(modifyReportDto.id, report);
-        let contents = `${modifyReportDto.accountName} đã cập nhật báo cáo`;
+        let contents = `${modifyReportDto.fullName} đã cập nhật báo cáo`;
         await this.createNotify(modifyReportDto, contents, notificationService, 'UPDATE');
         return updateReport;
     }
@@ -42,7 +43,7 @@ export class ReportRepository extends Repository<Reports> {
         return await this.delete(id);
     }
 
-    private mappingReport(modifyReportDto: ModifyReportDto, key: string): Reports {
+    private mappingReport(modifyReportDto: ModifyReportDTO, key: string): Reports {
         const report = new Reports();
         report.agencyId = modifyReportDto.agencyId;
         report.districtId = modifyReportDto.districtId;
@@ -53,15 +54,15 @@ export class ReportRepository extends Repository<Reports> {
         report.otherStoreName = modifyReportDto.otherStoreName;
         report.note = modifyReportDto.note;
         if (key === 'CREATE') {
-            report.createDate = moment(new Date).format('HH:mm:ss DD/MM/YYYY');
+            report.createDate = this.helper.getUpdateDate(1);
         }
-        report.updateDate = moment(new Date).format('HH:mm:ss DD/MM/YYYY');
-        report.userId = modifyReportDto.userId;
+        report.updateDate = this.helper.getUpdateDate(1);
+        report.updatedByUserId = modifyReportDto.updatedByUserId;
         return report;
     }
 
-    async createNotify(modifyReportDto, contents: string, notificationService: NotificationService, k: string) {
-        const notifyDto = new NotificationDto();
+    async createNotify(modifyReportDto: ModifyReportDTO, contents: string, notificationService: NotificationService, k: string) {
+        const notifyDto = new NotificationDTO();
         notifyDto.contents = contents;
         notifyDto.isPublished = true;
         notifyDto.agencyList = [];
@@ -70,11 +71,10 @@ export class ReportRepository extends Repository<Reports> {
         notifyDto.filePath = '';
         notifyDto.mimeType = '';
         notifyDto.orderId = 0;
-        notifyDto.sender = modifyReportDto.userId;
+        notifyDto.sender = modifyReportDto.updatedByUserId;
         notifyDto.notificationType = this.NOTIFY_TYPE_GENERAL;
-        notifyDto.updatedDate = moment(new Date).format('HH:mm DD/MM/YYYY');
         notifyDto.statusOrder = '';
         notifyDto.reportId = modifyReportDto.id;
-        await notificationService.modifyNotifyReport(notifyDto, k);
+        await notificationService.createNotifyForReport(notifyDto, k);
     }
 }

@@ -5,16 +5,16 @@ export class ProductOrder {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({name: 'product_id'}) 
+  @Column({ name: 'product_id' })
   productId: number;
 
-  @Column({name: 'order_id'}) 
+  @Column({ name: 'order_id' })
   orderId: number;
 
-  @Column() 
+  @Column({ length: 20 })
   quantity: string;
 
-  @Column({ name: 'created_date', length: 12 }) 
+  @Column({ name: 'created_date', length: 20 })
   createdDate: string;
 
 }

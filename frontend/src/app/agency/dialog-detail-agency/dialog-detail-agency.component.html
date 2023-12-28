@@ -8,7 +8,7 @@
       </span>
       <input matInput
         class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        id="agencyName" type="text" placeholder="" maxlength="120" [(ngModel)]="agency.agencyName"
+        id="agencyName" type="text" placeholder="" maxlength="200" [(ngModel)]="agency.agencyName"
         [ngModelOptions]="{ standalone: true }" [errorStateMatcher]="matcher" [disabled]="disabled" />
     </div>
     <div class="mb-3 row field">
@@ -39,7 +39,7 @@
       </span>
       <input matInput
         class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        id="email" type="email" placeholder="" maxlength="100" [(ngModel)]="agency.email"
+        id="email" type="email" placeholder="" maxlength="200" [(ngModel)]="agency.email"
         [ngModelOptions]="{ standalone: true }" [errorStateMatcher]="matcher" [disabled]="disabled" />
     </div>
     <div class="mb-3 row field">
@@ -49,10 +49,10 @@
       </span>
       <input matInput [disabled]="disabledUserName"
         class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        id="userName" type="text" placeholder="" maxlength="120" [(ngModel)]="agency.userName"
+        id="userName" type="text" placeholder="" maxlength="200" [(ngModel)]="agency.userName"
         [ngModelOptions]="{ standalone: true }" [errorStateMatcher]="matcher" />
     </div>
-    <div class="mb-3 row field">
+    <div class="mb-3 row field" [hidden]="isEdit">
       <span class="col-5 text-label" for="password">
         {{ "AGENCY.PASSWORD" | translate }}
         <label class="require">*</label>
@@ -63,7 +63,7 @@
         [(ngModel)]="agency.password" [ngModelOptions]="{ standalone: true }" [errorStateMatcher]="matcher"
         [disabled]="disabled" />
     </div>
-    <div class="mb-3 row field" [hidden]="disabled">
+    <div class="mb-3 row field" [hidden]="disabled || isEdit">
       <span class="col-5 text-label" for="confirmPassword">
         {{ "AGENCY.CONFIRM_PASSWORD" | translate }}
         <label class="require">*</label>
@@ -88,7 +88,7 @@
       </span>
       <input matInput
         class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        id="contract" type="text" placeholder="" maxlength="50" [(ngModel)]="agency.contract"
+        id="contract" type="text" placeholder="" maxlength="200" [(ngModel)]="agency.contract"
         [ngModelOptions]="{ standalone: true }" [errorStateMatcher]="matcher" [disabled]="disabled" />
     </div>
     <div class="mb-6 row field">
@@ -97,7 +97,7 @@
       </span>
       <textarea
         class="col-7 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        id="note" type="text" placeholder="" maxlength="1000" [(ngModel)]="agency.note"
+        id="note" type="text" placeholder="" maxlength="500" [(ngModel)]="agency.note"
         [ngModelOptions]="{ standalone: true }" [disabled]="disabled"></textarea>
     </div>
     <div *ngIf="error || (error !== null && error.length !== 0)">

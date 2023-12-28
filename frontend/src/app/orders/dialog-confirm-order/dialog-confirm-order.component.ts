@@ -131,6 +131,7 @@ export class DialogConfirmOrderComponent implements OnInit {
       userUpdated: this.helper.getUserId(),
       shippingDate: this.order.shippingDate,
       note: this.order.note,
+      editor: this.helper.getFullName(),
     };
 
     this.socketService.changeStatusOrder(payload).subscribe((response: any) => {

@@ -11,7 +11,7 @@ export class UserDistrict {
     @Column({ name: 'district_id' })
     districtId: number;
 
-    @Column({ name: 'updated_date' })
+    @Column({ name: 'updated_date', length: 20 })
     updatedDate: string;
 
 }

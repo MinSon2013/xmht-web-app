@@ -10,8 +10,6 @@ import { ReportController } from './report.controller';
 import { NotificationService } from '../notification/notification.service';
 import { NotificationRepository } from '../notification/repository/notification.repository';
 import { NotificationAgencyRepository } from '../notification/repository/notification-agency.repository';
-import { AgencyService } from '../agency/agency.service';
-import { AgencyRepository } from '../agency/repository/agency.repository';
 import { ReportsController } from './reports.controller';
 
 @Module({
@@ -21,7 +19,6 @@ import { ReportsController } from './reports.controller';
       ReportRepository,
       NotificationRepository,
       NotificationAgencyRepository,
-      AgencyRepository,
     ]),
     forwardRef(() => AuthModule),
     UserModule,
@@ -31,7 +28,6 @@ import { ReportsController } from './reports.controller';
     ReportService,
     UserService,
     NotificationService,
-    AgencyService,
   ],
   exports: [TypeOrmModule, ReportService]
 })

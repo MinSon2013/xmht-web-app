@@ -1,14 +1,13 @@
 import { Order } from '../entities/order.entity';
 import { DeleteResult, EntityRepository, Repository, UpdateResult } from 'typeorm'
-import { StatisticsDto } from '../dto/statistics.dto';
-import { ModifyOrderDto } from '../dto/modify-order.dto';
+import { ModifyOrderDTO } from '../dto/modify-order.dto';
 import { ProductOrder } from '../entities/product-order.entity';
 import { NotificationService } from '../../notification/notification.service';
 import { AgencyService } from '../../agency/agency.service';
 import { ProductsService } from '../../products/products.service';
 import { ProductOrderRepository } from './product-order.repository';
-import { SearchOrderDto } from '../dto/search-order.dto';
-import { NotificationDto } from '../../notification/dto/notification.dto';
+import { SearchOrderDTO } from '../dto/search-order.dto';
+import { NotificationDTO } from '../../notification/dto/notification.dto';
 import moment from 'moment';
 import { Users } from '../../user/entities/user.entity';
 
@@ -108,11 +107,11 @@ export class OrderRepository extends Repository<Order> {
         return response;
     }
 
-    async createOrder(modifyOrderDto: ModifyOrderDto,
+    async createOrder(modifyOrderDto: ModifyOrderDTO,
         agencyService: AgencyService,
         notificationService: NotificationService,
         productOrderRepo: ProductOrderRepository
-    ): Promise<ModifyOrderDto> {
+    ): Promise<ModifyOrderDTO> {
         const orderEntity = this.mappingOrder(modifyOrderDto);
         const order = await this.save(orderEntity);
         const entities: ProductOrder[] = [];
@@ -127,8 +126,7 @@ export class OrderRepository extends Repository<Order> {
         await productOrderRepo.save(entities);
 
         // tao thong bao
-        const agencyName = await agencyService.getName(modifyOrderDto.sender);//////////
-        let contents = `${agencyName} đã tạo đơn hàng mới`;
+        let contents = `${modifyOrderDto.editer} đã tạo đơn hàng mới`;
         modifyOrderDto.id = order.id;
         await this.createNotify(modifyOrderDto, contents, notificationService, 'CREATE');
 
@@ -136,7 +134,7 @@ export class OrderRepository extends Repository<Order> {
         return modifyOrderDto;
     }
 
-    async updateOrder(modifyOrderDto: ModifyOrderDto,
+    async updateOrder(modifyOrderDto: ModifyOrderDTO,
         agencyService: AgencyService,
         notificationService: NotificationService,
         productOrderRepo: ProductOrderRepository): Promise<UpdateResult | any> {
@@ -174,7 +172,6 @@ export class OrderRepository extends Repository<Order> {
         });
 
         // tao thong bao
-        //const agencyName = await agencyService.getName(modifyOrderDto.sender);
         const agencyName = modifyOrderDto.editer;
         let contents = '';
         if (orderOld.status !== modifyOrderDto.status) {
@@ -241,7 +238,7 @@ export class OrderRepository extends Repository<Order> {
                 break;
         }
 
-        const modifyOrderDto: ModifyOrderDto = new ModifyOrderDto();
+        const modifyOrderDto: ModifyOrderDTO = new ModifyOrderDTO();
         modifyOrderDto.sender = body.sender;
         modifyOrderDto.agencyId = body.agencyId;
         modifyOrderDto.notifyReceiver = body.agencyId;
@@ -268,7 +265,7 @@ export class OrderRepository extends Repository<Order> {
         return await this.delete(id);
     }
 
-    async search(searchOderDto: SearchOrderDto, productService: ProductsService, _agencyId: number): Promise<Order[]> {
+    async search(searchOderDto: SearchOrderDTO, productService: ProductsService, agencyId: number): Promise<Order[]> {
         let response: Order[] = [];
         const productList = await productService.getAllProduct();
 
@@ -278,8 +275,8 @@ export class OrderRepository extends Repository<Order> {
             .leftJoin(ProductOrder, 'productOrder', 'productOrder.order_id = order.id')
             .where('1=1');
 
-        if (_agencyId > 0) {
-            sql = sql.andWhere('order.agencyId = :agencyId', { agencyId: _agencyId })
+        if (agencyId > 0) {
+            sql = sql.andWhere('order.agencyId = :agencyId', { agencyId })
         } else if (searchOderDto.agencyId) {
             sql = sql.andWhere('order.agency_id = :agencyId', { agencyId: searchOderDto.agencyId })
         }
@@ -302,7 +299,7 @@ export class OrderRepository extends Repository<Order> {
         return response;
     }
 
-    private mappingOrder(modifyOrderDto: ModifyOrderDto): Order {
+    private mappingOrder(modifyOrderDto: ModifyOrderDTO): Order {
         const order = new Order();
         order.createdDate = modifyOrderDto.createdDate;
         order.deliveryId = modifyOrderDto.deliveryId;
@@ -376,7 +373,7 @@ export class OrderRepository extends Repository<Order> {
 
     async createNotify(modifyOrderDto, contents: string, notificationService: NotificationService, k: string) {
         const adminId = modifyOrderDto.adminId || modifyOrderDto.stockerId;
-        const notifyDto = new NotificationDto();
+        const notifyDto = new NotificationDTO();
         notifyDto.contents = contents;
         notifyDto.isPublished = true;
         notifyDto.agencyList = [];

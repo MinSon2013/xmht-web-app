@@ -1,18 +1,19 @@
-export class NotificationDto {
+export class NotificationDTO {
   id?: number;
+  orderId: number;
+  reportId: number;
   contents: string;
   fileName: string;
+  filePath: string;
+  mimeType: string;
+  notificationType: number;
   note: string;
   isPublished: boolean;
-  agencyList?: number[];
-  createdDate: string;
-  mimeType: string;
-  filePath?: string;
+  createdDate?: string;
+  updatedDate: string;
+  statusOrder: string;
   isViewed: boolean;
   sender: number;
-  notificationType: number;
-  updatedDate: string;
-  orderId?: number;
-  statusOrder?: string;
-  reportId?: number;
+  agencyId: number;
+  agencyList?: number[];
 }

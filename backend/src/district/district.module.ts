@@ -15,7 +15,7 @@ import { AgencyRepository } from '../agency/repository/agency.repository';
   imports: [
     TypeOrmModule.forFeature([
       DistrictRepository,
-      AgencyRepository,
+      //AgencyRepository,
     ]),
     forwardRef(() => AuthModule),
     UserModule,
@@ -24,7 +24,7 @@ import { AgencyRepository } from '../agency/repository/agency.repository';
   providers: [
     DistrictService,
     UserService,
-    AgencyService,
+    //AgencyService,
   ],
   exports: [TypeOrmModule]
 })

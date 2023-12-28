@@ -3,13 +3,13 @@
     <mat-dialog-content class="form-create shadow-md rounded px-8 pt-6 pb-8">
         <!-- Username -->
         <div class="mb-3 row field p-top" [hidden]="isEdit">
-            <span class="col-5 text-label" for="accountName">
+            <span class="col-5 text-label" for="userName">
                 {{ "USER.USERNAME" | translate }}
                 <label class="require">*</label>
             </span>
             <input matInput
                 class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                id="accountName" type="text" placeholder="" maxlength="200" [(ngModel)]="user.userName"
+                id="userName" type="text" placeholder="" maxlength="200" [(ngModel)]="user.userName"
                 [ngModelOptions]="{ standalone: true }" [errorStateMatcher]="matcher" />
         </div>
 
@@ -21,7 +21,7 @@
             </span>
             <input matInput
                 class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                id="fullName" type="text" placeholder="" maxlength="200" [(ngModel)]="user.fullName"
+                id="fullName" type="text" placeholder="" maxlength="255" [(ngModel)]="user.fullName"
                 [ngModelOptions]="{ standalone: true }" [errorStateMatcher]="matcher" />
         </div>
 

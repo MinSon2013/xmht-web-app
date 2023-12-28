@@ -7,7 +7,8 @@
             </span>
             <input matInput [disabled]="true"
                 class="col-5 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                id="id" type="text" maxlength=10 [(ngModel)]="order.approvedNumber" [ngModelOptions]="{standalone: true}" />
+                id="id" type="text" maxlength=10 [(ngModel)]="order.approvedNumber"
+                [ngModelOptions]="{standalone: true}" />
         </div>
         <div class="mb-3 row field">
             <span class="col-5 text-label" for="createdDate">
@@ -50,8 +51,7 @@
             </span>
             <input matInput [disabled]="true"
                 class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                id="pickupId" type="text" [(ngModel)]="selectedPickup.label"
-                [ngModelOptions]="{standalone: true}" />
+                id="pickupId" type="text" [(ngModel)]="selectedPickup.label" [ngModelOptions]="{standalone: true}" />
         </div>
         <div class="mb-3 row field">
             <span class="col-5 text-label" for="products">
@@ -85,8 +85,7 @@
             </span>
             <input matInput [disabled]="true"
                 class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                id="receipt" type="text" [(ngModel)]="selectedReceipt.label"
-                [ngModelOptions]="{standalone: true}" />
+                id="receipt" type="text" [(ngModel)]="selectedReceipt.label" [ngModelOptions]="{standalone: true}" />
         </div>
         <div class="mb-3 row field">
             <span class="col-5 text-label" for="transport">
@@ -127,7 +126,8 @@
             </span>
             <textarea [disabled]="(isAdmin || isStocker ) ? false : true"
                 class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                id="note" type="text" [(ngModel)]="order.note" [ngModelOptions]="{standalone: true}"></textarea>
+                id="note" type="text" [(ngModel)]="order.note" maxlength="500"
+                [ngModelOptions]="{standalone: true}"></textarea>
         </div>
         <div class="mb-6 row field" [hidden]="(!isAdmin && !isStocker) || order.status === 4 || order.status === 5">
             <span class="col-5 text-label" for="status">

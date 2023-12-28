@@ -2,140 +2,145 @@ import { DeleteResult, EntityRepository, Repository, UpdateResult } from 'typeor
 import { Users } from '../entities/user.entity'
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { AuthService } from '../../auth/auth.service';
-import { UserRoleDto } from '../dto/user-role.dto';
+import { UserDTO } from '../dto/user.dto';
 import { UserDistrict } from '../entities/user-district.entity';
-import { AgencyService } from '../../agency/agency.service';
 import { UserDistrictRepository } from './user-district.repository';
-import { UserRo } from '../ro/user.ro';
-import { Agency } from '../../agency/entities/agency.entity';
+import { UserRO } from '../ro/user.ro';
+import { Helper } from '../../shared/helper';
 
 @EntityRepository(Users)
 export class UserRepository extends Repository<Users> {
+    private readonly OPTIONS = 'changePassword';
+    private readonly helper = new Helper();
 
     constructor() {
         super();
     }
 
-    async getAll(): Promise<Users[]> {
-        return await this.find();
+    async getUserList(): Promise<UserRO[]> {
+        const raw = await this.createQueryBuilder('u')
+            .leftJoinAndSelect(UserDistrict, 'ud', 'ud.user_id = u.id')
+            .where('u.is_admin IS FALSE')
+            .orderBy('u.id', 'DESC')
+            .getRawMany();
+
+        return this.mappingUserRO(raw);
     }
 
-    async getUserRole(): Promise<UserRo[]> {
-        const sql = this.createQueryBuilder('u')
+    async getUserById(id: number, options?: string): Promise<UserRO> {
+        const raw = await this.createQueryBuilder('u')
             .leftJoinAndSelect(UserDistrict, 'ud', 'ud.user_id = u.id')
-            .leftJoinAndSelect(Agency, 'a', 'a.user_id = u.id')
-            .where('u.role > 0')
-            .orderBy('u.id', 'DESC');
-        const raw = await sql.getRawMany();
+            .where('u.id = :id', { id })
+            .getRawOne();
 
-        const result: UserRo[] = [];
+        return this.mappingUserRO([raw], options)[0];
+    }
+
+    private mappingUserRO(raw: any, options?: string): UserRO[] {
+        const result: UserRO[] = [];
         raw.forEach(element => {
-            const item: UserRo = {
+            const item: UserRO = {
                 id: element.u_id,
                 userName: element.u_username,
-                isAdmin: element.u_is_admin,
                 role: element.u_role,
                 districtId: element.ud_district_id,
-                fullName: element.a_full_name,
+                fullName: element.u_full_name,
+                password: options ? element.u_password : '',
+                isAdmin: element.u_is_admin,
             };
             result.push(item);
         });
-
         return result;
     }
 
-    async getOne(id: number): Promise<Users> {
-        return await this.findOne({
-            where: {
-                id
-            },
-        });
-    }
+    // async createUser_1(newUser: Users | any, authService: AuthService): Promise<Users> {
+    //     try {
+    //         const exists: boolean = await this.usernameExists(newUser.username);
+    //         if (!exists) {
+    //             const passwordHash: string = await authService.hashPassword(newUser.password);
+    //             newUser.password = passwordHash;
+    //             const user = await this.save(newUser);
+    //             return this.findOne(user.id);
+    //         } else {
+    //             throw new HttpException('Email is already in use', HttpStatus.CONFLICT);
+    //         }
+    //     } catch {
+    //         throw new HttpException('Email is already in use', HttpStatus.CONFLICT);
+    //     }
+    // }
 
-    async getByNamePassword(username: string, password: string) {
-        return await this.createQueryBuilder()
-            .where("username = :username", { username })
-            .execute()
-    }
-
-    async createUser(newUser: Users | any, authService: AuthService): Promise<Users> {
+    async createUser(userDto: UserDTO, authService: AuthService, userDistrictRepo: UserDistrictRepository): Promise<UserRO> {
         try {
-            const exists: boolean = await this.usernameExists(newUser.username);
-            if (!exists) {
-                const passwordHash: string = await authService.hashPassword(newUser.password);
-                newUser.password = passwordHash;
-                const user = await this.save(newUser);
-                return this.findOne(user.id);
-            } else {
-                throw new HttpException('Email is already in use', HttpStatus.CONFLICT);
-            }
-        } catch {
-            throw new HttpException('Email is already in use', HttpStatus.CONFLICT);
-        }
-    }
-
-    async createUserRole(userDto: UserRoleDto,
-        authService: AuthService,
-        agencyService: AgencyService,
-        repo: UserDistrictRepository): Promise<Users> {
-        try {
-            const exists: boolean = await this.usernameExists(userDto.username);
+            const exists: boolean = await this.usernameExists(userDto.userName);
             if (!exists) {
                 const passwordHash: string = await authService.hashPassword(userDto.password);
-                userDto.password = passwordHash;
-                const userEntity = new Users();
-                userEntity.isAdmin = userDto.isAdmin;
-                userEntity.password = userDto.password;
-                userEntity.userName = userDto.username;
-                userEntity.fullName = userDto.fullName;
-                userEntity.role = userDto.role;
-                const user = await this.save(userEntity);
+                //userDto.password = passwordHash;------
 
-                // Create agency for user
-                await agencyService.createAgencyForUserRole(user.id, userDto.fullName);
+                const entity = new Users();
+                entity.isAdmin = false;
+                entity.userName = userDto.userName;
+                entity.password = passwordHash;
+                entity.fullName = userDto.fullName;
+                entity.role = userDto.role;
+                entity.updatedDate = this.helper.getUpdateDate(2);
+                entity.updatedByUserId = userDto.updatedByUserId;
+                const user = await this.save(entity);
 
                 // Create user-district
-                await repo.createUserDistrict(user.id, userDto.districtId);
+                await userDistrictRepo.createUserDistrict(user.id, userDto.districtId);
 
-                return this.findOne(user.id);
+                return await this.getUserById(user.id);
             } else {
-                throw new HttpException('Username is already in use', HttpStatus.CONFLICT);
+                throw new HttpException('Username is already in use', HttpStatus.BAD_GATEWAY);
             }
         } catch {
-            throw new HttpException('Username is already in use', HttpStatus.CONFLICT);
+            throw new HttpException('Username is already in use', HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    async updateUserRole(userDto: UserRoleDto,
-        authService: AuthService,
-        agencyService: AgencyService,
-        repo: UserDistrictRepository): Promise<Users | any> {
+    async updateUser(userDto: UserDTO, authService: AuthService, userDistrictRepo: UserDistrictRepository): Promise<UpdateResult> {
         try {
-            const res = await this.createQueryBuilder()
-                .update(Users)
-                .set({ role: userDto.role })
-                .where("id = :id", { id: userDto.id })
-                .execute();
+            const entity = new Users();
+            let result;
+            const exists: boolean = await this.usernameExists(userDto.userName);
+            if (!exists) {
+                if (userDto.password.length > 0) {
+                    const passwordHash: string = await authService.hashPassword(userDto.password);
+                    entity.password = passwordHash;
+                }
+                entity.fullName = userDto.fullName;
+                entity.role = userDto.role;
+                entity.updatedDate = this.helper.getUpdateDate(2);
+                entity.updatedByUserId = userDto.updatedByUserId;
 
-            // Update agency for user
-            await agencyService.updateAgencyForUserRole(userDto.id, userDto.fullName);
+                result = await this.update(userDto.id, entity);
+            }
+
+            // const res = await this.createQueryBuilder()
+            //     .update(Users)
+            //     .set({ role: userDto.role })
+            //     .where("id = :id", { id: userDto.id })
+            //     .execute();
+
+            // // // Update agency for user
+            // // await agencyService.updateAgencyForUserRole(userDto.id, userDto.fullName);
 
             // Update user-district
-            await repo.updateUserDistrict(userDto.id, userDto.districtId);
+            await userDistrictRepo.updateUserDistrict(userDto.id, userDto.districtId);
 
-            return res;
+            return result;
         } catch {
-            throw new HttpException('Error update userrole', HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new HttpException('Exception update user', HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    async updateAgencyRole(userId: number, role: number) {
-        return await this.createQueryBuilder()
-            .update(Users)
-            .set({ role: role })
-            .where("id = :id", { id: userId })
-            .execute();
-    }
+    // async updateFullName(id: number, name: string) {
+    //     return await this.createQueryBuilder()
+    //         .update(Users)
+    //         .set({ fullName: name })
+    //         .where("id = :id", { id })
+    //         .execute();
+    // }
 
     async updatePassword(id: number, password: string, authService: AuthService): Promise<UpdateResult> {
         const passwordHash: string = await authService.hashPassword(password);
@@ -148,14 +153,6 @@ export class UserRepository extends Repository<Users> {
 
     async deleteUser(id: number): Promise<DeleteResult> {
         return await this.delete(id);
-    }
-
-    async deleteUserRole(id: number, agencyService: AgencyService): Promise<DeleteResult> {
-        const res = await this.delete(id);
-        if (res) {
-            await agencyService.deleteAgencyForUserRole(id);
-        }
-        return res;
     }
 
     private async usernameExists(userName: string): Promise<boolean> {
@@ -172,7 +169,7 @@ export class UserRepository extends Repository<Users> {
     }
 
     async changeUserPassword(userId: number, oldPassword: string, newPassword: string, authService: AuthService): Promise<UpdateResult> {
-        const foundUser: Users = await this.getOne(userId);
+        const foundUser = await this.getUserById(userId, this.OPTIONS);
         if (foundUser) {
             const matches: boolean = await authService.validatePassword(oldPassword, foundUser.password);
             if (matches) {
@@ -190,6 +187,7 @@ export class UserRepository extends Repository<Users> {
         }
     }
 
+    // REMOVE -----------------------------------
     // Sync database
     async syncUser(userId: number, fname: string, role: number) {
         if (role > 0) {
