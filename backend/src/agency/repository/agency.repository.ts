@@ -6,6 +6,7 @@ import { Users } from '../../user/entities/user.entity';
 import { AgencyRO } from '../ro/agency.ro';
 import { Helper } from '../../shared/helper';
 import { UserDTO } from '../../user/dto/user.dto';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
 @EntityRepository(Agency)
 export class AgencyRepository extends Repository<Agency> {
@@ -15,15 +16,38 @@ export class AgencyRepository extends Repository<Agency> {
         super();
     }
 
-    async findAll(): Promise<AgencyRO[]> {
-        return await this.getAgencyList();
+    async findAll(agencyId: number): Promise<AgencyRO[]> {
+        let sql = this.createQueryBuilder('a')
+            .innerJoinAndSelect(Users, 'u', 'u.id = a.user_id');
+
+        if (agencyId > 0) {
+            sql = sql.where('a.id = :agencyId', { agencyId });
+        }
+
+        const result = await sql.orderBy('a.id').getRawMany();
+        const res: AgencyRO[] = [];
+        result.forEach(element => {
+            const item = new AgencyRO();
+            item.id = element.a_id;
+            item.agencyName = element.a_agency_name;
+            item.address = element.a_address;
+            item.contract = element.a_contract;
+            item.note = element.a_note;
+            item.email = element.a_email;
+            item.phone = element.a_phone;
+            item.userId = element.u_id;
+            item.userName = element.u_username;
+            res.push(item);
+        });
+        return res;
     }
 
-    private async getAgencyList() {
-        const ids = await this.getIdsNotAgency(); // -- REMOVE -----
+    // -- REMOVE after sync -----
+    async getAgencyList() {
+        const ids = await this.getIdsNotAgency();
         const result = await this.createQueryBuilder('a')
-            .leftJoinAndSelect(Users, 'u', 'u.id = a.user_id')
-            .where('a.id NOT IN (:ids)', { ids })  // -- REMOVE -----
+            .innerJoinAndSelect(Users, 'u', 'u.id = a.user_id')
+            .where('a.id NOT IN (:ids)', { ids })
             .getRawMany();
 
         const res: AgencyRO[] = [];
@@ -45,7 +69,7 @@ export class AgencyRepository extends Repository<Agency> {
 
     async getByUserId(userId: number): Promise<AgencyRO> {
         const res = await this.createQueryBuilder('a')
-            .leftJoinAndSelect(Users, 'u', 'u.id = a.user_id')
+            .innerJoinAndSelect(Users, 'u', 'u.id = a.user_id')
             .where('a.user_id = :userId', { userId })
             .getRawOne();
 
@@ -63,20 +87,24 @@ export class AgencyRepository extends Repository<Agency> {
     }
 
     async createAgency(modifyAgencyDto: ModifyAgencyDTO, userService: UserService): Promise<AgencyRO> {
-        const userDTO: UserDTO = {
-            userName: modifyAgencyDto.userName,
-            password: modifyAgencyDto.password,
-            role: modifyAgencyDto.role,
-            districtId: 0,
-            fullName: modifyAgencyDto.agencyName,
-            updatedByUserId: modifyAgencyDto.updatedByUserId,
-        }
-        const user = await userService.createUser(userDTO);
+        try {
+            const userDTO: UserDTO = {
+                userName: modifyAgencyDto.userName,
+                password: modifyAgencyDto.password,
+                role: modifyAgencyDto.role,
+                districtId: 0,
+                fullName: modifyAgencyDto.agencyName,
+                updatedByUserId: modifyAgencyDto.updatedByUserId,
+            }
+            const user = await userService.createUser(userDTO);
 
-        const agencyEntity = this.mappingAgency(modifyAgencyDto);
-        agencyEntity.userId = user.id;
-        await this.save(agencyEntity);
-        return this.getByUserId(agencyEntity.userId);
+            const agencyEntity = this.mappingAgency(modifyAgencyDto);
+            agencyEntity.userId = user.id;
+            await this.save(agencyEntity);
+            return this.getByUserId(agencyEntity.userId);
+        } catch (err) {
+            throw new HttpException('Username is already in users', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     async updateAgency(modifyAgencyDto: ModifyAgencyDTO
@@ -91,6 +119,11 @@ export class AgencyRepository extends Repository<Agency> {
 
     async deleteAgency(id: number): Promise<DeleteResult> {
         return await this.delete(id);
+    }
+
+    async deleteAgencyByUserId(userId: number) {
+        return await this.createQueryBuilder()
+            .delete().where('user_id = :userId', { userId }).execute();
     }
 
     // public async getAgencyIdOfAdmin() {

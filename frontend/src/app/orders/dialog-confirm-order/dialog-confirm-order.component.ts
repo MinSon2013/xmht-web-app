@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Cities, MSG_STATUS, RECEIPT, STATUS, STOCKER, Transports } from '../../constants/const-data';
+import { ADMIN_ROLE, AGENCY_ROLE, Cities, MSG_STATUS, RECEIPT, STATUS, STOCKER_ROLE, Transports, USER_AREA_MANAGER_ROLE, USER_SALESMAN_ROLE } from '../../constants/const-data';
 import { Order } from '../../models/order';
 import { Helper } from '../../helpers/helper';
 import { TranslateService } from '@ngx-translate/core';
@@ -40,7 +40,6 @@ export class DialogConfirmOrderComponent implements OnInit {
     editer: '',
     confirmedDate: '',
     shippingDate: '',
-    updatedByUserId: this.helper.getUserId(),
   };
 
   cities: any[] = Cities;
@@ -51,10 +50,13 @@ export class DialogConfirmOrderComponent implements OnInit {
   receipt: any[] = RECEIPT;
   agencyList: any[] = [];
 
+  userRole: number = this.helper.getUserRole();
   isAdmin: boolean = this.helper.isAdmin();
-  role: number = this.helper.getUserRole();
-  isStocker: boolean = this.role === STOCKER;
-  agencyId: number = this.helper.getAgencyId();
+  isStocker: boolean = this.userRole === STOCKER_ROLE;
+  isSalesman: boolean = this.userRole === USER_SALESMAN_ROLE;
+  isAreaManager: boolean = this.userRole === USER_AREA_MANAGER_ROLE;
+  isAgency: boolean = this.userRole === AGENCY_ROLE;
+
   selectedStatus: any = {};
   selectedDelivery: any = {};
   selectedPickup: any = {};
@@ -72,7 +74,6 @@ export class DialogConfirmOrderComponent implements OnInit {
     this.productList = this.helper.getProductList();
     this.agencyList = this.helper.getAgencyList();
     this.deliveries = this.helper.getDeliveryList();
-
     if (this.data && this.data.id !== 0) {
       this.order.id = this.data.id;
       this.order.createdDate = this.data.createdDate;
@@ -95,7 +96,7 @@ export class DialogConfirmOrderComponent implements OnInit {
       this.order.confirmedDate = this.data.confirmedDate;
       this.order.shippingDate = this.data.shippingDate;
       this.order.approvedNumber = this.data.approvedNumber !== 0 ? this.data.approvedNumber : 0;
-      this.order.agencyName = this.agencyList.find(x => x.id === this.data.agencyId).fullName;
+      this.order.agencyName = this.agencyList.find(x => x.id === this.data.agencyId).agencyName;
       const status = this.status.find(x => x.value === this.order.status);
       this.selectedStatus = status ? status : { id: null, label: '' };
       const delivery = this.deliveries.find(x => x.id === this.order.deliveryId);
@@ -112,21 +113,21 @@ export class DialogConfirmOrderComponent implements OnInit {
   onSubmit() {
     this.order.status = this.selectedStatus.value;
     if (!this.order.isViewed) {
-      if (this.agencyId === this.order.agencyId) {
+      if (this.helper.getAgencyId() === this.order.agencyId) {
         this.order.isViewed = true;
       } else {
         this.order.isViewed = false;
       }
     }
     if (this.order.status === STATUS[3].value) {
-      this.order.shippingDate = moment().format('HH:mm DD/MM/YYYY');
+      this.order.shippingDate = this.helper.getDateFormat(2);
     }
 
     const payload = {
       id: this.order.id,
       isViewed: this.order.isViewed,
       status: this.order.status,
-      sender: this.agencyId,
+      sender: this.helper.getUserId(),
       agencyId: this.order.agencyId,
       userUpdated: this.helper.getUserId(),
       shippingDate: this.order.shippingDate,
@@ -148,7 +149,7 @@ export class DialogConfirmOrderComponent implements OnInit {
 
   onCancel() {
     if (!this.order.isViewed) {
-      if (this.agencyId === this.order.agencyId || this.isAdmin || this.isStocker) {
+      if (this.helper.getAgencyId() === this.order.agencyId || this.isAdmin || this.isStocker) {
         this.order.isViewed = true;
       } else {
         this.order.isViewed = false;

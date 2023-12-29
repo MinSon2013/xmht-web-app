@@ -8,7 +8,7 @@ import { FormControl } from '@angular/forms';
 import { ProductService } from '../services/product.service';
 import { TranslateService } from '@ngx-translate/core';
 import { FormGroup } from '@angular/forms';
-import { ROLE, STATUS, STOCKER, USER_AREA_MANAGER } from '../constants/const-data';
+import { STATUS, STOCKER_ROLE, USER_AREA_MANAGER_ROLE } from '../constants/const-data';
 import * as moment from 'moment';
 
 export interface Label { }
@@ -73,7 +73,7 @@ export class StatisticsComponent implements OnInit {
   public pieChartPlugins = [DatalabelsPlugin];
 
   searchForm: any = {
-    orderId: 0,
+    approvedNumber: 0,
     agencyId: 0,
     productId: 0,
     status: 0,
@@ -92,9 +92,9 @@ export class StatisticsComponent implements OnInit {
   status: any[] = STATUS;
   isAdmin: boolean = this.helper.isAdmin();
   role: number = this.helper.getUserRole();
-  isStocker: boolean = this.role === STOCKER;
-  hidden: boolean = this.role === USER_AREA_MANAGER || this.isStocker;
-  isUserRole: boolean = ROLE.includes(this.role);
+  isStocker: boolean = this.role === STOCKER_ROLE;
+  hidden: boolean = this.role === USER_AREA_MANAGER_ROLE || this.isStocker;
+  isUserRole: boolean = this.helper.getRoleAllowed(4).includes(this.role);
   isAllRole: boolean = this.isUserRole || this.isAdmin;
   agencyList: any[] = [];
 
@@ -204,7 +204,7 @@ export class StatisticsComponent implements OnInit {
     this.agencySelected = null;
     this.productSelected = null;
     this.selectedStatus = null;
-    this.searchForm.orderId = 0;
+    this.searchForm.approvedNumber = 0;
     this.searchForm.agencyId = 0;
     this.searchForm.productId = 0;
     this.searchForm.status = 0;

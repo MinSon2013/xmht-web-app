@@ -11,16 +11,16 @@ export class UsersController {
   constructor(private readonly userService: UserService) { }
 
   @UseGuards(JwtAuthGuard)
-  @Get()
-  findAll(): Promise<UserRO[]> {
-    return this.userService.findAll();
+  @Get(':userId')
+  findAll(@Param('userId', ParseIntPipe) userId: number): Promise<UserRO[]> {
+    return this.userService.findAll(userId);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Get(':id')
-  get(@Param('id', ParseIntPipe) id: number): Promise<UserRO> {
-    return this.userService.getOne(id);
-  }
+  // @UseGuards(JwtAuthGuard)
+  // @Get(':id')
+  // get(@Param('id', ParseIntPipe) id: number): Promise<UserRO> {
+  //   return this.userService.getOne(id);
+  // }
 
   @UseGuards(JwtAuthGuard)
   @Post()
@@ -52,10 +52,10 @@ export class UsersController {
     return this.userService.changeUserPassword(body);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Post('change/password/admin')
-  changePasswordAdmin(@Body() body: any) {
-    return this.userService.changeAdminPassword(body.password);
-  }
+  // @UseGuards(JwtAuthGuard)
+  // @Post('change/password/admin')
+  // changePasswordAdmin(@Body() body: any) {
+  //   return this.userService.changeAdminPassword(body.password);
+  // }
 
 }

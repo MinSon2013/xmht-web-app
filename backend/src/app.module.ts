@@ -67,7 +67,7 @@ export class AppModule {
           method: RequestMethod.POST
         },
         {
-          path: '/notification/download',
+          path: '/notifications/download',
           method: RequestMethod.GET
         },
         {

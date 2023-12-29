@@ -64,6 +64,4 @@ export class Order {
   @Column({ name: 'updated_date', length: 20 })
   updatedDate: string;
 
-  @Column({ name: 'updated_by_user_id', default: 0 })
-  updatedByUserId: number;
 }

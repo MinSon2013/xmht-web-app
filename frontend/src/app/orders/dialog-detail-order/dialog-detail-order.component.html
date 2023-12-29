@@ -30,7 +30,7 @@
         [(ngModel)]="agencySelected" (ngModelChange)="onChange($event)" required>
         <option [ngValue]="null" [disabled]="true" [selected]="true">-- {{'ORDER.SELECT_AGENCY' | translate}} --
         </option>
-        <option [ngValue]="item" *ngFor="let item of agencyList">{{item.fullName}}</option>
+        <option [ngValue]="item" *ngFor="let item of agencyList">{{item.agencyName}}</option>
       </select>
     </div>
     <div class="mb-3 row field">

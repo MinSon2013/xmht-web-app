@@ -32,7 +32,7 @@
                         -- {{ "ORDER.SELECT_AGENCY" | translate }} --
                     </option>
                     <option [ngValue]="item" *ngFor="let item of agencyList">
-                        {{ item.fullName }}
+                        {{ item.agencyName }}
                     </option>
                 </select>
             </div>
@@ -103,7 +103,7 @@
     <div class="row chart">
         <div class="col-6 bar-chart">
             <h4>{{'STATISTICS.BAR_CHART_TITLE' | translate}}</h4>
-            <div style="display: block;">
+            <div style="display: block; overflow-x: auto;">
                 <canvas class="column" baseChart [datasets]="barChartData" [labels]="barChartLabels"
                     [options]="barChartOptions" [plugins]="barChartPlugins" [legend]="barChartLegend">
                 </canvas>

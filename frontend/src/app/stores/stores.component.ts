@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { CustomPaginator } from '../common/custom-paginator';
 import { DialogDeleteConfirmComponent } from '../common/dialog-delete-confirm/dialog-delete-confirm.component';
-import { Cities, SERVICE_TYPE, USER_AREA_MANAGER } from '../constants/const-data';
+import { Cities, SERVICE_TYPE, USER_AREA_MANAGER_ROLE } from '../constants/const-data';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
@@ -48,7 +48,7 @@ export class StoresComponent implements OnInit {
   ) {
     this.getDistrict();
     this.agencyList = this.helper.getAgencyList();
-    this.isHiddenAddButton = (this.helper.isAdmin() || this.helper.getUserRole() === USER_AREA_MANAGER) ? false : true;
+    this.isHiddenAddButton = (this.helper.isAdmin() || this.helper.getUserRole() === USER_AREA_MANAGER_ROLE) ? false : true;
   }
 
   ngOnInit(): void {
@@ -120,7 +120,7 @@ export class StoresComponent implements OnInit {
 
           const agency = this.agencyList.find(x => x.id === Number(row.agencyId));
           if (agency) {
-            row.agencyName = agency.fullName;
+            row.agencyName = agency.agencyName;
           }
 
           const district = this.districtList.find(x => x.id === Number(row.districtId));
@@ -201,7 +201,7 @@ export class StoresComponent implements OnInit {
     this.dataSource.data.forEach(element => {
       const agency = this.agencyList.find(x => x.id === Number(element.agencyId));
       if (agency) {
-        element.agencyName = agency.fullName;
+        element.agencyName = agency.agencyName;
       }
 
       const district = this.districtList.find(x => x.id === Number(element.districtId));

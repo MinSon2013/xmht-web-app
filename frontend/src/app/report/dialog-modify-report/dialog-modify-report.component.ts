@@ -129,6 +129,8 @@ export class DialogModifyReportComponent {
                   this.helper.showError(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.SAVE_FILE', MSG_STATUS.FAIL));
                 }
               });
+            } else {
+              this.dialogRef.close(this.report);
             }
 
             this.helper.showSuccess(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.ADD_REPORT', MSG_STATUS.SUCCESS));
@@ -151,10 +153,10 @@ export class DialogModifyReportComponent {
                   this.helper.showError(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.SAVE_FILE', MSG_STATUS.FAIL));
                 }
               });
+            } else {
+              this.helper.showSuccess(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.MODIFIED_REPORT', MSG_STATUS.SUCCESS));
+              this.dialogRef.close(this.report);
             }
-
-            this.helper.showSuccess(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.MODIFIED_REPORT', MSG_STATUS.SUCCESS));
-            this.dialogRef.close(this.report);
           } else {
             this.helper.showError(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.MODIFIED_REPORT', MSG_STATUS.FAIL));
           }

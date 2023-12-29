@@ -13,7 +13,7 @@
                 <option [ngValue]="null" [disabled]="true" [selected]="true">
                     -- {{'STORE.SELECT_AGENCY' | translate}} --
                 </option>
-                <option [ngValue]="item" *ngFor="let item of agencyList">{{item.fullName}}</option>
+                <option [ngValue]="item" *ngFor="let item of agencyList">{{item.agencyName}}</option>
             </select>
         </div>
 

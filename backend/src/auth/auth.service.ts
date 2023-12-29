@@ -9,12 +9,14 @@ import { Users } from "../user/entities/user.entity";
 import { JwtService } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
 import { Inject } from "@nestjs/common/decorators";
-import { ADMIN, STOCKER, USER_AREA_MANAGER, USER_SALESMAN } from "../config/constant";
+import { ADMIN_ROLE, STOCKER_ROLE, USER_AREA_MANAGER_ROLE, USER_SALESMAN_ROLE } from "../config/constant";
+import { UserRO } from "../user/ro/user.ro";
+import { AgencyRO } from "../agency/ro/agency.ro";
 
 @Injectable()
 export class AuthService {
     jwtSecret: string = 'SECRET_STRING';
-    userRole: number[] = [ADMIN, STOCKER, USER_SALESMAN, USER_AREA_MANAGER];
+    userRole: number[] = [ADMIN_ROLE, STOCKER_ROLE, USER_SALESMAN_ROLE, USER_AREA_MANAGER_ROLE];
 
     constructor(
         @Inject(forwardRef(() => UserService))
@@ -28,34 +30,46 @@ export class AuthService {
     ) { }
 
     async login(user: AuthDto) {
-        // -- REMOVE ----
-        await this.syncDatabase(); //mapping data from agency to user
+        // // -- REMOVE ----
+        //  await this.syncDatabase(); //mapping data from agency to user
 
-        // const foundUser: Users = await this.userService.findByUsername(user.username);
-        // if (foundUser) {
-        //     const matches: boolean = await this.validatePassword(user.password, foundUser.password);
-        //     if (matches) {
-        //         const payload: UserRO = await this.userService.getOne(foundUser.id);
-        //         delete payload.password;
-        //         const agency: AgencyRO = await this.agencyService.findOne(foundUser.id);
+        const foundUser: Users = await this.userService.findByUsername(user.username);
+        if (foundUser) {
+            const matches: boolean = await this.validatePassword(user.password, foundUser.password);
+            if (matches) {
+                const payload: UserRO = await this.userService.getOne(foundUser.id);
+                delete payload.password;
 
-        //         const jwt = await this.generateJwt({ ...payload, agencyId: agency.id });
-        //         return await this.getDataToResponse(foundUser, jwt);
-        //     } else {
-        //         throw new HttpException('Login was not successfull, wrong credentials', HttpStatus.UNAUTHORIZED);
-        //     }
-        // } else {
-        //     throw new HttpException('Login was not successfull, User not found', HttpStatus.NOT_FOUND);
-        // }
+                let agencyId = 0;
+                if (!this.userRole.includes(payload.role)) {
+                    const agency: AgencyRO = await this.agencyService.findOne(foundUser.id);
+                    agencyId = agency.id;
+                }
+
+                const jwt = await this.generateJwt({ ...payload, agencyId });
+                return await this.getDataToResponse(foundUser, jwt);
+            } else {
+                throw new HttpException('Login was not successfull, wrong credentials', HttpStatus.UNAUTHORIZED);
+            }
+        } else {
+            throw new HttpException('Login was not successfull, User not found', HttpStatus.NOT_FOUND);
+        }
     }
 
     private async getDataToResponse(user: Users, jwt: string) {
         const deliveryList = await this.deliveryService.findAll();
-        let agencyList = await this.agencyService.findAll();
-        const agency = await this.agencyService.findOne(user.id);
         const productList = await this.productService.getAllProduct();
+        let agencyList;
+        let agencyId = 0;
+        let agencyName = '';
         if (!user.isAdmin && !this.userRole.includes(user.role)) {
-            agencyList = [agency];
+            const agency = await this.agencyService.findOne(user.id);
+            agencyId = agency.id;
+            agencyName = agency.agencyName;
+            //agencyList = [agency];
+            agencyList = await this.agencyService.findAll(agencyId);
+        } else {
+            agencyList = await this.agencyService.findAll(0);
         }
         return {
             loginInfo: {
@@ -64,8 +78,8 @@ export class AuthService {
                 isAdmin: user.isAdmin,
                 fullName: user.fullName,
                 userRole: user.role,
-                agencyId: agency ? agency.id : 0,
-                agencyName: agency ? agency.agencyName : '',
+                agencyId: agencyId,
+                agencyName: agencyName,
             },
             deliveryList,
             agencyList,
@@ -121,7 +135,7 @@ export class AuthService {
     // -- REMOVE ----------------------------------------------------------------
     async syncDatabase() {
         // get agency list
-        const agencyListNotUser = await this.agencyService.findAll();
+        const agencyListNotUser = await this.agencyService.getAgencyList();
         const agencyListUser = await this.agencyService.getUserNotAgency();
 
         // get user list
@@ -140,12 +154,12 @@ export class AuthService {
                 if (ff) {
                     // delete admin, thukho khoi agency
                     await this.userService.syncUser(el.id, ff.agencyName, 0);
-                    await this.agencyService.delete(ff.id);
+                    await this.agencyService.deleteSync(ff.id);
                 }
             }
 
         } catch (err) {
-            throw new HttpException('sync fail', HttpStatus.CONFLICT);
+            throw new HttpException('sync fail', HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

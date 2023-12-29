@@ -28,7 +28,6 @@ export interface Order {
     editer: string;
     confirmedDate: string,
     shippingDate: string,
-    updatedByUserId: number;
 }
 
 export interface ProductItem {

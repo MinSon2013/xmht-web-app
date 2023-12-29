@@ -4,7 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import { Helper } from '../../helpers/helper';
 import { MyErrorStateMatcher } from '../../orders/order-add/order-add.component';
-import { MSG_STATUS, NOTIFY_TYPE, ROLE, STOCKER } from '../../constants/const-data';
+import { MSG_STATUS, NOTIFY_TYPE, STOCKER_ROLE } from '../../constants/const-data';
 import { Notify } from '../../models/notify';
 import { NotificationService } from '../../services/notification.service';
 import * as moment from 'moment';
@@ -33,9 +33,10 @@ export class DialogDetailNotifyComponent implements OnInit {
   agencySelected: any = null;
   isEdit: boolean = true;
   agencyId: number = this.helper.getUserId();
-  role: number = this.helper.getUserRole();
-  hidden: boolean = !this.isAdmin && !ROLE.includes(this.role);
-  isStocker: boolean = this.role === STOCKER;
+  userRole: number = this.helper.getUserRole();
+  allowedRole = this.helper.getRoleAllowed(4);
+  hidden: boolean = !this.allowedRole.includes(this.userRole);
+  isStocker: boolean = this.userRole === STOCKER_ROLE;
 
   editor = new Editor;
   toolbar: Toolbar = [
@@ -83,7 +84,7 @@ export class DialogDetailNotifyComponent implements OnInit {
     this.agencyListSelectOption.push({ id: 0, label: 'Tất cả' });
     this.agencyList = this.helper.getAgencyList();
     this.agencyList.forEach(x => {
-      this.agencyListSelectOption.push({ id: x.id, label: x.fullName });
+      this.agencyListSelectOption.push({ id: x.id, label: x.agencyName });
     });
 
     if (this.data && this.data.id !== 0) {
@@ -125,7 +126,7 @@ export class DialogDetailNotifyComponent implements OnInit {
       this.notify.note = '';
       this.notify.isPublished = false;
       this.notify.filePath = '';
-      this.notify.createdDate = moment().format('HH:mm DD/MM/YYYY');
+      this.notify.createdDate = this.helper.getDateFormat(2);
       this.translate.get('NOTIFY.TITLE_ADD').subscribe(x => { this.header = x });
       this.agencySelected = this.agencyListSelectOption[0];
       this.html = '';
@@ -170,6 +171,7 @@ export class DialogDetailNotifyComponent implements OnInit {
           tap((res) => { })
         ).subscribe((response: any) => {
           if (response) {
+            console.log(response.id)
             this.notify.id = response.id;
             if (this.notify.file) {
               this.notifyService.uploadFile(this.notify).subscribe((res: any) => {
@@ -180,6 +182,9 @@ export class DialogDetailNotifyComponent implements OnInit {
                   this.helper.showError(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.SAVE_FILE', MSG_STATUS.FAIL));
                 }
               });
+            } else {
+              this.helper.showSuccess(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.ADD_NOTIFY', MSG_STATUS.SUCCESS));
+              this.dialogRef.close(this.notify);
             }
           } else {
             this.helper.showError(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.ADD_NOTIFY', MSG_STATUS.FAIL));

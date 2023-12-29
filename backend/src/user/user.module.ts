@@ -7,12 +7,19 @@ import { AuthModule } from '../auth/auth.module';
 import { JwtService } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { UserDistrictRepository } from './repository/user-district.repository';
+import { AgencyModule } from '../agency/agency.module';
+import { AgencyRepository } from '../agency/repository/agency.repository';
 
 @Module({
   controllers: [UsersController],
   imports: [
-    TypeOrmModule.forFeature([UserRepository, UserDistrictRepository]),
+    TypeOrmModule.forFeature([
+      UserRepository,
+      UserDistrictRepository,
+      AgencyRepository,
+    ]),
     forwardRef(() => AuthModule),
+    forwardRef(() => AgencyModule),
     PassportModule.register({ defaultStrategy: 'jwt' })
   ],
   providers: [

@@ -15,7 +15,6 @@ export class ReportService {
 
     getReportList() {
         const userId = this.helper.getUserId();
-        // const agencyId = this.helper.getAgencyId();
         return this.webrequestService.get(this.url + `/${userId}`);
     }
 
@@ -31,7 +30,6 @@ export class ReportService {
             attachFile: obj.attachFile,
             filePath: obj.filePath,
             note: obj.note,
-            userId: obj.userId,
             fullName: this.helper.getFullName(),
             updatedByUserId: this.helper.getUserId(),
         };
@@ -51,7 +49,6 @@ export class ReportService {
             attachFile: obj.attachFile,
             filePath: obj.filePath,
             note: obj.note,
-            userId: obj.userId,
             fullName: this.helper.getFullName(),
             updatedByUserId: this.helper.getUserId(),
         };
@@ -73,7 +70,7 @@ export class ReportService {
     search(districtId: number, date: string) {
         const payload = {
             date,
-            agencyId: this.helper.getAgencyId(),
+            // agencyId: this.helper.getAgencyId(),
             userId: this.helper.getUserId(),
             districtId,
         };

@@ -223,7 +223,7 @@ export class ReportComponent implements OnInit {
 
       const agency = this.agencyList.find(x => x.id === Number(element.agencyId));
       if (agency) {
-        element.agencyName = agency.fullName;
+        element.agencyName = agency.agencyName;
       }
 
       const district = this.districtList.find(x => x.id === Number(element.districtId));

@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { CustomPaginator } from '../common/custom-paginator';
 import { DialogDeleteConfirmComponent } from '../common/dialog-delete-confirm/dialog-delete-confirm.component';
-import { Cities, SERVICE_TYPE, USER_AREA_MANAGER } from '../constants/const-data';
+import { Cities, SERVICE_TYPE, USER_AREA_MANAGER_ROLE } from '../constants/const-data';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
@@ -39,7 +39,7 @@ export class DistrictComponent implements OnInit {
   constructor(public dialog: MatDialog,
     private districtService: DistrictService,
   ) {
-    this.isHiddenAddButton = (this.helper.isAdmin() || this.helper.getUserRole() === USER_AREA_MANAGER) ? false : true;
+    this.isHiddenAddButton = (this.helper.isAdmin() || this.helper.getUserRole() === USER_AREA_MANAGER_ROLE) ? false : true;
   }
 
   ngOnInit(): void {

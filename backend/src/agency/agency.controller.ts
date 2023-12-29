@@ -9,16 +9,16 @@ import { DeleteResult, UpdateResult } from 'typeorm';
 export class AgencyController {
   constructor(private readonly agencyService: AgencyService) { }
 
-  @UseGuards(JwtAuthGuard)
-  @Get()
-  findAll(): Promise<AgencyRO[]> {
-    return this.agencyService.findAll()
-  }
+  // @UseGuards(JwtAuthGuard)
+  // @Get()
+  // findAll(): Promise<AgencyRO[]> {
+  //   return this.agencyService.findAll()
+  // }
 
   @UseGuards(JwtAuthGuard)
-  @Get(':id')
-  get(@Param('id', ParseIntPipe) id: number): Promise<AgencyRO> {
-    return this.agencyService.findOne(id);
+  @Get(':agencyId')
+  get(@Param('agencyId', ParseIntPipe) agencyId: number): Promise<AgencyRO[]> {
+    return this.agencyService.findAll(agencyId);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -34,8 +34,8 @@ export class AgencyController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Delete(':id')
-  delete(@Param('id') id: number): Promise<DeleteResult> {
-    return this.agencyService.delete(id);
+  @Delete(':id/:userId')
+  delete(@Param('id') id: number, @Param('userId') userId: number): Promise<DeleteResult> {
+    return this.agencyService.delete(id, userId);
   }
 }

@@ -9,11 +9,11 @@ import { NotificationService } from '../notification/notification.service';
 import { AgencyService } from '../agency/agency.service';
 import { ProductOrderRepository } from './repository/product-order.repository';
 import { UserService } from '../user/user.service';
-import { ADMIN, STOCKER, USER_AREA_MANAGER, USER_SALESMAN } from '../config/constant';
+import { ADMIN_ROLE, STOCKER_ROLE, USER_AREA_MANAGER_ROLE, USER_SALESMAN_ROLE } from '../config/constant';
 
 @Injectable()
 export class OrdersService {
-  private readonly ROLE: number[] = [ADMIN, STOCKER, USER_AREA_MANAGER, USER_SALESMAN];
+  private readonly userRole: number[] = [ADMIN_ROLE, STOCKER_ROLE, USER_AREA_MANAGER_ROLE, USER_SALESMAN_ROLE];
 
   constructor(
     public readonly orderRepo: OrderRepository,
@@ -34,16 +34,11 @@ export class OrdersService {
     //   }
     // }
 
-
-    const agency = await this.agencyService.findOne(userId);
     const user = await this.userService.getOne(userId);
     let agencyId = 0;
-    if (agency) {
-      if (this.ROLE.includes(user.role)) {
-        agencyId = 0;
-      } else {
-        agencyId = agency.id;
-      }
+    if (!this.userRole.includes(user.role)) {
+      const agency = await this.agencyService.findOne(userId);
+      agencyId = agency.id;
     }
     return await this.orderRepo.getOrderList(agencyId, this.productService, this.productOrderRepo);
   }
@@ -62,28 +57,34 @@ export class OrdersService {
 
   async findOne(id: number, userId: number): Promise<Order> {
     // const adminId = await this.adminId();
-    const adminId = await 1;
+    //  const adminId = await 1;
     // const stockerId = await this.stockerId();
-    return await this.orderRepo.getOne(id, userId, this.productService, this.productOrderRepo, adminId);
+    const user = await this.userService.getOne(userId);
+    let agencyId = 0;
+    if (!this.userRole.includes(user.role)) {
+      const agency = await this.agencyService.findOne(userId);
+      agencyId = agency.id;
+    }
+    return await this.orderRepo.getOne(id, userId, agencyId, this.productService, this.productOrderRepo);
   }
 
   async create(modifyOrderDto: ModifyOrderDTO): Promise<ModifyOrderDTO> {
     // modifyOrderDto.adminId = await this.adminId();
-    modifyOrderDto.adminId = 1;
+    // modifyOrderDto.adminId = 1;
     // modifyOrderDto.stockerId = await this.stockerId();
-    return await this.orderRepo.createOrder(modifyOrderDto, this.agencyService, this.notificationService, this.productOrderRepo);
+    return await this.orderRepo.createOrder(modifyOrderDto, this.notificationService, this.productOrderRepo);
   }
 
   async update(modifyOrderDto: ModifyOrderDTO): Promise<UpdateResult | any> {
     // modifyOrderDto.adminId = await this.adminId();
-    modifyOrderDto.adminId = 1;
+    // modifyOrderDto.adminId = 1;
     // modifyOrderDto.stockerId = await this.stockerId();
-    return await this.orderRepo.updateOrder(modifyOrderDto, this.agencyService, this.notificationService, this.productOrderRepo);
+    return await this.orderRepo.updateOrder(modifyOrderDto, this.notificationService, this.productOrderRepo);
   }
 
   async updateStatus(body: any) {
     // body.adminId = await this.adminId();
-    body.adminId = 1;
+    // body.adminId = 1;
     // body.stockerId = await this.stockerId();
     return await this.orderRepo.updateStatus(body, this.notificationService);
   }
@@ -97,15 +98,11 @@ export class OrdersService {
   }
 
   async search(searchOderDto: SearchOrderDTO): Promise<Order[]> {
-    const agency = await this.agencyService.findOne(searchOderDto.userId);
     const user = await this.userService.getOne(searchOderDto.userId);
     let agencyId = 0;
-    if (agency) {
-      if (this.ROLE.includes(user.role)) {
-        agencyId = 0;
-      } else {
-        agencyId = agency.id;
-      }
+    if (!this.userRole.includes(user.role)) {
+      const agency = await this.agencyService.findOne(searchOderDto.userId);
+      agencyId = agency.id;
     }
     return await this.orderRepo.search(searchOderDto, this.productService, agencyId);
   }

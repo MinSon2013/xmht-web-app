@@ -7,18 +7,26 @@ import { ChangePasswordDto } from './dto/change-password.dto';
 import { UserDTO } from './dto/user.dto';
 import { UserDistrictRepository } from './repository/user-district.repository';
 import { UserRO } from './ro/user.ro';
+import { AgencyRepository } from '../agency/repository/agency.repository';
+import { ADMIN_ROLE, STOCKER_ROLE, USER_AREA_MANAGER_ROLE, USER_SALESMAN_ROLE } from '../config/constant';
 
 @Injectable()
 export class UserService {
+    private readonly userRole: number[] = [ADMIN_ROLE, STOCKER_ROLE, USER_AREA_MANAGER_ROLE, USER_SALESMAN_ROLE];
 
     constructor(private userRepo: UserRepository,
         @Inject(forwardRef(() => AuthService))
         private readonly authService: AuthService,
         private userDistrictRepo: UserDistrictRepository,
+        public readonly agencyRepo: AgencyRepository,
     ) { }
 
-    async findAll(): Promise<UserRO[]> {
-        return await this.userRepo.getUserList();
+    async findAll(userId: number): Promise<UserRO[]> {
+        const user = await this.getOne(userId);
+        if (user && [ADMIN_ROLE, STOCKER_ROLE].includes(user.role)) {
+            return await this.userRepo.getUserList();
+        }
+        return [user];
     }
 
     //--- REMOVE ----
@@ -59,6 +67,10 @@ export class UserService {
     }
 
     async deleteUser(id: number): Promise<DeleteResult> {
+        const user = await this.getOne(id);
+        if (user && !this.userRole.includes(user.role)) {
+            await this.agencyRepo.deleteAgencyByUserId(id);
+        }
         return await this.userRepo.deleteUser(id);
     }
 

@@ -45,7 +45,7 @@ export class DialogDeleteConfirmComponent implements OnInit {
         });
         break;
       case SERVICE_TYPE.AGENCYSERVICE:
-        this.agencyService.delete(data.id).subscribe((response) => {
+        this.agencyService.delete(data.row.id, data.row.userId).subscribe((response) => {
           this.onResponse(data.id, 'MESSAGE.DELETE_AGENCY', response);
         });
         break;
@@ -72,7 +72,7 @@ export class DialogDeleteConfirmComponent implements OnInit {
         });
         break;
       case SERVICE_TYPE.USERSERVICE:
-        this.userService.deleteUserRole(data.id).subscribe((response) => {
+        this.userService.delete(data.id).subscribe((response) => {
           this.onResponse(data.id, 'MESSAGE.DELETE_USER', response);
         });
         break;

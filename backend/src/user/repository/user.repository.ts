@@ -101,10 +101,10 @@ export class UserRepository extends Repository<Users> {
 
                 return await this.getUserById(user.id);
             } else {
-                throw new HttpException('Username is already in use', HttpStatus.BAD_GATEWAY);
+                throw new HttpException('Username is already in user', HttpStatus.BAD_GATEWAY);
             }
         } catch {
-            throw new HttpException('Username is already in use', HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new HttpException('Username is already in user', HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

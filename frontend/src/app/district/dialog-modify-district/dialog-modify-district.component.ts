@@ -8,7 +8,6 @@ import { FormControl } from '@angular/forms';
 import { Pickup } from '../../models/pickup';
 import { District } from '../../models/district';
 import { DistrictService } from '../../services/district.service';
-import * as moment from 'moment';
 
 @Component({
   selector: 'app-dialog-modify-district',

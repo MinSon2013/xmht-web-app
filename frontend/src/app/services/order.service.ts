@@ -22,7 +22,7 @@ export class OrderService {
 
     search(obj: Search) {
         const payload = {
-            orderId: Number(obj.orderId),
+            approvedNumber: Number(obj.approvedNumber),
             startDate: obj.startDate,
             endDate: obj.endDate,
             agencyId: Number(obj.agencyId),
@@ -48,6 +48,7 @@ export class OrderService {
             contract: obj.contract,
             agencyId: obj.agencyId,
             products: obj.products,
+            isAdmin: this.helper.isAdmin(),
             sender: this.helper.getUserId(),
         };
 
@@ -71,6 +72,7 @@ export class OrderService {
             agencyId: obj.agencyId,
             products: obj.products,
             isViewed: obj.isViewed,
+            approvedNumber: obj.approvedNumber,
             isAdmin: this.helper.isAdmin(),
             sender: this.helper.getUserId(),
         };

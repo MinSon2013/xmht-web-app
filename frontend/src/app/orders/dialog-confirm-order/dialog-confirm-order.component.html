@@ -27,7 +27,8 @@
                 class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="contract" type="text" [(ngModel)]="order.contract" [ngModelOptions]="{standalone: true}" />
         </div>
-        <div class="mb-3 row field" [hidden]="!isAdmin && !isStocker">
+        <div class="mb-3 row field" [hidden]="isAgency">
+            <!-- <div class="mb-3 row field" [hidden]="!isAdmin && !isStocker && !isSalesman && !isAreaManager"> -->
             <span class="col-5 text-label" for="agency">
                 {{'ORDER.AGENCY' | translate}}
             </span>
@@ -124,7 +125,7 @@
             <span class="col-5 text-label" for="note">
                 {{'ORDER.NOTE' | translate}}
             </span>
-            <textarea [disabled]="(isAdmin || isStocker ) ? false : true"
+            <textarea [disabled]="(isAdmin || isStocker || isSalesman ) ? false : true"
                 class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="note" type="text" [(ngModel)]="order.note" maxlength="500"
                 [ngModelOptions]="{standalone: true}"></textarea>
@@ -146,7 +147,7 @@
             {{'BUTTON.CANCEL' | translate}}
         </button>
         <button mat-raised-button mat-button
-            [hidden]="data.status === 5 ? true : (((data.status === 2 || data.status === 3) && !isAdmin && !isStocker) ? true : false)"
+            [hidden]="data.status === 5 ? true : (((data.status === 2 || data.status === 3) && !isAdmin && !isStocker && !isSalesman) ? true : false)"
             class="btn-save py-2 px-4 rounded focus:outline-none focus:shadow-outline ml-1" type="button"
             (click)="onSubmit()">{{ 'BUTTON.SAVE' | translate}}</button>
     </mat-dialog-actions>

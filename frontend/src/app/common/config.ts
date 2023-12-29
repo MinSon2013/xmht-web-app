@@ -9,6 +9,7 @@ export const CONFIG = {
             SEARCH: 'orders/search'
         },
         NOTIFICATION: 'notification',
+        NOTIFICATIONS: 'notifications',
         STATISTICS: 'statistics',
         DELIVERY: 'delivery',
         MENU: 'menu',

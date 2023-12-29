@@ -5,9 +5,11 @@ import { Agency } from '../../models/agency';
 import { TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import { Helper } from '../../helpers/helper';
-import { AGENCY, MSG_STATUS, STOCKER, USER_AREA_MANAGER } from '../../constants/const-data';
+import { AGENCY_ROLE, MSG_STATUS, STOCKER_ROLE, USER_AREA_MANAGER_ROLE } from '../../constants/const-data';
 import { AgencyService } from '../../services/agency.service';
 import { UserService } from '../../services/user.service';
+import { HttpStatusCode } from '@angular/common/http';
+import { AgencyRO } from '../../models/ro/agency.ro';
 
 @Component({
   selector: 'app-dialog-detail-agency',
@@ -34,12 +36,12 @@ export class DialogDetailAgencyComponent implements OnInit {
     confirmPassword: '',
     email: '',
     userId: 0,
-    role: AGENCY,
+    role: AGENCY_ROLE,
     updatedByUserId: this.helper.getUserId(),
   };
 
   userRole: number = this.helper.getUserRole();
-  disabled: boolean = (this.userRole === USER_AREA_MANAGER || this.userRole === STOCKER);
+  disabled: boolean = (this.userRole === USER_AREA_MANAGER_ROLE || this.userRole === STOCKER_ROLE);
 
   isEdit: boolean = false;
 
@@ -77,18 +79,29 @@ export class DialogDetailAgencyComponent implements OnInit {
   onSubmit() {
     if (this.validForm()) {
       if (this.agency.id === 0) {
-        this.agencyService.create(this.agency).subscribe((response: any) => {
-          if (response) {
-            this.agency.id = response.id;
-            this.agency.userId = response.userId;
+        this.agencyService.create(this.agency).subscribe({
+          error: error => {
+            if (error.error.statusCode === HttpStatusCode.InternalServerError) {
+              this.helper.showError(this.toastr, "Tên đăng nhập đã tồn tại.");
+            } else {
+              this.helper.showError(this.toastr, error.error.message);
+            }
+          },
+          complete: () => console.log('Complete!'),
+          next: (value) => {
+            if (value) {
+              const res = value as AgencyRO;
+              this.agency.id = res.id;
+              this.agency.userId = res.userId;
 
-            this.helper.addAgency(this.agency); //--------------------
+              this.helper.addAgency(this.agency);
 
-            this.helper.showSuccess(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.ADD_AGENCY', MSG_STATUS.SUCCESS));
-            this.dialogRef.close(this.agency);
-          } else {
-            this.helper.showError(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.ADD_AGENCY', MSG_STATUS.FAIL));
-          }
+              this.helper.showSuccess(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.ADD_AGENCY', MSG_STATUS.SUCCESS));
+              this.dialogRef.close(this.agency);
+            } else {
+              this.helper.showError(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.ADD_AGENCY', MSG_STATUS.FAIL));
+            }
+          },
         });
       } else {
         this.agencyService.update(this.agency).subscribe((response: any) => {
@@ -129,6 +142,11 @@ export class DialogDetailAgencyComponent implements OnInit {
     }
     if (this.agency.phone.length === 0) {
       isValidForm = false;
+    }
+    if (this.agency.password.length < 8 || this.agency.confirmPassword.length < 8) {
+      isValidForm = false;
+      this.errorPassword = 'Mật khẩu phải dài hơn 8 kí tự.';
+      return isValidForm;
     }
     if (this.agency.id === 0 && this.agency.confirmPassword.length === 0) {
       isValidForm = false;

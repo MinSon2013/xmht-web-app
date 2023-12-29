@@ -8,7 +8,7 @@ import { CustomPaginator } from '../common/custom-paginator';
 import { DialogDeleteConfirmComponent } from '../common/dialog-delete-confirm/dialog-delete-confirm.component';
 import { DialogDetailAgencyComponent } from './dialog-detail-agency/dialog-detail-agency.component';
 import { AgencyService } from '../services/agency.service';
-import { SERVICE_TYPE, STOCKER, USER_AREA_MANAGER } from '../constants/const-data';
+import { SERVICE_TYPE, STOCKER_ROLE, USER_AREA_MANAGER_ROLE } from '../constants/const-data';
 import { Helper } from '../helpers/helper';
 
 @Component({
@@ -16,7 +16,7 @@ import { Helper } from '../helpers/helper';
   templateUrl: './agency.component.html',
   styleUrls: ['./agency.component.scss'],
   providers: [
-    { provide: MatPaginatorIntl, useValue: CustomPaginator() }  // Here
+    { provide: MatPaginatorIntl, useValue: CustomPaginator() }
   ]
 })
 export class AgencyComponent implements OnInit {
@@ -33,7 +33,7 @@ export class AgencyComponent implements OnInit {
   helper = new Helper();
   hasData: boolean = false;
   role: number = this.helper.getUserRole();
-  hidden: boolean = (this.role === USER_AREA_MANAGER || this.role === STOCKER);
+  hidden: boolean = (this.role === USER_AREA_MANAGER_ROLE || this.role === STOCKER_ROLE);
 
   constructor(public dialog: MatDialog,
     private agencyService: AgencyService,
@@ -41,21 +41,21 @@ export class AgencyComponent implements OnInit {
 
   ngOnInit(): void {
     this.colspan = this.displayedColumns.length;
-    const agencyList = this.helper.getAgencyList();
-    if (agencyList.length === 0) {
-      this.agencyService.getAgencyList().subscribe((response: any) => {
-        if (response.length > 0) {
-          this.dataSource.data = response.reverse();
-          this.helper.setAgencyList(this.dataSource.data.reverse());
-        } else {
-          this.dataSource.data = [];
-        }
-        this.hideShowNoDataRow();
-      });
-    } else {
-      this.dataSource.data = agencyList.reverse();
+    // const agencyList = this.helper.getAgencyList();
+    //if (agencyList.length === 0) {
+    this.agencyService.getAgencyList().subscribe((response: any) => {
+      if (response.length > 0) {
+        this.dataSource.data = response.reverse();
+        this.helper.setAgencyList(response);
+      } else {
+        this.dataSource.data = [];
+      }
       this.hideShowNoDataRow();
-    }
+    });
+    // } else {
+    //   this.dataSource.data = agencyList.reverse();
+    //   this.hideShowNoDataRow();
+    // }
   }
 
   hideShowNoDataRow() {
@@ -89,14 +89,12 @@ export class AgencyComponent implements OnInit {
       });
       if (result !== null) {
         if (row && row.id !== 0) {
-          row.fullName = result.fullName;
+          row.agencyName = result.agencyName;
           row.address = result.address;
           row.phone = result.phone;
           row.note = result.note;
           row.email = result.email;
           row.contract = result.contract;
-          row.accountName = result.accountName;
-          row.password = result.password.length !== 0 ? result.password : row.password;
         } else {
           this.dataSource.data = [result, ...this.dataSource.data];
           this.dataSource.data = this.dataSource.data; // push obj into datasource
@@ -108,7 +106,7 @@ export class AgencyComponent implements OnInit {
 
   onDelete(row: any) {
     const dialogRef = this.dialog.open(DialogDeleteConfirmComponent, {
-      data: { id: row.id, type: SERVICE_TYPE.AGENCYSERVICE, content: 'Bạn chắc chắn muốn xóa nhà phân phối "' + row.fullName + '"?' },
+      data: { row, type: SERVICE_TYPE.AGENCYSERVICE, content: 'Bạn chắc chắn muốn xóa nhà phân phối "' + row.agencyName + '"?' },
     });
 
     dialogRef.afterClosed().subscribe(result => {

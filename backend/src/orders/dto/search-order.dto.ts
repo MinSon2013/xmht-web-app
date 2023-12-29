@@ -1,5 +1,4 @@
 export class SearchOrderDTO {
-    orderId: number;
     approvedNumber: number;
     agencyId: number;
     productId: number;

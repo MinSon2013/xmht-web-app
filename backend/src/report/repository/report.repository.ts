@@ -75,6 +75,6 @@ export class ReportRepository extends Repository<Reports> {
         notifyDto.notificationType = this.NOTIFY_TYPE_GENERAL;
         notifyDto.statusOrder = '';
         notifyDto.reportId = modifyReportDto.id;
-        await notificationService.createNotifyForReport(notifyDto, k);
+        return await notificationService.createNotifyForReport(notifyDto, k);
     }
 }

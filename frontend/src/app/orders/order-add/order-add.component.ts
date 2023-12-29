@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Cities, MSG_STATUS, RECEIPT, STATUS, STOCKER, Transports } from '../../constants/const-data';
+import { Cities, MSG_STATUS, RECEIPT, STATUS, STOCKER_ROLE, Transports } from '../../constants/const-data';
 import { Order, ProductItem } from '../../models/order';
 import { FormControl, FormGroupDirective, NgForm } from '@angular/forms';
 import { Helper } from '../../helpers/helper';
@@ -45,7 +45,7 @@ export class OrderAddComponent implements OnInit {
   helper = new Helper();
   isAdmin: boolean = this.helper.isAdmin();
   role: number = this.helper.getUserRole();
-  isStocker: boolean = this.role === STOCKER;
+  isStocker: boolean = this.role === STOCKER_ROLE;
 
   selectedStatus: any = { value: 1, label: '' };
   pickupSelected: any = null;
@@ -56,7 +56,7 @@ export class OrderAddComponent implements OnInit {
 
   order: Order = {
     id: 0,
-    createdDate: moment().format('HH:mm DD/MM/YYYY'),
+    createdDate: this.helper.getDateFormat(2),
     deliveryId: 0,
     pickupId: 0,
     productTotal: 0,
@@ -75,7 +75,6 @@ export class OrderAddComponent implements OnInit {
     editer: this.helper.getFullName(),
     confirmedDate: '',
     shippingDate: '',
-    updatedByUserId: this.helper.getUserId(),
   };
 
   date = new FormControl(new Date());
@@ -133,10 +132,10 @@ export class OrderAddComponent implements OnInit {
       this.order.products = this.order.products.filter(x => x.quantity.toString() !== '0' && x.quantity.toString() !== '');
 
       if (this.order.status === STATUS[1].value) {
-        this.order.confirmedDate = moment().format('HH:mm DD/MM/YYYY');
+        this.order.confirmedDate = this.helper.getDateFormat(2);
       }
       if (this.order.status === STATUS[3].value) {
-        this.order.shippingDate = moment().format('HH:mm DD/MM/YYYY');
+        this.order.shippingDate = this.helper.getDateFormat(2);
       }
       console.log(this.order)
       this.socketService.createdOrder(this.order).pipe(

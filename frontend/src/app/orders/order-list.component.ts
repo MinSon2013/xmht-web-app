@@ -9,7 +9,7 @@ import { Order } from '../models/order';
 import { DialogDetailOrderComponent } from './dialog-detail-order/dialog-detail-order.component';
 import { Helper } from '../helpers/helper';
 import { DialogConfirmOrderComponent } from './dialog-confirm-order/dialog-confirm-order.component';
-import { Cities, ROLE, SERVICE_TYPE, STATUS, STOCKER, USER_AREA_MANAGER } from '../constants/const-data';
+import { Cities, SERVICE_TYPE, STATUS, STOCKER_ROLE, USER_AREA_MANAGER_ROLE } from '../constants/const-data';
 import { CustomPaginator } from '../common/custom-paginator';
 import * as moment from 'moment';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -47,10 +47,11 @@ export class OrderListComponent implements OnInit {
   helper = new Helper();
   isAdmin: boolean = this.helper.isAdmin();
   agencyId: number = this.helper.getAgencyId();
-  role: number = this.helper.getUserRole();
-  isStocker: boolean = this.role === STOCKER;
-  hidden: boolean = this.role === USER_AREA_MANAGER || this.isStocker;
-  isUserRole: boolean = ROLE.includes(this.role);
+  userRole: number = this.helper.getUserRole();
+  allowedRole = this.helper.getRoleAllowed(4);
+  isStocker: boolean = this.userRole === STOCKER_ROLE;
+  hidden: boolean = this.userRole === USER_AREA_MANAGER_ROLE || this.isStocker;
+  isUserRole: boolean = this.allowedRole.includes(this.userRole);
   isAllRole: boolean = this.isUserRole || this.isAdmin;
 
   agencySelected: any = null;
@@ -107,7 +108,7 @@ export class OrderListComponent implements OnInit {
         this.dataSource.data = []
         this.dataSource.data = response.length > 0 ? response : [];
         this.dataSource.data.forEach(x => {
-          x.agencyName = this.agencyList.find(i => i.id === x.agencyId)?.fullName;
+          x.agencyName = this.agencyList.find(i => i.id === x.agencyId)?.agencyName;
           x.products.sort((a, b) => (a.id < b.id ? -1 : 1));
         });
         if (this.isStocker) {
@@ -225,7 +226,7 @@ export class OrderListComponent implements OnInit {
       const row: any[] = [];
       row.push(e.approvedNumber !== 0 ? e.approvedNumber.toString() : "-");
       row.push(e.createdDate);
-      row.push(this.agencyList.find(x => x.id === e.agencyId)?.fullName);
+      row.push(this.agencyList.find(x => x.id === e.agencyId)?.agencyName);
       row.push(e.contract);
       row.push(e.receivedDate);
       row.push(e.confirmedDate);
@@ -353,7 +354,7 @@ export class OrderListComponent implements OnInit {
       if (response.length > 0) {
         this.dataSource.data = response.reverse();
         this.dataSource.data.forEach(x => {
-          x.agencyName = this.agencyList.find(i => i.id === x.agencyId)?.fullName;
+          x.agencyName = this.agencyList.find(i => i.id === x.agencyId)?.agencyName;
         });
         this.dataSourceClone = new MatTableDataSource<Order>(this.dataSource.data);
         this.hasData = true;

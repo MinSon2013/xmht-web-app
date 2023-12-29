@@ -13,8 +13,13 @@ export class AgencyService {
         private readonly userService: UserService,
     ) { }
 
-    async findAll(): Promise<AgencyRO[]> {
-        return await this.agencyRepo.findAll();
+    async findAll(agencyId: number): Promise<AgencyRO[]> {
+        return await this.agencyRepo.findAll(agencyId);
+    }
+
+    /// --- REMOVE after sync
+    async getAgencyList(): Promise<AgencyRO[]> {
+        return await this.agencyRepo.getAgencyList();
     }
 
     async findOne(userId: number): Promise<AgencyRO> {
@@ -29,7 +34,13 @@ export class AgencyService {
         return await this.agencyRepo.updateAgency(modifyAgencyDto);
     }
 
-    async delete(id: number): Promise<DeleteResult> {
+    async delete(id: number, userId: number): Promise<DeleteResult> {
+        await this.agencyRepo.deleteAgency(id);
+        return await this.userService.deleteUser(userId);
+    }
+
+    //-- REMOVE after sync
+    async deleteSync(id: number): Promise<DeleteResult> {
         return await this.agencyRepo.deleteAgency(id);
     }
 

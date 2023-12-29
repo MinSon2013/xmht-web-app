@@ -4,15 +4,13 @@ import { Product } from '../../products/entities/product.entity';
 import { ProductRO } from '../../products/ro/product.ro';
 import { ProductOrder } from '../entities/product-order.entity';
 import { SearchOrderDTO } from '../dto/search-order.dto';
-import { ADMIN, STOCKER, USER_AREA_MANAGER, USER_SALESMAN } from '../../config/constant';
 
 @EntityRepository(ProductOrder)
 export class ProductOrderRepository extends Repository<ProductOrder> {
-  private readonly ROLE: number[] = [ADMIN, STOCKER, USER_AREA_MANAGER, USER_SALESMAN];
 
   // Get product total for order status = 4 (Đã giao hàng)
   // Screen: Statistics
-  async sumProduct(body: SearchOrderDTO): Promise<ProductRO[]> {
+  async sumProduct(body: SearchOrderDTO, agencyIdLogin: number): Promise<ProductRO[]> {
     let res: ProductRO[] = [];
     let sql = this.createQueryBuilder('po')
       .select('SUM(po.quantity)', 'total')
@@ -25,14 +23,16 @@ export class ProductOrderRepository extends Repository<ProductOrder> {
     //   // if (body.userId && body.userId !== adminId && body.userId !== stockerId) {
     //   sql = sql.andWhere('o.agencyId = :agencyId', { agencyId: body.agencyId })
     // }
-    if (body.orderId && body.orderId !== 0) {
-      sql = sql.andWhere('o.id = :orderId', { orderId: body.orderId })
+    if (agencyIdLogin > 0) {
+      sql = sql.andWhere('o.agencyId = :agencyId', { agencyId: agencyIdLogin })
+    } else if (body.agencyId) {
+      sql = sql.andWhere('o.agency_id = :agencyId', { agencyId: body.agencyId })
     }
+    // if (body.orderId && body.orderId !== 0) {
+    //   sql = sql.andWhere('o.id = :orderId', { orderId: body.orderId })
+    // }
     if (body.approvedNumber && body.approvedNumber !== 0) {
       sql = sql.andWhere('o.approved_number = :approvedNumber', { approvedNumber: body.approvedNumber })
-    }
-    if (body.agencyId && body.agencyId > 0) {
-      sql = sql.andWhere('o.agency_id = :agencyId', { agencyId: body.agencyId })
     }
     if (body.status && body.status !== 0) {
       sql = sql.andWhere('o.status = :status', { status: body.status })

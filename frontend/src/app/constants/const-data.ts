@@ -77,9 +77,8 @@ export const USER_ROLE = [
   },
 ]
 
-export const ROLE = [0, 1, 2, 3];
-export const ADMIN = 0;
-export const STOCKER = 1;
-export const USER_SALESMAN = 2;
-export const USER_AREA_MANAGER = 3;
-export const AGENCY = 4;
+export const ADMIN_ROLE = 0;
+export const STOCKER_ROLE = 1;
+export const USER_SALESMAN_ROLE = 2;
+export const USER_AREA_MANAGER_ROLE = 3;
+export const AGENCY_ROLE = 4;

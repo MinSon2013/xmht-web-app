@@ -3,17 +3,17 @@ import { DeleteResult, EntityRepository, Repository, UpdateResult } from 'typeor
 import { ModifyOrderDTO } from '../dto/modify-order.dto';
 import { ProductOrder } from '../entities/product-order.entity';
 import { NotificationService } from '../../notification/notification.service';
-import { AgencyService } from '../../agency/agency.service';
 import { ProductsService } from '../../products/products.service';
 import { ProductOrderRepository } from './product-order.repository';
 import { SearchOrderDTO } from '../dto/search-order.dto';
 import { NotificationDTO } from '../../notification/dto/notification.dto';
 import moment from 'moment';
-import { Users } from '../../user/entities/user.entity';
+import { Helper } from '../../shared/helper';
 
 @EntityRepository(Order)
 export class OrderRepository extends Repository<Order> {
     private NOTIFY_TYPE_GENERAL = 1;
+    private readonly helper = new Helper();
 
     constructor() {
         super();
@@ -24,20 +24,18 @@ export class OrderRepository extends Repository<Order> {
         productOrderRepo: ProductOrderRepository,
     ): Promise<Order[]> {
         let response: Order[] = [];
-        let orderList: any;
         if (agencyId !== 0) {
-            orderList = await this.find({
+            response = await this.find({
                 where: {
                     agencyId
                 }
             });
         } else {
-            orderList = await this.find();
+            response = await this.find();
         }
-        response = orderList;
         const productList = await productService.getAllProduct();
         const productOrderList = await productOrderRepo.find();
-        orderList.forEach(el => {
+        response.forEach(el => {
             el.products = [];
             const items = productOrderList.filter(x => x.orderId === el.id);
             if (items.length > 0) {
@@ -72,19 +70,17 @@ export class OrderRepository extends Repository<Order> {
     //     return response;
     // }
 
-    async getOne(id: number, userId: number,
+    async getOne(id: number, userId: number, agencyId: number,
         productService: ProductsService,
         productOrderRepo: ProductOrderRepository,
-        adminId: number,
-        stockerId?: number,
     ): Promise<Order> {
         let response = new Order();
         let orderList: any;
-        if (userId !== adminId && userId !== stockerId) {
+        if (agencyId !== 0) {
             orderList = await this.find({
                 where: {
                     id,
-                    agencyId: userId
+                    agencyId,
                 }
             });
         } else {
@@ -108,7 +104,6 @@ export class OrderRepository extends Repository<Order> {
     }
 
     async createOrder(modifyOrderDto: ModifyOrderDTO,
-        agencyService: AgencyService,
         notificationService: NotificationService,
         productOrderRepo: ProductOrderRepository
     ): Promise<ModifyOrderDTO> {
@@ -120,7 +115,7 @@ export class OrderRepository extends Repository<Order> {
             item.orderId = order.id;
             item.productId = element.id;
             item.quantity = element.quantity;
-            item.createdDate = modifyOrderDto.createdDate;
+            item.createdDate = this.helper.getUpdateDate(2);
             entities.push(item);
         });
         await productOrderRepo.save(entities);
@@ -135,7 +130,6 @@ export class OrderRepository extends Repository<Order> {
     }
 
     async updateOrder(modifyOrderDto: ModifyOrderDTO,
-        agencyService: AgencyService,
         notificationService: NotificationService,
         productOrderRepo: ProductOrderRepository): Promise<UpdateResult | any> {
         const orderOld = await this.findOne({ id: modifyOrderDto.id });
@@ -167,7 +161,7 @@ export class OrderRepository extends Repository<Order> {
             newProductOrder.productId = element.id;
             newProductOrder.orderId = modifyOrderDto.id;
             newProductOrder.quantity = element.quantity;
-            newProductOrder.createdDate = moment().format('DD/MM/YYYY');
+            newProductOrder.createdDate = this.helper.getUpdateDate(2);
             await productOrderRepo.save(newProductOrder);
         });
 
@@ -265,7 +259,7 @@ export class OrderRepository extends Repository<Order> {
         return await this.delete(id);
     }
 
-    async search(searchOderDto: SearchOrderDTO, productService: ProductsService, agencyId: number): Promise<Order[]> {
+    async search(searchOderDto: SearchOrderDTO, productService: ProductsService, agencyIdLogin: number): Promise<Order[]> {
         let response: Order[] = [];
         const productList = await productService.getAllProduct();
 
@@ -275,13 +269,13 @@ export class OrderRepository extends Repository<Order> {
             .leftJoin(ProductOrder, 'productOrder', 'productOrder.order_id = order.id')
             .where('1=1');
 
-        if (agencyId > 0) {
-            sql = sql.andWhere('order.agencyId = :agencyId', { agencyId })
+        if (agencyIdLogin > 0) {
+            sql = sql.andWhere('order.agencyId = :agencyId', { agencyId: agencyIdLogin })
         } else if (searchOderDto.agencyId) {
             sql = sql.andWhere('order.agency_id = :agencyId', { agencyId: searchOderDto.agencyId })
         }
-        if (searchOderDto.orderId && searchOderDto.orderId !== 0) {
-            sql = sql.andWhere('order.approved_number = :orderId', { orderId: searchOderDto.orderId })
+        if (searchOderDto.approvedNumber && searchOderDto.approvedNumber !== 0) {
+            sql = sql.andWhere('order.approved_number = :approvedNumber', { approvedNumber: searchOderDto.approvedNumber })
         }
         if (searchOderDto.status && searchOderDto.status !== 0) {
             sql = sql.andWhere('order.status = :status', { status: searchOderDto.status })

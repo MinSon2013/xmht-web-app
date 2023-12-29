@@ -70,11 +70,11 @@ export class NotificationService {
     }
 
     uploadFile(obj: any) {
-        return this.webrequestService.upload(this.url + `/upload?notifyId=${obj.id.toString()}`, obj);
+        return this.webrequestService.upload(CONFIG.URL.NOTIFICATIONS + `/upload?notifyId=${obj.id.toString()}`, obj);
     }
 
     downloadFile(id: number) {
-        return this.webrequestService.download(this.url + `/download?notifyId=${id.toString()}`);
+        return this.webrequestService.download(CONFIG.URL.NOTIFICATIONS + `/download?notifyId=${id.toString()}`);
     }
 
     delete(id: number) {

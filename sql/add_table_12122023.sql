@@ -1,5 +1,5 @@
 CREATE TABLE `district` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL,
   `province_id` varchar(255) NOT NULL,
   `updated_date` varchar(20) DEFAULT NULL,
@@ -12,7 +12,7 @@ ALTER TABLE `district`
   
   
  CREATE TABLE `store` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `agency_id` int(11) NOT NULL,
   `district_id` int(11) NOT NULL,
   `province_id` int(3) NOT NULL,
@@ -20,7 +20,7 @@ ALTER TABLE `district`
   `address` varchar(255) NOT NULL,
   `phone` varchar(12) NOT NULL,
   `note` varchar(255) DEFAULT NULL,
-  `updated_date` varchar(2) DEFAULT NULL,
+  `updated_date` varchar(20) DEFAULT NULL,
   `updated_by_user_id` int(11) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -30,7 +30,7 @@ ALTER TABLE `store`
   
   
  CREATE TABLE `report` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `agency_id` int(11) NOT NULL,
   `district_id` int(11) NOT NULL,
   `province_id` int(11) NOT NULL,
@@ -53,7 +53,7 @@ ALTER TABLE `report`
   
   
  CREATE TABLE `user_district` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
   `district_id` int(11) NOT NULL,
   `updated_date` varchar(18)

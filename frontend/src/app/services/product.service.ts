@@ -21,7 +21,7 @@ export class ProductService {
 
     getSumProductOrderList(obj: Search) {
         const payload = {
-            orderId: Number(obj.orderId),
+            approvedNumber: Number(obj.approvedNumber),
             startDate: obj.startDate,
             endDate: obj.endDate,
             agencyId: Number(obj.agencyId),
@@ -42,7 +42,7 @@ export class ProductService {
             quantity: obj.quantity,
             price: obj.price,
             note: obj.note,
-            updatedByUserId: obj.updatedByUserId,
+            updatedByUserId: this.helper.getUserId(),
         };
         return this.webrequestService.post(this.url, payload);
     }
@@ -54,7 +54,7 @@ export class ProductService {
             quantity: obj.quantity,
             price: obj.price,
             note: obj.note,
-            updatedByUserId: obj.updatedByUserId,
+            updatedByUserId: this.helper.getUserId(),
         };
         return this.webrequestService.put(this.url, payload);
     }

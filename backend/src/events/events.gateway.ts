@@ -159,7 +159,6 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect, 
   @SubscribeMessage('getBadge')
   async getBadgeNumber(client: Socket, req?: any) {
     console.log('getBadge..... + ' + client.data.agencyId)
-
     if (req && req.agencyId) {
       const notification = await this.notificationService.getBadgeNumber(req.agencyId);
       console.log('notification = ' + notification)

@@ -82,7 +82,6 @@ export class DialogDetailOrderComponent implements OnInit {
     editer: '',
     confirmedDate: '',
     shippingDate: '',
-    updatedByUserId: this.helper.getUserId(),
   };
 
   date = new Date();
@@ -102,7 +101,6 @@ export class DialogDetailOrderComponent implements OnInit {
     this.agencyList = this.helper.getAgencyList();
     this.productList = this.helper.getProductList();
     this.deliveries = this.helper.getDeliveryList();
-
     if (this.data && this.data.id !== 0) {
       this.header = 'Cập nhật thông tin đơn hàng';
       this.order.id = this.data.id;
@@ -126,7 +124,6 @@ export class DialogDetailOrderComponent implements OnInit {
       this.order.isViewed = this.data.isViewed;
       this.order.sender = this.data.sender;
       /* this.order.approvedNumber = this.data.approvedNumber !== 0 ? this.data.approvedNumber : '-'; */
-
       const status = this.status.find(x => x.value === this.order.status);
       this.statusSelected = status ? status : { id: null, label: '' };
       const delivery = this.deliveries.find(x => x.id === this.order.deliveryId);
@@ -201,11 +198,11 @@ export class DialogDetailOrderComponent implements OnInit {
       this.order.userUpdated = this.helper.getUserId();
       this.order.editer = this.helper.getFullName();
       if (this.order.status === STATUS[1].value) {
-        this.order.confirmedDate = moment().format('HH:mm DD/MM/YYYY');
+        this.order.confirmedDate = this.helper.getDateFormat(2);
         this.order.shippingDate = '';
       }
       if (this.order.status === STATUS[3].value) {
-        this.order.shippingDate = moment().format('HH:mm DD/MM/YYYY');
+        this.order.shippingDate = this.helper.getDateFormat(2);
       }
       this.socketService.updatedOrder(this.order).pipe(
         tap((res) => { })

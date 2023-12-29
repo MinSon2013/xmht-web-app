@@ -44,7 +44,7 @@
                 <option [ngValue]="null" [selected]="true">
                     -- {{'REPORT.SELECT_AGENCY' | translate}} --
                 </option>
-                <option [ngValue]="item" *ngFor="let item of agencyList">{{item.fullName}}</option>
+                <option [ngValue]="item" *ngFor="let item of agencyList">{{item.agencyName}}</option>
             </select>
         </div>
 

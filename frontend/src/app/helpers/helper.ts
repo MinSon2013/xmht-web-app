@@ -10,8 +10,9 @@ import { Product } from "../models/product";
 import { ProductOrder } from "../models/product-order";
 import { User } from "../models/user";
 import jwt_decode from "jwt-decode";
-import { STATUS } from "../constants/const-data";
+import { ADMIN_ROLE, AGENCY_ROLE, STATUS, STOCKER_ROLE, USER_AREA_MANAGER_ROLE, USER_SALESMAN_ROLE } from "../constants/const-data";
 import { Store } from "../models/store";
+import * as moment from "moment";
 
 export interface INavbarData {
   routeLink: string;
@@ -447,5 +448,40 @@ export class Helper {
     }
     return true;
   }
+
+  public getRoleAllowed(k: number) {
+    let role: number[] = [];
+    switch (k) {
+      case 1:
+        role = [ADMIN_ROLE];
+        break;
+      case 2:
+        role = [ADMIN_ROLE, STOCKER_ROLE];
+        break;
+      case 3:
+        role = [ADMIN_ROLE, USER_AREA_MANAGER_ROLE];
+        break;
+      case 4:
+        role = [ADMIN_ROLE, STOCKER_ROLE, USER_AREA_MANAGER_ROLE, USER_SALESMAN_ROLE];
+        break;
+      default:
+        role = [ADMIN_ROLE, STOCKER_ROLE, USER_AREA_MANAGER_ROLE, USER_SALESMAN_ROLE, AGENCY_ROLE];
+    }
+
+    return role;
+  }
+
+  public getDateFormat(t: number): string {
+    const UPDATE_DATE_FORMAT_1 = 'HH:mm:ss DD/MM/YYYY';
+    const UPDATE_DATE_FORMAT_2 = 'HH:mm DD/MM/YYYY';
+    if (t = 1) {
+      return moment(new Date).format(UPDATE_DATE_FORMAT_1);
+    } else if (t = 2) {
+      return moment(new Date).format(UPDATE_DATE_FORMAT_2);
+    } else {
+      return '';
+    }
+  }
+
 }
 

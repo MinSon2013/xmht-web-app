@@ -21,7 +21,7 @@ export class WebRequestService {
             'Access-Control-Allow-Headers': 'X-Requested-With,content-type',
             'Access-Control-Allow-Credentials': 'true',
             'Authorization': this.helper.getAccessToken(),
-        })
+        }),
     };
 
     constructor(private http: HttpClient) {

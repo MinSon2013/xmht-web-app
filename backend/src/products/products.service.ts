@@ -7,13 +7,18 @@ import { ProductRepository } from './repository/product.repository';
 import { ProductOrderRepository } from '../orders/repository/product-order.repository';
 import { AgencyRepository } from '../agency/repository/agency.repository';
 import { SearchOrderDTO } from '../orders/dto/search-order.dto';
+import { ADMIN_ROLE, STOCKER_ROLE, USER_AREA_MANAGER_ROLE, USER_SALESMAN_ROLE } from '../config/constant';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class ProductsService {
+  private readonly userRole: number[] = [ADMIN_ROLE, STOCKER_ROLE, USER_AREA_MANAGER_ROLE, USER_SALESMAN_ROLE];
+
   constructor(
     public productRepo: ProductRepository,
     public productOrderRepo: ProductOrderRepository,
     public agencyRepository: AgencyRepository,
+    public readonly userService: UserService,
   ) { }
 
   async getAllProduct(): Promise<Product[]> {
@@ -37,8 +42,12 @@ export class ProductsService {
   }
 
   async sum(body: SearchOrderDTO): Promise<ProductRO[]> {
-    // const adminId = await this.agencyRepository.getAgencyIdOfAdmin();
-    //const stockerId = await this.agencyRepository.getAgencyIdOfStocker();
-    return await this.productOrderRepo.sumProduct(body);
+    const user = await this.userService.getOne(body.userId);
+    let agencyId = 0;
+    if (!this.userRole.includes(user.role)) {
+      const agency = await this.agencyRepository.getByUserId(body.userId);
+      agencyId = agency.id;
+    }
+    return await this.productOrderRepo.sumProduct(body, agencyId);
   }
 }

@@ -7,14 +7,14 @@ import { Reports } from './entities/report.entity';
 import { ModifyReportDTO } from './dto/modify-report.dto';
 import { NotificationService } from '../notification/notification.service';
 import { SearchDTO } from './dto/search.dto';
-import { USER_AREA_MANAGER } from '../config/constant';
+import { USER_AREA_MANAGER_ROLE } from '../config/constant';
 
 @Injectable()
 export class ReportService {
     constructor(
         public readonly reportRepo: ReportRepository,
         private readonly userService: UserService,
-        @Inject(forwardRef(() => AuthService))
+        @Inject(forwardRef(() => NotificationService))
         private readonly notificationService: NotificationService,
     ) { }
 
@@ -29,7 +29,7 @@ export class ReportService {
                 .addGroupBy("id")
                 .where("1 = 1");
 
-            if (userEntity.role === USER_AREA_MANAGER) {
+            if (userEntity.role === USER_AREA_MANAGER_ROLE) {
                 const districtIds = await this.userService.getDistrictByUserId(userId);
                 if (districtIds.length > 0) {
                     sql = sql.andWhere("district_id IN (:districtIds)", { districtIds });
@@ -68,7 +68,6 @@ export class ReportService {
     async delete(id: number): Promise<DeleteResult> {
         return await this.reportRepo.deleteReport(id);
     }
-
 
     async uploadFile(reportId: number, file: { path, filename, mimetype }): Promise<Reports | any> {
         const res = await this.reportRepo.createQueryBuilder()

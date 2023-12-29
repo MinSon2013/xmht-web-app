@@ -7,8 +7,4 @@ export class StatisticsService {
     constructor(
         private webrequestService: WebRequestService,
     ) { }
-
-    getInfo() {
-        return this.webrequestService.get(this.url);
-    }
 }

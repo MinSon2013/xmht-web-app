@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, UseGuard
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { ModifyOrderDTO } from './dto/modify-order.dto';
 import { SearchOrderDTO } from './dto/search-order.dto';
-import { StatisticsDto } from './dto/statistics.dto';
+//import { StatisticsDto } from './dto/statistics.dto';
 import { Order } from './entities/order.entity';
 import { OrdersService } from './orders.service';
 

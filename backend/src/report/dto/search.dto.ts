@@ -1,6 +1,6 @@
 export interface SearchDTO {
     date: string;
-    agencyId: number;
+    //  agencyId: number;
     userId: number;
     districtId: number;
 }

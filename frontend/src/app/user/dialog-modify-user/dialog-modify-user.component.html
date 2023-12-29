@@ -34,7 +34,7 @@
             <input matInput class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:shadow-outline {{
             errorPassword.length !== 0 ? 'focus-p' : ''}}" id="password" type="password" placeholder="********"
                 maxlength="30" minlength="8" [(ngModel)]="user.password" [ngModelOptions]="{ standalone: true }"
-                [errorStateMatcher]="matcher" />
+                [errorStateMatcher]="matcher" autocomplete />
         </div>
 
         <!-- Confirm password -->
@@ -46,7 +46,7 @@
             <input matInput class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:shadow-outline {{
             errorPassword.length !== 0 ? 'focus-p' : '' }}" id="confirmPassword" type="password" placeholder="********"
                 maxlength="30" minlength="8" [(ngModel)]="user.confirmPassword" [ngModelOptions]="{ standalone: true }"
-                [errorStateMatcher]="matcher" />
+                [errorStateMatcher]="matcher" autocomplete />
         </div>
 
         <div class="mb-3 row field" *ngIf="errorPassword || (errorPassword !== null && errorPassword.length !== 0)">

@@ -1,10 +1,9 @@
-import { forwardRef, Injectable, Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { StoreRepository } from './repository/store.repository';
 import { Store } from './entities/store.entity';
 import { ModifyStoreDTO } from './dto/modify-store.dto';
-import { STOCKER } from '../config/constant';
 
 @Injectable()
 export class StoreService {
@@ -16,7 +15,7 @@ export class StoreService {
     async findAll(userId: number, agencyId: number): Promise<Store[]> {
         const userEntity = await this.userService.getOne(userId);
         if (userEntity) {
-            if (!userEntity.isAdmin && userEntity.role !== STOCKER) {
+            if (!userEntity.isAdmin && agencyId > 0) {
                 return await this.storeRepo.createQueryBuilder()
                     .where("agency_id = :agencyId", { agencyId })
                     .groupBy("agency_id")

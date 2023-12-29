@@ -58,10 +58,9 @@
         <label class="require">*</label>
       </span>
       <input matInput class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:shadow-outline {{
-          errorPassword.length !== 0 ? 'focus-p' : ''
-        }}" id="password" type="password" placeholder="********" minlength="8" maxlength="30"
-        [(ngModel)]="agency.password" [ngModelOptions]="{ standalone: true }" [errorStateMatcher]="matcher"
-        [disabled]="disabled" />
+          errorPassword.length !== 0 ? 'focus-p' : '' }}" id="password" type="password" placeholder="********"
+        minlength="8" maxlength="30" [(ngModel)]="agency.password" [ngModelOptions]="{ standalone: true }"
+        [errorStateMatcher]="matcher" [disabled]="disabled" autocomplete />
     </div>
     <div class="mb-3 row field" [hidden]="disabled || isEdit">
       <span class="col-5 text-label" for="confirmPassword">
@@ -72,7 +71,7 @@
           errorPassword.length !== 0 ? 'focus-p' : ''
         }}" id="confirmPassword" type="password" placeholder="********" minlength="8" maxlength="30"
         [(ngModel)]="agency.confirmPassword" [ngModelOptions]="{ standalone: true }" [errorStateMatcher]="matcher"
-        [disabled]="disabled" />
+        [disabled]="disabled" autocomplete />
     </div>
     <div class="mb-3 row field" *ngIf="
         errorPassword || (errorPassword !== null && errorPassword.length !== 0)

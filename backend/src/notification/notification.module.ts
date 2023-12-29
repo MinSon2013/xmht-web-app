@@ -6,31 +6,23 @@ import { NotificationService } from './notification.service';
 import { NotificationRepository } from './repository/notification.repository';
 import { NotificationAgencyRepository } from './repository/notification-agency.repository';
 import { PassportModule } from '@nestjs/passport';
-import { AgencyService } from '../agency/agency.service';
-import { AgencyRepository } from '../agency/repository/agency.repository';
 import { AuthModule } from '../auth/auth.module';
-import { UserRepository } from '../user/repository/user.repository';
-import { UserService } from '../user/user.service';
-import { UserDistrictRepository } from '../user/repository/user-district.repository';
+import { NotificationsController } from './notifications.controller';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       NotificationRepository,
       NotificationAgencyRepository,
-      // AgencyRepository,
-      //UserRepository,
-      //UserDistrictRepository,
     ]),
     AuthModule,
     PassportModule.register({ defaultStrategy: 'jwt' })
   ],
-  providers: [NotificationService,
+  providers: [
+    NotificationService,
     ConfigService,
-    //UserService,
-    //  AgencyService,
   ],
-  controllers: [NotificationController],
+  controllers: [NotificationController, NotificationsController],
   exports: [TypeOrmModule, NotificationService],
 })
 export class NotificationModule { }

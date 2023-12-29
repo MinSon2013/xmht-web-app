@@ -143,13 +143,13 @@ export class NotificationService {
   //   return update;
   // }
 
-  async delete(id: number): Promise<DeleteResult> {
-    if (id === 0) {
+  async delete(notifyId: number): Promise<DeleteResult> {
+    if (notifyId === 0) {
       await this.notifyAgencyRepo.createQueryBuilder().delete().execute();
       return await this.notifyRepo.createQueryBuilder().delete().execute();
     } else {
-      await this.notifyAgencyRepo.deleteNotificationAgency(id);
-      return await this.notifyRepo.delete(id);
+      await this.notifyAgencyRepo.deleteNotificationAgency(notifyId);
+      return await this.notifyRepo.delete(notifyId);
     }
   }
 
@@ -284,17 +284,18 @@ export class NotificationService {
     const notify = this.notifyRepo.mappingNoyify(body);
     if (key === 'CREATE') {
       notify.createdDate = this.helper.getUpdateDate(2);
-      await this.notifyRepo.save(notify);
+      const res = await this.notifyRepo.save(notify);
+      notify.id = res.id;
       const notifyAgency: NotificationAgency = {
         id: 0,
         agencyId: 0, // For Admin
         notificationId: notify.id,
         isViewed: false,
       };
-      await this.notifyAgencyRepo.save(notifyAgency);
+      return await this.notifyAgencyRepo.save(notifyAgency);
     } else {
       const notifyEntity = await this.notifyRepo.getByReportId(notify.reportId);
-      await this.notifyRepo.update(notifyEntity.id, notify);
+      return await this.notifyRepo.update(notifyEntity.id, notify);
     }
   }
 

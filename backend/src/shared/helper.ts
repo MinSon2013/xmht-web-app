@@ -10,6 +10,5 @@ export class Helper {
         } else if (t = 2) {
             return moment(new Date).format(this.UPDATE_DATE_FORMAT_2);
         }
-
     }
 }

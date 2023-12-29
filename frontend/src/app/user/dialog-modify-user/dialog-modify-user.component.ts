@@ -6,8 +6,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import { Helper } from '../../helpers/helper';
 import { MSG_STATUS, USER_ROLE } from '../../constants/const-data';
-import { AgencyService } from '../../services/agency.service';
 import { UserService } from '../../services/user.service';
+import { HttpStatusCode } from '@angular/common/http';
+import { UserRO } from 'src/app/models/ro/user.ro';
 
 @Component({
   selector: 'app-dialog-modify-user',
@@ -69,47 +70,59 @@ export class DialogModifyUserComponent implements OnInit {
     if (this.validForm()) {
       this.user.role = this.roleSelected?.value;
       if (this.user.id === 0) {
-        this.userService.createUserRole(this.user).subscribe((response: any) => {
-          if (response) {
-            this.user.id = response.id;
-
-
-
-            this.helper.addAgency(this.user);
-
-            // const user: User = {
-            //   id: response.userId,
-            //   username: this.user.username,
-            //   password: this.user.password,
-            //   isAdmin: false,
-            //   role: this.roleSelected?.value,
-            //   districtId: this.user.districtId,
-            //   fullName: this.user.fullName,
-            //   updatedByUserId: this.helper.getUserId(),
-            // };
-            // //this.helper.addUser(user);
-
-            this.helper.showSuccess(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.ADD_USER', MSG_STATUS.SUCCESS));
-            this.dialogRef.close(this.user);
-          } else {
-            this.helper.showError(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.ADD_USER', MSG_STATUS.FAIL));
-          }
-        },
-          (error) => {
-            if (error.error.statusCode === 409) {
+        this.userService.create(this.user).subscribe({
+          error: error => {
+            if (error.error.statusCode === HttpStatusCode.InternalServerError) {
               this.helper.showError(this.toastr, "Tên đăng nhập đã tồn tại.");
             } else {
               this.helper.showError(this.toastr, error.error.message);
             }
-          });
+          },
+          complete: () => console.log('Complete!'),
+          next: (value) => {
+            if (value) {
+              const res = value as UserRO;
+              this.user.id = res.id;
+              this.helper.addAgency(this.user);
+
+              // const user: User = {
+              //   id: response.userId,
+              //   username: this.user.username,
+              //   password: this.user.password,
+              //   isAdmin: false,
+              //   role: this.roleSelected?.value,
+              //   districtId: this.user.districtId,
+              //   fullName: this.user.fullName,
+              //   updatedByUserId: this.helper.getUserId(),
+              // };
+              // //this.helper.addUser(user);
+
+              this.helper.showSuccess(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.ADD_USER', MSG_STATUS.SUCCESS));
+              this.dialogRef.close(this.user);
+            } else {
+              this.helper.showError(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.ADD_USER', MSG_STATUS.FAIL));
+            }
+          },
+        });
       } else {
-        this.userService.updateUserRole(this.user).subscribe((response: any) => {
-          if (response && response.affected > 0) {
-            this.helper.showSuccess(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.MODIFIED_USER', MSG_STATUS.SUCCESS));
-            this.dialogRef.close(this.user);
-          } else {
-            this.helper.showError(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.MODIFIED_USER', MSG_STATUS.FAIL));
-          }
+        this.userService.update(this.user).subscribe({
+          error: error => {
+            if (error.error.statusCode === HttpStatusCode.InternalServerError) {
+              this.helper.showError(this.toastr, "Không thể cập nhật user");
+            } else {
+              this.helper.showError(this.toastr, error.error.message);
+            }
+          },
+          complete: () => console.log('Complete!'),
+          next: (response) => {
+            const res = response as any;
+            if (res && res.affected > 0) {
+              this.helper.showSuccess(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.MODIFIED_USER', MSG_STATUS.SUCCESS));
+              this.dialogRef.close(this.user);
+            } else {
+              this.helper.showError(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.MODIFIED_USER', MSG_STATUS.FAIL));
+            }
+          },
         });
       }
     }

@@ -8,7 +8,7 @@ import { CustomPaginator } from '../common/custom-paginator';
 import { DialogDeleteConfirmComponent } from '../common/dialog-delete-confirm/dialog-delete-confirm.component';
 import { ProductService } from '../services/product.service';
 import { DialogDetailProductComponent } from './dialog-detail-product/dialog-detail-product.component';
-import { SERVICE_TYPE, STOCKER, USER_AREA_MANAGER } from '../constants/const-data';
+import { SERVICE_TYPE, STOCKER_ROLE, USER_AREA_MANAGER_ROLE } from '../constants/const-data';
 import { Helper } from '../helpers/helper';
 
 @Component({
@@ -28,8 +28,8 @@ export class ProductsComponent implements OnInit {
   hasData: boolean = false;
   helper = new Helper();
   role: number = this.helper.getUserRole();
-  isStocker: boolean = this.role === STOCKER;
-  hidden: boolean = (this.role === USER_AREA_MANAGER || this.isStocker);
+  isStocker: boolean = this.role === STOCKER_ROLE;
+  hidden: boolean = (this.role === USER_AREA_MANAGER_ROLE || this.isStocker);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;

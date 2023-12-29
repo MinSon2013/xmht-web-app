@@ -5,7 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { CustomPaginator } from '../common/custom-paginator';
 import { DialogDeleteConfirmComponent } from '../common/dialog-delete-confirm/dialog-delete-confirm.component';
-import { SERVICE_TYPE, STOCKER, USER_ROLE } from '../constants/const-data';
+import { SERVICE_TYPE, STOCKER_ROLE, USER_ROLE } from '../constants/const-data';
 import { Helper } from '../helpers/helper';
 import { DialogModifyUserComponent } from './dialog-modify-user/dialog-modify-user.component';
 import { DistrictService } from '../services/district.service';
@@ -34,12 +34,11 @@ export class UserComponent implements OnInit {
   hasData: boolean = false;
   isAdmin: boolean = this.helper.isAdmin();
   role: number = this.helper.getUserRole();
-  isStocker: boolean = this.role === STOCKER;
+  isStocker: boolean = this.role === STOCKER_ROLE;
 
   districtList: any[] = [];
   roleSelected: any = null;
   roleList = USER_ROLE;
-  length: number = 0;
 
   constructor(public dialog: MatDialog,
     private districtService: DistrictService,
@@ -54,13 +53,13 @@ export class UserComponent implements OnInit {
   }
 
   getData() {
-    this.userService.getUserRoleList().subscribe((response: any) => {
+    this.userService.getUserList().subscribe((response: any) => {
       if (response.length > 0) {
         this.dataSource.data = response;
-        if (!this.isAdmin && !this.isStocker) {
-          const userId = this.helper.getUserId();
-          this.dataSource.data = this.dataSource.data.filter(x => x.id === userId);
-        }
+        // if (!this.isAdmin && !this.isStocker) {
+        //   const userId = this.helper.getUserId();
+        //   this.dataSource.data = this.dataSource.data.filter(x => x.id === userId);
+        // }
         this.convertData();
       } else {
         this.dataSource.data = [];
@@ -80,7 +79,7 @@ export class UserComponent implements OnInit {
   convertData() {
     this.dataSource.data.forEach(element => {
       const role = this.roleList.find(x => x.value === element.role)
-      element.roleLabel = role ? role.label : '';
+      element.roleLabel = role ? role.label : 'NPP';
       if (element.districtId) {
         const district = this.districtList.find(y => y.id === element.districtId);
         element.districtName = district ? district.name : '';
@@ -94,7 +93,6 @@ export class UserComponent implements OnInit {
     } else {
       this.hasData = true;
     }
-    this.length = this.dataSource.data.length;
   }
 
   ngAfterViewInit() {
@@ -148,7 +146,6 @@ export class UserComponent implements OnInit {
         } else {
           this.hasData = true;
         }
-        this.length = this.dataSource.data.length;
       }
     });
   }

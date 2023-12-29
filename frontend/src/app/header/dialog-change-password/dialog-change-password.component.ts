@@ -6,6 +6,7 @@ import { UserService } from '../../services/user.service';
 import { Helper } from '../../helpers/helper';
 import { MSG_STATUS } from '../../constants/const-data';
 import { MyErrorStateMatcher } from '../../orders/order-add/order-add.component';
+import { HttpStatusCode } from '@angular/common/http';
 
 @Component({
   selector: 'app-dialog-change-password',
@@ -50,24 +51,26 @@ export class DialogChangePasswordComponent implements OnInit {
         newPassword: this.users.newPassword,
         oldPassword: this.users.oldPassword,
       };
-      this.userService.changePassword(payload).subscribe(
-        (response: any) => {
-        this.loading = false;
-        if (response) {
-          this.helper.showSuccess(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.CHANGE_PASSWORD', MSG_STATUS.SUCCESS));
-          this.dialogRef.close();
-        } else {
-          this.helper.showError(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.CHANGE_PASSWORD', MSG_STATUS.FAIL));
-        }
-      },
-      (err) => {
-        this.loading = false;
-        if (err.error.statusCode === 400) {
-          this.helper.showError(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.PASSWORD_WRONG', 0));
-        } else if (err.error.statusCode === 404) {
-          this.helper.showError(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.NOT_FOUND', 0));
-          this.dialogRef.close();
-        } 
+      this.userService.changePassword(payload).subscribe({
+        error: error => {
+          this.loading = false;
+          if (error.error.statusCode === HttpStatusCode.BadRequest) {
+            this.helper.showError(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.PASSWORD_WRONG', 0));
+          } else if (error.error.statusCode === 404) {
+            this.helper.showError(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.NOT_FOUND', 0));
+            this.dialogRef.close();
+          }
+        },
+        complete: () => console.log('Complete!'),
+        next: (value) => {
+          this.loading = false;
+          if (value) {
+            this.helper.showSuccess(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.CHANGE_PASSWORD', MSG_STATUS.SUCCESS));
+            this.dialogRef.close();
+          } else {
+            this.helper.showError(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.CHANGE_PASSWORD', MSG_STATUS.FAIL));
+          }
+        },
       });
     } else {
       this.loading = false;
@@ -89,7 +92,7 @@ export class DialogChangePasswordComponent implements OnInit {
     if (this.users.confirmNewPassword.length === 0) {
       isValidForm = false;
     }
-    
+
     if (!isValidForm) {
       this.error = 'Vui lòng nhập đầy đủ thông tin bắt buộc (*)';
     } else {
