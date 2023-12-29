@@ -1,7 +1,7 @@
 <div class="bg-white container">
     <h2 class="header">{{'USER.TITLE_LIST' | translate}}</h2>
 
-    <div class="action-add">
+    <div class="action-add" [hidden]="!isAdmin">
         <button mat-raised-button class="btn-add" (click)="onEdit(null)">
             <mat-icon aria-hidden="false" aria-label="Add icon" fontSet="fas" fontIcon="fa-plus"
                 class="fa-plus"></mat-icon>
@@ -55,7 +55,7 @@
                         <mat-icon aria-hidden="false" aria-label="Trash icon" fontSet="fas" fontIcon="fa-pen"
                             class="fa-pen" (click)="onEdit(element)"></mat-icon>
                         <mat-icon aria-hidden="false" aria-label="Trash icon" fontSet="fas" fontIcon="fa-trash"
-                            class="fa-trash" (click)="onDelete(element)"></mat-icon>
+                            class="fa-trash" (click)="onDelete(element)" [hidden]="!isAdmin"></mat-icon>
                     </div>
                 </td>
             </ng-container>
@@ -68,7 +68,7 @@
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
             <tr mat-row *matHeaderRowDef="['no-data']" class="text-center" [hidden]="hasData"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onEdit(row)"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
         <mat-paginator [hidden]="!hasData" [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons
             aria-label="Select page of periodic elements">

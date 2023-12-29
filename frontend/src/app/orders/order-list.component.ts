@@ -9,7 +9,7 @@ import { Order } from '../models/order';
 import { DialogDetailOrderComponent } from './dialog-detail-order/dialog-detail-order.component';
 import { Helper } from '../helpers/helper';
 import { DialogConfirmOrderComponent } from './dialog-confirm-order/dialog-confirm-order.component';
-import { Cities, SERVICE_TYPE, STATUS, STOCKER_ROLE, USER_AREA_MANAGER_ROLE } from '../constants/const-data';
+import { AGENCY_ROLE, Cities, SERVICE_TYPE, STATUS, STOCKER_ROLE, USER_AREA_MANAGER_ROLE, USER_SALESMAN_ROLE } from '../constants/const-data';
 import { CustomPaginator } from '../common/custom-paginator';
 import * as moment from 'moment';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -48,11 +48,10 @@ export class OrderListComponent implements OnInit {
   isAdmin: boolean = this.helper.isAdmin();
   agencyId: number = this.helper.getAgencyId();
   userRole: number = this.helper.getUserRole();
-  allowedRole = this.helper.getRoleAllowed(4);
   isStocker: boolean = this.userRole === STOCKER_ROLE;
-  hidden: boolean = this.userRole === USER_AREA_MANAGER_ROLE || this.isStocker;
-  isUserRole: boolean = this.allowedRole.includes(this.userRole);
-  isAllRole: boolean = this.isUserRole || this.isAdmin;
+  isAgency: boolean = this.userRole === AGENCY_ROLE;
+  isAreaManager: boolean = this.userRole === USER_AREA_MANAGER_ROLE;
+  isSalesman: boolean = this.userRole === USER_SALESMAN_ROLE;
 
   agencySelected: any = null;
   productSelected: any = null;
@@ -89,8 +88,8 @@ export class OrderListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.isAllRole) {
-      this.displayedColumns = ['approvedNumber', 'agencyName', 'contract', 'createdDate', 'receivedDate', 'confirmedDate', 'shippingDate', 'deliveryId', 'pickupId', 'productName', 'quantity', 'productTotal', 'licensePlates', 'driver', 'status', 'deleteAction'];
+    if (!this.isAdmin && !this.isAgency && !this.isSalesman && !this.isStocker) {
+      this.displayedColumns = ['approvedNumber', 'createdDate', 'contract', 'receivedDate', 'confirmedDate', 'shippingDate', 'deliveryId', 'pickupId', 'productName', 'quantity', 'productTotal', 'licensePlates', 'driver', 'status'];
     }
     this.colspan = this.displayedColumns.length;
     this.productList = this.helper.getProductList();
@@ -158,7 +157,7 @@ export class OrderListComponent implements OnInit {
     const elements = Array.from(
       document.getElementsByClassName('body') as HTMLCollectionOf<HTMLElement>,
     );
-    if (row && row.status !== 1) {
+    if (row && row.status !== 1 || this.isAreaManager) {
       const dialogRef = this.dialog.open(DialogConfirmOrderComponent, {
         data: row,
       });
@@ -385,7 +384,7 @@ export class OrderListComponent implements OnInit {
     this.productSelected = null;
     this.selectedStatus = null;
     this.range.reset();
-    this.searchForm.orderId = 0;
+    this.searchForm.approvedNumber = 0;
     this.searchForm.agencyId = 0;
     this.searchForm.productId = 0;
     this.searchForm.status = 0;

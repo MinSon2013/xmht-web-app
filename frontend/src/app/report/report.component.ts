@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { DialogDeleteConfirmComponent } from '../common/dialog-delete-confirm/dialog-delete-confirm.component';
-import { Cities, SERVICE_TYPE } from '../constants/const-data';
+import { Cities, SERVICE_TYPE, USER_AREA_MANAGER_ROLE, USER_SALESMAN_ROLE } from '../constants/const-data';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
 import { Helper } from '../helpers/helper';
@@ -45,10 +45,14 @@ export class ReportComponent implements OnInit {
   cities = Cities;
   storeList: any[] = [];
 
-  role: number = this.helper.getUserRole();
+  userRole: number = this.helper.getUserRole();
+  isAreaManager: boolean = this.userRole === USER_AREA_MANAGER_ROLE;
+  isSalesman: boolean = this.userRole === USER_SALESMAN_ROLE;
 
   date = new FormControl(null);
   MAX_LENGTH_SHORT_CONTENT: number = 80;
+
+  districtId: number = 0;
 
   constructor(public dialog: MatDialog,
     private reportService: ReportService,
@@ -56,13 +60,20 @@ export class ReportComponent implements OnInit {
     public router: Router,
     private storeService: StoreService,
   ) {
-    this.getDistrict();
-    this.getStoreList();
     this.agencyList = this.helper.getAgencyList();
   }
 
   ngOnInit(): void {
+    if (this.isSalesman) {
+      this.displayedColumns = ['rowId', 'updateDateVisisble', 'provinceName', 'storeName', 'agencyName', 'storeInformation', 'reportContent', 'attachFile', 'note'];
+    }
     this.colspan = this.displayedColumns.length;
+    if (this.isAreaManager) {
+      this.getUserDistrict();
+    }
+
+    this.getStoreList();
+    this.getDistrict();
     this.getData();
   }
 
@@ -82,6 +93,17 @@ export class ReportComponent implements OnInit {
     this.districtService.getDistrictList().subscribe((response: any) => {
       if (response.length > 0) {
         this.districtList = response;
+        if (this.isAreaManager) {
+          this.districtList = this.districtList.filter(x => x.id === this.districtId);
+        }
+      }
+    });
+  }
+
+  getUserDistrict() {
+    this.districtService.getUserDistrictList().subscribe((response: any) => {
+      if (response) {
+        this.districtId = response;
       }
     });
   }
@@ -141,7 +163,6 @@ export class ReportComponent implements OnInit {
           this.spans = [];
           this.dataSource.data = [];
           this.getData();
-
         }
       }
     });

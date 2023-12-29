@@ -2,7 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
-import { Cities, MSG_STATUS } from '../../constants/const-data';
+import { Cities, MSG_STATUS, USER_AREA_MANAGER_ROLE, USER_SALESMAN_ROLE } from '../../constants/const-data';
 import { Helper } from '../../helpers/helper';
 import { Reports } from '../../models/report';
 import { ReportService } from '../../services/report.service';
@@ -18,6 +18,10 @@ export class DialogModifyReportComponent {
   header: string = '';
   helper = new Helper();
   isAdmin: boolean = this.helper.isAdmin();
+  userRole: number = this.helper.getUserRole();
+  isAreaManager: boolean = this.userRole === USER_AREA_MANAGER_ROLE;
+  isSalesman: boolean = this.userRole === USER_SALESMAN_ROLE;
+
   showOtherStore: boolean = true;
   cities = Cities;
 
@@ -109,8 +113,6 @@ export class DialogModifyReportComponent {
       this.report.districtId = this.districtSelected.id
       this.report.provinceId = this.provinceSelected.id;
       this.report.storeId = this.storeSelected ? this.storeSelected.id : 0;
-      this.report.attachFile = this.getFilename(this.report.attachFile);
-      this.report.attachFile = this.toNonAccentVietnamese(this.report.attachFile);
       this.report.userId = this.helper.getUserId();
       this.report.file = this.file;
       this.report.fileName = this.report.attachFile;
@@ -121,6 +123,8 @@ export class DialogModifyReportComponent {
             this.report.updateDate = response.updateDate;
             // Upload file
             if (this.file) {
+              this.report.attachFile = this.getFilename(this.report.attachFile);
+              this.report.attachFile = this.toNonAccentVietnamese(this.report.attachFile);
               this.reportService.uploadFile(this.report).subscribe((res: any) => {
                 if (res.statusCode === 200) {
                   this.helper.showSuccess(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.ADD_REPORT', MSG_STATUS.SUCCESS));
@@ -145,6 +149,8 @@ export class DialogModifyReportComponent {
             this.report.updateDate = moment(new Date).format('HH:mm:ss DD/MM/YYYY');
             // Upload file
             if (this.file) {
+              this.report.attachFile = this.getFilename(this.report.attachFile);
+              this.report.attachFile = this.toNonAccentVietnamese(this.report.attachFile);
               this.reportService.uploadFile(this.report).subscribe((res: any) => {
                 if (res.statusCode === 200) {
                   this.helper.showSuccess(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.MODIFIED_REPORT', MSG_STATUS.SUCCESS));
@@ -220,6 +226,10 @@ export class DialogModifyReportComponent {
     this.agencyList = this.agencyList.filter(function (elem, index, self) {
       return index === self.indexOf(elem);
     });
+
+    if (agencyIds.length === 0) {
+      this.showOtherStore = true;
+    }
   }
 
   onChangeAgency(event: any) {

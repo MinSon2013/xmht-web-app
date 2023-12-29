@@ -15,7 +15,7 @@ export class ProductOrderRepository extends Repository<ProductOrder> {
     let sql = this.createQueryBuilder('po')
       .select('SUM(po.quantity)', 'total')
       .addSelect('p.name', 'name')
-      .innerJoin(Product, 'p', 'p.id = po.product_id')
+      .leftJoin(Product, 'p', 'p.id = po.product_id')
       .leftJoin(Order, 'o', 'o.id = po.order_id')
       .where('o.status = 4');
 
@@ -42,7 +42,16 @@ export class ProductOrderRepository extends Repository<ProductOrder> {
     }
     if (body.startDate && body.startDate.length !== 0
       && body.endDate && body.endDate.length !== 0) {
-      sql = sql.andWhere('STR_TO_DATE(po.created_date, \'%d/%m/%Y\') BETWEEN STR_TO_DATE(:start, \'%d/%m/%Y\') AND STR_TO_DATE(:end, \'%d/%m/%Y\') ', { start: body.startDate, end: body.endDate })
+      // sql = sql.andWhere('STR_TO_DATE(o.created_date, \'%d/%m/%Y\') BETWEEN STR_TO_DATE(:start, \'%d/%m/%Y\') AND STR_TO_DATE(:end, \'%d/%m/%Y\') ', { start: body.startDate, end: body.endDate })
+      sql = sql.andWhere(
+        `IF(LENGTH(o.created_date) > 10,
+          STR_TO_DATE(RIGHT(o.created_date, 10), '%d/%m/%Y'),
+          STR_TO_DATE(o.created_date, '%d/%m/%Y')
+        )
+        BETWEEN STR_TO_DATE(:start, \'%d/%m/%Y\') 
+        AND STR_TO_DATE(:end, \'%d/%m/%Y\') `,
+        { start: body.startDate, end: body.endDate }
+      );
     }
 
     let query = await sql.groupBy('p.name').getRawMany();

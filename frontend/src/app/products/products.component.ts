@@ -27,9 +27,9 @@ export class ProductsComponent implements OnInit {
   colspan: number = 0;
   hasData: boolean = false;
   helper = new Helper();
-  role: number = this.helper.getUserRole();
-  isStocker: boolean = this.role === STOCKER_ROLE;
-  hidden: boolean = (this.role === USER_AREA_MANAGER_ROLE || this.isStocker);
+  userRole: number = this.helper.getUserRole();
+  isAreaManager: boolean = this.userRole === USER_AREA_MANAGER_ROLE;
+  isStocker: boolean = this.userRole === STOCKER_ROLE;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -39,6 +39,9 @@ export class ProductsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    if (this.isStocker || this.isAreaManager) {
+      this.displayedColumns = ['id', 'productName', 'quantity', 'price', 'note'];
+    }
     this.colspan = this.displayedColumns.length;
     const productList = this.helper.getProductList();
     if (productList.length === 0) {

@@ -10,12 +10,12 @@
                 id="createdDate" type="text" maxlength="20" [(ngModel)]="notify.createdDate"
                 [ngModelOptions]="{standalone: true}" />
         </div>
-        <div class="mb-3 row field" *ngIf="isAdmin">
+        <div class="mb-3 row field" *ngIf="!isAgency">
             <span class="col-3 text-label" for="agencyName">
                 {{'NOTIFY.AGENCY' | translate}}
                 <label class="require">*</label>
             </span>
-            <select [disabled]="(!isAdmin || !isEdit)"
+            <select [disabled]="(!this.isAdmin && !this.isSalesman && !isEdit)"
                 class="col-9 form-select appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 [(ngModel)]="agencySelected" (ngModelChange)="onSelected($event)" required>
                 <option [ngValue]="null" [disabled]="true" [selected]="true">
@@ -24,12 +24,12 @@
                 <option [ngValue]="item" *ngFor="let item of agencyListSelectOption">{{item.label}}</option>
             </select>
         </div>
-        <div class="mb-3 row field" *ngIf="isAdmin || isStocker">
+        <div class="mb-3 row field" *ngIf="isAdmin || this.isSalesman">
             <span class="col-3 text-label" for="fileName">
                 {{'NOTIFY.FILENAME' | translate}}
                 <!-- <label class="require">*</label> -->
             </span>
-            <input matInput [disabled]="(!isAdmin || !isEdit || isStocker)"
+            <input matInput [disabled]="(!isAdmin && !isEdit && !this.isSalesman)"
                 class="col-9 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="fileName" type="file" placeholder="" (change)="onFileChange($event)" />
         </div>
@@ -41,17 +41,18 @@
         </div>
         <div class="mb-3 row field content">
             <div class="NgxEditor__Wrapper" id="editor">
-                <ngx-editor-menu [editor]="editor" [toolbar]="toolbar" [disabled]="!isAdmin"> </ngx-editor-menu>
-                <ngx-editor [editor]="editor" [ngModel]="html" [disabled]="(!isAdmin || !isEdit)"
-                    [placeholder]="'Nhập ở đây...'" (ngModelChange)="onChange($event)"
-                    (keyup)="onKeyup($event)"></ngx-editor>
+                <ngx-editor-menu [editor]="editor" [toolbar]="toolbar" [disabled]="!this.isAdmin && !this.isSalesman">
+                </ngx-editor-menu>
+                <ngx-editor [editor]="editor" [ngModel]="html"
+                    [disabled]="(!this.isAdmin && !this.isSalesman && !isEdit)" [placeholder]="'Nhập ở đây...'"
+                    (ngModelChange)="onChange($event)" (keyup)="onKeyup($event)"></ngx-editor>
             </div>
         </div>
 
         <div class="checkbox mb-3 row field">
             <span class="col-3 text-label" for="type"></span>
             <mat-checkbox class="col-9" [checked]="couponChecked" (change)="onChangeCheckbox($event)"
-                [disabled]="(!isAdmin || !isEdit || isStocker)">
+                [disabled]="(!this.isAdmin && !this.isSalesman && !isEdit)">
                 {{'NOTIFY.COUPON_TYPE' | translate}}
             </mat-checkbox>
         </div>
@@ -60,7 +61,7 @@
             <span class="col-3 text-label" for="note">
                 {{'NOTIFY.NOTE' | translate}}
             </span>
-            <textarea [disabled]="(!isAdmin || !isEdit || isStocker)"
+            <textarea [disabled]="(!this.isAdmin && !this.isSalesman && !isEdit)"
                 class="col-9 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="note" type="text" placeholder="" maxlength="500" [(ngModel)]="notify.note"
                 [ngModelOptions]="{standalone: true}"></textarea>
@@ -73,10 +74,10 @@
         <button mat-button mat-raised-button
             class="btn-cancel py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             (click)="onCancel()">{{'BUTTON.CLOSE' | translate}}</button>
-        <button mat-button mat-raised-button *ngIf="(isAdmin && isEdit)"
+        <button mat-button mat-raised-button *ngIf="((this.isAdmin || this.isSalesman) && isEdit)"
             class="btn-draf py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             (click)="onSubmit(false)">{{'BUTTON.DRAFT' | translate}}</button>
-        <button mat-button mat-raised-button *ngIf="(isAdmin && isEdit)"
+        <button mat-button mat-raised-button *ngIf="((this.isAdmin || this.isSalesman) && isEdit)"
             class="btn-save py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button"
             (click)="onSubmit(true)">{{ 'BUTTON.SENT' | translate }}
         </button>

@@ -30,9 +30,11 @@ export class ReportService {
                 .where("1 = 1");
 
             if (userEntity.role === USER_AREA_MANAGER_ROLE) {
-                const districtIds = await this.userService.getDistrictByUserId(userId);
-                if (districtIds.length > 0) {
-                    sql = sql.andWhere("district_id IN (:districtIds)", { districtIds });
+                const districtId = await this.userService.getDistrictByUserId(userId);
+                if (districtId) {
+                    sql = sql.andWhere("district_id = :districtId", { districtId });
+                } else {
+                    return [];
                 }
             }
 

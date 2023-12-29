@@ -8,7 +8,7 @@ import { MatMenuTrigger } from '@angular/material/menu';
 import { TranslateService } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogChangePasswordComponent } from './dialog-change-password/dialog-change-password.component';
-import { AGENCY_ROLE } from '../constants/const-data';
+import { AGENCY_ROLE, STOCKER_ROLE, USER_AREA_MANAGER_ROLE } from '../constants/const-data';
 
 @Component({
   selector: 'app-header',
@@ -27,10 +27,13 @@ export class HeaderComponent implements OnInit {
   badgeNumber: number = 0;
   agencyId: number = this.helper.getAgencyId();
   isAdmin: boolean = this.helper.isAdmin();
-  role: number = this.helper.getUserRole();
+  userRole: number = this.helper.getUserRole();
   navigateComponent: string = 'logout';
-
-  hidden: boolean = !this.isAdmin && !this.helper.getRoleAllowed(4).includes(this.role);
+  allowedRole = this.helper.getRoleAllowed(4);
+  hidden: boolean = !this.isAdmin && !this.allowedRole.includes(this.userRole);
+  isStocker: boolean = this.userRole === STOCKER_ROLE;
+  isAreaManager: boolean = this.userRole === USER_AREA_MANAGER_ROLE;
+  isAgency: boolean = this.userRole === AGENCY_ROLE;
 
   constructor(private router: Router,
     public notifyService: NotificationService,
@@ -41,7 +44,7 @@ export class HeaderComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    if (this.role === AGENCY_ROLE) {
+    if (this.isAgency) {
       this.agencyName = this.helper.getAgencyName();
     } else {
       this.agencyName = this.helper.getFullName();

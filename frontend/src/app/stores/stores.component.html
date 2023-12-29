@@ -1,7 +1,7 @@
 <div class="bg-white container">
     <h2 class="header">{{'STORE.TITLE' | translate}}</h2>
 
-    <div class="action-add row" [hidden]="isHiddenAddButton">
+    <div class="action-add row" [hidden]="isStocker">
         <button mat-raised-button class="btn-add" (click)="onEdit(null)">
             <mat-icon aria-hidden="false" aria-label="Add icon" fontSet="fas" fontIcon="fa-plus"
                 class="fa-plus"></mat-icon>
@@ -94,7 +94,7 @@
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
             <tr mat-row *matHeaderRowDef="['no-data']" class="text-center" [hidden]="hasData"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onEdit(row)"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
         <mat-paginator [hidden]="!hasData" [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons
             aria-label="Select page of periodic elements">

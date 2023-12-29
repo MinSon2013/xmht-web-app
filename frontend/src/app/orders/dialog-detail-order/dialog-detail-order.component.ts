@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Cities, MSG_STATUS, RECEIPT, STATUS, Transports } from '../../constants/const-data';
+import { AGENCY_ROLE, Cities, MSG_STATUS, RECEIPT, STATUS, Transports, USER_SALESMAN_ROLE } from '../../constants/const-data';
 import { Order, ProductItem } from '../../models/order';
 import { MyErrorStateMatcher } from '../order-add/order-add.component';
 import * as moment from 'moment';
@@ -43,7 +43,6 @@ export class DialogDetailOrderComponent implements OnInit {
   transportError: any = '';
   receiptError: any = '';
   helper = new Helper();
-  isAdmin: boolean = this.helper.isAdmin();
   agencyId: number = this.helper.getAgencyId();
 
   cities: any[] = Cities;
@@ -87,6 +86,11 @@ export class DialogDetailOrderComponent implements OnInit {
   date = new Date();
   testForm!: FormGroup;
   loading: boolean = false;
+
+  userRole: number = this.helper.getUserRole();
+  isAdmin: boolean = this.helper.isAdmin();
+  isSalesman: boolean = this.userRole === USER_SALESMAN_ROLE;
+  isAgency: boolean = this.userRole === AGENCY_ROLE;
 
   constructor(
     public dialogRef: MatDialogRef<DialogDetailOrderComponent>,

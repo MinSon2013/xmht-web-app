@@ -51,7 +51,7 @@
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
             <tr mat-row *matHeaderRowDef="['no-data']" class="text-center" [hidden]="hasData"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onEdit(row)"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
         <mat-paginator [hidden]="!hasData" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
             aria-label="Select page of periodic elements">

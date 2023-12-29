@@ -295,7 +295,10 @@ export class NotificationService {
       return await this.notifyAgencyRepo.save(notifyAgency);
     } else {
       const notifyEntity = await this.notifyRepo.getByReportId(notify.reportId);
-      return await this.notifyRepo.update(notifyEntity.id, notify);
+      if (notifyEntity) {
+        return await this.notifyRepo.update(notifyEntity.id, notify);
+      }
+      return;
     }
   }
 

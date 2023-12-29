@@ -149,7 +149,10 @@ export class DialogConfirmOrderComponent implements OnInit {
 
   onCancel() {
     if (!this.order.isViewed) {
-      if (this.helper.getAgencyId() === this.order.agencyId || this.isAdmin || this.isStocker) {
+      if (this.helper.getAgencyId() === this.order.agencyId
+        || this.isAdmin
+        || this.isStocker
+        || this.isSalesman) {
         this.order.isViewed = true;
       } else {
         this.order.isViewed = false;

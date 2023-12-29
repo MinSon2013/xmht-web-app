@@ -4,7 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import { Helper } from '../../helpers/helper';
 import { MyErrorStateMatcher } from '../../orders/order-add/order-add.component';
-import { MSG_STATUS, NOTIFY_TYPE, STOCKER_ROLE } from '../../constants/const-data';
+import { AGENCY_ROLE, MSG_STATUS, NOTIFY_TYPE, STOCKER_ROLE, USER_SALESMAN_ROLE } from '../../constants/const-data';
 import { Notify } from '../../models/notify';
 import { NotificationService } from '../../services/notification.service';
 import * as moment from 'moment';
@@ -34,9 +34,8 @@ export class DialogDetailNotifyComponent implements OnInit {
   isEdit: boolean = true;
   agencyId: number = this.helper.getUserId();
   userRole: number = this.helper.getUserRole();
-  allowedRole = this.helper.getRoleAllowed(4);
-  hidden: boolean = !this.allowedRole.includes(this.userRole);
-  isStocker: boolean = this.userRole === STOCKER_ROLE;
+  isSalesman: boolean = this.userRole === USER_SALESMAN_ROLE;
+  isAgency: boolean = this.userRole === AGENCY_ROLE;
 
   editor = new Editor;
   toolbar: Toolbar = [
@@ -144,8 +143,6 @@ export class DialogDetailNotifyComponent implements OnInit {
   onSubmit(isPublished: boolean) {
     if (this.validForm()) {
       this.notify.isPublished = isPublished;
-      this.notify.fileName = this.getFilename(this.notify.fileName);
-      this.notify.fileName = this.toNonAccentVietnamese(this.notify.fileName);
       this.notify.agencyId = this.agencySelected.id;
       this.notify.sender = this.agencyId;
       this.notify.userId = this.helper.getUserId();
@@ -174,6 +171,8 @@ export class DialogDetailNotifyComponent implements OnInit {
             console.log(response.id)
             this.notify.id = response.id;
             if (this.notify.file) {
+              this.notify.fileName = this.getFilename(this.notify.fileName);
+              this.notify.fileName = this.toNonAccentVietnamese(this.notify.fileName);
               this.notifyService.uploadFile(this.notify).subscribe((res: any) => {
                 if (res.statusCode === 200) {
                   this.helper.showSuccess(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.ADD_NOTIFY', MSG_STATUS.SUCCESS));
@@ -201,6 +200,8 @@ export class DialogDetailNotifyComponent implements OnInit {
         ).subscribe((response: any) => {
           if (response && response.affected > 0) {
             if (this.notify.file) {
+              this.notify.fileName = this.getFilename(this.notify.fileName);
+              this.notify.fileName = this.toNonAccentVietnamese(this.notify.fileName);
               this.notifyService.uploadFile(this.notify).subscribe((res: any) => {
                 if (res.statusCode === 200) {
                   this.helper.showSuccess(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.MODIFIED_NOTIFY', MSG_STATUS.SUCCESS));

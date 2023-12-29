@@ -38,7 +38,7 @@ export class UserService {
         return await this.userRepo.getUserById(id);
     }
 
-    async getDistrictByUserId(userId: number): Promise<number[]> {
+    async getDistrictByUserId(userId: number): Promise<number> {
         return await this.userDistrictRepo.getDistrictByUserId(userId);
     }
 

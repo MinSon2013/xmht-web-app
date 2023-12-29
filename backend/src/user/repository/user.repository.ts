@@ -111,20 +111,20 @@ export class UserRepository extends Repository<Users> {
     async updateUser(userDto: UserDTO, authService: AuthService, userDistrictRepo: UserDistrictRepository): Promise<UpdateResult> {
         try {
             const entity = new Users();
-            let result;
-            const exists: boolean = await this.usernameExists(userDto.userName);
-            if (!exists) {
-                if (userDto.password.length > 0) {
-                    const passwordHash: string = await authService.hashPassword(userDto.password);
-                    entity.password = passwordHash;
-                }
-                entity.fullName = userDto.fullName;
-                entity.role = userDto.role;
-                entity.updatedDate = this.helper.getUpdateDate(2);
-                entity.updatedByUserId = userDto.updatedByUserId;
+            // let result;
+            // const exists: boolean = await this.usernameExists(userDto.userName);
+            // if (!exists) {
+            //     if (userDto.password.length > 0) {
+            //         const passwordHash: string = await authService.hashPassword(userDto.password);
+            //         entity.password = passwordHash;
+            //     }
+            entity.fullName = userDto.fullName;
+            entity.role = userDto.role;
+            entity.updatedDate = this.helper.getUpdateDate(2);
+            entity.updatedByUserId = userDto.updatedByUserId;
 
-                result = await this.update(userDto.id, entity);
-            }
+            const result = await this.update(userDto.id, entity);
+            // }
 
             // const res = await this.createQueryBuilder()
             //     .update(Users)

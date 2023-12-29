@@ -4,7 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { DialogDeleteConfirmComponent } from '../common/dialog-delete-confirm/dialog-delete-confirm.component';
-import { NOTIFY_TYPE, SERVICE_TYPE } from '../constants/const-data';
+import { AGENCY_ROLE, NOTIFY_TYPE, SERVICE_TYPE, STOCKER_ROLE, USER_AREA_MANAGER_ROLE, USER_SALESMAN_ROLE } from '../constants/const-data';
 import { Helper } from '../helpers/helper';
 import { DialogDetailNotifyComponent } from './dialog-detail-notify/dialog-detail-notify.component';
 import { Notify } from '../models/notify';
@@ -41,6 +41,12 @@ export class NotifyComponent implements OnInit {
   badgeNumber1: number = 0;
   badgeNumber2: number = 0;
 
+  userRole: number = this.helper.getUserRole();
+  isStocker: boolean = this.userRole === STOCKER_ROLE;
+  isAgency: boolean = this.userRole === AGENCY_ROLE;
+  isAreaManager: boolean = this.userRole === USER_AREA_MANAGER_ROLE;
+  isSalesman: boolean = this.userRole === USER_SALESMAN_ROLE;
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -52,8 +58,8 @@ export class NotifyComponent implements OnInit {
 
   ngOnInit(): void {
     this.agencyId = this.helper.getAgencyId();
-    if (!this.isAdmin) {
-      this.displayedColumns = ['checkAll', 'updatedDate', 'contents', 'fileName', 'action'];
+    if (!this.isAdmin && !this.isSalesman) {
+      this.displayedColumns = ['checkAll', 'updatedDate', 'agencyName', 'contents', 'fileName', 'statusOrder', 'confirmer'];
     }
     this.colspan = this.displayedColumns.length;
     this.agencyList = this.helper.getAgencyList();

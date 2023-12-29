@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { CustomPaginator } from '../common/custom-paginator';
 import { DialogDeleteConfirmComponent } from '../common/dialog-delete-confirm/dialog-delete-confirm.component';
-import { Cities, SERVICE_TYPE, USER_AREA_MANAGER_ROLE } from '../constants/const-data';
+import { Cities, SERVICE_TYPE, STOCKER_ROLE, USER_AREA_MANAGER_ROLE, USER_SALESMAN_ROLE } from '../constants/const-data';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
@@ -39,23 +39,28 @@ export class StoresComponent implements OnInit {
   agencyList: any[] = [];
   districtList: any[] = [];
   cities = Cities;
-  isHiddenAddButton: boolean = true;
+  isAdmin: boolean = this.helper.isAdmin();
+  isStocker: boolean = this.helper.getUserRole() === STOCKER_ROLE;
+  isAreaManager: boolean = this.helper.getUserRole() === USER_AREA_MANAGER_ROLE;
+  districtId: number = 0;
 
   constructor(public dialog: MatDialog,
     private storeService: StoreService,
     private districtService: DistrictService,
     public router: Router,
   ) {
-    this.getDistrict();
     this.agencyList = this.helper.getAgencyList();
-    this.isHiddenAddButton = (this.helper.isAdmin() || this.helper.getUserRole() === USER_AREA_MANAGER_ROLE) ? false : true;
   }
 
   ngOnInit(): void {
-    if (this.isHiddenAddButton) {
+    if (this.isStocker) {
       this.displayedColumns = ['agencyName', 'districtName', 'provinceName', 'storeName', 'address', 'phone'];
     }
     this.colspan = this.displayedColumns.length;
+    if (this.isAreaManager) {
+      this.getUserDistrict();
+    }
+    this.getDistrict();
     this.getData();
   }
 
@@ -63,6 +68,9 @@ export class StoresComponent implements OnInit {
     this.storeService.getStoreList().subscribe((response: any) => {
       if (response.length > 0) {
         this.dataSource.data = response;
+        if (this.isAreaManager) {
+          this.dataSource.data = this.dataSource.data.filter(x => x.districtId === this.districtId);
+        }
         this.convertData();
       } else {
         this.dataSource.data = [];
@@ -75,6 +83,17 @@ export class StoresComponent implements OnInit {
     this.districtService.getDistrictList().subscribe((response: any) => {
       if (response.length > 0) {
         this.districtList = response;
+        if (this.isAreaManager) {
+          this.districtList = this.districtList.filter(x => x.id === this.districtId);
+        }
+      }
+    });
+  }
+
+  getUserDistrict() {
+    this.districtService.getUserDistrictList().subscribe((response: any) => {
+      if (response) {
+        this.districtId = response;
       }
     });
   }

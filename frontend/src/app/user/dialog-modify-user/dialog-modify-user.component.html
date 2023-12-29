@@ -19,7 +19,7 @@
                 {{ "USER.NAME" | translate }}
                 <label class="require">*</label>
             </span>
-            <input matInput
+            <input matInput [disabled]="!isAdmin"
                 class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="fullName" type="text" placeholder="" maxlength="255" [(ngModel)]="user.fullName"
                 [ngModelOptions]="{ standalone: true }" [errorStateMatcher]="matcher" />
@@ -61,7 +61,7 @@
                 {{ "USER.ROLE" | translate }}
                 <label class="require">*</label>
             </span>
-            <select
+            <select [disabled]="!isAdmin"
                 class="col-7 form-select appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 [(ngModel)]="roleSelected" (ngModelChange)="onChangeRole($event)" required>
                 <option [ngValue]="null" [disabled]="true" [selected]="true">
@@ -76,7 +76,7 @@
             <span class="col-5 text-label" for="note">
                 {{ "USER.DISTRICT" | translate }}
             </span>
-            <select
+            <select [disabled]="!isAdmin"
                 class="col-7 form-select appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 [(ngModel)]="districtSelected" (ngModelChange)="onChangeDistrict($event)" required>
                 <option [ngValue]="null" [disabled]="true" [selected]="true">

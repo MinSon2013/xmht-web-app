@@ -35,6 +35,9 @@ export class DistrictComponent implements OnInit {
   cities: Pickup[] = Cities;
   isHiddenAddButton: boolean = true;
   length: number = 0;
+  isAdmin: boolean = this.helper.isAdmin();
+  districtId: number = 0;
+  isAreaManager: boolean = this.helper.getUserRole() === USER_AREA_MANAGER_ROLE;
 
   constructor(public dialog: MatDialog,
     private districtService: DistrictService,
@@ -47,6 +50,11 @@ export class DistrictComponent implements OnInit {
       this.displayedColumns = ['districtName', 'province'];
     }
     this.colspan = this.displayedColumns.length;
+
+    if (this.isAreaManager) {
+      this.getUserDistrict();
+    }
+
     this.getData();
   }
 
@@ -66,10 +74,22 @@ export class DistrictComponent implements OnInit {
             });
           }
         });
+
+        if (this.isAreaManager) {
+          this.dataSource.data = this.dataSource.data.filter(x => x.id === this.districtId);
+        }
       } else {
         this.dataSource.data = [];
       }
       this.hideShowNoDataRow();
+    });
+  }
+
+  getUserDistrict() {
+    this.districtService.getUserDistrictList().subscribe((response: any) => {
+      if (response) {
+        this.districtId = response;
+      }
     });
   }
 

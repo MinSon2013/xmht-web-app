@@ -9,7 +9,7 @@ export interface Agency {
     contract: string,
     userName: string,
     password: string,
-    confirmPassword: '',
+    confirmPassword: string,
     role?: number;
     updatedByUserId?: number;
 }

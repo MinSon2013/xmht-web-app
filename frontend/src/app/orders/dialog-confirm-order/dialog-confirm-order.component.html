@@ -130,7 +130,8 @@
                 id="note" type="text" [(ngModel)]="order.note" maxlength="500"
                 [ngModelOptions]="{standalone: true}"></textarea>
         </div>
-        <div class="mb-6 row field" [hidden]="(!isAdmin && !isStocker) || order.status === 4 || order.status === 5">
+        <div class="mb-6 row field"
+            [hidden]="(!isAdmin && !isStocker && !isSalesman) || order.status === 4 || order.status === 5">
             <span class="col-5 text-label" for="status">
                 {{'ORDER.STATUS' | translate}}
             </span>

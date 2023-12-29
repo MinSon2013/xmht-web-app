@@ -32,14 +32,18 @@ export class AgencyComponent implements OnInit {
 
   helper = new Helper();
   hasData: boolean = false;
-  role: number = this.helper.getUserRole();
-  hidden: boolean = (this.role === USER_AREA_MANAGER_ROLE || this.role === STOCKER_ROLE);
+  userRole: number = this.helper.getUserRole();
+  isAreaManager: boolean = this.userRole === USER_AREA_MANAGER_ROLE;
+  isStocker: boolean = this.userRole === STOCKER_ROLE;
 
   constructor(public dialog: MatDialog,
     private agencyService: AgencyService,
   ) { }
 
   ngOnInit(): void {
+    if (this.isStocker || this.isAreaManager) {
+      this.displayedColumns = ['id', 'agencyName', 'address', 'phone', 'email', 'contract', 'note'];
+    }
     this.colspan = this.displayedColumns.length;
     // const agencyList = this.helper.getAgencyList();
     //if (agencyList.length === 0) {

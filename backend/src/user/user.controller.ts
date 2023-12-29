@@ -16,6 +16,13 @@ export class UsersController {
     return this.userService.findAll(userId);
   }
 
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/district/:userId')
+  get(@Param('userId', ParseIntPipe) userId: number): Promise<number> {
+    return this.userService.getDistrictByUserId(userId);
+  }
+
   // @UseGuards(JwtAuthGuard)
   // @Get(':id')
   // get(@Param('id', ParseIntPipe) id: number): Promise<UserRO> {

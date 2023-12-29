@@ -143,12 +143,15 @@ export class DialogDetailAgencyComponent implements OnInit {
     if (this.agency.phone.length === 0) {
       isValidForm = false;
     }
-    if (this.agency.password.length < 8 || this.agency.confirmPassword.length < 8) {
+    if ((this.agency.password.length > 0 && this.agency.password.length < 8)
+      || (this.agency.confirmPassword.length > 0 && this.agency.confirmPassword.length < 8)) {
+      // if (this.agency.password.length < 8 || this.agency.confirmPassword.length < 8) {
       isValidForm = false;
       this.errorPassword = 'Mật khẩu phải dài hơn 8 kí tự.';
       return isValidForm;
     }
-    if (this.agency.id === 0 && this.agency.confirmPassword.length === 0) {
+    if (this.agency.id === 0
+      && (this.agency.confirmPassword.length === 0 || this.agency.password.length === 0)) {
       isValidForm = false;
     }
 

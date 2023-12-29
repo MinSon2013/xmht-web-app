@@ -16,7 +16,7 @@
       </button>
     </div>
 
-    <button mat-raised-button class="btn-add" (click)="onEdit(null)" *ngIf="isAdmin">
+    <button mat-raised-button class="btn-add" (click)="onEdit(null)" [hidden]="!isAdmin && !isSalesman">
       <mat-icon aria-hidden="false" aria-label="Add icon" fontSet="fas" fontIcon="fa-plus" class="fa-plus"></mat-icon>
       <label class="pad-label">{{ "BUTTON.ADD" | translate }}</label>
     </button>
@@ -116,8 +116,8 @@
                   ? 'fa-pen'
                   : 'fa-circle-info'
               }}" class="fa-pen" (click)="onEdit(element)"></mat-icon>
-            <!-- <mat-icon *ngIf="isAdmin" aria-hidden="false" aria-label="Trash icon" fontSet="fas" fontIcon="fa-trash"
-              class="fa-trash" (click)="onDelete(element)"></mat-icon> -->
+            <mat-icon *ngIf="isAdmin" aria-hidden="false" aria-label="Trash icon" fontSet="fas" fontIcon="fa-trash"
+              class="fa-trash" (click)="onDelete(element)"></mat-icon>
           </div>
         </td>
       </ng-container>

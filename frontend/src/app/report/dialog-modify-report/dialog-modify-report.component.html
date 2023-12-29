@@ -7,7 +7,7 @@
                 {{'REPORT.DISTRICT_NAME' | translate}}
                 <label class="require">*</label>
             </span>
-            <select
+            <select [disabled]="isSalesman"
                 class="col-7 form-select appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 [(ngModel)]="districtSelected" (ngModelChange)="onChangeDistrict($event)" required>
                 <option [ngValue]="null" [disabled]="true" [selected]="true">
@@ -23,7 +23,7 @@
                 {{'REPORT.PROVINCE_1' | translate}}
                 <label class="require">*</label>
             </span>
-            <select
+            <select [disabled]="isSalesman"
                 class="col-7 form-select appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 [(ngModel)]="provinceSelected" (ngModelChange)="onChangeProvince($event)" required>
                 <option [ngValue]="null" [disabled]="true" [selected]="true">
@@ -34,11 +34,11 @@
         </div>
 
         <!-- Agency -->
-        <div class="mb-3 row field p-top" [hidden]="!isAdmin">
+        <div class="mb-3 row field p-top" [hidden]="!isAdmin && !isAreaManager && !isSalesman">
             <span class="col-5 text-label" for="agency">
                 {{'REPORT.AGENCY_NAME' | translate}}
             </span>
-            <select
+            <select [disabled]="isSalesman"
                 class="col-7 form-select appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 [(ngModel)]="agencySelected" (ngModelChange)="onChangeAgency($event)" required>
                 <option [ngValue]="null" [selected]="true">
@@ -55,7 +55,7 @@
                 <label class="require">*</label>
             </span>
             <div class="p0 col-7">
-                <select [hidden]="showOtherStore"
+                <select [hidden]="showOtherStore" [disabled]="isSalesman"
                     class="select-store form-select appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     [(ngModel)]="storeSelected" (ngModelChange)="onChangeStore($event)" required>
                     <option [ngValue]="null" [disabled]="true" [selected]="true">
@@ -64,7 +64,7 @@
                     <option [ngValue]="item" *ngFor="let item of storeDistrictList">{{item.storeName}}</option>
                 </select>
 
-                <input matInput [hidden]="!showOtherStore"
+                <input matInput [hidden]="!showOtherStore" [disabled]="isSalesman"
                     class="other-store appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     id="otherStoreName" type="text" placeholder="" maxlength="255" [(ngModel)]="report.otherStoreName"
                     [ngModelOptions]="{ standalone: true }" />
@@ -78,7 +78,7 @@
                 {{ "REPORT.INFORMATION" | translate }}
                 <label class="require">*</label>
             </span>
-            <textarea matInput
+            <textarea matInput [disabled]="isSalesman"
                 class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="address" type="text" placeholder="" [(ngModel)]="report.storeInformation"
                 [ngModelOptions]="{ standalone: true }"></textarea>
@@ -90,7 +90,7 @@
                 {{ "REPORT.CONTENT" | translate }}
                 <label class="require">*</label>
             </span>
-            <textarea matInput
+            <textarea matInput [disabled]="isSalesman"
                 class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="phone" type="text" placeholder="" [(ngModel)]="report.reportContent"
                 [ngModelOptions]="{ standalone: true }"></textarea>
@@ -101,7 +101,7 @@
             <span class="col-5 text-label" for="fileName">
                 {{'REPORT.FILE' | translate}}
             </span>
-            <input matInput
+            <input matInput [disabled]="isSalesman"
                 class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="fileName" type="file" placeholder="" (change)="onFileChange($event)" />
         </div>
@@ -111,7 +111,7 @@
             <span class="col-5 text-label" for="note">
                 {{ "REPORT.NOTE" | translate }}
             </span>
-            <textarea
+            <textarea [disabled]="isSalesman"
                 class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="note" type="text" placeholder="" maxlength="255" [(ngModel)]="report.note"
                 [ngModelOptions]="{standalone: true}"></textarea>
@@ -130,7 +130,7 @@
             {{ "BUTTON.CANCEL" | translate }}
         </button>
         <button mat-raised-button mat-button class="btn-save py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            type="button" (click)="onSubmit()">
+            type="button" (click)="onSubmit()" [hidden]="isSalesman">
             {{ "BUTTON.SAVE" | translate }}
         </button>
     </mat-dialog-actions>

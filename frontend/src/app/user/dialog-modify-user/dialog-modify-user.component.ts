@@ -39,6 +39,7 @@ export class DialogModifyUserComponent implements OnInit {
 
   helper = new Helper();
   isEdit: boolean = false;
+  isAdmin: boolean = this.helper.isAdmin();
 
   constructor(
     public dialogRef: MatDialogRef<DialogModifyUserComponent>,
@@ -151,7 +152,13 @@ export class DialogModifyUserComponent implements OnInit {
       isValidForm = false;
     }
 
-    if (this.user.password.length < 8 || this.user.confirmPassword.length < 8) {
+    if (this.user.id === 0
+      && (this.user.confirmPassword.length === 0 || this.user.password.length === 0)) {
+      isValidForm = false;
+    }
+
+    if ((this.user.password && this.user.password.length < 8)
+      || (this.user.confirmPassword && this.user.confirmPassword.length < 8)) {
       isValidForm = false;
       this.errorPassword = 'Mật khẩu phải dài hơn 8 kí tự.';
       return isValidForm;

@@ -10,17 +10,17 @@ export class UserDistrictRepository extends Repository<UserDistrict> {
         super();
     }
 
-    async getDistrictByUserId(userId: number): Promise<number[]> {
+    async getDistrictByUserId(userId: number): Promise<number> {
         const res = await this.createQueryBuilder()
-            .select('district_id as districtId')
+            //   .select('district_id as districtId')
             .where('user_id = :userId', { userId })
-            .getMany();
+            .getOne();
 
-        const districtIds: number[] = [];
-        res.forEach(el => {
-            districtIds.push(el.districtId);
-        });
-        return districtIds;
+        // const districtIds: number[] = [];
+        // res.forEach(el => {
+        //     districtIds.push(el.districtId);
+        // });
+        return res.districtId;
     }
 
     async createUserDistrict(userId: number, districtId: number): Promise<UserDistrict> {

@@ -2,10 +2,12 @@ import { Injectable } from "@angular/core";
 import { CONFIG } from "../common/config";
 import { WebRequestService } from "./web-request.service";
 import { District } from "../models/district";
+import { Helper } from "../helpers/helper";
 
 @Injectable({ providedIn: 'root' })
 export class DistrictService {
     readonly url: string = CONFIG.URL.DISTRICT;
+    readonly helper = new Helper();
 
     constructor(
         private webrequestService: WebRequestService,
@@ -13,6 +15,11 @@ export class DistrictService {
 
     getDistrictList() {
         return this.webrequestService.get(this.url);
+    }
+
+    getUserDistrictList() {
+        const userId = this.helper.getUserId();
+        return this.webrequestService.get('users/district' + `/${userId}`);
     }
 
     create(obj: District) {
