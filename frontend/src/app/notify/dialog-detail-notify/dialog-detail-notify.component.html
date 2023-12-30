@@ -27,7 +27,6 @@
         <div class="mb-3 row field" *ngIf="isAdmin || this.isSalesman">
             <span class="col-3 text-label" for="fileName">
                 {{'NOTIFY.FILENAME' | translate}}
-                <!-- <label class="require">*</label> -->
             </span>
             <input matInput [disabled]="(!isAdmin && !isEdit && !this.isSalesman)"
                 class="col-9 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"

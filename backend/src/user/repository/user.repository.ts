@@ -68,29 +68,11 @@ export class UserRepository extends Repository<Users> {
         return result;
     }
 
-    // async createUser_1(newUser: Users | any, authService: AuthService): Promise<Users> {
-    //     try {
-    //         const exists: boolean = await this.usernameExists(newUser.username);
-    //         if (!exists) {
-    //             const passwordHash: string = await authService.hashPassword(newUser.password);
-    //             newUser.password = passwordHash;
-    //             const user = await this.save(newUser);
-    //             return this.findOne(user.id);
-    //         } else {
-    //             throw new HttpException('Email is already in use', HttpStatus.CONFLICT);
-    //         }
-    //     } catch {
-    //         throw new HttpException('Email is already in use', HttpStatus.CONFLICT);
-    //     }
-    // }
-
     async createUser(userDto: UserDTO, authService: AuthService, userDistrictRepo: UserDistrictRepository): Promise<UserRO> {
         try {
             const exists: boolean = await this.usernameExists(userDto.userName);
             if (!exists) {
                 const passwordHash: string = await authService.hashPassword(userDto.password);
-                //userDto.password = passwordHash;------
-
                 const entity = new Users();
                 entity.isAdmin = false;
                 entity.userName = userDto.userName;
@@ -116,30 +98,12 @@ export class UserRepository extends Repository<Users> {
     async updateUser(userDto: UserDTO, authService: AuthService, userDistrictRepo: UserDistrictRepository): Promise<UpdateResult> {
         try {
             const entity = new Users();
-            // let result;
-            // const exists: boolean = await this.usernameExists(userDto.userName);
-            // if (!exists) {
-            //     if (userDto.password.length > 0) {
-            //         const passwordHash: string = await authService.hashPassword(userDto.password);
-            //         entity.password = passwordHash;
-            //     }
             entity.fullName = userDto.fullName;
             entity.role = userDto.role;
             entity.updatedDate = this.helper.getUpdateDate(2);
             entity.updatedByUserId = userDto.updatedByUserId;
 
             const result = await this.update(userDto.id, entity);
-            // }
-
-            // const res = await this.createQueryBuilder()
-            //     .update(Users)
-            //     .set({ role: userDto.role })
-            //     .where("id = :id", { id: userDto.id })
-            //     .execute();
-
-            // // // Update agency for user
-            // // await agencyService.updateAgencyForUserRole(userDto.id, userDto.fullName);
-
             // Update user-district
             await userDistrictRepo.updateUserDistrict(userDto.id, userDto.districtId);
 
@@ -148,14 +112,6 @@ export class UserRepository extends Repository<Users> {
             throw new HttpException('Exception update user', HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    // async updateFullName(id: number, name: string) {
-    //     return await this.createQueryBuilder()
-    //         .update(Users)
-    //         .set({ fullName: name })
-    //         .where("id = :id", { id })
-    //         .execute();
-    // }
 
     async updatePassword(id: number, password: string, authService: AuthService): Promise<UpdateResult> {
         const passwordHash: string = await authService.hashPassword(password);

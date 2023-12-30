@@ -211,7 +211,6 @@ export class DialogDetailOrderComponent implements OnInit {
       this.socketService.updatedOrder(this.order).pipe(
         tap((res) => { })
       ).subscribe((response: any) => {
-        //this.loading = false;
         if (response.affected && response.affected !== 0) {
           this.helper.showSuccess(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.MODIFIED_ORDER', MSG_STATUS.SUCCESS));
           this.dialogRef.close(this.order);
@@ -224,7 +223,6 @@ export class DialogDetailOrderComponent implements OnInit {
         }
       });
     } else {
-      //this.loading = false;
     }
   }
 

@@ -12,14 +12,8 @@ export class UserDistrictRepository extends Repository<UserDistrict> {
 
     async getDistrictByUserId(userId: number): Promise<number> {
         const res = await this.createQueryBuilder()
-            //   .select('district_id as districtId')
             .where('user_id = :userId', { userId })
             .getOne();
-
-        // const districtIds: number[] = [];
-        // res.forEach(el => {
-        //     districtIds.push(el.districtId);
-        // });
         return res.districtId;
     }
 

@@ -1,4 +1,4 @@
-import { ClassSerializerInterceptor, Controller, Get, ParseIntPipe, Post, Put, StreamableFile, UseGuards } from '@nestjs/common';
+import { ClassSerializerInterceptor, Controller, Get, ParseIntPipe, Post, StreamableFile, UseGuards } from '@nestjs/common';
 import { UseInterceptors } from '@nestjs/common/decorators/core/use-interceptors.decorator';
 import { Query, Res, UploadedFile } from '@nestjs/common/decorators/http/route-params.decorator';
 import LocalFilesInterceptor from '../config/local-files-interceptor';

@@ -164,30 +164,16 @@ export class OrderListComponent implements OnInit {
       const dialogRef = this.dialog.open(DialogConfirmOrderComponent, {
         data: row,
       });
+      dialogRef.afterClosed().subscribe(result => {
 
-      // elements.forEach(el => {
-      //   el.style.position = 'fixed';
-      // });
-
-      // dialogRef.afterClosed().subscribe(result => {
-      //   elements.forEach(el => {
-      //     el.style.position = 'relative';
-      //   });
-      // });
+      });
     } else {
       const dialogRef = this.dialog.open(DialogDetailOrderComponent, {
         data: row,
       });
 
-      // elements.forEach(el => {
-      //   el.style.position = 'fixed';
-      // });
-
-      // dialogRef.afterClosed().subscribe(result => {
-      //   elements.forEach(el => {
-      //     el.style.position = 'relative';
-      //   });
-      // });
+      dialogRef.afterClosed().subscribe(result => {
+      });
     }
   }
 

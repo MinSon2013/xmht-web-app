@@ -75,7 +75,6 @@ export class DialogModifyDistrictComponent {
           this.district.provinceList.push(item.label);
         }
       });
-      // this.district.updateDate = moment().format('HH:mm DD/MM/YYYY');
       if (this.district.id === 0) {
         this.districtService.create(this.district).subscribe((response: any) => {
           if (response) {

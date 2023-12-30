@@ -1,7 +1,6 @@
 import { forwardRef, Injectable, Inject, NotFoundException } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { DeleteResult, UpdateResult } from 'typeorm';
-import { AuthService } from '../auth/auth.service';
 import { ReportRepository } from './repository/report.repository';
 import { Reports } from './entities/report.entity';
 import { ModifyReportDTO } from './dto/modify-report.dto';

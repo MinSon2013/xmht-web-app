@@ -12,12 +12,10 @@
         <div class="col-4">
             <img src="../../assets/images/logo_1.png" class="logo" />
         </div>
-        <!--  <br/><br/> -->
         <div class="col-8">
             <h3 class="fw-600 t3-margin top">{{'PRINT_PDF.TITLE_3' | translate}}</h3>
         </div>
     </div>
-    <!-- <br/> -->
     <div class="row block left-1">
         <span class="label">{{'PRINT_PDF.AGENCY' | translate}}</span>
         <span class="s fw-600">{{agency}}</span>
@@ -30,7 +28,6 @@
         <span class="label">{{'PRINT_PDF.LICENSE_PLATE' | translate}}</span>
         <span class="s fw-600">{{licensePlates}}</span>
     </div>
-    <!-- <br/> -->
     <table mat-table [dataSource]="dataSource">
         <!-- STT Column -->
         <ng-container matColumnDef="no">
@@ -89,7 +86,6 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
-    <!--  <br/> -->
     <span class="label fw-600">{{'PRINT_PDF.TEXT' | translate}}{{numberToText}}</span>
     <h6 class="sd text-right">{{shippingDate}}</h6>
     <div class="row footer">
@@ -98,7 +94,6 @@
         <span class="fw fw-600 col-3">{{'PRINT_PDF.SECURITY' | translate}}</span>
         <span class="fw fw-600 col-3">{{'PRINT_PDF.CREATOR' | translate}}</span>
     </div>
-    <!-- <br/> -->
 </div>
 <div class="btn-container" id="action">
     <button mat-raised-button mat-button class="btn-cancel btn btn-info m-1" (click)="onCancel()">{{ 'BUTTON.CANCEL' |

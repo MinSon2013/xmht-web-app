@@ -57,10 +57,6 @@ export class UserComponent implements OnInit {
     this.userService.getUserList().subscribe((response: any) => {
       if (response.length > 0) {
         this.dataSource.data = response;
-        // if (!this.isAdmin && !this.isStocker) {
-        //   const userId = this.helper.getUserId();
-        //   this.dataSource.data = this.dataSource.data.filter(x => x.id === userId);
-        // }
         this.convertData();
       } else {
         this.dataSource.data = [];
@@ -109,14 +105,7 @@ export class UserComponent implements OnInit {
       data: { row, districtList: this.districtList },
     });
 
-    // elements.forEach(el => {
-    //   el.style.position = 'fixed';
-    // });
-
     dialogRef.afterClosed().subscribe(result => {
-      // elements.forEach(el => {
-      //   el.style.position = 'relative';
-      // });
       if (result !== null) {
         if (row && row.id !== 0) {
           row.fullName = result.fullName;

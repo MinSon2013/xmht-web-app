@@ -7,7 +7,6 @@ export class ModifyStoreDTO {
   address: string;
   phone: string;
   note: string;
-  // updatedDate: string;
   userId: number;
   updatedByUserId: number;
 }

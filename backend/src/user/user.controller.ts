@@ -23,12 +23,6 @@ export class UsersController {
     return this.userService.getDistrictByUserId(userId);
   }
 
-  // @UseGuards(JwtAuthGuard)
-  // @Get(':id')
-  // get(@Param('id', ParseIntPipe) id: number): Promise<UserRO> {
-  //   return this.userService.getOne(id);
-  // }
-
   @UseGuards(JwtAuthGuard)
   @Post()
   create(@Body() user: UserDTO): Promise<UserRO> {
@@ -41,12 +35,6 @@ export class UsersController {
     return this.userService.updateUser(user);
   }
 
-  // @UseGuards(JwtAuthGuard)
-  // @Put()
-  // updatePassword(@Body() user: UserDTO) {
-  //   return this.userService.updateUserPassword(user.id, user.password);
-  // }
-
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
   deleteUser(@Param('id') id: number) {
@@ -58,11 +46,4 @@ export class UsersController {
   changePassword(@Body() body: ChangePasswordDto) {
     return this.userService.changeUserPassword(body);
   }
-
-  // @UseGuards(JwtAuthGuard)
-  // @Post('change/password/admin')
-  // changePasswordAdmin(@Body() body: any) {
-  //   return this.userService.changeAdminPassword(body.password);
-  // }
-
 }

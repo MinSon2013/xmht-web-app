@@ -120,9 +120,6 @@ export class AgencyRepository extends Repository<Agency> {
             }
         }
 
-        //// Update user fullname
-        // await userService.updateFullName(modifyAgencyDto.userId, modifyAgencyDto.agencyName);
-
         return await this.update(modifyAgencyDto.id, agency);
     }
 
@@ -134,26 +131,6 @@ export class AgencyRepository extends Repository<Agency> {
         return await this.createQueryBuilder()
             .delete().where('user_id = :userId', { userId }).execute();
     }
-
-    // public async getAgencyIdOfAdmin() {
-    //     const admin = await this.createQueryBuilder()
-    //         .select('a.id as agencyId')
-    //         .from(Agency, 'a')
-    //         .innerJoin(Users, 'u', 'u.id = a.user_id')
-    //         .where('u.is_admin IS TRUE')
-    //         .getRawOne();
-    //     return admin.agencyId;
-    // }
-
-    // public async getAgencyIdOfStocker() {
-    //     const stocker = await this.createQueryBuilder()
-    //         .select('a.id as agencyId')
-    //         .from(Agency, 'a')
-    //         .innerJoin(Users, 'u', 'u.id = a.user_id')
-    //         .where('u.is_stocker IS TRUE')
-    //         .getRawOne();
-    //     return stocker.agencyId;
-    // }
 
     private mappingAgency(modifiedDto: ModifyAgencyDTO): Agency {
         const entity = new Agency();
@@ -168,30 +145,6 @@ export class AgencyRepository extends Repository<Agency> {
         entity.updatedDate = this.helper.getUpdateDate(1);
         return entity;
     }
-
-    // async createAgencyForUserRole(userId: number, name: string): Promise<Agency> {
-    //     const agencyEntity = new Agency();
-    //     agencyEntity.userId = userId;
-    //     agencyEntity.agencyName = name;
-    //     const agency = await this.save(agencyEntity);
-    //     return agency;
-    // }
-
-    // async updateAgencyForUserRole(userId: number, name: string): Promise<any> {
-    //     return await this.createQueryBuilder()
-    //         .update(Agency)
-    //         .set({ agencyName: name })
-    //         .where("user_id = :userId", { userId })
-    //         .execute();
-    // }
-
-    // async deleteAgencyForUserRole(userId: number): Promise<DeleteResult> {
-    //     return await this.createQueryBuilder()
-    //         .delete()
-    //         .where("user_id = :userId", { userId })
-    //         .execute();
-    // }
-
 
     //----- REMOVE ----------
     public async getIdsNotAgency() {

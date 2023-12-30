@@ -69,10 +69,6 @@ export class UserService {
         return await this.userRepo.updateUser(user, this.authService, this.userDistrictRepo);
     }
 
-    // async updateFullName(userId: number, name: string) {
-    //     return await this.userRepo.updateFullName(userId, name);
-    // }
-
     async updateUserPassword(id: number, password: string): Promise<UpdateResult> {
         return await this.userRepo.updatePassword(id, password, this.authService);
     }
@@ -92,15 +88,6 @@ export class UserService {
     async changeAdminPassword(password: string) {
         return await this.authService.hashPassword(password);
     }
-
-    // async deleteUserRole(id: number): Promise<DeleteResult> {
-    //     const result = await this.userRepo.deleteUserRole(id, this.agencyService,);
-    //     if (result) {
-    //         await this.repo.deleteUserDistrict(id);
-    //     }
-    //     return result;
-    // }
-
 
     // --- REMOVE --------------
     async syncUser(userId: number, fname: string, role: number) {

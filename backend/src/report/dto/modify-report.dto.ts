@@ -9,9 +9,6 @@ export class ModifyReportDTO {
   attachFile: string;
   filePath: string;
   note: string;
-  // updatedDate: string;
-  // userId: number;
-  // createDate?: string;
   fullName?: string;
   otherStoreName: string;
   updatedByUserId: number;

@@ -9,12 +9,6 @@ import { DeleteResult, UpdateResult } from 'typeorm';
 export class AgencyController {
   constructor(private readonly agencyService: AgencyService) { }
 
-  // @UseGuards(JwtAuthGuard)
-  // @Get()
-  // findAll(): Promise<AgencyRO[]> {
-  //   return this.agencyService.findAll()
-  // }
-
   @UseGuards(JwtAuthGuard)
   @Get(':agencyId')
   get(@Param('agencyId', ParseIntPipe) agencyId: number): Promise<AgencyRO[]> {

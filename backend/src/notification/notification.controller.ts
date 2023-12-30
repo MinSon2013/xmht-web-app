@@ -10,19 +10,12 @@ import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 export class NotificationController {
   constructor(private readonly notificationService: NotificationService) { }
 
-  // @UseGuards(JwtAuthGuard)
-  // @Get()
-  // findAll(): Promise<any> {
-  //   return this.notificationService.getAll();
-  // }
-
   @UseGuards(JwtAuthGuard)
   @Get(':agencyId')
   getAll(@Param('agencyId', ParseIntPipe) agencyId: number): Promise<any> {
     return this.notificationService.getAll(agencyId);
   }
 
-  // @UseGuards(JwtAuthGuard)
   @Post('/badge')
   getBadge(@Body() body): Promise<any[]> {
     return this.notificationService.getBadgeNumber(Number(body.agencyId));

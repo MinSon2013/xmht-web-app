@@ -18,7 +18,6 @@ export const CONFIG = {
         STORE: 'store',
         REPORT: 'report',
         REPORTS: 'reports',
-        // USER_ROLE: 'user-role',
     },
     LOCAL_STORAGE: {
         ORDER_LIST: 'orderList',

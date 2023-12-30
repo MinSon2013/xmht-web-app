@@ -11,7 +11,6 @@ import { AgencyRepository } from '../agency/repository/agency.repository';
 import { DeliveryRepository } from '../delivery/repository/delivery.repository';
 import { ProductRepository } from '../products/repository/product.repository';
 import { ProductOrderRepository } from '../orders/repository/product-order.repository';
-import { MenuRepository } from '../menu/repository/menu.repository';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { JwtAuthGuard } from './guards/jwt.guard';
 import { ConfigModule, ConfigService } from '@nestjs/config';

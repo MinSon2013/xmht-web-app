@@ -28,7 +28,6 @@
                 id="contract" type="text" [(ngModel)]="order.contract" [ngModelOptions]="{standalone: true}" />
         </div>
         <div class="mb-3 row field" [hidden]="isAgency">
-            <!-- <div class="mb-3 row field" [hidden]="!isAdmin && !isStocker && !isSalesman && !isAreaManager"> -->
             <span class="col-5 text-label" for="agency">
                 {{'ORDER.AGENCY' | translate}}
             </span>

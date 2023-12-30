@@ -85,19 +85,6 @@ export class DialogModifyUserComponent implements OnInit {
               const res = value as UserRO;
               this.user.id = res.id;
               this.helper.addAgency(this.user);
-
-              // const user: User = {
-              //   id: response.userId,
-              //   username: this.user.username,
-              //   password: this.user.password,
-              //   isAdmin: false,
-              //   role: this.roleSelected?.value,
-              //   districtId: this.user.districtId,
-              //   fullName: this.user.fullName,
-              //   updatedByUserId: this.helper.getUserId(),
-              // };
-              // //this.helper.addUser(user);
-
               this.helper.showSuccess(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.ADD_USER', MSG_STATUS.SUCCESS));
               this.dialogRef.close(this.user);
             } else {
@@ -195,14 +182,6 @@ export class DialogModifyUserComponent implements OnInit {
       return false;
     }
   }
-
-  // onlyNumberKey(event: any) {
-  //   var ASCIICode = (event.which) ? event.which : event.keyCode;
-  //   if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57)) {
-  //     return false;
-  //   }
-  //   return true;
-  // }
 
   onlyNumberKey(event: any) {
     return this.helper.onlyNumberKey(event);

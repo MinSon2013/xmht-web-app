@@ -146,7 +146,6 @@ export class DialogDetailAgencyComponent implements OnInit {
     }
     if ((this.agency.password && this.agency.password.length > 0 && this.agency.password.length < 8)
       || (this.agency.confirmPassword && this.agency.confirmPassword.length > 0 && this.agency.confirmPassword.length < 8)) {
-      // if (this.agency.password.length < 8 || this.agency.confirmPassword.length < 8) {
       isValidForm = false;
       this.errorPassword = 'Mật khẩu phải dài hơn 8 kí tự.';
       return isValidForm;
@@ -182,14 +181,6 @@ export class DialogDetailAgencyComponent implements OnInit {
       return false;
     }
   }
-
-  // onlyNumberKey(event: any) {
-  //   var ASCIICode = (event.which) ? event.which : event.keyCode;
-  //   if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57)) {
-  //     return false;
-  //   }
-  //   return true;
-  // }
 
   onlyNumberKey(event: any) {
     return this.helper.onlyNumberKey(event);

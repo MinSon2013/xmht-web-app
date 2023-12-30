@@ -19,18 +19,11 @@ export class ProductOrderRepository extends Repository<ProductOrder> {
       .leftJoin(Order, 'o', 'o.id = po.order_id')
       .where('o.status = 4');
 
-    // if (body.userId && body.userId !== adminId && body.userId !== stockerId) {
-    //   // if (body.userId && body.userId !== adminId && body.userId !== stockerId) {
-    //   sql = sql.andWhere('o.agencyId = :agencyId', { agencyId: body.agencyId })
-    // }
     if (agencyIdLogin > 0) {
       sql = sql.andWhere('o.agencyId = :agencyId', { agencyId: agencyIdLogin })
     } else if (body.agencyId) {
       sql = sql.andWhere('o.agency_id = :agencyId', { agencyId: body.agencyId })
     }
-    // if (body.orderId && body.orderId !== 0) {
-    //   sql = sql.andWhere('o.id = :orderId', { orderId: body.orderId })
-    // }
     if (body.approvedNumber && body.approvedNumber !== 0) {
       sql = sql.andWhere('o.approved_number = :approvedNumber', { approvedNumber: body.approvedNumber })
     }
@@ -42,7 +35,6 @@ export class ProductOrderRepository extends Repository<ProductOrder> {
     }
     if (body.startDate && body.startDate.length !== 0
       && body.endDate && body.endDate.length !== 0) {
-      // sql = sql.andWhere('STR_TO_DATE(o.created_date, \'%d/%m/%Y\') BETWEEN STR_TO_DATE(:start, \'%d/%m/%Y\') AND STR_TO_DATE(:end, \'%d/%m/%Y\') ', { start: body.startDate, end: body.endDate })
       sql = sql.andWhere(
         `IF(LENGTH(o.created_date) > 10,
           STR_TO_DATE(RIGHT(o.created_date, 10), '%d/%m/%Y'),

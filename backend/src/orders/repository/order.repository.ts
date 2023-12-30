@@ -7,7 +7,6 @@ import { ProductsService } from '../../products/products.service';
 import { ProductOrderRepository } from './product-order.repository';
 import { SearchOrderDTO } from '../dto/search-order.dto';
 import { NotificationDTO } from '../../notification/dto/notification.dto';
-import moment from 'moment';
 import { Helper } from '../../shared/helper';
 
 @EntityRepository(Order)
@@ -54,21 +53,6 @@ export class OrderRepository extends Repository<Order> {
         });
         return response;
     }
-
-    // async findByMonthYear(body: StatisticsDto) {
-    //     let response: Order[] = [];
-    //     let orderList: any;
-    //     let length = body.dateTime.length;
-    //     let query = this.createQueryBuilder('order')
-    //         .select('order.created_date as createdDate')
-    //         .where('RIGHT(order.created_date, :length) = :dateTime', { length, dateTime: body.dateTime });
-
-    //     if (body.agencyId !== 0) {
-    //         query = query.andWhere('order.agency_id = :agencyId', { agencyId: body.agencyId })
-    //     }
-    //     response = await query.getRawMany();
-    //     return response;
-    // }
 
     async getOne(id: number, userId: number, agencyId: number,
         productService: ProductsService,
@@ -285,7 +269,6 @@ export class OrderRepository extends Repository<Order> {
         }
         if (searchOderDto.startDate && searchOderDto.startDate.length !== 0
             && searchOderDto.endDate && searchOderDto.endDate.length !== 0) {
-            //sql = sql.andWhere('STR_TO_DATE(order.created_date, \'%d/%m/%Y\') BETWEEN STR_TO_DATE(:start, \'%d/%m/%Y\') AND STR_TO_DATE(:end, \'%d/%m/%Y\') ', { start: searchOderDto.startDate, end: searchOderDto.endDate })
             sql = sql.andWhere(
                 `IF(LENGTH(order.created_date) > 10,
                   STR_TO_DATE(RIGHT(order.created_date, 10), '%d/%m/%Y'),

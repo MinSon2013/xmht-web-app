@@ -70,7 +70,6 @@ export class ReportService {
     search(districtId: number, date: string) {
         const payload = {
             date,
-            // agencyId: this.helper.getAgencyId(),
             userId: this.helper.getUserId(),
             districtId,
         };

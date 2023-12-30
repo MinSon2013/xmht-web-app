@@ -66,7 +66,6 @@ export class AuthService {
             const agency = await this.agencyService.findOne(user.id);
             agencyId = agency.id;
             agencyName = agency.agencyName;
-            //agencyList = [agency];
             agencyList = await this.agencyService.findAll(agencyId);
         } else {
             agencyList = await this.agencyService.findAll(0);

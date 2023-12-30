@@ -17,12 +17,7 @@ export class NotificationService {
 
     getNotificationList(): Observable<any> {
         const agencyId = this.helper.getAgencyId();
-        const isAdmin = this.helper.isAdmin();
-        // if (isAdmin) {
-        //     return this.webrequestService.get(this.url);
-        // } else {
         return this.webrequestService.get(this.url + `/${agencyId}`);
-        // }
     }
 
     getBadgeNumber(agencyId: number): Observable<any> {

@@ -138,14 +138,7 @@ export class ReportComponent implements OnInit {
       panelClass: 'my-panel',
     });
 
-    // elements.forEach(el => {
-    //   el.style.position = 'fixed';
-    // });
-
     dialogRef.afterClosed().subscribe(result => {
-      // elements.forEach(el => {
-      //   el.style.position = 'relative';
-      // });
       if (result !== null) {
         if (row && row.id !== 0) {
           row.storeInformation = result.storeInformation;
@@ -262,10 +255,6 @@ export class ReportComponent implements OnInit {
         element.storeName = store.storeName;
       }
     });
-
-    // this.cacheSpan('id', (d: { id: number; }) => d.id);
-    // this.cacheSpan('updateDate', (d: { id: number; updateDate: string; }) => d.id + d.updateDate);
-    // this.cacheSpan('provinceName', (d: { id: number; updateDate: string; provinceName: string; }) => d.id + d.updateDate + d.provinceName);
 
     this.cacheSpan('rowId', (d: { rowId: number; }) => d.rowId);
     this.cacheSpan('updateDateVisisble', (d: { rowId: number; updateDateVisisble: string; }) => d.rowId + d.updateDateVisisble);

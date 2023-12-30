@@ -4,10 +4,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import { Helper } from '../../helpers/helper';
 import { MyErrorStateMatcher } from '../../orders/order-add/order-add.component';
-import { AGENCY_ROLE, MSG_STATUS, NOTIFY_TYPE, STOCKER_ROLE, USER_SALESMAN_ROLE } from '../../constants/const-data';
+import { AGENCY_ROLE, MSG_STATUS, NOTIFY_TYPE, USER_SALESMAN_ROLE } from '../../constants/const-data';
 import { Notify } from '../../models/notify';
 import { NotificationService } from '../../services/notification.service';
-import * as moment from 'moment';
 import { Editor, toDoc, Toolbar, Validators } from 'ngx-editor';
 import { FormControl, FormGroup } from '@angular/forms';
 import { SocketService } from '../../services/socket.service';
@@ -241,9 +240,6 @@ export class DialogDetailNotifyComponent implements OnInit {
     if (this.notify.contents.length === 0) {
       isValidForm = false;
     }
-    // if (this.notify.fileName.length === 0) {
-    //   isValidForm = false;
-    // }
 
     if (!isValidForm) {
       this.error = 'Vui lòng nhập đầy đủ thông tin bắt buộc (*)';

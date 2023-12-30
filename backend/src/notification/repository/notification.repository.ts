@@ -10,14 +10,6 @@ import { Helper } from '../../shared/helper';
 export class NotificationRepository extends Repository<Notification> {
     private readonly helper = new Helper();
 
-    // async findAll(): Promise<any> {
-    //     return await this.querySql(0);
-    // }
-
-    // async getAll(agencyId: number): Promise<any> {
-    //     return await this.querySql(agencyId);
-    // }
-
     async getAll(agencyId: number): Promise<any> {
         let sql = this.createQueryBuilder('n')
             .select('n')
@@ -66,7 +58,6 @@ export class NotificationRepository extends Repository<Notification> {
     }
 
     async createNotification(createDto: NotificationDTO, notifyAgencyRepo: NotificationAgencyRepository): Promise<Notification | any> {
-        // createDto.updatedDate = createDto.createdDate;
         const notifyEntity = this.mappingNoyify(createDto);
         const notify = await this.save(notifyEntity);
         const notifyAgency: NotificationAgency[] = [];
@@ -83,7 +74,6 @@ export class NotificationRepository extends Repository<Notification> {
     }
 
     async updateNotification(modifyDto: NotificationDTO, notifyAgencyRepo: NotificationAgencyRepository): Promise<UpdateResult> {
-        //modifyDto.updatedDate = this.helper.getUpdateDate(1);
         const notify = this.mappingNoyify(modifyDto);
         const update = await this.update(modifyDto.id, notify);
 
@@ -116,112 +106,6 @@ export class NotificationRepository extends Repository<Notification> {
         }
         return { statusCode: 400 };
     }
-
-
-    // private async querySql(agencyId: number) {
-    //     let sql = this.createQueryBuilder('n')
-    //         .select('n')
-    //         .addSelect('GROUP_CONCAT(DISTINCT na.agency_id SEPARATOR ", ") as agencyList')
-    //         .innerJoin(NotificationAgency, 'na', 'na.notification_id = n.id');
-
-    //     if (agencyId !== 0) {
-    //         sql = sql.where('na.agency_id = :agencyId', { agencyId });
-    //     }
-
-    //     let query = await sql.groupBy('n.id')
-    //         .orderBy('n.updated_date', 'DESC')
-    //         .addOrderBy('n.id', 'DESC')
-    //         .getRawMany();
-    //     const res: NotificationDto[] = [];
-    //     query.forEach(x => {
-    //         const item = new NotificationDto();
-    //         item.id = x.n_id;
-    //         item.contents = x.n_contents;
-    //         item.fileName = x.n_filename;
-    //         item.note = x.n_note;
-    //         item.isPublished = x.n_is_published;
-    //         item.agencyList = x.agencyList.split(",").map(Number);;
-    //         item.createdDate = x.n_created_date;
-    //         item.mimeType = x.n_mime_type;
-    //         item.filePath = x.n_file_path;
-
-    //         item.sender = x.n_sender;
-    //         item.updatedDate = x.n_updated_date;
-    //         item.notificationType = x.n_notification_type;
-    //         item.orderId = x.n_order_id;
-    //         item.statusOrder = x.n_status_order;
-    //         res.push(item);
-    //     });
-
-    //     const res2: NotificationAgencyDto[] = [];
-    //     const query2 = await this.createQueryBuilder()
-    //         .from(NotificationAgency, 'na')
-    //         .getRawMany();
-    //     query2.forEach(el => {
-    //         const item = new NotificationAgencyDto();
-    //         item.id = el.id;
-    //         item.agencyId = el.agencyId;
-    //         item.notificationId = el.notificationId;
-    //         item.isViewed = el.isViewed;
-    //         res2.push(item);
-    //     });
-
-    //     return { notify: res, notifyAgency: res2 };
-    // }
-
-    // async createNotification(createDto: NotificationDTO,
-    //     notifyAgencyRepo: NotificationAgencyRepository): Promise<Notification | any> {
-    //     const notify = this.mappingNoyify(createDto);
-    //     const notifyEntity = await this.save(notify);
-    //     const notifyAgency: NotificationAgency[] = [];
-    //     createDto.agencyList.forEach(x => {
-    //         notifyAgency.push({
-    //             id: 0,
-    //             agencyId: x,
-    //             notificationId: notifyEntity.id,
-    //             isViewed: false,
-    //         });
-    //     });
-    //     await notifyAgencyRepo.saveNotifyAgency(notifyAgency);
-    //     return notifyEntity;
-    // }
-
-    // async uploadFile(id: number, file: { path, filename, mimetype }): Promise<Notification | any> {
-    //     const res = await this.createQueryBuilder()
-    //         .update(Notification)
-    //         .set({ filePath: file.path, fileName: file.filename, mimeType: file.mimetype })
-    //         .where("id = :id", { id })
-    //         .execute();
-    //     if (res.affected > 0) {
-    //         return { statusCode: 200 };
-    //     }
-    //     return { statusCode: 400 };
-    // }
-
-    // async updateNotification(modifyDto: NotificationDTO,
-    //     notifyAgencyRepo: NotificationAgencyRepository): Promise<UpdateResult> {
-    //     const notify = this.mappingNoyify(modifyDto);
-    //     const update = await this.update(modifyDto.id, notify);
-
-    //     await notifyAgencyRepo.deleteNotificationAgency(modifyDto.id);
-
-    //     const notifyAgency: NotificationAgency[] = [];
-    //     modifyDto.agencyList.forEach(x => {
-    //         notifyAgency.push({
-    //             id: 0,
-    //             agencyId: x,
-    //             notificationId: modifyDto.id,
-    //             isViewed: modifyDto.isViewed,
-    //         });
-    //     });
-    //     await notifyAgencyRepo.saveNotifyAgency(notifyAgency);
-    //     return update;
-    // }
-
-    // async deleteNotification(id: number, notifyAgencyRepo: NotificationAgencyRepository): Promise<DeleteResult> {
-    //     await notifyAgencyRepo.deleteNotificationAgency(id);
-    //     return await this.delete(id);
-    // }
 
     public mappingNoyify(modifyDto: NotificationDTO): Notification {
         const notify = new Notification();

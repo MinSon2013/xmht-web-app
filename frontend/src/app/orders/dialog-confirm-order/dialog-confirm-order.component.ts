@@ -1,12 +1,11 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ADMIN_ROLE, AGENCY_ROLE, Cities, MSG_STATUS, RECEIPT, STATUS, STOCKER_ROLE, Transports, USER_AREA_MANAGER_ROLE, USER_SALESMAN_ROLE } from '../../constants/const-data';
+import { AGENCY_ROLE, Cities, MSG_STATUS, RECEIPT, STATUS, STOCKER_ROLE, Transports, USER_AREA_MANAGER_ROLE, USER_SALESMAN_ROLE } from '../../constants/const-data';
 import { Order } from '../../models/order';
 import { Helper } from '../../helpers/helper';
 import { TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import { SocketService } from '../../services/socket.service';
-import * as moment from 'moment';
 
 @Component({
   selector: 'app-dialog-confirm-order',

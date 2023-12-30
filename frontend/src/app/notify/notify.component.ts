@@ -184,14 +184,7 @@ export class NotifyComponent implements OnInit {
       data: row,
     });
 
-    // elements.forEach(el => {
-    //   el.style.position = 'fixed';
-    // });
-
     dialogRef.afterClosed().subscribe(result => {
-      // elements.forEach(el => {
-      //   el.style.position = 'relative';
-      // });
       this.getData();
       if (result !== null) {
         if (row && row.id !== 0) {
@@ -235,13 +228,7 @@ export class NotifyComponent implements OnInit {
   };
 
   onDownload(row: any) {
-    this.notifyService.downloadFile(row.id)
-    // .pipe(tap((res1) => {
-    // })).subscribe((res: any) => {
-    //   if (res.statusCode === 400) {
-    //     console.log(res)
-    //   }
-    // });
+    this.notifyService.downloadFile(row.id);
   }
 
   onChangeCheckedAll(event: any) {

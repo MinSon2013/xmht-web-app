@@ -22,7 +22,6 @@ import { Helper } from '../helpers/helper';
 export class AgencyComponent implements OnInit {
 
   displayedColumns: string[] = ['id', 'agencyName', 'address', 'phone', 'email', 'contract', 'note', 'deleteAction'];
-  // displayedColumns: string[] = ['id', 'agencyName', 'address', 'phone', 'email', 'userName', 'contract', 'note', 'deleteAction'];
   dataSource = new MatTableDataSource<Agency>();
   clickedRows = new Set<Agency>();
   colspan: number = 0;
@@ -46,8 +45,6 @@ export class AgencyComponent implements OnInit {
       this.displayedColumns = ['id', 'agencyName', 'address', 'phone', 'email', 'contract', 'note'];
     }
     this.colspan = this.displayedColumns.length;
-    // const agencyList = this.helper.getAgencyList();
-    //if (agencyList.length === 0) {
     this.agencyService.getAgencyList().subscribe((response: any) => {
       if (response.length > 0) {
         this.dataSource.data = response.reverse();
@@ -57,10 +54,6 @@ export class AgencyComponent implements OnInit {
       }
       this.hideShowNoDataRow();
     });
-    // } else {
-    //   this.dataSource.data = agencyList.reverse();
-    //   this.hideShowNoDataRow();
-    // }
   }
 
   hideShowNoDataRow() {
@@ -84,14 +77,7 @@ export class AgencyComponent implements OnInit {
       data: row,
     });
 
-    // elements.forEach(el => {
-    //   el.style.position = 'fixed';
-    // });
-
     dialogRef.afterClosed().subscribe(result => {
-      // elements.forEach(el => {
-      //   el.style.position = 'relative';
-      // });
       if (result !== null) {
         if (row && row.id !== 0) {
           row.agencyName = result.agencyName;

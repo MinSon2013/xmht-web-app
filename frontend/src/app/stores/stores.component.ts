@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { CustomPaginator } from '../common/custom-paginator';
 import { DialogDeleteConfirmComponent } from '../common/dialog-delete-confirm/dialog-delete-confirm.component';
-import { Cities, SERVICE_TYPE, STOCKER_ROLE, USER_AREA_MANAGER_ROLE, USER_SALESMAN_ROLE } from '../constants/const-data';
+import { Cities, SERVICE_TYPE, STOCKER_ROLE, USER_AREA_MANAGER_ROLE } from '../constants/const-data';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
@@ -119,14 +119,7 @@ export class StoresComponent implements OnInit {
       data: { row, districtList: this.districtList },
     });
 
-    // elements.forEach(el => {
-    //   el.style.position = 'fixed';
-    // });
-
     dialogRef.afterClosed().subscribe(result => {
-      // elements.forEach(el => {
-      //   el.style.position = 'relative';
-      // });
       if (result !== null) {
         if (row && row.id !== 0) {
           row.storeName = result.storeName;
@@ -183,10 +176,6 @@ export class StoresComponent implements OnInit {
       }
     });
   }
-
-  // onReport() {
-  //   this.router.navigate(['report']);
-  // }
 
   cacheSpan(key: string, accessor: any) {
     for (let i = 0; i < this.dataSource.data.length;) {
