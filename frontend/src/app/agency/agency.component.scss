@@ -7,8 +7,8 @@
 
 .container {
     height: auto;
-    min-width: 100%;
-    margin-top: 7rem;
+    min-width: 90%;
+    margin-top: 5rem;
     padding-bottom: 2rem;
 }
 
@@ -26,7 +26,7 @@
         border: 1px solid grey;
         border-bottom: 1.05px solid grey;
         margin-bottom: 20px;
-        display: block;
+        // display: block;
         overflow-x: auto;
         white-space: nowrap;
         max-height: 500px;
@@ -49,7 +49,7 @@
             background: #90bdf5;
             color: rgb(0, 0, 0);
             font-size: 12pt;
-            width: 1%;
+            font-weight: 600;
             border-right: 1px solid whitesmoke;
         }
 
@@ -164,6 +164,7 @@
             padding: 0 !important;
 
             table {
+                display: block !important;
                 margin-bottom: 0.5rem !important;
             }
         }
@@ -174,7 +175,7 @@
 @media only screen and (max-width:400px) {
     .container {
         margin-top: 5rem !important;
-        padding-left: 1rem !important;
+        padding-left: 0.5rem !important;
         padding-top: 1rem !important;
 
         .header {
@@ -191,8 +192,10 @@
 
         .table-container {
             padding: 0 !important;
+            margin-bottom: 1rem !important;
 
             table {
+                display: block !important;
                 margin-bottom: 0.5rem !important;
             }
         }

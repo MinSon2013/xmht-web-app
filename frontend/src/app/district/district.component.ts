@@ -115,14 +115,14 @@ export class DistrictComponent implements OnInit {
       data: row,
     });
 
-    elements.forEach(el => {
-      el.style.position = 'fixed';
-    });
+    // elements.forEach(el => {
+    //   el.style.position = 'fixed';
+    // });
 
     dialogRef.afterClosed().subscribe(result => {
-      elements.forEach(el => {
-        el.style.position = 'relative';
-      });
+      // elements.forEach(el => {
+      //   el.style.position = 'relative';
+      // });
       if (result !== null) {
         if (row && row.id !== 0) {
           row.name = result.name;

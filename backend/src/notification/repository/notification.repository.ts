@@ -66,6 +66,7 @@ export class NotificationRepository extends Repository<Notification> {
     }
 
     async createNotification(createDto: NotificationDTO, notifyAgencyRepo: NotificationAgencyRepository): Promise<Notification | any> {
+        // createDto.updatedDate = createDto.createdDate;
         const notifyEntity = this.mappingNoyify(createDto);
         const notify = await this.save(notifyEntity);
         const notifyAgency: NotificationAgency[] = [];
@@ -82,6 +83,7 @@ export class NotificationRepository extends Repository<Notification> {
     }
 
     async updateNotification(modifyDto: NotificationDTO, notifyAgencyRepo: NotificationAgencyRepository): Promise<UpdateResult> {
+        //modifyDto.updatedDate = this.helper.getUpdateDate(1);
         const notify = this.mappingNoyify(modifyDto);
         const update = await this.update(modifyDto.id, notify);
 

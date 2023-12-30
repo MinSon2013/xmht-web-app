@@ -50,7 +50,7 @@ mat-toolbar-row {
             color: white;
             font-weight: 600;
             padding-left: 4px;
-            font-size: 12pt;
+            font-size: 13pt;
         }
 
         :host {
@@ -104,9 +104,11 @@ mat-toolbar-row {
 }
 
 .sub-menu {
+    padding-bottom: 6px;
+
     .menu-item {
         color: white;
-        font-size: 11pt;
+        font-size: 12pt;
         font-family: 'Roboto', sans-serif;
         padding: 0 0.75rem;
     }
@@ -132,10 +134,12 @@ mat-toolbar-row {
 
     .mat-toolbar-row {
         padding: 0 6px !important;
+        height: 100px !important;
     }
 
     .head-content {
         padding: 0.4rem 0.25rem !important;
+        display: block;
 
         .head-content-left {
             .span {
@@ -161,7 +165,7 @@ mat-toolbar-row {
             mat-icon {
                 width: auto !important;
                 font-size: 12pt !important;
-                padding-top: 8px !important;
+                padding-top: 0 !important;
             }
 
             .agency {
@@ -174,6 +178,8 @@ mat-toolbar-row {
     .sub-menu {
         overflow-x: auto;
         overflow-y: hidden;
+        width: 100% !important;
+        display: block !important;
     }
 
     .menu-item {
@@ -188,10 +194,12 @@ mat-toolbar-row {
 
     .mat-toolbar-row {
         padding: 0 6px !important;
+        height: 100px !important;
     }
 
     .head-content {
         padding: 0.4rem 0.25rem !important;
+        display: block !important;
 
         .head-content-left {
             .span {
@@ -207,6 +215,8 @@ mat-toolbar-row {
         }
 
         .head-content-right {
+            width: 100% !important;
+            padding-left: 0 !important;
 
             .fa-bell {
                 margin-left: 0.5rem !important;
@@ -217,7 +227,7 @@ mat-toolbar-row {
             mat-icon {
                 width: auto !important;
                 font-size: 10pt !important;
-                padding-top: 10px !important;
+                padding-top: 3px !important;
             }
 
             .agency {

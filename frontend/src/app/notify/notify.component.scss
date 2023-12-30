@@ -9,7 +9,7 @@
     padding-bottom: 2rem;
     min-width: 100%;
     height: auto;
-    margin-top: 7rem;
+    margin-top: 5rem;
 }
 
 .header {
@@ -57,8 +57,9 @@
             white-space: pre;
             color: rgb(0, 0, 0);
             font-size: 12pt;
-            background-color: rgb(201, 201, 201);
+            background-color: #90bdf5;
             padding: 8px;
+            font-weight: 600;
 
             label {
                 margin-left: 5px;
@@ -68,7 +69,7 @@
         td {
             font-size: 11pt;
             width: auto;
-            padding: 8px;
+            padding: 8px 8px 8px 1rem;
 
             .col-content {
                 min-width: 30px;
@@ -156,6 +157,10 @@
         .w30 {
             width: 30%;
         }
+
+        .pl-0 {
+            padding-left: 0 !important;
+        }
     }
 
     .mat-mdc-row .mat-mdc-cell {
@@ -220,7 +225,7 @@
         label {
             color: dimgray;
             cursor: pointer;
-            font-weight: 500;
+            font-weight: 600;
         }
     }
 }
@@ -307,7 +312,7 @@
 @media only screen and (max-width:600px) {
     .container {
         padding-left: 1rem !important;
-        padding-top: 1rem !important;
+        padding-top: 0 !important;
 
         .header {
             padding: 2rem 0 1rem 0 !important;
@@ -317,6 +322,7 @@
 
         .action-add {
             margin-right: 0 !important;
+            padding: 0.25rem !important;
         }
 
         .table-container {
@@ -364,7 +370,7 @@
                 label {
                     color: dimgray;
                     cursor: pointer;
-                    font-weight: 500;
+                    font-weight: 600;
                 }
             }
         }
@@ -373,8 +379,8 @@
 
 @media only screen and (max-width:400px) {
     .container {
-        padding-left: 1rem !important;
-        padding-top: 1rem !important;
+        padding-left: 0.5rem !important;
+        padding-top: 0 !important;
 
         .header {
             padding: 2rem 0 1rem 0 !important;
@@ -384,10 +390,12 @@
 
         .action-add {
             margin-right: 0 !important;
+            padding: 0.25rem !important;
         }
 
         .table-container {
             padding: 0 !important;
+            margin-bottom: 2rem !important;
 
             table {
                 margin-bottom: 0.5rem !important;
@@ -430,7 +438,7 @@
                 label {
                     color: dimgray;
                     cursor: pointer;
-                    font-weight: 500;
+                    font-weight: 600;
                 }
             }
         }

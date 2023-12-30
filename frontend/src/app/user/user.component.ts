@@ -5,7 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { CustomPaginator } from '../common/custom-paginator';
 import { DialogDeleteConfirmComponent } from '../common/dialog-delete-confirm/dialog-delete-confirm.component';
-import { SERVICE_TYPE, STOCKER_ROLE, USER_ROLE, USER_SALESMAN_ROLE } from '../constants/const-data';
+import { SERVICE_TYPE, USER_ROLE } from '../constants/const-data';
 import { Helper } from '../helpers/helper';
 import { DialogModifyUserComponent } from './dialog-modify-user/dialog-modify-user.component';
 import { DistrictService } from '../services/district.service';
@@ -109,14 +109,14 @@ export class UserComponent implements OnInit {
       data: { row, districtList: this.districtList },
     });
 
-    elements.forEach(el => {
-      el.style.position = 'fixed';
-    });
+    // elements.forEach(el => {
+    //   el.style.position = 'fixed';
+    // });
 
     dialogRef.afterClosed().subscribe(result => {
-      elements.forEach(el => {
-        el.style.position = 'relative';
-      });
+      // elements.forEach(el => {
+      //   el.style.position = 'relative';
+      // });
       if (result !== null) {
         if (row && row.id !== 0) {
           row.fullName = result.fullName;

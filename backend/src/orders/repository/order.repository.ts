@@ -387,13 +387,13 @@ export class OrderRepository extends Repository<Order> {
         notifyDto.agencyList.push(modifyOrderDto.notifyReceiver === 0 ? adminId : modifyOrderDto.notifyReceiver);
         notifyDto.sender = modifyOrderDto.id !== 0 ? modifyOrderDto.userUpdated : modifyOrderDto.sender;
         notifyDto.notificationType = this.NOTIFY_TYPE_GENERAL;
-        notifyDto.updatedDate = moment(new Date).format('HH:mm DD/MM/YYYY');
+        notifyDto.updatedDate = this.helper.getUpdateDate(2);
         notifyDto.orderId = modifyOrderDto.id;
         notifyDto.statusOrder = this.getStatusOrder(modifyOrderDto.status);
         if (k === 'UPDATE') {
             await notificationService.updateNotifyOrder(notifyDto);
         } else if (k === 'CREATE') {
-            notifyDto.createdDate = moment(new Date).format('HH:mm DD/MM/YYYY');
+            notifyDto.createdDate = this.helper.getUpdateDate(2);
             await notificationService.create(notifyDto);
         }
     }

@@ -8,7 +8,7 @@ import { CustomPaginator } from '../common/custom-paginator';
 import { DialogDeleteConfirmComponent } from '../common/dialog-delete-confirm/dialog-delete-confirm.component';
 import { DialogDetailAgencyComponent } from './dialog-detail-agency/dialog-detail-agency.component';
 import { AgencyService } from '../services/agency.service';
-import { SERVICE_TYPE, STOCKER_ROLE, USER_AREA_MANAGER_ROLE } from '../constants/const-data';
+import { AGENCY_ROLE, SERVICE_TYPE, STOCKER_ROLE, USER_AREA_MANAGER_ROLE } from '../constants/const-data';
 import { Helper } from '../helpers/helper';
 
 @Component({
@@ -35,6 +35,7 @@ export class AgencyComponent implements OnInit {
   userRole: number = this.helper.getUserRole();
   isAreaManager: boolean = this.userRole === USER_AREA_MANAGER_ROLE;
   isStocker: boolean = this.userRole === STOCKER_ROLE;
+  isAgency: boolean = this.userRole === AGENCY_ROLE;
 
   constructor(public dialog: MatDialog,
     private agencyService: AgencyService,
@@ -83,14 +84,14 @@ export class AgencyComponent implements OnInit {
       data: row,
     });
 
-    elements.forEach(el => {
-      el.style.position = 'fixed';
-    });
+    // elements.forEach(el => {
+    //   el.style.position = 'fixed';
+    // });
 
     dialogRef.afterClosed().subscribe(result => {
-      elements.forEach(el => {
-        el.style.position = 'relative';
-      });
+      // elements.forEach(el => {
+      //   el.style.position = 'relative';
+      // });
       if (result !== null) {
         if (row && row.id !== 0) {
           row.agencyName = result.agencyName;

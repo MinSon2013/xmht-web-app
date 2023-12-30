@@ -284,6 +284,7 @@ export class NotificationService {
     const notify = this.notifyRepo.mappingNoyify(body);
     if (key === 'CREATE') {
       notify.createdDate = this.helper.getUpdateDate(2);
+      notify.updatedDate = this.helper.getUpdateDate(2);
       const res = await this.notifyRepo.save(notify);
       notify.id = res.id;
       const notifyAgency: NotificationAgency = {
@@ -294,6 +295,7 @@ export class NotificationService {
       };
       return await this.notifyAgencyRepo.save(notifyAgency);
     } else {
+      notify.updatedDate = this.helper.getUpdateDate(2);
       const notifyEntity = await this.notifyRepo.getByReportId(notify.reportId);
       if (notifyEntity) {
         return await this.notifyRepo.update(notifyEntity.id, notify);

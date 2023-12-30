@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Cities, MSG_STATUS, RECEIPT, STATUS, STOCKER_ROLE, Transports } from '../../constants/const-data';
+import { Cities, MSG_STATUS, RECEIPT, STATUS, STOCKER_ROLE, Transports, USER_SALESMAN_ROLE } from '../../constants/const-data';
 import { Order, ProductItem } from '../../models/order';
 import { FormControl, FormGroupDirective, NgForm } from '@angular/forms';
 import { Helper } from '../../helpers/helper';
@@ -44,8 +44,9 @@ export class OrderAddComponent implements OnInit {
   receiptError: any = '';
   helper = new Helper();
   isAdmin: boolean = this.helper.isAdmin();
-  role: number = this.helper.getUserRole();
-  isStocker: boolean = this.role === STOCKER_ROLE;
+  userRole: number = this.helper.getUserRole();
+  isStocker: boolean = this.userRole === STOCKER_ROLE;
+  isSalesman: boolean = this.userRole === USER_SALESMAN_ROLE;
 
   selectedStatus: any = { value: 1, label: '' };
   pickupSelected: any = null;

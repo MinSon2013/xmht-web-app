@@ -4,7 +4,7 @@
     padding: 2rem;
     display: block;
     background-color: white;
-    margin-top: 7rem;
+    margin-top: 5rem;
 
     .chart {
         display: flex;
@@ -126,7 +126,7 @@
     .container {
         padding-left: 0.5rem !important;
         padding-right: 0.5rem !important;
-        padding-top: 0 !important;
+        padding-top: 0.5rem !important;
 
         .action-search {
             padding-right: 0.5rem !important;
@@ -195,7 +195,7 @@
 @media only screen and (max-width:400px) {
     .container {
         padding-left: 0.5rem !important;
-        padding-top: 0 !important;
+        padding-top: 0.5rem !important;
 
         .action-search {
             padding-right: 0.5rem !important;

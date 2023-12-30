@@ -7,9 +7,11 @@
 
 .container {
     height: auto;
-    min-width: 100%;
-    margin-top: 7rem;
+    min-width: 86%;
+    margin-top: 5rem;
     padding-bottom: 2rem;
+    padding-left: 10rem;
+    padding-right: 10rem;
 }
 
 .header {
@@ -48,7 +50,7 @@
             background: #90bdf5;
             color: rgb(0, 0, 0);
             font-size: 12pt;
-            width: 1%;
+            font-weight: 600;
             border: 1px solid whitesmoke;
         }
 
@@ -56,6 +58,7 @@
             border-right: 1px solid whitesmoke;
             text-align: left;
             font-size: 11pt;
+            min-width: 8rem;
 
             .no-data {
                 padding: 0px 0.5rem;
@@ -72,12 +75,16 @@
             padding: 6px;
         }
 
-        .w-8rem {
-            min-width: 8rem;
+        .w10 {
+            width: 10rem;
         }
 
-        .w-9rem {
-            min-width: 9rem;
+        .w15 {
+            width: 15rem;
+        }
+
+        .w20 {
+            width: 20rem;
         }
     }
 
@@ -145,8 +152,10 @@
 
 @media only screen and (max-width:600px) {
     .container {
-        padding-left: 1rem !important;
+        padding-left: 0.5rem !important;
         margin-top: 5rem !important;
+        width: 100% !important;
+        padding-right: 0.5rem !important;
 
         .header {
             padding: 2rem 0 1rem 0 !important;
@@ -171,8 +180,10 @@
 
 @media only screen and (max-width:400px) {
     .container {
-        padding-left: 1rem !important;
+        padding-left: 0.5rem !important;
         margin-top: 5rem !important;
+        width: 100% !important;
+        padding-right: 0.5rem !important;
 
         .header {
             padding: 2rem 0 1rem 0 !important;
@@ -186,6 +197,7 @@
 
         .table-container {
             padding: 0 !important;
+            margin-bottom: 1rem !important;
 
             table {
                 margin-bottom: 0.5rem !important;

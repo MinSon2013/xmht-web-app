@@ -22,7 +22,7 @@
                         id="createdDate" type="text" maxlength=15 [(ngModel)]="order.createdDate"
                         [ngModelOptions]="{standalone: true}" />
                 </div>
-                <div class="mb-3 row field" [hidden]="!isAdmin">
+                <div class="mb-3 row field" [hidden]="!isAdmin && !isSalesman">
                     <span class="col-5 text-label" for="agency">
                         {{'ORDER.AGENCY' | translate}}
                         <label class="require">*</label>

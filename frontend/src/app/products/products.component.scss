@@ -8,7 +8,7 @@
 .container {
     height: auto;
     min-width: 100%;
-    margin-top: 7rem;
+    margin-top: 5rem;
     padding-bottom: 2rem;
 }
 
@@ -26,7 +26,7 @@
         border: 1px solid grey;
         border-bottom: 1.05px solid grey;
         margin-bottom: 20px;
-        display: block;
+        //display: block;
         overflow-x: auto;
 
         .wrap-text {
@@ -47,7 +47,7 @@
             color: rgb(0, 0, 0);
             font-size: 12pt;
             text-align: center;
-            width: 1%;
+            font-weight: 600;
             border-right: 1px solid whitesmoke;
         }
 
@@ -209,6 +209,7 @@
 
         .table-container {
             padding: 0 !important;
+            margin-bottom: 1rem !important;
 
             table {
                 margin-bottom: 0.5rem !important;

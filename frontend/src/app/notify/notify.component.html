@@ -37,7 +37,7 @@
           <mat-checkbox [checked]="checkedAll" (change)="onChangeCheckedAll($event)">
           </mat-checkbox>
         </th>
-        <td mat-cell *matCellDef="let element">
+        <td mat-cell *matCellDef="let element" class="pl-0">
           <mat-checkbox [checked]="element.checkedItem" (change)="onChangeCheckedItem($event, element)">
           </mat-checkbox>
         </td>
@@ -98,7 +98,8 @@
 
       <!-- statusOrder Column -->
       <ng-container matColumnDef="statusOrder">
-        <th mat-header-cell *matHeaderCellDef sortActionDescription="Sort by statusOrder" class="pre-line w20">
+        <th mat-header-cell *matHeaderCellDef sortActionDescription="Sort by statusOrder" class="pre-line w20"
+          style="min-width: 10rem;">
           {{ "NOTIFY.STATUS_ORDER" | translate }}
         </th>
         <td mat-cell class="wrap-text" *matCellDef="let element" class="{{ !element.isViewed ? 'bold' : '' }}">

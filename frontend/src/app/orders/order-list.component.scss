@@ -6,7 +6,7 @@
 }
 
 .bg-white {
-    margin-top: 7rem;
+    margin-top: 6rem;
 }
 
 .header {
@@ -61,6 +61,7 @@
             width: auto;
             text-align: center;
             border-right: 1px solid whitesmoke;
+            font-weight: 600;
         }
 
         td {
@@ -162,11 +163,15 @@
         }
 
         .bold {
-            font-weight: 500;
+            font-weight: 600;
         }
 
         .del-action {
             background: whitesmoke;
+        }
+
+        .driver {
+            min-width: 10rem;
         }
     }
 }
@@ -193,6 +198,7 @@
 
             label {
                 cursor: pointer;
+                font-weight: 600;
             }
         }
 
@@ -321,7 +327,7 @@
 
     select {
         width: 50% !important;
-        max-height: 36px;
+        max-height: 40px;
     }
 
     .id {
@@ -511,7 +517,7 @@
 
 @media only screen and (max-width: 600px) {
     .bg-white {
-        margin-top: 5rem !important;
+        margin-top: 6rem !important;
     }
 
     .header {
@@ -630,7 +636,7 @@
 
 @media only screen and (max-width: 400px) {
     .bg-white {
-        margin-top: 5.15rem !important;
+        margin-top: 6rem !important;
     }
 
     .header {

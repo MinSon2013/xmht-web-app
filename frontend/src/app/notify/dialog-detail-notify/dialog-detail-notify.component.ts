@@ -32,7 +32,7 @@ export class DialogDetailNotifyComponent implements OnInit {
   agencyListSelectOption: any[] = [];
   agencySelected: any = null;
   isEdit: boolean = true;
-  agencyId: number = this.helper.getUserId();
+  userId: number = this.helper.getUserId();
   userRole: number = this.helper.getUserRole();
   isSalesman: boolean = this.userRole === USER_SALESMAN_ROLE;
   isAgency: boolean = this.userRole === AGENCY_ROLE;
@@ -144,7 +144,7 @@ export class DialogDetailNotifyComponent implements OnInit {
     if (this.validForm()) {
       this.notify.isPublished = isPublished;
       this.notify.agencyId = this.agencySelected.id;
-      this.notify.sender = this.agencyId;
+      this.notify.sender = this.userId;
       this.notify.userId = this.helper.getUserId();
       this.notify.agencyList = [];
       if (this.notify.agencyId === 0) {
@@ -190,7 +190,7 @@ export class DialogDetailNotifyComponent implements OnInit {
           }
         });
       } else {
-        if (this.agencyId === this.notify.agencyId) {
+        if (this.userId === this.notify.sender) {
           this.notify.isViewed = true;
         } else {
           this.notify.isViewed = false;
@@ -224,7 +224,7 @@ export class DialogDetailNotifyComponent implements OnInit {
 
   onCancel() {
     if (this.notify.id !== 0) {
-      if (this.agencyId === this.notify.agencyId) {
+      if (this.userId === this.notify.sender) {
         const payload = {
           isViewed: true,
           agencyId: this.notify.agencyId,

@@ -8,7 +8,7 @@
 .container {
     height: auto;
     min-width: 100%;
-    margin-top: 7rem;
+    margin-top: 5rem;
     padding-bottom: 2rem;
 }
 
@@ -26,7 +26,7 @@
         border: 1px solid grey;
         border-bottom: 1.05px solid grey;
         margin-bottom: 20px;
-        //  display: block;
+        //display: block;
         overflow-x: auto;
         white-space: nowrap;
         max-height: 500px;
@@ -49,11 +49,13 @@
             color: rgb(0, 0, 0);
             font-size: 12pt;
             border: 1px solid whitesmoke;
+            font-weight: 600;
         }
 
         td {
             text-align: left;
             font-size: 11pt;
+            padding-left: 10px !important;
 
             .no-data {
                 padding: 0px 0.5rem;
@@ -86,12 +88,16 @@
             padding: 6px;
         }
 
-        .w8 {
-            min-width: 8rem;
+        .w6 {
+            min-width: 6rem;
         }
 
         .w9 {
             min-width: 9rem;
+        }
+
+        .w12 {
+            min-width: 12rem;
         }
 
         .w15 {
@@ -114,6 +120,11 @@
 
         .del-action {
             background: whitesmoke;
+        }
+
+        .rowid {
+            min-width: 4rem;
+            max-width: 4rem;
         }
     }
 
@@ -249,7 +260,7 @@
 @media only screen and (max-width:600px) {
     .container {
         padding-left: 1rem !important;
-        margin-top: 5rem !important;
+        margin-top: 6rem !important;
 
         .header {
             padding: 1rem 0 1rem 0 !important;
@@ -272,12 +283,18 @@
             padding: 0 !important;
 
             table {
+                display: block !important;
                 margin-bottom: 0.5rem !important;
             }
         }
 
         .action-search {
             padding: 0 1rem !important;
+        }
+
+        .district {
+            text-align: left !important;
+            padding-left: 0 !important;
         }
     }
 
@@ -286,7 +303,7 @@
 @media only screen and (max-width:400px) {
     .container {
         padding-left: 1rem !important;
-        margin-top: 5rem !important;
+        margin-top: 6rem !important;
 
         .header {
             padding: 1rem 0 1rem 0 !important;
@@ -307,14 +324,21 @@
 
         .table-container {
             padding: 0 !important;
+            margin-bottom: 1rem !important;
 
             table {
+                display: block !important;
                 margin-bottom: 0.5rem !important;
             }
         }
 
         .action-search {
             padding: 0 1rem !important;
+        }
+
+        .district {
+            text-align: left !important;
+            padding-left: 0 !important;
         }
     }
 }

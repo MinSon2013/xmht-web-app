@@ -171,8 +171,7 @@
         "DELETE_USER": "Xóa thông tin USER"
     },
     "HEADER": {
-        "MENU_1": "Thay đổi mật khẩu",
-        "MENU_2": "Đăng xuất",
+        "MENU_ITEM_CHANGE_PASSWORD": "Thay đổi mật khẩu",
         "MENU_GROUP_ORDER": "Thông tin đặt hàng",
         "MENU_GROUP_MANAGE": "Quản lý",
         "MENU_GROUP_REPORT": "Báo cáo",
@@ -183,7 +182,9 @@
         "MENU_ITEM_AGENCY": "Quản lý NPP",
         "MENU_ITEM_STORE": "Quản lý cửa hàng",
         "MENU_ITEM_DISTRICT": "Quản lý khu vực",
-        "MENU_ITEM_USER": "Quản lý User"
+        "MENU_ITEM_USER": "Quản lý User",
+        "MENU_ITEM_NOTIFICATION": "Thông báo",
+        "MENU_ITEM_LOGOUT": "Đăng xuất"
     },
     "CHANGE_PASSWORD": {
         "OLD_PASSWORD": "Mật khẩu cũ",
