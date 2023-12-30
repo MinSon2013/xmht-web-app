@@ -31,7 +31,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 })
 export class OrderListComponent implements OnInit {
 
-  displayedColumns: string[] = ['approvedNumber', 'createdDate', 'contract', 'receivedDate', 'confirmedDate', 'shippingDate', 'deliveryId', 'pickupId', 'productName', 'quantity', 'productTotal', 'licensePlates', 'driver', 'status', 'deleteAction'];
+  displayedColumns: string[] = ['approvedNumber', 'agencyName', 'contract', 'createdDate', 'receivedDate', 'confirmedDate', 'shippingDate', 'deliveryId', 'pickupId', 'productName', 'quantity', 'productTotal', 'licensePlates', 'driver', 'status', 'deleteAction'];
   colspan: number = 0;
   dataSource = new MatTableDataSource<Order>();
   dataSourceClone = new MatTableDataSource<Order>();
@@ -88,8 +88,11 @@ export class OrderListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (!this.isAdmin && !this.isAgency && !this.isSalesman && !this.isStocker) {
-      this.displayedColumns = ['approvedNumber', 'createdDate', 'contract', 'receivedDate', 'confirmedDate', 'shippingDate', 'deliveryId', 'pickupId', 'productName', 'quantity', 'productTotal', 'licensePlates', 'driver', 'status'];
+    if (this.isAreaManager) {
+      this.displayedColumns = ['approvedNumber', 'agencyName', 'contract', 'createdDate', 'receivedDate', 'confirmedDate', 'shippingDate', 'deliveryId', 'pickupId', 'productName', 'quantity', 'productTotal', 'licensePlates', 'driver', 'status'];
+    }
+    if (this.isAgency) {
+      this.displayedColumns = ['approvedNumber', 'contract', 'createdDate', 'receivedDate', 'confirmedDate', 'shippingDate', 'deliveryId', 'pickupId', 'productName', 'quantity', 'productTotal', 'licensePlates', 'driver', 'status'];
     }
     this.colspan = this.displayedColumns.length;
     this.productList = this.helper.getProductList();
