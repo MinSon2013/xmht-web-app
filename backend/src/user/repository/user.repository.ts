@@ -46,6 +46,11 @@ export class UserRepository extends Repository<Users> {
         return this.mappingUserRO([raw], options)[0];
     }
 
+    async getUserPasswordById(userId) {
+        const res = await this.findOne(userId);
+        return res.password;
+    }
+
     private mappingUserRO(raw: any, options?: string): UserRO[] {
         const result: UserRO[] = [];
         raw.forEach(element => {

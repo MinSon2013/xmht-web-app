@@ -7,6 +7,7 @@ import { AgencyRO } from '../ro/agency.ro';
 import { Helper } from '../../shared/helper';
 import { UserDTO } from '../../user/dto/user.dto';
 import { HttpException, HttpStatus } from '@nestjs/common';
+import { AuthService } from '../../auth/auth.service';
 
 @EntityRepository(Agency)
 export class AgencyRepository extends Repository<Agency> {
@@ -107,9 +108,17 @@ export class AgencyRepository extends Repository<Agency> {
         }
     }
 
-    async updateAgency(modifyAgencyDto: ModifyAgencyDTO
-    ): Promise<UpdateResult> {
+    async updateAgency(modifyAgencyDto: ModifyAgencyDTO,
+        authService: AuthService,
+        userService: UserService): Promise<UpdateResult> {
         const agency = this.mappingAgency(modifyAgencyDto);
+        if (modifyAgencyDto.password && modifyAgencyDto.password.length > 0) {
+            const password = await userService.getUserPassword(modifyAgencyDto.userId);
+            const matches: boolean = await authService.validatePassword(modifyAgencyDto.password, password);
+            if (!matches) {
+                await userService.updateUserPassword(modifyAgencyDto.id, modifyAgencyDto.password);
+            }
+        }
 
         //// Update user fullname
         // await userService.updateFullName(modifyAgencyDto.userId, modifyAgencyDto.agencyName);

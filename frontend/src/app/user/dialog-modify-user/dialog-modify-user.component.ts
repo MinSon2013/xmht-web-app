@@ -69,7 +69,7 @@ export class DialogModifyUserComponent implements OnInit {
 
   onSubmit() {
     if (this.validForm()) {
-      this.user.role = this.roleSelected?.value;
+      this.user.role = this.roleSelected ? this.roleSelected.value : this.user.role;
       if (this.user.id === 0) {
         this.userService.create(this.user).subscribe({
           error: error => {
@@ -142,7 +142,11 @@ export class DialogModifyUserComponent implements OnInit {
       isValidForm = false;
     }
     if (!this.roleSelected) {
-      isValidForm = false;
+      if (this.isEdit) {
+        isValidForm = true;
+      } else {
+        isValidForm = false;
+      }
     } else {
       if (!this.districtSelected && this.roleSelected.role === 'USER_AREA_MANAGER') {
         isValidForm = false;
@@ -157,14 +161,14 @@ export class DialogModifyUserComponent implements OnInit {
       isValidForm = false;
     }
 
-    if ((this.user.password && this.user.password.length < 8)
-      || (this.user.confirmPassword && this.user.confirmPassword.length < 8)) {
+    if ((this.user.password && this.user.password.length > 0 && this.user.password.length < 8)
+      || (this.user.confirmPassword && this.user.confirmPassword.length > 0 && this.user.confirmPassword.length < 8)) {
       isValidForm = false;
       this.errorPassword = 'Mật khẩu phải dài hơn 8 kí tự.';
       return isValidForm;
     }
 
-    if (this.user.id === 0 && !this.passwordsMatching() && !this.isEdit) {
+    if (this.user.password && this.user.confirmPassword && !this.passwordsMatching()) {
       isValidForm = false;
       this.errorPassword = 'Mật khẩu không khớp';
       return isValidForm;
@@ -174,6 +178,7 @@ export class DialogModifyUserComponent implements OnInit {
       this.error = 'Vui lòng nhập đầy đủ thông tin bắt buộc (*)';
     } else {
       this.error = '';
+      this.errorPassword = '';
       isValidForm = true;
     }
 

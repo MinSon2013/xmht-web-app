@@ -4,6 +4,7 @@ import { DeleteResult, UpdateResult } from 'typeorm';
 import { ModifyAgencyDTO } from './dto/modify-agency.dto';
 import { AgencyRepository } from './repository/agency.repository';
 import { AgencyRO } from './ro/agency.ro';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable()
 export class AgencyService {
@@ -11,6 +12,8 @@ export class AgencyService {
         public readonly agencyRepo: AgencyRepository,
         @Inject(forwardRef(() => UserService))
         private readonly userService: UserService,
+        @Inject(forwardRef(() => AuthService))
+        private readonly authService: AuthService,
     ) { }
 
     async findAll(agencyId: number): Promise<AgencyRO[]> {
@@ -31,7 +34,7 @@ export class AgencyService {
     }
 
     async update(modifyAgencyDto: ModifyAgencyDTO): Promise<UpdateResult> {
-        return await this.agencyRepo.updateAgency(modifyAgencyDto);
+        return await this.agencyRepo.updateAgency(modifyAgencyDto, this.authService, this.userService);
     }
 
     async delete(id: number, userId: number): Promise<DeleteResult> {

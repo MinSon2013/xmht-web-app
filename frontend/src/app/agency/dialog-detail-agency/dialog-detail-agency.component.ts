@@ -43,6 +43,7 @@ export class DialogDetailAgencyComponent implements OnInit {
   userRole: number = this.helper.getUserRole();
   disabled: boolean = (this.userRole === USER_AREA_MANAGER_ROLE || this.userRole === STOCKER_ROLE);
 
+  isAdmin: boolean = this.helper.isAdmin();
   isEdit: boolean = false;
 
   constructor(
@@ -107,7 +108,7 @@ export class DialogDetailAgencyComponent implements OnInit {
         this.agencyService.update(this.agency).subscribe((response: any) => {
           if (response) {
 
-            this.helper.updateAgency(this.agency);//--------------------
+            this.helper.updateAgency(this.agency);
 
             this.helper.showSuccess(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.MODIFIED_AGENCY', MSG_STATUS.SUCCESS));
             this.dialogRef.close(this.agency);
@@ -143,8 +144,8 @@ export class DialogDetailAgencyComponent implements OnInit {
     if (this.agency.phone.length === 0) {
       isValidForm = false;
     }
-    if ((this.agency.password.length > 0 && this.agency.password.length < 8)
-      || (this.agency.confirmPassword.length > 0 && this.agency.confirmPassword.length < 8)) {
+    if ((this.agency.password && this.agency.password.length > 0 && this.agency.password.length < 8)
+      || (this.agency.confirmPassword && this.agency.confirmPassword.length > 0 && this.agency.confirmPassword.length < 8)) {
       // if (this.agency.password.length < 8 || this.agency.confirmPassword.length < 8) {
       isValidForm = false;
       this.errorPassword = 'Mật khẩu phải dài hơn 8 kí tự.';
@@ -155,7 +156,7 @@ export class DialogDetailAgencyComponent implements OnInit {
       isValidForm = false;
     }
 
-    if (this.agency.id === 0 && !this.passwordsMatching()) {
+    if (this.agency.password && this.agency.confirmPassword && !this.passwordsMatching()) {
       isValidForm = false;
       this.errorPassword = 'Mật khẩu không khớp';
     }
@@ -164,6 +165,7 @@ export class DialogDetailAgencyComponent implements OnInit {
       this.error = 'Vui lòng nhập đầy đủ thông tin bắt buộc (*)';
     } else {
       this.error = '';
+      this.errorPassword = '';
       isValidForm = true;
     }
 

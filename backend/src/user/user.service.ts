@@ -38,6 +38,10 @@ export class UserService {
         return await this.userRepo.getUserById(id);
     }
 
+    async getUserPassword(userId: number): Promise<string> {
+        return await this.userRepo.getUserPasswordById(userId);
+    }
+
     async getDistrictByUserId(userId: number): Promise<number> {
         return await this.userDistrictRepo.getDistrictByUserId(userId);
     }
@@ -55,6 +59,13 @@ export class UserService {
     }
 
     async updateUser(user: UserDTO): Promise<UpdateResult> {
+        if (user.password) {
+            const password = await this.getUserPassword(user.id);
+            const matches: boolean = await this.authService.validatePassword(user.password, password);
+            if (!matches) {
+                await this.updateUserPassword(user.id, user.password);
+            }
+        }
         return await this.userRepo.updateUser(user, this.authService, this.userDistrictRepo);
     }
 

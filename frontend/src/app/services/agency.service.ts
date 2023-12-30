@@ -45,6 +45,7 @@ export class AgencyService {
             email: obj.email,
             contract: obj.contract,
             updatedByUserId: obj.updatedByUserId,
+            password: obj.password,
         };
         return this.webrequestService.put(this.url, payload);
     }

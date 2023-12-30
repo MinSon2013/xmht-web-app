@@ -67,6 +67,7 @@ export class UserService {
             role: obj.role,
             districtId: obj.districtId,
             fullName: obj.fullName,
+            password: obj.password,
             updatedByUserId: new Helper().getUserId(),
         };
         return this.webrequestService.put(this.url, payload);

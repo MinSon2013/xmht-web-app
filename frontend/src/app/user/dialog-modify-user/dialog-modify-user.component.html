@@ -26,10 +26,10 @@
         </div>
 
         <!-- Password -->
-        <div class="mb-3 row field" [hidden]="isEdit">
+        <div class="mb-3 row field" [hidden]="(!isAdmin && isEdit)">
             <span class="col-5 text-label" for="password">
                 {{ "USER.PASSWORD" | translate }}
-                <label class="require">*</label>
+                <label class="require" [hidden]="isEdit">*</label>
             </span>
             <input matInput class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:shadow-outline {{
             errorPassword.length !== 0 ? 'focus-p' : ''}}" id="password" type="password" placeholder="********"
@@ -38,10 +38,10 @@
         </div>
 
         <!-- Confirm password -->
-        <div class="mb-3 row field" [hidden]="isEdit">
+        <div class="mb-3 row field" [hidden]="(!isAdmin && isEdit)">
             <span class="col-5 text-label" for="confirmPassword">
                 {{ "USER.CONFIRM_PASSWORD" | translate }}
-                <label class="require">*</label>
+                <label class="require" [hidden]="isEdit">*</label>
             </span>
             <input matInput class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:shadow-outline {{
             errorPassword.length !== 0 ? 'focus-p' : '' }}" id="confirmPassword" type="password" placeholder="********"
@@ -59,7 +59,7 @@
         <div class="mb-3 row field">
             <span class="col-5 text-label" for="contract">
                 {{ "USER.ROLE" | translate }}
-                <label class="require">*</label>
+                <label class="require" [hidden]="isEdit">*</label>
             </span>
             <select [disabled]="!isAdmin"
                 class="col-7 form-select appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
