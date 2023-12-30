@@ -31,29 +31,29 @@ export class AuthService {
 
     async login(user: AuthDto) {
         // // -- REMOVE ----
-        //  await this.syncDatabase(); //mapping data from agency to user
+        await this.syncDatabase(); //mapping data from agency to user
 
-        const foundUser: Users = await this.userService.findByUsername(user.username);
-        if (foundUser) {
-            const matches: boolean = await this.validatePassword(user.password, foundUser.password);
-            if (matches) {
-                const payload: UserRO = await this.userService.getOne(foundUser.id);
-                delete payload.password;
+        // const foundUser: Users = await this.userService.findByUsername(user.username);
+        // if (foundUser) {
+        //     const matches: boolean = await this.validatePassword(user.password, foundUser.password);
+        //     if (matches) {
+        //         const payload: UserRO = await this.userService.getOne(foundUser.id);
+        //         delete payload.password;
 
-                let agencyId = 0;
-                if (!this.userRole.includes(payload.role)) {
-                    const agency: AgencyRO = await this.agencyService.findOne(foundUser.id);
-                    agencyId = agency.id;
-                }
+        //         let agencyId = 0;
+        //         if (!this.userRole.includes(payload.role)) {
+        //             const agency: AgencyRO = await this.agencyService.findOne(foundUser.id);
+        //             agencyId = agency.id;
+        //         }
 
-                const jwt = await this.generateJwt({ ...payload, agencyId });
-                return await this.getDataToResponse(foundUser, jwt);
-            } else {
-                throw new HttpException('Login was not successfull, wrong credentials', HttpStatus.UNAUTHORIZED);
-            }
-        } else {
-            throw new HttpException('Login was not successfull, User not found', HttpStatus.NOT_FOUND);
-        }
+        //         const jwt = await this.generateJwt({ ...payload, agencyId });
+        //         return await this.getDataToResponse(foundUser, jwt);
+        //     } else {
+        //         throw new HttpException('Login was not successfull, wrong credentials', HttpStatus.UNAUTHORIZED);
+        //     }
+        // } else {
+        //     throw new HttpException('Login was not successfull, User not found', HttpStatus.NOT_FOUND);
+        // }
     }
 
     private async getDataToResponse(user: Users, jwt: string) {

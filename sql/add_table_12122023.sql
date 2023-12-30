@@ -3,13 +3,10 @@ CREATE TABLE `district` (
   `name` VARCHAR(255) NOT NULL,
   `province_id` varchar(255) NOT NULL,
   `updated_date` varchar(20) DEFAULT NULL,
-  `updated_by_user_id` int(11) DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `updated_by_user_id` int(11) DEFAULT 0,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
-ALTER TABLE `district`
-  ADD PRIMARY KEY (`id`);
-  
-  
   
  CREATE TABLE `store` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -21,11 +18,9 @@ ALTER TABLE `district`
   `phone` varchar(12) NOT NULL,
   `note` varchar(255) DEFAULT NULL,
   `updated_date` varchar(20) DEFAULT NULL,
-  `updated_by_user_id` int(11) DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-ALTER TABLE `store`
-  ADD PRIMARY KEY (`id`);
+  `updated_by_user_id` int(11) DEFAULT 0,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
   
   
   
@@ -44,11 +39,9 @@ ALTER TABLE `store`
   `mime_type` varchar(150) NOT NULL,
   `update_date` VARCHAR(20),
   `create_date` VARCHAR(20),
-  `updated_by_user_id` int(11) DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-ALTER TABLE `report`
-  ADD PRIMARY KEY (`id`);
+  `updated_by_user_id` int(11) DEFAULT 0,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
   
   
   
@@ -56,8 +49,6 @@ ALTER TABLE `report`
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
   `district_id` int(11) NOT NULL,
-  `updated_date` varchar(18)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-ALTER TABLE `user_district`
-  ADD PRIMARY KEY (`id`);
+  `updated_date` varchar(18),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
