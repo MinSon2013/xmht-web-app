@@ -20,12 +20,6 @@ export const CONFIG = {
         REPORTS: 'reports',
     },
     LOCAL_STORAGE: {
-        ORDER_LIST: 'orderList',
-        AGENCY_LIST: 'agencyList',
-        PRODUCT_LIST: 'productList',
-        PRODUCT_SUM: 'productSum',
-        PRODUCT_ORDER_LIST: 'productOrderList',
-        DELIVERY_LIST: 'deliveryList',
         LOGIN_INFO: 'loginInfo',
         TOKEN: 'token',
         IS_ADMIN: 'is_admin',

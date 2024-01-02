@@ -48,7 +48,6 @@ export class AgencyComponent implements OnInit {
     this.agencyService.getAgencyList().subscribe((response: any) => {
       if (response.length > 0) {
         this.dataSource.data = response.reverse();
-        this.helper.setAgencyList(response);
       } else {
         this.dataSource.data = [];
       }
@@ -102,7 +101,6 @@ export class AgencyComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.helper.deleteAgency(row);
         this.dataSource.data = this.dataSource.data.filter(x => x.id !== row.id);
         if (this.dataSource.data.length === 0) {
           this.hasData = false;

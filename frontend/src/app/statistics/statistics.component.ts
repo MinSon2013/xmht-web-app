@@ -10,6 +10,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { FormGroup } from '@angular/forms';
 import { STATUS, STOCKER_ROLE, USER_AREA_MANAGER_ROLE } from '../constants/const-data';
 import * as moment from 'moment';
+import { AgencyService } from '../services/agency.service';
 
 export interface Label { }
 export interface ChartDataSets {
@@ -103,13 +104,27 @@ export class StatisticsComponent implements OnInit {
     private productService: ProductService,
     private cdr: ChangeDetectorRef,
     public translate: TranslateService,
-  ) { }
+    private agencyService: AgencyService,
+  ) {
+    this.getProducts();
+    this.getAgencys();
+  }
 
   ngOnInit() {
-    this.productList = this.helper.getProductList();
-    this.agencyList = this.helper.getAgencyList();
     this.getDataChartPie();
     this.getDataChartByDate();
+  }
+
+  getProducts() {
+    this.productService.getProductList().subscribe((response: any) => {
+      this.productList = response;
+    });
+  }
+
+  getAgencys() {
+    this.agencyService.getAgencyList().subscribe((response: any) => {
+      this.agencyList = response;
+    });
   }
 
   generateBarChart() {

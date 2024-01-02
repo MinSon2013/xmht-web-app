@@ -59,7 +59,6 @@ export class DialogDetailProductComponent implements OnInit {
         this.productService.create(this.product).subscribe((response: any) => {
           if (response) {
             this.product.id = response.id;
-            this.helper.addProduct(this.product);
             this.helper.showSuccess(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.ADD_PRODUCT', MSG_STATUS.SUCCESS));
             this.dialogRef.close(this.product);
           } else {
@@ -69,7 +68,6 @@ export class DialogDetailProductComponent implements OnInit {
       } else {
         this.productService.update(this.product).subscribe((response: any) => {
           if (response) {
-            this.helper.updateProduct(this.product);
             this.helper.showSuccess(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.MODIFIED_PRODUCT', MSG_STATUS.SUCCESS));
             this.dialogRef.close(this.product);
           } else {

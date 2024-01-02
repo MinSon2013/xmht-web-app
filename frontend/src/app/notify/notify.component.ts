@@ -12,6 +12,7 @@ import { NotificationService } from '../services/notification.service';
 import { Agency } from '../models/agency';
 import { SocketService } from '../services/socket.service';
 import { CustomSocket } from '../sockets/custom-socket';
+import { AgencyService } from '../services/agency.service';
 
 @Component({
   selector: 'app-notify',
@@ -54,7 +55,8 @@ export class NotifyComponent implements OnInit {
     public notifyService: NotificationService,
     private socketService: SocketService,
     private socket: CustomSocket,
-  ) { }
+    private agencyService: AgencyService,
+  ) { this.getAgencys(); }
 
   ngOnInit(): void {
     this.agencyId = this.helper.getAgencyId();
@@ -62,7 +64,6 @@ export class NotifyComponent implements OnInit {
       this.displayedColumns = ['checkAll', 'updatedDate', 'agencyName', 'contents', 'fileName', 'statusOrder', 'confirmer'];
     }
     this.colspan = this.displayedColumns.length;
-    this.agencyList = this.helper.getAgencyList();
     this.getData();
     this.emitSocket();
   }
@@ -138,6 +139,12 @@ export class NotifyComponent implements OnInit {
     });
   }
 
+  getAgencys() {
+    this.agencyService.getAgencyList().subscribe((response: any) => {
+      this.agencyList = response;
+    });
+  }
+
   private convertHtmlToText(html: string) {
     let text = html.replaceAll("<p>", "");
     text = text.replaceAll("</p>", "\n");
@@ -181,7 +188,7 @@ export class NotifyComponent implements OnInit {
       document.getElementsByClassName('body') as HTMLCollectionOf<HTMLElement>,
     );
     const dialogRef = this.dialog.open(DialogDetailNotifyComponent, {
-      data: row,
+      data: { row, agencyList: this.agencyList },
     });
 
     dialogRef.afterClosed().subscribe(result => {

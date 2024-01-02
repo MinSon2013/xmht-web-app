@@ -2,16 +2,9 @@ import { animate, style, transition, trigger, keyframes } from "@angular/animati
 import { TranslateService } from "@ngx-translate/core";
 import { ToastrService } from "ngx-toastr";
 import { CONFIG } from "../common/config";
-import { Agency } from "../models/agency";
-import { Delivery } from "../models/delivery";
 import { LoginInfo } from "../models/login-info";
-import { Order } from "../models/order";
-import { Product } from "../models/product";
-import { ProductOrder } from "../models/product-order";
-import { User } from "../models/user";
 import jwt_decode from "jwt-decode";
-import { ADMIN_ROLE, AGENCY_ROLE, STATUS, STOCKER_ROLE, USER_AREA_MANAGER_ROLE, USER_SALESMAN_ROLE } from "../constants/const-data";
-import { Store } from "../models/store";
+import { ADMIN_ROLE, AGENCY_ROLE, STOCKER_ROLE, USER_AREA_MANAGER_ROLE, USER_SALESMAN_ROLE } from "../constants/const-data";
 import * as moment from "moment";
 
 export interface INavbarData {
@@ -76,16 +69,13 @@ export class Helper {
 
   checkSession() {
     let appHeader = document.getElementById('app-header');
-    // let appSidenav = document.getElementById('app-sidenav');
     let appLogin = document.getElementById('login-container');
     if (localStorage.getItem(CONFIG.LOCAL_STORAGE.ACCESS_TOKEN)) {
       appHeader ? appHeader.hidden = false : '';
-      //  appSidenav ? appSidenav.hidden = false : '';
       appLogin ? appLogin.hidden = true : '';
       return true;
     } else {
       appHeader ? appHeader.hidden = true : '';
-      // appSidenav ? appSidenav.hidden = true : '';
       appLogin ? appLogin.hidden = false : '';
       return false;
     }
@@ -158,226 +148,6 @@ export class Helper {
     }
     return 0;
   }
-
-  getDeliveryList(): Delivery[] {
-    let deliveryList: Delivery[] = [];
-    let jsonString = localStorage.getItem(CONFIG.LOCAL_STORAGE.DELIVERY_LIST);
-    if (jsonString) {
-      deliveryList = JSON.parse(jsonString) as Delivery[];
-    }
-    return deliveryList;
-  }
-
-  // START ------------------------------------------
-
-  setOrderList(data: any[]) {
-    localStorage.setItem(CONFIG.LOCAL_STORAGE.ORDER_LIST, JSON.stringify(data));
-  }
-
-  getOrderList(): Order[] {
-    let orderList: Order[] = [];
-    let jsonString = localStorage.getItem(CONFIG.LOCAL_STORAGE.ORDER_LIST);
-    if (jsonString) {
-      orderList = JSON.parse(jsonString) as Order[];
-      orderList.forEach(item => {
-        switch (item.status) {
-          case 1:
-            item.statusLabel = STATUS[0].label;
-            break;
-          case 2:
-            item.statusLabel = STATUS[1].label;
-            break;
-          case 3:
-            item.statusLabel = STATUS[2].label;
-            break;
-          case 4:
-            item.statusLabel = STATUS[3].label;
-            break;
-          case 5:
-            item.statusLabel = STATUS[4].label;
-            break;
-        }
-      });
-    }
-    return orderList;
-  }
-
-  updateStatusOrder(id: number, status: number) {
-    let orderList = this.getOrderList();
-    if (orderList.length > 0) {
-      orderList.forEach(element => {
-        if (element.id === id) {
-          element.status = status;
-        }
-      });
-      localStorage.setItem(CONFIG.LOCAL_STORAGE.ORDER_LIST, JSON.stringify(orderList));
-    }
-  }
-
-  updateOrder(obj: any) {
-    let orderList = this.getOrderList();
-    if (orderList.length > 0) {
-      const order = orderList.find(x => x.id === obj.id);
-      if (order) {
-        order.createdDate = obj.createdDate;
-        order.deliveryId = obj.deliveryId;
-        order.pickupId = obj.pickupId;
-        order.productTotal = obj.productTotal;
-        order.driver = obj.driver;
-        order.note = obj.note;
-        order.transport = obj.transport;
-        order.licensePlates = obj.licensePlates;
-        order.receivedDate = obj.receivedDate;
-        order.status = obj.status;
-        order.note = obj.note;
-        order.products = obj.products;
-        order.contract = obj.contract;
-        order.agencyId = obj.agencyId;
-      }
-
-      localStorage.setItem(CONFIG.LOCAL_STORAGE.ORDER_LIST, JSON.stringify(orderList));
-    }
-  }
-
-  addOrder(data: any) {
-    let orderList = this.getOrderList();
-    orderList.push(data);
-    localStorage.setItem('orderList', JSON.stringify(orderList));
-  }
-
-  deleteOrder(obj: any) {
-    let orderList = this.getOrderList();
-    if (orderList.length > 0) {
-      orderList = orderList.filter(x => x.id !== obj.id);
-      localStorage.setItem(CONFIG.LOCAL_STORAGE.ORDER_LIST, JSON.stringify(orderList));
-    }
-  }
-
-  getAgencyList(): Agency[] {
-    let agencyList: Agency[] = [];
-    let jsonString = localStorage.getItem(CONFIG.LOCAL_STORAGE.AGENCY_LIST);
-    if (jsonString) {
-      agencyList = JSON.parse(jsonString) as Agency[];
-    }
-    return agencyList;
-  }
-
-  updateAgency(obj: any) {
-    let agencyList = this.getAgencyList();
-    if (agencyList.length > 0) {
-      agencyList.forEach(element => {
-        if (element.id === obj.id) {
-          element.address = obj.address;
-          element.contract = obj.contract;
-          element.email = obj.email;
-          element.agencyName = obj.agencyName;
-          element.note = obj.note;
-          element.phone = obj.phone;
-          element.userId = obj.userId;
-        }
-      });
-      localStorage.setItem(CONFIG.LOCAL_STORAGE.AGENCY_LIST, JSON.stringify(agencyList));
-    }
-  }
-
-  addAgency(data: any) {
-    let agencyList = this.getAgencyList();
-    agencyList.push(data);
-    localStorage.setItem(CONFIG.LOCAL_STORAGE.AGENCY_LIST, JSON.stringify(agencyList));
-  }
-
-  deleteAgency(obj: any) {
-    let agencyList = this.getAgencyList();
-    if (agencyList.length > 0) {
-      agencyList = agencyList.filter(x => x.id !== obj.id);
-      localStorage.setItem(CONFIG.LOCAL_STORAGE.AGENCY_LIST, JSON.stringify(agencyList));
-    }
-  }
-
-  setProductList(data: any[]) {
-    localStorage.setItem(CONFIG.LOCAL_STORAGE.PRODUCT_LIST, JSON.stringify(data));
-  }
-
-  getProductList(): Product[] {
-    let productList: Product[] = [];
-    let jsonString = localStorage.getItem(CONFIG.LOCAL_STORAGE.PRODUCT_LIST);
-    if (jsonString) {
-      productList = JSON.parse(jsonString) as Product[];
-    }
-    return productList;
-  }
-
-  getProductSum(): any[] {
-    let productSum: any[] = [];
-    let jsonString = localStorage.getItem(CONFIG.LOCAL_STORAGE.PRODUCT_SUM);
-    if (jsonString) {
-      productSum = JSON.parse(jsonString);
-    }
-    return productSum;
-  }
-
-  updateProduct(obj: any) {
-    let productList = this.getProductList();
-    if (productList.length > 0) {
-      productList.forEach(element => {
-        if (element.id === obj.id) {
-          element.name = obj.name;
-          element.quantity = obj.quantity;
-          element.price = obj.price;
-        }
-      });
-      localStorage.setItem(CONFIG.LOCAL_STORAGE.PRODUCT_LIST, JSON.stringify(productList));
-    }
-  }
-
-  addProduct(data: any) {
-    let productList = this.getProductList();
-    productList.push(data);
-    localStorage.setItem(CONFIG.LOCAL_STORAGE.PRODUCT_LIST, JSON.stringify(productList));
-  }
-
-  deleteProduct(obj: any) {
-    let productList = this.getProductList();
-    if (productList.length > 0) {
-      productList = productList.filter(x => x.id !== obj.id);
-      localStorage.setItem(CONFIG.LOCAL_STORAGE.PRODUCT_LIST, JSON.stringify(productList));
-    }
-  }
-
-  getProductOrderList(): ProductOrder[] {
-    let productOrderList: ProductOrder[] = [];
-    let jsonString = localStorage.getItem(CONFIG.LOCAL_STORAGE.PRODUCT_ORDER_LIST);
-    if (jsonString) {
-      productOrderList = JSON.parse(jsonString) as ProductOrder[];
-    }
-    return productOrderList;
-  }
-
-  updateProductOrder(obj: any) {
-    let productOrderList = this.getProductOrderList();
-    if (productOrderList.length > 0) {
-      productOrderList.forEach(element => {
-        if (element.productId === obj.productId && element.orderId === obj.orderId) {
-          element.quantity = obj.quantity;
-        }
-      });
-      localStorage.setItem(CONFIG.LOCAL_STORAGE.PRODUCT_ORDER_LIST, JSON.stringify(productOrderList));
-    }
-  }
-
-  addProductOrder(data: ProductOrder[]) {
-    let productOrderList = this.getProductOrderList();
-    productOrderList = data.concat(productOrderList);
-    localStorage.setItem(CONFIG.LOCAL_STORAGE.PRODUCT_ORDER_LIST, JSON.stringify(productOrderList));
-  }
-
-  setAgencyList(agencyList: Agency[]) {
-    localStorage.setItem(CONFIG.LOCAL_STORAGE.AGENCY_LIST, JSON.stringify(agencyList));
-  }
-
-
-  // END ------------------------------------------
-
 
   getMessage(translate: TranslateService, key: string, status: number, content?: string): string {
     let msg: string = '';

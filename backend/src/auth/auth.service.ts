@@ -1,9 +1,7 @@
 import { forwardRef, HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { DeliveryService } from "../delivery/delivery.service";
 import { AgencyService } from "../agency/agency.service";
 import { UserService } from "../user/user.service";
 import { AuthDto } from "./dto/auth.dto";
-import { ProductsService } from "../products/products.service";
 import bcrypt from 'bcrypt';
 import { Users } from "../user/entities/user.entity";
 import { JwtService } from "@nestjs/jwt";
@@ -23,8 +21,6 @@ export class AuthService {
         private readonly userService: UserService,
         @Inject(forwardRef(() => AgencyService))
         private readonly agencyService: AgencyService,
-        private readonly deliveryService: DeliveryService,
-        private readonly productService: ProductsService,
         private readonly jwtService: JwtService,
         private configService: ConfigService,
     ) { }
@@ -57,18 +53,12 @@ export class AuthService {
     }
 
     private async getDataToResponse(user: Users, jwt: string) {
-        const deliveryList = await this.deliveryService.findAll();
-        const productList = await this.productService.getAllProduct();
-        let agencyList;
         let agencyId = 0;
         let agencyName = '';
         if (!user.isAdmin && !this.userRole.includes(user.role)) {
             const agency = await this.agencyService.findOne(user.id);
             agencyId = agency.id;
             agencyName = agency.agencyName;
-            agencyList = await this.agencyService.findAll(agencyId);
-        } else {
-            agencyList = await this.agencyService.findAll(0);
         }
         return {
             loginInfo: {
@@ -80,9 +70,6 @@ export class AuthService {
                 agencyId: agencyId,
                 agencyName: agencyName,
             },
-            deliveryList,
-            agencyList,
-            productList,
             accessToken: jwt,
             tokenType: 'JWT',
             expiresIn: 10000,

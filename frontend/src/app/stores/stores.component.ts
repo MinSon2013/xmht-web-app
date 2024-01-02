@@ -12,6 +12,7 @@ import { StoreService } from '../services/store.service';
 import { DialogModifyStoreComponent } from './dialog-modify-store/dialog-modify-store.component';
 import { DistrictService } from '../services/district.service';
 import { Router } from '@angular/router';
+import { AgencyService } from '../services/agency.service';
 
 @Component({
   selector: 'app-stores',
@@ -48,8 +49,9 @@ export class StoresComponent implements OnInit {
     private storeService: StoreService,
     private districtService: DistrictService,
     public router: Router,
+    private agencyService: AgencyService,
   ) {
-    this.agencyList = this.helper.getAgencyList();
+    this.getAgencys();
   }
 
   ngOnInit(): void {
@@ -90,6 +92,12 @@ export class StoresComponent implements OnInit {
     });
   }
 
+  getAgencys() {
+    this.agencyService.getAgencyList().subscribe((response: any) => {
+      this.agencyList = response;
+    });
+  }
+
   getUserDistrict() {
     this.districtService.getUserDistrictList().subscribe((response: any) => {
       if (response) {
@@ -116,7 +124,7 @@ export class StoresComponent implements OnInit {
       document.getElementsByClassName('body') as HTMLCollectionOf<HTMLElement>,
     );
     const dialogRef = this.dialog.open(DialogModifyStoreComponent, {
-      data: { row, districtList: this.districtList },
+      data: { row, districtList: this.districtList, agencyList: this.agencyList },
     });
 
     dialogRef.afterClosed().subscribe(result => {

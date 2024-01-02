@@ -16,6 +16,7 @@ import { ReportService } from '../services/report.service';
 import * as moment from 'moment';
 import { FormControl } from '@angular/forms';
 import { CustomPaginator } from '../common/custom-paginator';
+import { AgencyService } from '../services/agency.service';
 
 @Component({
   selector: 'app-report',
@@ -59,8 +60,9 @@ export class ReportComponent implements OnInit {
     private districtService: DistrictService,
     public router: Router,
     private storeService: StoreService,
+    private agencyService: AgencyService,
   ) {
-    this.agencyList = this.helper.getAgencyList();
+    this.getAgencys();
   }
 
   ngOnInit(): void {
@@ -116,6 +118,12 @@ export class ReportComponent implements OnInit {
     });
   }
 
+  getAgencys() {
+    this.agencyService.getAgencyList().subscribe((response: any) => {
+      this.agencyList = response;
+    });
+  }
+
   hideShowNoDataRow() {
     if (this.dataSource.data.length === 0) {
       this.hasData = false;
@@ -134,7 +142,12 @@ export class ReportComponent implements OnInit {
       document.getElementsByClassName('body') as HTMLCollectionOf<HTMLElement>,
     );
     const dialogRef = this.dialog.open(DialogModifyReportComponent, {
-      data: { row, districtList: this.districtList, storeList: this.storeList },
+      data: {
+        row,
+        districtList: this.districtList,
+        storeList: this.storeList,
+        agencyList: this.agencyList
+      },
       panelClass: 'my-panel',
     });
 

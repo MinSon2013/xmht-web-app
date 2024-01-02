@@ -43,17 +43,18 @@ export class ProductsComponent implements OnInit {
       this.displayedColumns = ['id', 'productName', 'quantity', 'price', 'note'];
     }
     this.colspan = this.displayedColumns.length;
-    const productList = this.helper.getProductList();
-    if (productList.length === 0) {
-      this.productService.getProductList().subscribe((response: any) => {
-        this.helper.setProductList(response);
-        this.dataSource.data = response.length > 0 ? response.reverse() : [];
-      });
-    } else {
-      this.dataSource.data = productList.length > 0 ? productList.reverse() : [];
-    }
+    this.getData();
+  }
 
-    this.hideShowNoDataRow();
+  getData() {
+    this.productService.getProductList().subscribe((response: any) => {
+      if (response.length > 0) {
+        this.dataSource.data = response.reverse();
+      } else {
+        this.dataSource.data = [];
+      }
+      this.hideShowNoDataRow();
+    });
   }
 
   hideShowNoDataRow() {
@@ -100,7 +101,6 @@ export class ProductsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.helper.deleteProduct(row);
         this.dataSource.data = this.dataSource.data.filter(x => x.id !== row.id);
         if (this.dataSource.data.length === 0) {
           this.hasData = false;

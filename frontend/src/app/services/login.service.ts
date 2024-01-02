@@ -28,9 +28,6 @@ export class LoginService {
                     // Lưu session vào storage
                     localStorage.setItem(CONFIG.LOCAL_STORAGE.ACCESS_TOKEN, response.body.accessToken ? response.body.accessToken : '1');
                     localStorage.setItem(CONFIG.LOCAL_STORAGE.LOGIN_INFO, JSON.stringify(response.body.loginInfo));
-                    localStorage.setItem(CONFIG.LOCAL_STORAGE.DELIVERY_LIST, JSON.stringify(response.body.deliveryList));
-                    localStorage.setItem(CONFIG.LOCAL_STORAGE.AGENCY_LIST, JSON.stringify(response.body.agencyList));
-                    localStorage.setItem(CONFIG.LOCAL_STORAGE.PRODUCT_LIST, JSON.stringify(response.body.productList));
                 } else if (response.body.statusCode === HttpStatusCode.Unauthorized) {
                     this.errorSubject.next('Mật khẩu không đúng.');
                     this.helper.showError(this.toastr, 'Mật khẩu không đúng.');

@@ -94,9 +94,6 @@ export class DialogDetailAgencyComponent implements OnInit {
               const res = value as AgencyRO;
               this.agency.id = res.id;
               this.agency.userId = res.userId;
-
-              this.helper.addAgency(this.agency);
-
               this.helper.showSuccess(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.ADD_AGENCY', MSG_STATUS.SUCCESS));
               this.dialogRef.close(this.agency);
             } else {
@@ -107,9 +104,6 @@ export class DialogDetailAgencyComponent implements OnInit {
       } else {
         this.agencyService.update(this.agency).subscribe((response: any) => {
           if (response) {
-
-            this.helper.updateAgency(this.agency);
-
             this.helper.showSuccess(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.MODIFIED_AGENCY', MSG_STATUS.SUCCESS));
             this.dialogRef.close(this.agency);
           } else {

@@ -5,11 +5,11 @@ import { Delivery } from './entities/delivery.entity';
 
 @Controller('delivery')
 export class DeliveryController {
-    constructor(private readonly deliveryService: DeliveryService) {}
-  
-    @UseGuards(JwtAuthGuard)
-    @Get()
-    findAll(): Promise<Delivery[]> {
-      return this.deliveryService.findAll()
-    }
+  constructor(private readonly deliveryService: DeliveryService) { }
+
+  @UseGuards(JwtAuthGuard)
+  @Get()
+  findAll(): Promise<Delivery[]> {
+    return this.deliveryService.findAll()
+  }
 }

@@ -54,7 +54,7 @@ export class DialogModifyStoreComponent {
 
   ngOnInit(): void {
     this.districtList = this.data.districtList;
-    this.agencyList = this.helper.getAgencyList();
+    this.agencyList = this.data.agencyList;
     if (this.data.row && this.data.row.id !== 0) {
       this.translate.get('STORE.TITLE_MODIFIED').subscribe(x => { this.header = x });
       this.store.id = this.data.row.id;

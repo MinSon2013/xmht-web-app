@@ -8,7 +8,7 @@ import { Helper } from '../../helpers/helper';
 import { MSG_STATUS, USER_ROLE } from '../../constants/const-data';
 import { UserService } from '../../services/user.service';
 import { HttpStatusCode } from '@angular/common/http';
-import { UserRO } from 'src/app/models/ro/user.ro';
+import { UserRO } from '../../models/ro/user.ro';
 
 @Component({
   selector: 'app-dialog-modify-user',
@@ -84,7 +84,6 @@ export class DialogModifyUserComponent implements OnInit {
             if (value) {
               const res = value as UserRO;
               this.user.id = res.id;
-              this.helper.addAgency(this.user);
               this.helper.showSuccess(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.ADD_USER', MSG_STATUS.SUCCESS));
               this.dialogRef.close(this.user);
             } else {

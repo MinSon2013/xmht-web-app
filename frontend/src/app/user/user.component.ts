@@ -129,7 +129,6 @@ export class UserComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.helper.deleteAgency(row);
         this.dataSource.data = this.dataSource.data.filter(x => x.id !== row.id);
         if (this.dataSource.data.length === 0) {
           this.hasData = false;

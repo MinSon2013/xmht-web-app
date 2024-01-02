@@ -11,6 +11,9 @@ import { ToastrService } from 'ngx-toastr';
 import { TranslateService } from '@ngx-translate/core';
 import { SocketService } from '../../services/socket.service';
 import { tap } from 'rxjs';
+import { DeliveryService } from '../../services/delivery.service';
+import { AgencyService } from '../../services/agency.service';
+import { ProductService } from '../../services/product.service';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -86,17 +89,37 @@ export class OrderAddComponent implements OnInit {
     public translate: TranslateService,
     private toastr: ToastrService,
     private socketService: SocketService,
+    private deliveryService: DeliveryService,
+    private agencyService: AgencyService,
+    private productService: ProductService,
   ) { }
 
   ngOnInit(): void {
-    this.agencyList = this.helper.getAgencyList();
-    this.productList = this.helper.getProductList();
-    this.deliveries = this.helper.getDeliveryList();
-
-    this.setProductOrder();
+    this.getAgencys();
+    this.getProducts();
+    this.getDelivery();
     if (!this.helper.isAdmin()) {
       this.order.contract = this.agencyList[0].contract;
     }
+  }
+
+  getAgencys() {
+    this.agencyService.getAgencyList().subscribe((response: any) => {
+      this.agencyList = response;
+    });
+  }
+
+  getProducts() {
+    this.productService.getProductList().subscribe((response: any) => {
+      this.productList = response;
+      this.setProductOrder();
+    });
+  }
+
+  getDelivery() {
+    this.deliveryService.getDeliveryList().subscribe((response: any) => {
+      this.deliveries = response;
+    });
   }
 
   setProductOrder() {

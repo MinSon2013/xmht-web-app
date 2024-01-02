@@ -13,6 +13,8 @@ import { Location } from '@angular/common';
 import { NumToVietnameseText } from '../../common/num-to-vietnamese-text';
 import * as moment from 'moment';
 import { Order } from '../../models/order';
+import { AgencyService } from '../../services/agency.service';
+import { DeliveryService } from '../../services/delivery.service';
 
 @Component({
   selector: 'app-print-pdf',
@@ -30,8 +32,8 @@ export class PrintPdfComponent implements OnInit {
 
   helper = new Helper();
   cities: any[] = Cities;
-  deliveries: any[] = this.helper.getDeliveryList();
-  agencyList = this.helper.getAgencyList();
+  agencyList: any[] = [];
+  deliveries: any[] = [];
 
   header: string = '';
   agency: string = '';
@@ -55,16 +57,20 @@ export class PrintPdfComponent implements OnInit {
     public translate: TranslateService,
     private orderService: OrderService,
     private location: Location,
+    private agencyService: AgencyService,
+    private deliveryService: DeliveryService,
   ) {
     const navigation = this.router.getCurrentNavigation();
     this.data = navigation?.extras;
+    this.getAgencys();
+    this.getDelivery();
   }
 
   ngOnInit(): void {
     if (!this.data.agencyId) {
       this.location.back();
     } else {
-      this.agency = this.agencyList.find(y => y.id === this.data.agencyId)!.agencyName;
+      // this.agency = this.agencyList.find(y => y.id === this.data.agencyId)!.agencyName;
       this.translate.get('TITLE_APP').subscribe(x => {
         this.header = x;
       });
@@ -156,6 +162,19 @@ export class PrintPdfComponent implements OnInit {
         this.cacheSpan([], 'ton', (d: { ton: any; }) => d.ton);
         this.cacheSpan([], 'note', (d: { ton: any; }) => d.ton);
       }
+    });
+  }
+
+  getAgencys() {
+    this.agencyService.getAgencyList().subscribe((response: any) => {
+      this.agencyList = response;
+      this.agency = this.agencyList.find(y => y.id === this.data.agencyId)!.agencyName;
+    });
+  }
+
+  getDelivery() {
+    this.deliveryService.getDeliveryList().subscribe((response: any) => {
+      this.deliveries = response;
     });
   }
 

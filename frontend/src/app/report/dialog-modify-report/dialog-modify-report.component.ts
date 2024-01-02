@@ -74,8 +74,8 @@ export class DialogModifyReportComponent {
     this.districtList = this.data.districtList;
     this.districtListClone = this.data.districtList;
     this.storeList = this.data.storeList;
-    this.agencyList = this.helper.getAgencyList();
-    this.agencyListClone = this.helper.getAgencyList();
+    this.agencyList = this.data.agencyList;
+    this.agencyListClone = this.data.agencyList;
     if (this.data.row && this.data.row.id !== 0) {
       this.translate.get('REPORT.TITLE_MODIFIED').subscribe(x => { this.header = x });
       this.report.id = this.data.row.id;

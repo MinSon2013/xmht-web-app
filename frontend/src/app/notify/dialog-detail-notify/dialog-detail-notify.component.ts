@@ -57,7 +57,7 @@ export class DialogDetailNotifyComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<DialogDetailNotifyComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: Notify,
+    @Inject(MAT_DIALOG_DATA) public data: Notify | any,
     public translate: TranslateService,
     private toastr: ToastrService,
     private notifyService: NotificationService,
@@ -80,42 +80,42 @@ export class DialogDetailNotifyComponent implements OnInit {
     }
 
     this.agencyListSelectOption.push({ id: 0, label: 'Tất cả' });
-    this.agencyList = this.helper.getAgencyList();
+    this.agencyList = this.data.agencyList ? this.data.agencyList : [];
     this.agencyList.forEach(x => {
       this.agencyListSelectOption.push({ id: x.id, label: x.agencyName });
     });
 
-    if (this.data && this.data.id !== 0) {
+    if (this.data && this.data.row.id !== 0) {
       this.translate.get('NOTIFY.TITLE_MODIFIED').subscribe(x => { this.header = x });
       if (!this.isAdmin) {
         this.translate.get('NOTIFY.DETAIL').subscribe(x => { this.header = x });
       }
-      this.notify.id = this.data.id;
-      this.notify.agencyList = this.data.agencyList;
-      this.notify.contents = this.data.contents;
-      this.notify.fileName = this.data.fileName;
-      this.notify.note = this.data.note;
-      this.notify.isPublished = this.data.isPublished;
-      this.notify.createdDate = this.data.createdDate;
-      this.notify.filePath = this.data.filePath;
-      this.notify.mimeType = this.data.mimeType;
-      if (this.data.agencyList && this.data.agencyList.length === 1) {
-        const id = this.data.agencyList[0];
+      this.notify.id = this.data.row.id;
+      this.notify.agencyList = this.data.row.agencyList;
+      this.notify.contents = this.data.row.contents;
+      this.notify.fileName = this.data.row.fileName;
+      this.notify.note = this.data.row.note;
+      this.notify.isPublished = this.data.row.isPublished;
+      this.notify.createdDate = this.data.row.createdDate;
+      this.notify.filePath = this.data.row.filePath;
+      this.notify.mimeType = this.data.row.mimeType;
+      if (this.data.row.agencyList && this.data.row.agencyList.length === 1) {
+        const id = this.data.row.agencyList[0];
         const agency = this.agencyListSelectOption.find(x => x.id === id);
         this.agencySelected = agency ? agency : this.agencyListSelectOption[0];
-      } else if (this.data.agencyList && this.data.agencyList.length > 1) {
+      } else if (this.data.row.agencyList && this.data.row.agencyList.length > 1) {
         this.agencySelected = this.agencyListSelectOption[0];
       } else {
         this.agencySelected = this.agencyListSelectOption[0];
       }
-      this.notify.agencyId = this.data.agencyId;
+      this.notify.agencyId = this.data.row.agencyId;
       this.html = this.notify.contents;
-      this.notify.sender = this.data.sender;
+      this.notify.sender = this.data.row.sender;
       this.isEdit = (this.notify.sender === this.loginId);
-      this.couponChecked = this.data.notificationType === 2 ? true : false
-      this.notify.notificationType = this.data.notificationType;
-      this.notify.orderId = this.data.orderId;
-      this.notify.statusOrder = this.data.statusOrder;
+      this.couponChecked = this.data.row.notificationType === 2 ? true : false
+      this.notify.notificationType = this.data.row.notificationType;
+      this.notify.orderId = this.data.row.orderId;
+      this.notify.statusOrder = this.data.row.statusOrder;
     } else {
       this.notify.id = 0;
       this.notify.agencyList = [];
@@ -264,10 +264,10 @@ export class DialogDetailNotifyComponent implements OnInit {
       const file = event.target.files[0];
       this.notify.file = file;
       if (this.data) {
-        if (this.data.fileName !== file.name) {
+        if (this.data.row.fileName !== file.name) {
           this.notify.fileName = file.name;
         } else {
-          this.notify.fileName = this.data.fileName;
+          this.notify.fileName = this.data.row.fileName;
         }
       } else {
         this.notify.fileName = file.name;

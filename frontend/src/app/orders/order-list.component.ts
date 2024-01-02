@@ -20,6 +20,9 @@ import * as XLSX from 'xlsx-js-style';
 import { CustomSocket } from '../sockets/custom-socket';
 import { ExcelConfig } from '../helpers/excel.config';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { DeliveryService } from '../services/delivery.service';
+import { ProductService } from '../services/product.service';
+import { AgencyService } from '../services/agency.service';
 
 @Component({
   selector: 'app-order-list',
@@ -83,8 +86,14 @@ export class OrderListComponent implements OnInit {
     public translate: TranslateService,
     private socket: CustomSocket,
     private deviceService: DeviceDetectorService,
+    private deliveryService: DeliveryService,
+    private agencyService: AgencyService,
+    private productService: ProductService,
   ) {
     this.epicFunction();
+    this.getAgencys();
+    this.getProducts();
+    this.getDelivery();
   }
 
   ngOnInit(): void {
@@ -95,10 +104,6 @@ export class OrderListComponent implements OnInit {
       this.displayedColumns = ['approvedNumber', 'contract', 'createdDate', 'receivedDate', 'confirmedDate', 'shippingDate', 'deliveryId', 'pickupId', 'productName', 'quantity', 'productTotal', 'licensePlates', 'driver', 'status'];
     }
     this.colspan = this.displayedColumns.length;
-    this.productList = this.helper.getProductList();
-    this.agencyList = this.helper.getAgencyList();
-    this.deliveries = this.helper.getDeliveryList();
-
     this.getData();
     this.emitSocket();
   }
@@ -106,9 +111,7 @@ export class OrderListComponent implements OnInit {
   getData() {
     this.orderService.getOrderList().subscribe((response: any) => {
       if (response.length > 0) {
-        this.helper.setOrderList(response.reverse());
-        this.dataSource.data = []
-        this.dataSource.data = response.length > 0 ? response : [];
+        this.dataSource.data = response.length > 0 ? response.reverse() : [];
         this.dataSource.data.forEach(x => {
           x.agencyName = this.agencyList.find(i => i.id === x.agencyId)?.agencyName;
           x.products.sort((a, b) => (a.id < b.id ? -1 : 1));
@@ -130,6 +133,24 @@ export class OrderListComponent implements OnInit {
         this.hasData = true;
       }
       this.dataSourceClone = new MatTableDataSource<Order>(this.dataSource.data);
+    });
+  }
+
+  getAgencys() {
+    this.agencyService.getAgencyList().subscribe((response: any) => {
+      this.agencyList = response;
+    });
+  }
+
+  getProducts() {
+    this.productService.getProductList().subscribe((response: any) => {
+      this.productList = response;
+    });
+  }
+
+  getDelivery() {
+    this.deliveryService.getDeliveryList().subscribe((response: any) => {
+      this.deliveries = response;
     });
   }
 
@@ -162,14 +183,24 @@ export class OrderListComponent implements OnInit {
     );
     if (row && row.status !== 1 || this.isAreaManager) {
       const dialogRef = this.dialog.open(DialogConfirmOrderComponent, {
-        data: row,
+        data: {
+          row,
+          agencyList: this.agencyList,
+          productList: this.productList,
+          deliveries: this.deliveries,
+        },
       });
       dialogRef.afterClosed().subscribe(result => {
 
       });
     } else {
       const dialogRef = this.dialog.open(DialogDetailOrderComponent, {
-        data: row,
+        data: {
+          row,
+          agencyList: this.agencyList,
+          productList: this.productList,
+          deliveries: this.deliveries,
+        },
       });
 
       dialogRef.afterClosed().subscribe(result => {
@@ -184,7 +215,7 @@ export class OrderListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.helper.deleteOrder(row);
+        // this.helper.deleteOrder(row);
         this.dataSource.data = this.dataSource.data.filter(x => x.id !== row.id);
         if (this.dataSource.data.length === 0) {
           this.hasData = false;

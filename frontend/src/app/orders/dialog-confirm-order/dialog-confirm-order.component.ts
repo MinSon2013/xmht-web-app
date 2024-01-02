@@ -63,39 +63,39 @@ export class DialogConfirmOrderComponent implements OnInit {
   selectedReceipt: any = null;
 
   constructor(public dialogRef: MatDialogRef<DialogConfirmOrderComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: Order,
+    @Inject(MAT_DIALOG_DATA) public data: Order | any,
     public translate: TranslateService,
     private toastr: ToastrService,
     private socketService: SocketService,
   ) { }
 
   ngOnInit(): void {
-    this.productList = this.helper.getProductList();
-    this.agencyList = this.helper.getAgencyList();
-    this.deliveries = this.helper.getDeliveryList();
-    if (this.data && this.data.id !== 0) {
-      this.order.id = this.data.id;
-      this.order.createdDate = this.data.createdDate;
-      this.order.deliveryId = this.data.deliveryId;
-      this.order.pickupId = this.data.pickupId;
-      this.order.productTotal = this.data.productTotal;
-      this.order.driver = this.data.driver;
-      this.order.note = this.data.note;
-      this.order.transport = this.data.transport;
-      this.order.receipt = this.data.receipt;
-      this.order.licensePlates = this.data.licensePlates;
-      this.order.receivedDate = this.data.receivedDate;
-      this.order.status = this.data.status;
-      this.order.note = this.data.note;
-      this.order.products = this.data.products;
-      this.order.contract = this.data.contract;
-      this.order.sender = this.data.sender;
-      this.order.isViewed = this.data.isViewed;
-      this.order.agencyId = this.data.agencyId;
-      this.order.confirmedDate = this.data.confirmedDate;
-      this.order.shippingDate = this.data.shippingDate;
-      this.order.approvedNumber = this.data.approvedNumber !== 0 ? this.data.approvedNumber : 0;
-      this.order.agencyName = this.agencyList.find(x => x.id === this.data.agencyId).agencyName;
+    this.agencyList = this.data.agencyList ? this.data.agencyList : [];
+    this.productList = this.data.productList ? this.data.productList : [];
+    this.deliveries = this.data.deliveries ? this.data.deliveries : [];
+    if (this.data && this.data.row.id !== 0) {
+      this.order.id = this.data.row.id;
+      this.order.createdDate = this.data.row.createdDate;
+      this.order.deliveryId = this.data.row.deliveryId;
+      this.order.pickupId = this.data.row.pickupId;
+      this.order.productTotal = this.data.row.productTotal;
+      this.order.driver = this.data.row.driver;
+      this.order.note = this.data.row.note;
+      this.order.transport = this.data.row.transport;
+      this.order.receipt = this.data.row.receipt;
+      this.order.licensePlates = this.data.row.licensePlates;
+      this.order.receivedDate = this.data.row.receivedDate;
+      this.order.status = this.data.row.status;
+      this.order.note = this.data.row.note;
+      this.order.products = this.data.row.products;
+      this.order.contract = this.data.row.contract;
+      this.order.sender = this.data.row.sender;
+      this.order.isViewed = this.data.row.isViewed;
+      this.order.agencyId = this.data.row.agencyId;
+      this.order.confirmedDate = this.data.row.confirmedDate;
+      this.order.shippingDate = this.data.row.shippingDate;
+      this.order.approvedNumber = this.data.row.approvedNumber !== 0 ? this.data.row.approvedNumber : 0;
+      this.order.agencyName = this.agencyList.find(x => x.id === this.data.row.agencyId).agencyName;
       const status = this.status.find(x => x.value === this.order.status);
       this.selectedStatus = status ? status : { id: null, label: '' };
       const delivery = this.deliveries.find(x => x.id === this.order.deliveryId);
@@ -137,7 +137,6 @@ export class DialogConfirmOrderComponent implements OnInit {
     this.socketService.changeStatusOrder(payload).subscribe((response: any) => {
       if (response.affected !== 0) {
         this.helper.showSuccess(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.MODIFIED_ORDER', MSG_STATUS.SUCCESS));
-        this.helper.updateStatusOrder(this.order.id, this.order.status);
         this.dialogRef.close(this.order);
       } else {
         this.helper.showError(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.MODIFIED_ORDER', MSG_STATUS.FAIL));
