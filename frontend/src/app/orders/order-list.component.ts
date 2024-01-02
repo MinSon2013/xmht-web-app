@@ -200,6 +200,7 @@ export class OrderListComponent implements OnInit {
           agencyList: this.agencyList,
           productList: this.productList,
           deliveries: this.deliveries,
+          disableClose: true,
         },
       });
 

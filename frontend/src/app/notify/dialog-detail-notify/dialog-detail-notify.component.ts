@@ -85,7 +85,7 @@ export class DialogDetailNotifyComponent implements OnInit {
       this.agencyListSelectOption.push({ id: x.id, label: x.agencyName });
     });
 
-    if (this.data && this.data.row.id !== 0) {
+    if (this.data.row && this.data.row.id !== 0) {
       this.translate.get('NOTIFY.TITLE_MODIFIED').subscribe(x => { this.header = x });
       if (!this.isAdmin) {
         this.translate.get('NOTIFY.DETAIL').subscribe(x => { this.header = x });

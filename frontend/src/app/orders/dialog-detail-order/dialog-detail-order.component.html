@@ -138,7 +138,7 @@
       <input matInput
         class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         id="licensePlates" type="text" placeholder="" maxlength="12" [(ngModel)]="order.licensePlates"
-        [ngModelOptions]="{standalone: true}" [errorStateMatcher]="matcher" />
+        [ngModelOptions]="{standalone: true}" [errorStateMatcher]="matcher" (keyup.enter)="focusNext('driver')" />
     </div>
     <div class="mb-3 row field">
       <span class="col-5 text-label" for="driver">
@@ -148,7 +148,7 @@
       <input matInput
         class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         id="driver" type="text" placeholder="" maxlength="100" [(ngModel)]="order.driver"
-        [ngModelOptions]="{standalone: true}" [errorStateMatcher]="matcher" />
+        [ngModelOptions]="{standalone: true}" [errorStateMatcher]="matcher" (keyup.enter)="focusNext('note')" />
     </div>
     <div class="mb-3 row field">
       <span class="col-5 text-label" for="receivedDate">

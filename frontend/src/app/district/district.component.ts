@@ -113,6 +113,7 @@ export class DistrictComponent implements OnInit {
     );
     const dialogRef = this.dialog.open(DialogModifyDistrictComponent, {
       data: row,
+      disableClose: true,
     });
 
     dialogRef.afterClosed().subscribe(result => {

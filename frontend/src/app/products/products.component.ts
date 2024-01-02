@@ -76,6 +76,7 @@ export class ProductsComponent implements OnInit {
     );
     const dialogRef = this.dialog.open(DialogDetailProductComponent, {
       data: row,
+      disableClose: true,
     });
 
     dialogRef.afterClosed().subscribe(result => {

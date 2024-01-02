@@ -188,7 +188,11 @@ export class NotifyComponent implements OnInit {
       document.getElementsByClassName('body') as HTMLCollectionOf<HTMLElement>,
     );
     const dialogRef = this.dialog.open(DialogDetailNotifyComponent, {
-      data: { row, agencyList: this.agencyList },
+      data: {
+        row,
+        agencyList: this.agencyList,
+        disableClose: true,
+      },
     });
 
     dialogRef.afterClosed().subscribe(result => {

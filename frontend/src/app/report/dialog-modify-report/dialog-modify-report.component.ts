@@ -68,7 +68,7 @@ export class DialogModifyReportComponent {
     public translate: TranslateService,
     private toastr: ToastrService,
     private reportService: ReportService,
-  ) { }
+  ) { dialogRef.disableClose = true; }
 
   ngOnInit(): void {
     this.districtList = this.data.districtList;
@@ -318,6 +318,10 @@ export class DialogModifyReportComponent {
       inform = `${store.address}. \nSĐT: ${store.phone}`
     }
     return inform;
+  }
+
+  focusNext(id: string) {
+    document.getElementById(id)?.focus();
   }
 
 }

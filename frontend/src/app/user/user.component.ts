@@ -102,7 +102,11 @@ export class UserComponent implements OnInit {
       document.getElementsByClassName('body') as HTMLCollectionOf<HTMLElement>,
     );
     const dialogRef = this.dialog.open(DialogModifyUserComponent, {
-      data: { row, districtList: this.districtList },
+      data: {
+        row,
+        districtList: this.districtList,
+        disableClose: true,
+      },
     });
 
     dialogRef.afterClosed().subscribe(result => {

@@ -47,7 +47,7 @@ export class DialogModifyUserComponent implements OnInit {
     public translate: TranslateService,
     private toastr: ToastrService,
     private userService: UserService,
-  ) { }
+  ) { dialogRef.disableClose = true; }
 
   ngOnInit(): void {
     this.districtList = this.data.districtList;
@@ -199,6 +199,10 @@ export class DialogModifyUserComponent implements OnInit {
     if (this.roleSelected.role === 'USER_AREA_MANAGER') {
       this.user.districtId = event.id;
     }
+  }
+
+  focusNext(id: string) {
+    document.getElementById(id)?.focus();
   }
 
 }

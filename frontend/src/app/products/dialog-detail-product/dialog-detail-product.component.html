@@ -9,7 +9,8 @@
             <input matInput [disabled]="hidden"
                 class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="productName" type="text" placeholder="" maxlength="255" [(ngModel)]="product.name"
-                [ngModelOptions]="{standalone: true}" [errorStateMatcher]="matcher" />
+                [ngModelOptions]="{standalone: true}" [errorStateMatcher]="matcher"
+                (keyup.enter)="focusNext('quantity')" />
         </div>
         <div class="mb-3 row field">
             <span class="col-5 text-label" for="quantity">
@@ -19,7 +20,8 @@
             <input matInput [disabled]="hidden"
                 class="col-4 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="quantity" type="number" placeholder="" min="0" max="999999" [(ngModel)]="product.quantity"
-                [ngModelOptions]="{standalone: true}" [errorStateMatcher]="matcher" />
+                [ngModelOptions]="{standalone: true}" [errorStateMatcher]="matcher"
+                (keyup.enter)="focusNext('price')" />
             <span class="col-3 text-label ton">(tấn)</span>
         </div>
         <div class="mb-3 row field">
@@ -30,7 +32,7 @@
             <input matInput [disabled]="hidden"
                 class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="price" type="number" placeholder="" min="0" max="99999999" [(ngModel)]="product.price"
-                [ngModelOptions]="{standalone: true}" [errorStateMatcher]="matcher" />
+                [ngModelOptions]="{standalone: true}" [errorStateMatcher]="matcher" (keyup.enter)="focusNext('note')" />
         </div>
         <div class="mb-6 row field">
             <span class="col-5 text-label" for="note">

@@ -58,7 +58,7 @@
             <input matInput
                 class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="storeName" type="text" placeholder="" maxlength="255" [(ngModel)]="store.storeName"
-                [ngModelOptions]="{ standalone: true }" />
+                [ngModelOptions]="{ standalone: true }" (keyup.enter)="focusNext('address')" />
         </div>
 
         <!-- Address -->
@@ -70,7 +70,7 @@
             <input matInput
                 class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="address" type="text" placeholder="" maxlength="255" [(ngModel)]="store.address"
-                [ngModelOptions]="{ standalone: true }" />
+                [ngModelOptions]="{ standalone: true }" (keyup.enter)="focusNext('phone')" />
         </div>
 
         <!-- Phone-->
@@ -82,7 +82,8 @@
             <input matInput
                 class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="phone" type="text" placeholder="" maxlength="12" minlength="10" [(ngModel)]="store.phone"
-                [ngModelOptions]="{ standalone: true }" (keydown)="onKeyPress($event)" />
+                [ngModelOptions]="{ standalone: true }" (keydown)="onKeyPress($event)"
+                (keyup.enter)="focusNext('note')" />
         </div>
 
         <!-- Note -->

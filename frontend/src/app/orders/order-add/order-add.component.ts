@@ -282,4 +282,8 @@ export class OrderAddComponent implements OnInit {
   onlyNumberKey(event: any) {
     return this.helper.onlyNumberKey(event);
   }
+
+  focusNext(id: string) {
+    document.getElementById(id)?.focus();
+  }
 }

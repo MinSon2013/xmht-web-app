@@ -124,7 +124,12 @@ export class StoresComponent implements OnInit {
       document.getElementsByClassName('body') as HTMLCollectionOf<HTMLElement>,
     );
     const dialogRef = this.dialog.open(DialogModifyStoreComponent, {
-      data: { row, districtList: this.districtList, agencyList: this.agencyList },
+      data: {
+        row,
+        districtList: this.districtList,
+        agencyList: this.agencyList,
+        disableClose: true,
+      },
     });
 
     dialogRef.afterClosed().subscribe(result => {

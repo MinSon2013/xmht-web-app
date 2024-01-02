@@ -7,9 +7,10 @@
         <label class="require">*</label>
       </span>
       <input matInput
-        class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:shadow-outline"
         id="agencyName" type="text" placeholder="" maxlength="200" [(ngModel)]="agency.agencyName"
-        [ngModelOptions]="{ standalone: true }" [errorStateMatcher]="matcher" [disabled]="disabled" />
+        [ngModelOptions]="{ standalone: true }" [errorStateMatcher]="matcher" [disabled]="disabled"
+        (keyup.enter)="focusNext('address')" />
     </div>
     <div class="mb-3 row field">
       <span class="col-5 text-label" for="address">
@@ -19,7 +20,8 @@
       <input matInput
         class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         id="address" type="text" placeholder="" maxlength="500" [(ngModel)]="agency.address"
-        [ngModelOptions]="{ standalone: true }" [errorStateMatcher]="matcher" [disabled]="disabled" />
+        [ngModelOptions]="{ standalone: true }" [errorStateMatcher]="matcher" [disabled]="disabled"
+        (keyup.enter)="focusNext('phone')" />
     </div>
     <div class="mb-3 row field">
       <span class="col-5 text-label" for="phone">
@@ -30,7 +32,7 @@
         class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         id="phone" type="text" placeholder="" (keydown)="onlyNumberKey($event)" pattern="\d*" maxlength="12"
         [(ngModel)]="agency.phone" [ngModelOptions]="{ standalone: true }" [errorStateMatcher]="matcher"
-        [disabled]="disabled" />
+        [disabled]="disabled" (keyup.enter)="focusNext('email')" />
     </div>
     <div class="mb-3 row field">
       <span class="col-5 text-label" for="email">
@@ -40,7 +42,8 @@
       <input matInput
         class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         id="email" type="email" placeholder="" maxlength="200" [(ngModel)]="agency.email"
-        [ngModelOptions]="{ standalone: true }" [errorStateMatcher]="matcher" [disabled]="disabled" />
+        [ngModelOptions]="{ standalone: true }" [errorStateMatcher]="matcher" [disabled]="disabled"
+        (keyup.enter)="focusNext('userName')" />
     </div>
     <div class="mb-3 row field">
       <span class="col-5 text-label" for="userName">
@@ -50,7 +53,7 @@
       <input matInput [disabled]="disabledUserName"
         class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         id="userName" type="text" placeholder="" maxlength="200" [(ngModel)]="agency.userName"
-        [ngModelOptions]="{ standalone: true }" [errorStateMatcher]="matcher" />
+        [ngModelOptions]="{ standalone: true }" [errorStateMatcher]="matcher" (keyup.enter)="focusNext('password')" />
     </div>
     <div class="mb-3 row field" [hidden]="(!isAdmin && isEdit)">
       <span class="col-5 text-label" for="password">
@@ -60,7 +63,7 @@
       <input matInput class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:shadow-outline {{
           errorPassword.length !== 0 ? 'focus-p' : '' }}" id="password" type="password" placeholder="********"
         minlength="8" maxlength="30" [(ngModel)]="agency.password" [ngModelOptions]="{ standalone: true }"
-        [errorStateMatcher]="matcher" [disabled]="disabled" autocomplete />
+        [errorStateMatcher]="matcher" [disabled]="disabled" autocomplete (keyup.enter)="focusNext('confirmPassword')" />
     </div>
     <div class="mb-3 row field" [hidden]="(!isAdmin && isEdit)">
       <span class="col-5 text-label" for="confirmPassword">
@@ -71,7 +74,7 @@
           errorPassword.length !== 0 ? 'focus-p' : ''
         }}" id="confirmPassword" type="password" placeholder="********" minlength="8" maxlength="30"
         [(ngModel)]="agency.confirmPassword" [ngModelOptions]="{ standalone: true }" [errorStateMatcher]="matcher"
-        [disabled]="disabled" autocomplete />
+        [disabled]="disabled" autocomplete (keyup.enter)="focusNext('contract')" />
     </div>
     <div class="mb-3 row field" *ngIf="
         errorPassword || (errorPassword !== null && errorPassword.length !== 0)
@@ -88,7 +91,8 @@
       <input matInput
         class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         id="contract" type="text" placeholder="" maxlength="200" [(ngModel)]="agency.contract"
-        [ngModelOptions]="{ standalone: true }" [errorStateMatcher]="matcher" [disabled]="disabled" />
+        [ngModelOptions]="{ standalone: true }" [errorStateMatcher]="matcher" [disabled]="disabled"
+        (keyup.enter)="focusNext('note')" />
     </div>
     <div class="mb-6 row field">
       <span class="col-5 text-label" for="note">

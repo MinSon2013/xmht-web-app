@@ -74,6 +74,7 @@ export class AgencyComponent implements OnInit {
     );
     const dialogRef = this.dialog.open(DialogDetailAgencyComponent, {
       data: row,
+      disableClose: true,
     });
 
     dialogRef.afterClosed().subscribe(result => {

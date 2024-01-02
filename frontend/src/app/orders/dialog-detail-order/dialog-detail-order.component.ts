@@ -99,13 +99,13 @@ export class DialogDetailOrderComponent implements OnInit {
     public translate: TranslateService,
     private toastr: ToastrService,
     private socketService: SocketService,
-  ) { }
+  ) { dialogRef.disableClose = true; }
 
   ngOnInit(): void {
     this.agencyList = this.data.agencyList ? this.data.agencyList : [];
     this.productList = this.data.productList ? this.data.productList : [];
     this.deliveries = this.data.deliveries ? this.data.deliveries : [];
-    if (this.data && this.data.row.id !== 0) {
+    if (this.data.row && this.data.row.id !== 0) {
       this.header = 'Cập nhật thông tin đơn hàng';
       this.order.id = this.data.row.id;
       this.order.createdDate = this.data.row.createdDate;
@@ -334,5 +334,9 @@ export class DialogDetailOrderComponent implements OnInit {
 
   onlyNumberKey(event: any) {
     return this.helper.onlyNumberKey(event);
+  }
+
+  focusNext(id: string) {
+    document.getElementById(id)?.focus();
   }
 }

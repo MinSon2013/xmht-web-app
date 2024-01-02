@@ -38,7 +38,7 @@ export class DialogDetailProductComponent implements OnInit {
     public translate: TranslateService,
     private toastr: ToastrService,
     private productService: ProductService,
-  ) { }
+  ) { dialogRef.disableClose = true; }
 
   ngOnInit(): void {
     if (this.data && this.data.id !== 0) {
@@ -99,5 +99,9 @@ export class DialogDetailProductComponent implements OnInit {
       this.error = 'Vui lòng nhập đầy đủ thông tin bắt buộc (*)';
     }
     return isValidForm;
+  }
+
+  focusNext(id: string) {
+    document.getElementById(id)?.focus();
   }
 }

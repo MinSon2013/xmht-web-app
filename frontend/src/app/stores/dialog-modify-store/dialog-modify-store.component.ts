@@ -50,7 +50,7 @@ export class DialogModifyStoreComponent {
     public translate: TranslateService,
     private toastr: ToastrService,
     private storeService: StoreService,
-  ) { }
+  ) { dialogRef.disableClose = true; }
 
   ngOnInit(): void {
     this.districtList = this.data.districtList;
@@ -175,6 +175,10 @@ export class DialogModifyStoreComponent {
       return false;
     }
     return true;
+  }
+
+  focusNext(id: string) {
+    document.getElementById(id)?.focus();
   }
 
 }

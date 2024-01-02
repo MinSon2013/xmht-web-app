@@ -146,7 +146,8 @@ export class ReportComponent implements OnInit {
         row,
         districtList: this.districtList,
         storeList: this.storeList,
-        agencyList: this.agencyList
+        agencyList: this.agencyList,
+        disableClose: true,
       },
       panelClass: 'my-panel',
     });

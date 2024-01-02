@@ -10,7 +10,8 @@
             <input matInput
                 class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="userName" type="text" placeholder="" maxlength="200" [(ngModel)]="user.userName"
-                [ngModelOptions]="{ standalone: true }" [errorStateMatcher]="matcher" />
+                [ngModelOptions]="{ standalone: true }" [errorStateMatcher]="matcher"
+                (keyup.enter)="focusNext('fullName')" />
         </div>
 
         <!-- Fullname -->
@@ -22,7 +23,8 @@
             <input matInput [disabled]="!isAdmin"
                 class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="fullName" type="text" placeholder="" maxlength="255" [(ngModel)]="user.fullName"
-                [ngModelOptions]="{ standalone: true }" [errorStateMatcher]="matcher" />
+                [ngModelOptions]="{ standalone: true }" [errorStateMatcher]="matcher"
+                (keyup.enter)="focusNext('password')" />
         </div>
 
         <!-- Password -->
@@ -34,7 +36,7 @@
             <input matInput class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:shadow-outline {{
             errorPassword.length !== 0 ? 'focus-p' : ''}}" id="password" type="password" placeholder="********"
                 maxlength="30" minlength="8" [(ngModel)]="user.password" [ngModelOptions]="{ standalone: true }"
-                [errorStateMatcher]="matcher" autocomplete />
+                [errorStateMatcher]="matcher" autocomplete (keyup.enter)="focusNext('confirmPassword')" />
         </div>
 
         <!-- Confirm password -->

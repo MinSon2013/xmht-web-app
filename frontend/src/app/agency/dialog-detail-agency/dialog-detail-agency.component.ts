@@ -53,7 +53,7 @@ export class DialogDetailAgencyComponent implements OnInit {
     private toastr: ToastrService,
     private agencyService: AgencyService,
     private userService: UserService,
-  ) { }
+  ) { dialogRef.disableClose = true; }
 
   ngOnInit(): void {
     if (this.data && this.data.id !== 0) {
@@ -178,6 +178,10 @@ export class DialogDetailAgencyComponent implements OnInit {
 
   onlyNumberKey(event: any) {
     return this.helper.onlyNumberKey(event);
+  }
+
+  focusNext(id: string) {
+    document.getElementById(id)?.focus();
   }
 
 }

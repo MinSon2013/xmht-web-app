@@ -38,7 +38,7 @@ export class DialogModifyDistrictComponent {
     public translate: TranslateService,
     private toastr: ToastrService,
     private districtService: DistrictService,
-  ) { }
+  ) { dialogRef.disableClose = true; }
 
   ngOnInit(): void {
     if (this.data && this.data.id !== 0) {
@@ -122,6 +122,10 @@ export class DialogModifyDistrictComponent {
     }
 
     return isValidForm;
+  }
+
+  focusNext(id: string) {
+    document.getElementById(id)?.focus();
   }
 
 }
