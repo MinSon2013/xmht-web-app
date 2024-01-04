@@ -22,16 +22,14 @@ export class DialogDetailNotifyComponent implements OnInit {
   header: string = '';
   error: any = '';
   matcher = new MyErrorStateMatcher();
-  notify: any = {};
+  notify: Notify | any = {};
 
   helper = new Helper();
   isAdmin: boolean = new Helper().isAdmin();
-  loginId: number = new Helper().getUserId();
   agencyList: any[] = [];
   agencyListSelectOption: any[] = [];
   agencySelected: any = null;
   isEdit: boolean = true;
-  userId: number = this.helper.getUserId();
   userRole: number = this.helper.getUserRole();
   isSalesman: boolean = this.userRole === USER_SALESMAN_ROLE;
   isAgency: boolean = this.userRole === AGENCY_ROLE;
@@ -111,7 +109,7 @@ export class DialogDetailNotifyComponent implements OnInit {
       this.notify.agencyId = this.data.row.agencyId;
       this.html = this.notify.contents;
       this.notify.sender = this.data.row.sender;
-      this.isEdit = (this.notify.sender === this.loginId);
+      this.isEdit = (this.notify.sender === this.helper.getUserId());
       this.couponChecked = this.data.row.notificationType === 2 ? true : false
       this.notify.notificationType = this.data.row.notificationType;
       this.notify.orderId = this.data.row.orderId;
@@ -143,8 +141,7 @@ export class DialogDetailNotifyComponent implements OnInit {
     if (this.validForm()) {
       this.notify.isPublished = isPublished;
       this.notify.agencyId = this.agencySelected.id;
-      this.notify.sender = this.userId;
-      this.notify.userId = this.helper.getUserId();
+      this.notify.sender = this.helper.getUserId();
       this.notify.agencyList = [];
       if (this.notify.agencyId === 0) {
         const res: number[] = [];
@@ -189,7 +186,7 @@ export class DialogDetailNotifyComponent implements OnInit {
           }
         });
       } else {
-        if (this.userId === this.notify.sender) {
+        if (this.helper.getUserId() === this.notify.sender) {
           this.notify.isViewed = true;
         } else {
           this.notify.isViewed = false;
@@ -223,7 +220,7 @@ export class DialogDetailNotifyComponent implements OnInit {
 
   onCancel() {
     if (this.notify.id !== 0) {
-      if (this.userId === this.notify.sender) {
+      if (this.helper.getUserId() !== this.notify.sender) {
         const payload = {
           isViewed: true,
           agencyId: this.notify.agencyId,

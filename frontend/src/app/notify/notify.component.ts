@@ -28,7 +28,7 @@ export class NotifyComponent implements OnInit {
 
   helper = new Helper();
   isAdmin: boolean = new Helper().isAdmin();
-  loginId: number = new Helper().getAgencyId();
+  loginId: number = new Helper().getUserId();
   hasData: boolean = false;
   agencyList: Agency[] = [];
   agencyId: number = 0;
@@ -60,7 +60,7 @@ export class NotifyComponent implements OnInit {
 
   ngOnInit(): void {
     this.agencyId = this.helper.getAgencyId();
-    if (!this.isAdmin && !this.isSalesman) {
+    if (!this.isAdmin && !this.isSalesman && !this.isAgency) {
       this.displayedColumns = ['checkAll', 'updatedDate', 'agencyName', 'contents', 'fileName', 'statusOrder', 'confirmer'];
     }
     this.colspan = this.displayedColumns.length;
@@ -92,11 +92,6 @@ export class NotifyComponent implements OnInit {
 
           if (el.agencyList && el.agencyList?.length === 1) {
             let agencyId = el.agencyList[0];
-            if (this.isAdmin) {
-              if (agencyId === this.agencyId) {
-                agencyId = el.sender;
-              }
-            }
             const item = this.agencyList.find(x => x.id === agencyId);
             if (item) {
               el.agencyName = item.agencyName;
@@ -107,7 +102,7 @@ export class NotifyComponent implements OnInit {
             el.agencyName = "Tất cả"
           }
 
-          if (el.sender === this.agencyId) {
+          if (el.sender === this.loginId) { // sender is userId, loginId is userId
             el.isViewed = true;
           } else {
             const item = notifyAgencyList.find((x: { notificationId: number; agencyId: number; isViewed: boolean }) => x.notificationId === el.id && x.agencyId === this.agencyId);
@@ -197,23 +192,6 @@ export class NotifyComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       this.getData();
-      if (result !== null) {
-        if (row && row.id !== 0) {
-          row.contents = result.contents ? result.contents : '';
-          row.fileName = result.fileName;
-          row.fileBlob = result.fileBlob;
-          row.note = result.note;
-          row.isPublished = result.isPublished;
-          row.createdDate = result.createdDate;
-          row.agencyList = result.agencyList;
-          row.mimeType = result.mimeType;
-          row.filePath = result.filePath;
-          row.isViewd = result.isViewd;
-        } else {
-          this.dataSource.data = [result, ...this.dataSource.data];
-          this.dataSource.data = this.dataSource.data;
-        }
-      }
     });
   }
 

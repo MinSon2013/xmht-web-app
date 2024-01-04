@@ -358,7 +358,6 @@ export class OrderRepository extends Repository<Order> {
     }
 
     async createNotify(modifyOrderDto, contents: string, notificationService: NotificationService, k: string) {
-        const adminId = modifyOrderDto.adminId || modifyOrderDto.stockerId;
         const notifyDto = new NotificationDTO();
         notifyDto.contents = contents;
         notifyDto.isPublished = true;
@@ -367,7 +366,7 @@ export class OrderRepository extends Repository<Order> {
         notifyDto.fileName = '';
         notifyDto.filePath = '';
         notifyDto.mimeType = '';
-        notifyDto.agencyList.push(modifyOrderDto.notifyReceiver === 0 ? adminId : modifyOrderDto.notifyReceiver);
+        notifyDto.agencyList.push(modifyOrderDto.notifyReceiver);
         notifyDto.sender = modifyOrderDto.id !== 0 ? modifyOrderDto.userUpdated : modifyOrderDto.sender;
         notifyDto.notificationType = this.NOTIFY_TYPE_GENERAL;
         notifyDto.updatedDate = this.helper.getUpdateDate(2);
