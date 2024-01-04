@@ -8,7 +8,7 @@ import { MatMenuTrigger } from '@angular/material/menu';
 import { TranslateService } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogChangePasswordComponent } from './dialog-change-password/dialog-change-password.component';
-import { AGENCY_ROLE, STOCKER_ROLE, USER_AREA_MANAGER_ROLE } from '../constants/const-data';
+import { AGENCY_ROLE, STOCKER_ROLE, USER_AREA_MANAGER_ROLE, USER_SALESMAN_ROLE } from '../constants/const-data';
 
 @Component({
   selector: 'app-header',
@@ -34,6 +34,7 @@ export class HeaderComponent implements OnInit {
   isStocker: boolean = this.userRole === STOCKER_ROLE;
   isAreaManager: boolean = this.userRole === USER_AREA_MANAGER_ROLE;
   isAgency: boolean = this.userRole === AGENCY_ROLE;
+  isSalesman: boolean = this.userRole === USER_SALESMAN_ROLE;
 
   constructor(private router: Router,
     public notifyService: NotificationService,
@@ -93,12 +94,6 @@ export class HeaderComponent implements OnInit {
     this.router.navigateByUrl(key);
   }
 
-  openHeaderMenu() {
-    if (!this.isAdmin) {
-      this.subMenuTrigger.openMenu();
-    }
-  }
-
   openSubMenu(submenu: MatMenuTrigger, key: number) {
     submenu.openMenu();
     if (key === 1) {
@@ -107,8 +102,6 @@ export class HeaderComponent implements OnInit {
     if (key === 2) {
       this.closeSubMenu(this.menuTrigger1);
     }
-
-    this.closeSubMenu(this.subMenuTrigger);
   }
 
   closeSubMenu(submenu: MatMenuTrigger) {
