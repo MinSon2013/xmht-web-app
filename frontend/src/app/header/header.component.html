@@ -59,7 +59,8 @@
                         {{ "HEADER.MENU_GROUP_STATISTICS" | translate }}
                     </a>
 
-                    <a mat-button [routerLink]="'/report'" class="menu-item" [hidden]="isStocker || isAgency">
+                    <a mat-button [routerLink]="'/report'" class="menu-item"
+                        [hidden]="isStocker || isAgency || isSalesman">
                         {{ "HEADER.MENU_GROUP_REPORT" | translate }}
                     </a>
 
@@ -67,10 +68,15 @@
                         {{ "HEADER.MENU_ITEM_NOTIFICATION" | translate }}
                     </a>
 
-                    <!-- User info -->
-                    <a mat-button class="menu-item" [matMenuTriggerFor]="subMenu" #subMenuTrigger="matMenuTrigger"
-                        (click)="subMenuTrigger.openMenu()">
-                        User
+                    <!-- User info not Admin -->
+                    <a mat-button class="menu-item {{isAdmin ? 'cursor' : ''}}" [matMenuTriggerFor]="subMenu"
+                        #subMenuTrigger="matMenuTrigger" (click)="openSubMenu(subMenuTrigger, 0)" [hidden]="isAdmin">
+                        {{agencyName}}
+                    </a>
+
+                    <!-- User info Admin -->
+                    <a mat-button class="menu-item {{isAdmin ? 'cursor' : ''}}" [hidden]="!isAdmin">
+                        {{agencyName}}
                     </a>
 
                     <a mat-button [routerLink]="" class="menu-item" (click)="onLogOut()">
@@ -95,11 +101,6 @@
 
                     <mat-menu #subMenu="matMenu" [overlapTrigger]="false">
                         <span (mouseleave)="subMenuTrigger.closeMenu()">
-                            <button mat-menu-item class="cursor">
-                                <!-- <mat-icon aria-hidden="false" aria-label="User icon" fontSet="fas"
-                                    fontIcon="fa-user"></mat-icon> -->
-                                {{agencyName}}
-                            </button>
                             <button mat-menu-item (click)="onChangePassword()">
                                 <mat-icon aria-hidden="false" aria-label="User icon" fontSet="fas"
                                     fontIcon="fa-lock"></mat-icon>

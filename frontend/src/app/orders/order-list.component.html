@@ -415,8 +415,8 @@
           <div class="center">
             <mat-icon aria-hidden="false" aria-label="Edit icon" fontSet="fas" fontIcon="fa-pen" class="fa-pen"
               (click)="onEdit(element)"></mat-icon>
-            <mat-icon aria-hidden="false" [hidden]="!isAdmin && !isStocker" aria-label="Print icon" fontSet="fas"
-              fontIcon="fa-print" class="fa-print" (click)="onPrint(element)"></mat-icon>
+            <mat-icon aria-hidden="false" [hidden]="!isAdmin && !isStocker && !isSalesman" aria-label="Print icon"
+              fontSet="fas" fontIcon="fa-print" class="fa-print" (click)="onPrint(element)"></mat-icon>
             <mat-icon [hidden]="!isAdmin" aria-hidden="false" aria-label="Trash icon" fontSet="fas" fontIcon="fa-trash"
               class="fa-trash" (click)="onDelete(element)"></mat-icon>
           </div>
@@ -437,7 +437,7 @@
     </mat-paginator>
   </div>
   <div class="action-export" [hidden]="dataSource.data.length === 0">
-    <button mat-raised-button class="btn-export" (click)="exportToExcel()" [hidden]="!isAdmin">
+    <button mat-raised-button class="btn-export" (click)="exportToExcel()" [hidden]="!isAdmin && !isSalesman">
       <mat-icon aria-hidden="false" aria-label="Export icon" fontSet="fas" fontIcon="fa-download"
         class="fa-download"></mat-icon>
       <label class="pad-label">{{ "BUTTON.DOWNLOAD" | translate }}</label>
