@@ -3,7 +3,6 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { AGENCY_ROLE, Cities, MSG_STATUS, RECEIPT, STATUS, Transports, USER_SALESMAN_ROLE } from '../../constants/const-data';
 import { Order, ProductItem } from '../../models/order';
 import { MyErrorStateMatcher } from '../order-add/order-add.component';
-import * as moment from 'moment';
 import { Helper } from '../../helpers/helper';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MAT_DATE_FORMATS } from '@angular/material/core';
@@ -77,7 +76,7 @@ export class DialogDetailOrderComponent implements OnInit {
     products: [],
     agencyId: 0,
     agencyName: '',
-    approvedNumber: '',
+    approvedNumber: 0,
     editer: '',
     confirmedDate: '',
     shippingDate: '',
@@ -186,7 +185,7 @@ export class DialogDetailOrderComponent implements OnInit {
       this.order.transport = Number(this.transportSelected.id);
       this.order.receipt = Number(this.receiptSelected.value);
       this.order.products = this.order.products.filter(x => x.quantity && x.quantity.toString() !== '0' && x.quantity.toString() !== '');
-      this.order.receivedDate = moment(this.testForm.value.date).format("DD/MM/YYYY");
+      this.order.receivedDate = this.helper.getDateFormat(3, this.testForm.value.date);
       this.order.agencyId = this.agencySelected.id;
       if (!this.order.isViewed) {
         if ((this.agencyId === this.order.agencyId) || this.isAdmin) {

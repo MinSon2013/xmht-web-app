@@ -367,7 +367,7 @@ export class OrderRepository extends Repository<Order> {
         notifyDto.filePath = '';
         notifyDto.mimeType = '';
         notifyDto.agencyList.push(modifyOrderDto.notifyReceiver);
-        notifyDto.sender = modifyOrderDto.id !== 0 ? modifyOrderDto.userUpdated : modifyOrderDto.sender;
+        notifyDto.sender = modifyOrderDto.userUpdated || modifyOrderDto.sender;
         notifyDto.notificationType = this.NOTIFY_TYPE_GENERAL;
         notifyDto.updatedDate = this.helper.getUpdateDate(2);
         notifyDto.orderId = modifyOrderDto.id;

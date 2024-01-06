@@ -8,12 +8,14 @@ import { NotificationAgencyRepository } from './repository/notification-agency.r
 import { PassportModule } from '@nestjs/passport';
 import { AuthModule } from '../auth/auth.module';
 import { NotificationsController } from './notifications.controller';
+import { UserRepository } from '../user/repository/user.repository';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       NotificationRepository,
       NotificationAgencyRepository,
+      UserRepository,
     ]),
     AuthModule,
     PassportModule.register({ defaultStrategy: 'jwt' })

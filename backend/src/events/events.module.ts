@@ -20,6 +20,8 @@ import { MenuRepository } from '../menu/repository/menu.repository';
 import { DeliveryRepository } from '../delivery/repository/delivery.repository';
 import { JwtService } from '@nestjs/jwt';
 import { UserDistrictRepository } from '../user/repository/user-district.repository';
+import { ReportService } from '../report/report.service';
+import { ReportRepository } from '../report/repository/report.repository';
 
 @Module({
     imports: [
@@ -34,6 +36,7 @@ import { UserDistrictRepository } from '../user/repository/user-district.reposit
             MenuRepository,
             DeliveryRepository,
             UserDistrictRepository,
+            ReportRepository,
         ]),
     ],
     providers: [
@@ -46,6 +49,7 @@ import { UserDistrictRepository } from '../user/repository/user-district.reposit
         NotificationService,
         MenuService,
         DeliveryService,
+        ReportService,
         JwtService
     ]
 })

@@ -7,6 +7,7 @@ import { Notification } from './entities/notification.entity';
 import { NotificationAgencyRepository } from './repository/notification-agency.repository';
 import { NotificationRepository } from './repository/notification.repository';
 import { Helper } from '../shared/helper';
+import { UserRepository } from '../user/repository/user.repository';
 
 @Injectable()
 export class NotificationService {
@@ -15,11 +16,19 @@ export class NotificationService {
   constructor(
     public readonly notifyRepo: NotificationRepository,
     public readonly notifyAgencyRepo: NotificationAgencyRepository,
+    public readonly userRepo: UserRepository,
   ) { }
 
   async getAll(agencyId: number): Promise<any> {
     const res1 = await this.notifyRepo.getAll(agencyId);
     const res2 = await this.notifyAgencyRepo.getNotificationAgencyByAgencyId(agencyId);
+    const userList = await this.userRepo.getAllUserList();
+    res1.forEach(x => {
+      const user = userList.find(y => y.id === x.sender);
+      if (user) {
+        x.confirmName = user.fullName;
+      }
+    })
     return { notifyList: res1, notifyAgencyList: res2 };
   }
 

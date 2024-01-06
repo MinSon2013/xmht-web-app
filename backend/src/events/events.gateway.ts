@@ -16,6 +16,8 @@ import { ConfigService } from '@nestjs/config';
 import { Order } from '../orders/entities/order.entity';
 import { NotificationDTO } from '../notification/dto/notification.dto';
 import { Notification } from '../notification/entities/notification.entity';
+import { ModifyReportDTO } from '../report/dto/modify-report.dto';
+import { ReportService } from '../report/report.service';
 
 @WebSocketGateway({ cors: { origin: '*' } })
 export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect, OnModuleInit {
@@ -26,6 +28,7 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect, 
     private userService: UserService,
     private orderService: OrdersService,
     private notificationService: NotificationService,
+    private reportService: ReportService,
     private readonly jwtService: JwtService,
     private configService: ConfigService,
   ) { }
@@ -207,5 +210,34 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect, 
 
   verifyJwt(jwt: string): Promise<any> {
     return this.jwtService.verifyAsync(jwt, { secret: this.configService.get('JWT_SECRET_KEY') });
+  }
+
+  async emitGetReportList(client: Socket) {
+    console.log('api-gateway: emitGetReportList..... + ' + client.data.agencyId)
+    return this.server.emit('emitGetReportList', 'emitGetReportList');
+  }
+
+  @SubscribeMessage('addReport')
+  async onAddReport(client: Socket, payload: ModifyReportDTO) {
+    console.log('api-gateway: onAddReport....' + JSON.stringify(client.data))
+    const addReport = await this.reportService.create(payload);
+    await this.server.to(client.id).emit('reportAdded', addReport);
+    await this.emitGetReportList(client);
+  }
+
+  @SubscribeMessage('updateReport')
+  async onUpdateReport(client: Socket, payload: ModifyReportDTO) {
+    console.log('api-gateway: onUpdateReport....' + JSON.stringify(client.data))
+    const updateReport = await this.reportService.update(payload);
+    await this.server.to(client.id).emit('reportUpdated', updateReport);
+    await this.emitGetReportList(client);
+  }
+
+  @SubscribeMessage('deleteReport')
+  async deleteReport(client: Socket, payload: any) {
+    console.log('api-gateway: deleteReport....' + JSON.stringify(client.data))
+    const deleteReport = await this.reportService.delete(payload);
+    await this.server.to(client.id).emit('reportDeleted', deleteReport);
+    await this.emitGetReportList(client);
   }
 }

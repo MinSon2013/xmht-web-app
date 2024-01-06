@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { Notify } from '../models/notify';
 import { Order } from '../models/order';
 import { CustomSocket } from '../sockets/custom-socket';
+import { Reports } from '../models/report';
 
 @Injectable({
     providedIn: 'root'
@@ -22,7 +23,7 @@ export class SocketService {
 
         socket.on("connect", (s: any) => {
             console.log("connect");//
-          });
+        });
 
         socket.on("connection", (s: any) => {
             console.log("connection");
@@ -156,6 +157,62 @@ export class SocketService {
         this.socket.emit('deleteOrder', id);
         return new Observable((subscribe) => {
             this.socket.on('orderDeleted', (data: any) => {
+                subscribe.next(data);
+            });
+        })
+    }
+
+    createdReport(obj: Reports) {
+        const report = {
+            storeId: obj.storeId,
+            agencyId: obj.agencyId,
+            districtId: obj.districtId,
+            provinceId: obj.provinceId,
+            storeInformation: obj.storeInformation,
+            reportContent: obj.reportContent,
+            otherStoreName: obj.otherStoreName,
+            attachFile: obj.attachFile,
+            filePath: obj.filePath,
+            note: obj.note,
+            fullName: obj.fullName,
+            updatedByUserId: obj.updatedByUserId,
+        };
+        this.socket.emit('addReport', report);
+        return new Observable((subscribe) => {
+            this.socket.on('reportAdded', (data: any) => {
+                subscribe.next(data);
+            });
+        })
+    }
+
+    updatedReport(obj: Reports) {
+        const report = {
+            id: obj.id,
+            storeId: obj.storeId,
+            agencyId: obj.agencyId,
+            districtId: obj.districtId,
+            provinceId: obj.provinceId,
+            storeInformation: obj.storeInformation,
+            reportContent: obj.reportContent,
+            otherStoreName: obj.otherStoreName,
+            attachFile: obj.attachFile,
+            filePath: obj.filePath,
+            note: obj.note,
+            fullName: obj.fullName,
+            updatedByUserId: obj.updatedByUserId,
+        };
+        this.socket.emit('updateReport', report);
+        return new Observable((subscribe) => {
+            this.socket.on('reportUpdated', (data: any) => {
+                subscribe.next(data);
+            });
+        })
+    }
+
+    deleteReport(id: number) {
+        this.socket.emit('deleteReport', id);
+        return new Observable((subscribe) => {
+            this.socket.on('reportDeleted', (data: any) => {
                 subscribe.next(data);
             });
         })

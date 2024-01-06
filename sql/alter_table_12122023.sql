@@ -9,6 +9,7 @@ CHANGE  `full_name` `agency_name` varchar(200);
 -- ALTER TABLE `notification` 
 
 ALTER TABLE notification
+ADD order_id int(11) DEFAULT 0,
 ADD report_id int(11) DEFAULT 0,
 DROP `short_contents`;
 
@@ -39,4 +40,3 @@ WHERE `username` = 'thukho';
 
 ALTER TABLE `users`
 DROP is_stocker;
-

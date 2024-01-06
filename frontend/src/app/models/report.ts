@@ -24,4 +24,5 @@ export interface Reports {
     showDetail?: boolean;
     showLabel?: string;
     showContent?: string
+    fullName?: string;
 }

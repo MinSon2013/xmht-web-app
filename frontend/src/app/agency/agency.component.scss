@@ -22,6 +22,7 @@
     padding: 1rem;
 
     table {
+        table-layout: fixed;
         width: 100%;
         border: 1px solid grey;
         border-bottom: 1.05px solid grey;
@@ -30,6 +31,7 @@
         white-space: nowrap;
         max-height: 500px;
         overflow: auto;
+        display: block;
 
         .wrap-text {
             white-space: break-spaces;

@@ -29,7 +29,6 @@ export class UserService {
         return [user];
     }
 
-    //--- REMOVE ----
     async getAllUserList(): Promise<UserRO[]> {
         return await this.userRepo.getAllUserList();
     }

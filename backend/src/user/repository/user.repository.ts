@@ -17,7 +17,6 @@ export class UserRepository extends Repository<Users> {
         super();
     }
 
-    //--- REMOVE ---------
     async getAllUserList(): Promise<UserRO[]> {
         const raw = await this.createQueryBuilder('u')
             .leftJoinAndSelect(UserDistrict, 'ud', 'ud.user_id = u.id')
@@ -177,7 +176,5 @@ export class UserRepository extends Repository<Users> {
         } catch (err) {
             console.log(err)
         }
-
     }
-
 }

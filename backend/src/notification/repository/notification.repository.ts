@@ -161,9 +161,9 @@ export class NotificationRepository extends Repository<Notification> {
         const ind2 = body.contents.indexOf(']');
         const approvedNumber = body.contents.substring(ind1 + 1, ind2);
         let notify = null;
-        if (approvedNumber.length > 0) {
+        if (approvedNumber.length > 0 && approvedNumber !== '-') {
             notify = await this.find({
-                contents: Like(`%${approvedNumber}%`)
+                contents: Like(`%${approvedNumber}%`),
             });
 
         } else {
@@ -173,6 +173,7 @@ export class NotificationRepository extends Repository<Notification> {
         }
 
         if (notify.length > 0) {
+            notify = notify.reverse();
             body.id = notify[0].id;
         }
 

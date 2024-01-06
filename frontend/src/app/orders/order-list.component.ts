@@ -101,7 +101,7 @@ export class OrderListComponent implements OnInit {
       this.displayedColumns = ['approvedNumber', 'agencyName', 'contract', 'createdDate', 'receivedDate', 'confirmedDate', 'shippingDate', 'deliveryId', 'pickupId', 'productName', 'quantity', 'productTotal', 'licensePlates', 'driver', 'status'];
     }
     if (this.isAgency) {
-      this.displayedColumns = ['approvedNumber', 'contract', 'createdDate', 'receivedDate', 'confirmedDate', 'shippingDate', 'deliveryId', 'pickupId', 'productName', 'quantity', 'productTotal', 'licensePlates', 'driver', 'status'];
+      this.displayedColumns = ['approvedNumber', 'contract', 'createdDate', 'receivedDate', 'confirmedDate', 'shippingDate', 'deliveryId', 'pickupId', 'productName', 'quantity', 'productTotal', 'licensePlates', 'driver', 'status', 'deleteAction'];
     }
     this.colspan = this.displayedColumns.length;
     this.getData();
@@ -216,7 +216,6 @@ export class OrderListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        // this.helper.deleteOrder(row);
         this.dataSource.data = this.dataSource.data.filter(x => x.id !== row.id);
         if (this.dataSource.data.length === 0) {
           this.hasData = false;
@@ -368,8 +367,8 @@ export class OrderListComponent implements OnInit {
     this.searchForm.agencyId = this.agencySelected !== null ? this.agencySelected.id : 0;
     this.searchForm.productId = this.productSelected !== null ? this.productSelected.id : 0;
     this.searchForm.status = this.selectedStatus !== null ? this.selectedStatus.value : 0;
-    this.searchForm.startDate = this.range.value.start !== null ? moment(this.range.value.start).format('DD/MM/YYYY') : '';
-    this.searchForm.endDate = this.range.value.end !== null ? moment(this.range.value.end).format('DD/MM/YYYY') : '';
+    this.searchForm.startDate = this.range.value.start !== null ? this.helper.getDateFormat(3, this.range.value.start) : '';
+    this.searchForm.endDate = this.range.value.end !== null ? this.helper.getDateFormat(3, this.range.value.end) : '';
     this.orderService.search(this.searchForm).subscribe((response: any) => {
       if (response.length > 0) {
         this.dataSource.data = response.reverse();

@@ -241,13 +241,18 @@ export class Helper {
     return role;
   }
 
-  public getDateFormat(t: number): string {
+  public getDateFormat(t: number, value?: Date | null): string {
     const UPDATE_DATE_FORMAT_1 = 'HH:mm:ss DD/MM/YYYY';
     const UPDATE_DATE_FORMAT_2 = 'HH:mm DD/MM/YYYY';
-    if (t = 1) {
+    const UPDATE_DATE_FORMAT_3 = 'DD/MM/YYYY';
+    if (t === 1) {
       return moment(new Date).format(UPDATE_DATE_FORMAT_1);
-    } else if (t = 2) {
+    } else if (t === 2) {
       return moment(new Date).format(UPDATE_DATE_FORMAT_2);
+    } else if (t === 3) {
+      return moment(value).format(UPDATE_DATE_FORMAT_3);
+    } else if (t === 4) {
+      return moment().format('HH giờ mm"');
     } else {
       return '';
     }

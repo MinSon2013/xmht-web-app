@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Cities, MSG_STATUS, RECEIPT, STATUS, STOCKER_ROLE, Transports, USER_SALESMAN_ROLE } from '../../constants/const-data';
+import { AGENCY_ROLE, Cities, MSG_STATUS, RECEIPT, STATUS, STOCKER_ROLE, Transports, USER_SALESMAN_ROLE } from '../../constants/const-data';
 import { Order, ProductItem } from '../../models/order';
 import { FormControl, FormGroupDirective, NgForm } from '@angular/forms';
 import { Helper } from '../../helpers/helper';
 import { ErrorStateMatcher } from '@angular/material/core';
-import * as moment from 'moment';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
@@ -50,6 +49,7 @@ export class OrderAddComponent implements OnInit {
   userRole: number = this.helper.getUserRole();
   isStocker: boolean = this.userRole === STOCKER_ROLE;
   isSalesman: boolean = this.userRole === USER_SALESMAN_ROLE;
+  isAgency: boolean = this.userRole === AGENCY_ROLE;
 
   selectedStatus: any = { value: 1, label: '' };
   pickupSelected: any = null;
@@ -98,14 +98,15 @@ export class OrderAddComponent implements OnInit {
     this.getAgencys();
     this.getProducts();
     this.getDelivery();
-    if (!this.helper.isAdmin()) {
-      this.order.contract = this.agencyList[0].contract;
-    }
   }
 
   getAgencys() {
     this.agencyService.getAgencyList().subscribe((response: any) => {
       this.agencyList = response;
+      if (this.isAgency) {
+        const agency = this.agencyList.find(x => x.id === this.helper.getAgencyId());
+        this.order.contract = agency.contract;
+      }
     });
   }
 
@@ -144,13 +145,13 @@ export class OrderAddComponent implements OnInit {
       this.order.pickupId = Number(this.pickupSelected.id);
       this.order.transport = Number(this.transportSelected.id);
       this.order.receipt = Number(this.receiptSelected.value);
-      this.order.receivedDate = moment(this.date.value).format('DD/MM/YYYY');
-      if (this.isAdmin) {
-        this.order.agencyId = this.agencySelected !== null ? this.agencySelected.id : 0;
-        this.order.notifyReceiver = this.order.agencyId;
-      } else {
+      this.order.receivedDate = this.helper.getDateFormat(3, this.date.value);
+      if (this.isAgency) {
         this.order.agencyId = this.helper.getAgencyId();
         this.order.notifyReceiver = 0;
+      } else {
+        this.order.agencyId = this.agencySelected !== null ? this.agencySelected.id : 0;
+        this.order.notifyReceiver = this.order.agencyId;
       }
       this.order.sender = this.helper.getUserId();
       this.order.products = this.order.products.filter(x => x.quantity.toString() !== '0' && x.quantity.toString() !== '');
@@ -161,7 +162,7 @@ export class OrderAddComponent implements OnInit {
       if (this.order.status === STATUS[3].value) {
         this.order.shippingDate = this.helper.getDateFormat(2);
       }
-      console.log(this.order)
+
       this.socketService.createdOrder(this.order).pipe(
         tap((res) => { })
       ).subscribe((response: any) => {
@@ -202,7 +203,7 @@ export class OrderAddComponent implements OnInit {
       isValidForm = false;
       this.error = 'Vui lòng nhập đầy đủ thông tin bắt buộc (*)';
     }
-    if (this.isAdmin && !this.agencySelected) {
+    if (!this.isAgency && !this.agencySelected) {
       isValidForm = false;
       this.error = 'Vui lòng nhập đầy đủ thông tin bắt buộc (*)';
     }

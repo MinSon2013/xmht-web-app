@@ -9,7 +9,6 @@ import { ProductService } from '../services/product.service';
 import { TranslateService } from '@ngx-translate/core';
 import { FormGroup } from '@angular/forms';
 import { STATUS, STOCKER_ROLE, USER_AREA_MANAGER_ROLE } from '../constants/const-data';
-import * as moment from 'moment';
 import { AgencyService } from '../services/agency.service';
 
 export interface Label { }
@@ -208,8 +207,8 @@ export class StatisticsComponent implements OnInit {
     this.searchForm.agencyId = this.agencySelected !== null ? this.agencySelected.id : 0;
     this.searchForm.productId = this.productSelected !== null ? this.productSelected.id : 0;
     this.searchForm.status = this.selectedStatus !== null ? this.selectedStatus.value : 0;
-    this.searchForm.startDate = this.range.value.start !== null ? moment(this.range.value.start).format('DD/MM/YYYY') : '';
-    this.searchForm.endDate = this.range.value.end !== null ? moment(this.range.value.end).format('DD/MM/YYYY') : '';
+    this.searchForm.startDate = this.range.value.start !== null ? this.helper.getDateFormat(3, this.range.value.start) : '';
+    this.searchForm.endDate = this.range.value.end !== null ? this.helper.getDateFormat(3, this.range.value.end) : '';
     this.getDataChartByDate();
     this.getDataChartPie();
     this.resetFormSearch();

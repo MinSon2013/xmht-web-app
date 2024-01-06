@@ -11,7 +11,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { OrderService } from '../../services/order.service';
 import { Location } from '@angular/common';
 import { NumToVietnameseText } from '../../common/num-to-vietnamese-text';
-import * as moment from 'moment';
 import { Order } from '../../models/order';
 import { AgencyService } from '../../services/agency.service';
 import { DeliveryService } from '../../services/delivery.service';
@@ -131,7 +130,7 @@ export class PrintPdfComponent implements OnInit {
         if (order.shippingDate.length > 0) {
           const ks = order.shippingDate.split(' ');
           const ms = ks[1].split('/');
-          ks[0] = moment().format('HH giờ mm"');
+          ks[0] = this.helper.getDateFormat(4);
           this.shippingDate = `Xuất xong lúc: ${ks[0]}, ngày ${ms[0]} tháng ${ms[1]} năm ${ms[2]}`;
         }
 

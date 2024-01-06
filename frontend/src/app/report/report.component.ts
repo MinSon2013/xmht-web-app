@@ -13,10 +13,10 @@ import { DialogModifyReportComponent } from './dialog-modify-report/dialog-modif
 import { MatTableDataSource } from '@angular/material/table';
 import { Reports } from '../models/report';
 import { ReportService } from '../services/report.service';
-import * as moment from 'moment';
 import { FormControl } from '@angular/forms';
 import { CustomPaginator } from '../common/custom-paginator';
 import { AgencyService } from '../services/agency.service';
+import { CustomSocket } from '../sockets/custom-socket';
 
 @Component({
   selector: 'app-report',
@@ -61,6 +61,7 @@ export class ReportComponent implements OnInit {
     public router: Router,
     private storeService: StoreService,
     private agencyService: AgencyService,
+    private socket: CustomSocket,
   ) {
     this.getAgencys();
   }
@@ -77,6 +78,7 @@ export class ReportComponent implements OnInit {
     this.getStoreList();
     this.getDistrict();
     this.getData();
+    this.emitSocket();
   }
 
   getData() {
@@ -89,6 +91,12 @@ export class ReportComponent implements OnInit {
       }
       this.hideShowNoDataRow();
     });
+  }
+
+  emitSocket() {
+    this.socket.on('emitGetReportList', (response: Reports[]) => {
+      this.getData();
+    })
   }
 
   getDistrict() {
@@ -230,6 +238,7 @@ export class ReportComponent implements OnInit {
     let r = 0;
     let upd = '';
     this.dataSource.data.forEach(element => {
+      element.showContent = element.reportContent;
       if (element.reportContent.length > this.MAX_LENGTH_SHORT_CONTENT) {
         element.showContent = element.reportContent.substring(0, (this.MAX_LENGTH_SHORT_CONTENT - 1));
         element.showLabel = "...[Chi tiết]";
@@ -289,7 +298,7 @@ export class ReportComponent implements OnInit {
     const districtId = this.districtSelected ? this.districtSelected.id : 0;
     let date = '';
     if (this.date.value) {
-      date = moment(this.date.value).format('DD/MM/YYYY');
+      date = this.helper.getDateFormat(3, this.date.value);
     }
 
     this.reportService.search(districtId, date).subscribe((response: any) => {

@@ -60,8 +60,11 @@ export class NotifyComponent implements OnInit {
 
   ngOnInit(): void {
     this.agencyId = this.helper.getAgencyId();
-    if (!this.isAdmin && !this.isSalesman && !this.isAgency) {
+    if (!this.isAdmin && !this.isSalesman) {
       this.displayedColumns = ['checkAll', 'updatedDate', 'agencyName', 'contents', 'fileName', 'statusOrder', 'confirmer'];
+    }
+    if (this.isAgency) {
+      this.displayedColumns = ['checkAll', 'updatedDate', 'contents', 'fileName', 'statusOrder', 'confirmer', 'action'];
     }
     this.colspan = this.displayedColumns.length;
     this.getData();
@@ -81,15 +84,6 @@ export class NotifyComponent implements OnInit {
             el.showDetail = false;
           }
 
-          const agency = this.agencyList.find(x => x.id === el.sender);
-          if (agency) {
-            el.confirmName = agency.agencyName;
-          } else if (this.isAdmin) {
-            el.confirmName = this.helper.getFullName();
-          } else {
-            el.confirmName = '';
-          }
-
           if (el.agencyList && el.agencyList?.length === 1) {
             let agencyId = el.agencyList[0];
             const item = this.agencyList.find(x => x.id === agencyId);
@@ -101,7 +95,6 @@ export class NotifyComponent implements OnInit {
           } else if (el.agencyList && el.agencyList?.length > 1) {
             el.agencyName = "Tất cả"
           }
-
           if (el.sender === this.loginId) { // sender is userId, loginId is userId
             el.isViewed = true;
           } else {

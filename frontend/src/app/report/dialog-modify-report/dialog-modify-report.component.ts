@@ -6,7 +6,8 @@ import { Cities, MSG_STATUS, USER_AREA_MANAGER_ROLE, USER_SALESMAN_ROLE } from '
 import { Helper } from '../../helpers/helper';
 import { Reports } from '../../models/report';
 import { ReportService } from '../../services/report.service';
-import * as moment from 'moment';
+import { SocketService } from '../../services/socket.service';
+import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-dialog-modify-report',
@@ -68,6 +69,7 @@ export class DialogModifyReportComponent {
     public translate: TranslateService,
     private toastr: ToastrService,
     private reportService: ReportService,
+    private socketService: SocketService,
   ) { dialogRef.disableClose = true; }
 
   ngOnInit(): void {
@@ -116,8 +118,12 @@ export class DialogModifyReportComponent {
       this.report.userId = this.helper.getUserId();
       this.report.file = this.file;
       this.report.fileName = this.report.attachFile;
+      this.report.fullName = this.helper.getFullName();
+      this.report.updatedByUserId = this.helper.getUserId();
       if (this.report.id === 0) {
-        this.reportService.create(this.report).subscribe((response: any) => {
+        this.socketService.createdReport(this.report).pipe(
+          tap((res) => { })
+        ).subscribe((response: any) => {
           if (response) {
             this.report.id = response.id;
             this.report.updateDate = response.updateDate;
@@ -144,9 +150,11 @@ export class DialogModifyReportComponent {
           }
         });
       } else {
-        this.reportService.update(this.report).subscribe((response: any) => {
+        this.socketService.updatedReport(this.report).pipe(
+          tap((res) => { })
+        ).subscribe((response: any) => {
           if (response && response.affected > 0) {
-            this.report.updateDate = moment(new Date).format('HH:mm:ss DD/MM/YYYY');
+            this.report.updateDate = this.helper.getDateFormat(1);
             // Upload file
             if (this.file) {
               this.report.attachFile = this.getFilename(this.report.attachFile);
