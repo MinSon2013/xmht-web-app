@@ -41,6 +41,7 @@
     "jwt-decode": "^3.1.2",
     "mdb-angular-ui-kit": "^4.0.0",
     "moment": "^2.29.4",
+    "ng-image-slider": "^7.0.1",
     "ng2-charts": "^4.1.1",
     "ngx-device-detector": "^7.0.0",
     "ngx-editor": "^15.3.0",

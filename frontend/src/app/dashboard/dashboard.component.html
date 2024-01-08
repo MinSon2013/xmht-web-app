@@ -1,44 +1,91 @@
 <div class="container">
-    <section class="tabs row">
-        <input id="tab-1" type="radio" name="radio-set" class="tab-selector-1" />
-        <label for="tab-1" class="tab-label-1">GIỚI THIỆU</label>
+    <div id="slider">
+        <ng-image-slider #nav [images]="imageObjects" [infinite]="false" [autoSlide]="5" [imagePopup]="false"
+            [imageSize]="{ width: '100%', height: '70%' }" [defaultActiveImage]="0" [animationSpeed]="5"
+            [lazyLoading]="true" [slideImage]="1">
+        </ng-image-slider>
+    </div>
 
-        <input id="tab-2" type="radio" name="radio-set" class="tab-selector-2" checked="checked" />
-        <label for="tab-2" class="tab-label-2">SẢN PHẨM</label>
+    <div id="products">
+        <h3>
+            SẢN PHẨM XI MĂNG HÀ TIÊN
+        </h3>
+        <div class="div-product">
+            <div class="row">
+                <div class="col"></div>
+                <div class="col-10">
+                    <ng-image-slider #nav class="shadow" [images]="imageProducts" [infinite]="false" [autoSlide]="2"
+                        [imagePopup]="false" [imageSize]="{ width: '30%', height: '40%' }" [animationSpeed]="2"
+                        [lazyLoading]="true" [slideImage]="1" (imageClick)="imageClickHandler($event)">
+                    </ng-image-slider>
 
-        <input id="tab-3" type="radio" name="radio-set" class="tab-selector-3" />
-        <label for="tab-3" class="tab-label-3">LIÊN HỆ</label>
-
-        <div class="clear-shadow"></div>
-
-        <div class="content">
-            <div class="content-1">
-                <h2>VỀ CHÚNG TÔI</h2>
-                <span>
-                    <img class="img1" src="../../assets/images/nen1.jpg" />
-                    <img class="img1" src="../../assets/images/nen2.jpg" />
-                    <img class="img1" src="../../assets/images/nen3.jpg" />
-                    <img class="img1" src="../../assets/images/nen4.jpg" />
-                    <img class="img1" src="../../assets/images/nen5.jpg" />
-                </span>
-
-            </div>
-            <div class="content-2">
-                <h2>SẢN PHẨM</h2>
-                <span>
-                    <img class="img" src="../../assets/images/1.jpg" />
-                    <img class="img" src="../../assets/images/2.jpg" />
-                    <img class="img" src="../../assets/images/3.jpg" />
-                    <img class="img" src="../../assets/images/4.jpg" />
-                </span>
-            </div>
-            <div class="content-3">
-                <h2>THÔNG TIN LIÊN HỆ</h2>
-                <span>Công ty cổ phần xi măng Hà Tiên</span>
-                <span> Địa chỉ: Số 218, Tỉnh lộ 11, ấp Hòn Chông, xã Bình An, huyện Kiên Lương, tỉnh Kiên Giang</span>
-                <span> Email:phongkhkdxmht@gmail.com</span>
-                <span>SĐT : 02973.759.360</span>
+                    <div id="desciption" class="shadow">
+                        <p>
+                            {{desciption}}
+                        </p>
+                        <button class="btn-hidden" mat-button (click)="onHidden()">
+                            Ẩn
+                            <mat-icon aria-hidden="false" fontSet="fas" fontIcon="fa-caret-up"
+                                class="fa-icon"></mat-icon>
+                        </button>
+                    </div>
+                </div>
+                <div class="col"></div>
             </div>
         </div>
-    </section>
+    </div>
+
+    <div id="intro" class="row">
+        <div id="infor" class="col-7">
+            <div id="div-title">
+                <h5>
+                    {{'INTRO' | translate}}
+                </h5>
+                <h3>
+                    {{'TITLE_APP' | translate}}
+                </h3>
+            </div>
+
+            <div id="content">
+                <p>
+                    Công ty cổ phần Xi măng Hà Tiên là Nhà máy Xi măng Hà Tiên do .... "thay thế vô đây"....
+                </p>
+
+                <button class="btn-detail" mat-raised-button mat-button (click)="onShowDetail()">
+                    {{!showDetail ? 'Xem chi tiết' : 'Thu gọn lại' }}
+                </button>
+
+            </div>
+        </div>
+
+        <div id="contact" class="col-5">
+            <h5>
+                <p>
+                    THÔNG TIN LIÊN HỆ
+                </p>
+            </h5>
+            <h6>
+                <p>
+                    {{'TITLE_APP' | translate}}
+                </p>
+            </h6>
+
+            <p>
+                Địa chỉ: Số 218, Tỉnh lộ 11, ấp Hòn Chông, xã Bình An, huyện Kiên Lương, tỉnh Kiên Giang
+            </p>
+            <p>
+                Email: phongkhkdxmht@gmail.com
+            </p>
+            <p>
+                SĐT: 02973.759.360
+            </p>
+        </div>
+
+        <div id="introDetail">
+            <mat-divider></mat-divider>
+            <p>
+                Công ty cổ phần Xi măng Hà Tiên là Nhà máy Xi măng Hà Tiên do .... "thay thế vô đây"....
+            </p>
+        </div>
+    </div>
 </div>

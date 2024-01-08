@@ -54,6 +54,7 @@ import { UserComponent } from './user/user.component';
 import { DialogModifyUserComponent } from './user/dialog-modify-user/dialog-modify-user.component';
 import { ReportComponent } from './report/report.component';
 import { DialogModifyReportComponent } from './report/dialog-modify-report/dialog-modify-report.component';
+import { NgImageSliderModule } from 'ng-image-slider';
 
 const config: SocketIoConfig = { url: `${environment.apiUrl}`, options: {} };
 
@@ -132,7 +133,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
       }
     }),
     SocketIoModule.forRoot(config),
-
+    NgImageSliderModule,
   ],
   providers: [
     { provide: DateAdapter, useClass: DateFormat },
