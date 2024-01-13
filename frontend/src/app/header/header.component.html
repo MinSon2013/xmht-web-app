@@ -19,7 +19,7 @@
 
                     <!-- Manage -->
                     <a mat-button [matMenuTriggerFor]="menu2" #menuTrigger2="matMenuTrigger"
-                        (click)="openSubMenu(menuTrigger2, 2)" class="menu-item" [hidden]="isAgency">
+                        (click)="openSubMenu(menuTrigger2, 2)" class="menu-item" *ngIf="!isAgency && !isStocker">
                         <mat-icon aria-hidden="false" fontSet="fas" fontIcon="fa-caret-down" class="fa-icon"></mat-icon>
                         {{ "HEADER.MENU_GROUP_MANAGE" | translate }}
                     </a>

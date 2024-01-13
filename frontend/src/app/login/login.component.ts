@@ -97,4 +97,8 @@ export class LoginComponent implements OnInit {
       });
   }
 
+  focusNext(id: string) {
+    document.getElementById(id)?.focus();
+  }
+
 }

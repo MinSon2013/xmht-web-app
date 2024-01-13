@@ -12,6 +12,7 @@ ALTER TABLE notification
 ADD `order_id` int(11) DEFAULT 0,
 ADD `report_id` int(11) DEFAULT 0,
 ADD `notification_type` tinyint(2) DEFAULT 0,
+ADD `status_order` varchar(255) DEFAULT NULL,
 ADD `updated_date` varchar(20) DEFAULT NULL,
 DROP `short_contents`;
 

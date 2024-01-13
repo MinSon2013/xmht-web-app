@@ -9,7 +9,7 @@
         <input
           class="col-12 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           type="text" placeholder="Tên đăng nhập" (keyup)="onKey($event, 'username')" maxlength="200" autocomplete
-          [(ngModel)]="username" [ngModelOptions]="{ standalone: true }" />
+          [(ngModel)]="username" [ngModelOptions]="{ standalone: true }" (keyup.enter)="focusNext('password')" />
       </div>
       <div class="mb-6 row field">
         <label class="form-label" for="password">
@@ -17,8 +17,8 @@
         </label>
         <input
           class="col-12 shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
-          type="password" autocomplete placeholder="Mật khẩu" (keyup)="onKey($event, 'password')" maxlength="30"
-          [(ngModel)]="password" [ngModelOptions]="{ standalone: true }" />
+          id="password" type="password" autocomplete placeholder="Mật khẩu" (keyup)="onKey($event, 'password')"
+          maxlength="30" [(ngModel)]="password" [ngModelOptions]="{ standalone: true }" />
       </div>
       <div class="flex items-center justify-between">
         <button class="col-12 btn-login py-2 px-2 rounded focus:outline-none focus:shadow-outline" type="button"
