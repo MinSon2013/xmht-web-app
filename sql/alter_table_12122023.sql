@@ -9,9 +9,10 @@ CHANGE  `full_name` `agency_name` varchar(200);
 -- ALTER TABLE `notification` 
 
 ALTER TABLE notification
-ADD order_id int(11) DEFAULT 0,
-ADD report_id int(11) DEFAULT 0,
-ADD notification_type tinyint(2) DEFAULT 0,
+ADD `order_id` int(11) DEFAULT 0,
+ADD `report_id` int(11) DEFAULT 0,
+ADD `notification_type` tinyint(2) DEFAULT 0,
+ADD `updated_date` varchar(20) DEFAULT NULL,
 DROP `short_contents`;
 
 
