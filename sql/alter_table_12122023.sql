@@ -11,6 +11,7 @@ CHANGE  `full_name` `agency_name` varchar(200);
 ALTER TABLE notification
 ADD order_id int(11) DEFAULT 0,
 ADD report_id int(11) DEFAULT 0,
+ADD notification_type tinyint(4) DEFAULT 0,
 DROP `short_contents`;
 
 
