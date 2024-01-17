@@ -8,7 +8,7 @@
 .container {
     height: auto;
     min-width: 100%;
-    margin-top: 5rem;
+    padding-top: 5rem;
     padding-bottom: 2rem;
 }
 
@@ -262,7 +262,8 @@
 @media only screen and (max-width:600px) {
     .container {
         padding-left: 1rem !important;
-        margin-top: 6rem !important;
+        padding-top: 6rem !important;
+        padding-bottom: 3rem;
 
         .header {
             padding: 1rem 0 1rem 0 !important;
@@ -292,6 +293,16 @@
 
         .action-search {
             padding: 0 1rem !important;
+            margin-bottom: 0.5rem;
+
+            .receivedDate {
+                padding-left: 0 !important;
+            }
+
+            mat-form-field {
+                margin-top: 0.5rem !important;
+                width: 68% !important;
+            }
         }
 
         .district {
@@ -305,7 +316,7 @@
 @media only screen and (max-width:400px) {
     .container {
         padding-left: 1rem !important;
-        margin-top: 6rem !important;
+        padding-top: 6rem !important;
 
         .header {
             padding: 1rem 0 1rem 0 !important;
@@ -321,6 +332,7 @@
             .btn-search,
             .btn-add {
                 margin: 0.5rem 0 !important;
+                width: 143px !important;
             }
         }
 
@@ -336,6 +348,11 @@
 
         .action-search {
             padding: 0 1rem !important;
+
+            mat-form-field,
+            select {
+                width: 58% !important;
+            }
         }
 
         .district {

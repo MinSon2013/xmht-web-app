@@ -102,8 +102,8 @@
       </button>
     </div>
   </div>
-  <div class="action-group">
-    <div class="action-trigger-button">
+  <div class="action-group row">
+    <div class="action-trigger-button col-7">
       <button mat-raised-button class="btn1 btn-trigger" (click)="onLoadLasted(1)">
         <label class="pad-label">{{ "BUTTON.WAITING" | translate }}</label>
       </button>
@@ -118,13 +118,24 @@
       </button>
     </div>
 
-    <div class="action-add" [hidden]="!isAdmin && !isAgency && !isSalesman">
-      <button mat-raised-button class="btn-add" (click)="onAdd()">
+    <div class="action-btn col-5">
+      <!-- <div class="action-export" [hidden]="dataSource.data.length === 0"> -->
+      <button mat-raised-button class="btn-export" (click)="exportToExcel()" [hidden]="!isAdmin && !isSalesman">
+        <mat-icon aria-hidden="false" aria-label="Export icon" fontSet="fas" fontIcon="fa-download"
+          class="fa-download"></mat-icon>
+        <label class="pad-label">{{ "BUTTON.DOWNLOAD" | translate }}</label>
+      </button>
+      <!-- </div> -->
+
+      <!-- <div > -->
+      <button mat-raised-button class="btn-add" (click)="onAdd()" [hidden]="!isAdmin && !isAgency && !isSalesman">
         <mat-icon aria-hidden="false" aria-label="Add icon" fontSet="fas" fontIcon="fa-plus" class="fa-plus"></mat-icon>
         <label class="pad-label">{{ "BUTTON.ADD" | translate }}</label>
       </button>
+      <!-- </div> -->
     </div>
   </div>
+
   <div class="table-container" #TABLE #table>
     <table mat-table [dataSource]="dataSource" matSort>
       <!-- ApprovedNumber column -->
@@ -436,12 +447,12 @@
       aria-label="Select page of periodic elements">
     </mat-paginator>
   </div>
-  <div class="action-export" [hidden]="dataSource.data.length === 0">
+  <!-- <div class="action-export" [hidden]="dataSource.data.length === 0">
     <button mat-raised-button class="btn-export" (click)="exportToExcel()" [hidden]="!isAdmin && !isSalesman">
       <mat-icon aria-hidden="false" aria-label="Export icon" fontSet="fas" fontIcon="fa-download"
         class="fa-download"></mat-icon>
       <label class="pad-label">{{ "BUTTON.DOWNLOAD" | translate }}</label>
     </button>
-  </div>
-  <div class="py-5"></div>
+  </div> -->
+  <!-- <div class="py-5"></div> -->
 </div>

@@ -2,9 +2,8 @@
     min-width: 100%;
     min-height: 100%;
     padding: 2rem;
-    display: block;
     background-color: white;
-    margin-top: 5rem;
+    padding-top: 6rem;
 
     .chart {
         display: flex;
@@ -46,8 +45,8 @@
         border-radius: 4px;
 
         .action-submit {
-            margin-bottom: 1rem;
-            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            margin-top: 0.5rem;
             margin-right: 1rem;
             width: 100%;
             cursor: pointer;
@@ -126,7 +125,7 @@
     .container {
         padding-left: 0.5rem !important;
         padding-right: 0.5rem !important;
-        padding-top: 0.5rem !important;
+        padding-top: 5.5rem !important;
 
         .action-search {
             padding-right: 0.5rem !important;
@@ -195,7 +194,7 @@
 @media only screen and (max-width:400px) {
     .container {
         padding-left: 0.5rem !important;
-        padding-top: 0.5rem !important;
+        padding-top: 5.5rem !important;
 
         .action-search {
             padding-right: 0.5rem !important;

@@ -127,6 +127,126 @@ mat-toolbar-row {
     height: 80px;
 }
 
+@media only screen and (max-width: 1024px) {
+    .head {
+        padding: 0 !important;
+    }
+
+    .mat-toolbar-row {
+        padding: 0 6px !important;
+        height: 100px !important;
+    }
+
+    .head-content {
+        padding: 0.4rem 0.25rem !important;
+        display: block;
+
+        .head-content-left {
+            .span {
+                font-size: 11pt !important;
+                padding: 4px;
+                margin: auto !important;
+            }
+
+            img {
+                width: 50px !important;
+                height: 50px !important;
+            }
+        }
+
+        .head-content-right {
+
+            .fa-bell {
+                margin-left: 0.5rem !important;
+                padding-top: 0px !important;
+                padding-right: 5px !important;
+            }
+
+            mat-icon {
+                width: auto !important;
+                font-size: 12pt !important;
+                padding-top: 0 !important;
+            }
+
+            .agency {
+                font-size: 11pt !important;
+                padding-top: 3px !important;
+            }
+        }
+    }
+
+    .sub-menu {
+        overflow-x: auto;
+        overflow-y: hidden;
+        width: 100% !important;
+        display: block !important;
+    }
+
+    .menu-item {
+        font-size: 9pt !important;
+    }
+}
+
+@media only screen and (max-width: 800px) {
+    .head {
+        padding: 0 !important;
+    }
+
+    .mat-toolbar-row {
+        padding: 0 6px !important;
+        height: 100px !important;
+    }
+
+    .head-content {
+        padding: 0.4rem 0.25rem !important;
+        display: block;
+
+        .head-content-left {
+            .span {
+                font-size: 11pt !important;
+                padding: 4px;
+                margin: auto !important;
+            }
+
+            img {
+                width: 50px !important;
+                height: 50px !important;
+            }
+        }
+
+        .head-content-right {
+
+            .fa-bell {
+                margin-left: 0.5rem !important;
+                padding-top: 0px !important;
+                padding-right: 5px !important;
+            }
+
+            mat-icon {
+                width: auto !important;
+                font-size: 12pt !important;
+                padding-top: 0 !important;
+            }
+
+            .agency {
+                font-size: 11pt !important;
+                padding-top: 3px !important;
+            }
+        }
+    }
+
+    .sub-menu {
+        overflow-x: auto;
+        overflow-y: hidden;
+        width: 100% !important;
+        display: block !important;
+    }
+
+    .menu-item {
+        font-size: 9pt !important;
+    }
+}
+
 @media only screen and (max-width: 600px) {
     .head {
         padding: 0 !important;

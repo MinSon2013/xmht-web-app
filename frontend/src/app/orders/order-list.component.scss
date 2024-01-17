@@ -6,7 +6,7 @@
 }
 
 .bg-white {
-    margin-top: 6rem;
+    padding-top: 5rem;
 }
 
 .header {
@@ -17,20 +17,21 @@
 
 .table-container {
     padding: 0.5rem 1rem;
+    overflow: auto;
+    overflow-y: auto;
 
     table {
         table-layout: fixed;
         width: 100%;
         border: 1px solid grey;
         border-bottom: 1.05px solid grey;
-        margin-bottom: 20px;
+        margin-bottom: 0.5rem;
         display: block;
         overflow-x: auto;
         white-space: nowrap;
         text-align: center;
-
-        max-height: 500px;
-        overflow: auto;
+        max-height: 405px;
+        // overflow: auto;
 
         .nowrap {
             white-space: pre;
@@ -174,6 +175,37 @@
             min-width: 10rem;
         }
     }
+
+    .action-export {
+        margin-bottom: 1rem;
+        padding-right: 1rem;
+        cursor: pointer;
+        width: 100%;
+        text-align: right;
+
+        .btn-export {
+            color: white;
+            background-color: transparent;
+            padding: 1.25rem;
+            width: 145px;
+            background: royalblue;
+            border: 1px solid royalblue;
+            border-radius: 4px;
+
+            .fa-download {
+                color: #fff;
+                font-size: 18px;
+            }
+
+            .pad-label {
+                margin-left: 5px;
+            }
+        }
+
+        span {
+            font-weight: 700;
+        }
+    }
 }
 
 .action-group {
@@ -210,13 +242,13 @@
         }
     }
 
-    .action-add {
-        width: 100%;
+    .action-btn {
+        // width: 100%;
         text-align: right;
-        cursor: pointer;
         margin-bottom: 0.5rem;
 
         .btn-add {
+            cursor: pointer;
             color: white;
             background-color: transparent;
             padding: 1.25rem;
@@ -238,39 +270,69 @@
                 cursor: pointer;
             }
         }
+
+        // .action-export {
+        //     margin-bottom: 1rem;
+        //     padding-right: 1rem;
+
+        //width: 100%;
+        // text-align: right;
+
+        .btn-export {
+            margin-right: 1rem;
+            cursor: pointer;
+            color: white;
+            background-color: transparent;
+            padding: 1.25rem;
+            width: 150px;
+            background: royalblue;
+            border: 1px solid royalblue;
+            border-radius: 4px;
+
+            .fa-download {
+                color: #fff;
+                font-size: 18px;
+            }
+
+            .pad-label {
+                margin-left: 5px;
+            }
+        }
+
+        // }
     }
 }
 
-.action-export {
-    margin-bottom: 1rem;
-    padding-right: 1rem;
-    cursor: pointer;
-    width: 100%;
-    text-align: right;
+// .action-export {
+//     margin-bottom: 1rem;
+//     padding-right: 1rem;
+//     cursor: pointer;
+//     width: 100%;
+//     text-align: right;
 
-    .btn-export {
-        color: white;
-        background-color: transparent;
-        padding: 1.25rem;
-        width: 145px;
-        background: royalblue;
-        border: 1px solid royalblue;
-        border-radius: 4px;
+//     .btn-export {
+//         color: white;
+//         background-color: transparent;
+//         padding: 1.25rem;
+//         width: 145px;
+//         background: royalblue;
+//         border: 1px solid royalblue;
+//         border-radius: 4px;
 
-        .fa-download {
-            color: #fff;
-            font-size: 18px;
-        }
+//         .fa-download {
+//             color: #fff;
+//             font-size: 18px;
+//         }
 
-        .pad-label {
-            margin-left: 5px;
-        }
-    }
+//         .pad-label {
+//             margin-left: 5px;
+//         }
+//     }
 
-    span {
-        font-weight: 700;
-    }
-}
+//     span {
+//         font-weight: 700;
+//     }
+// }
 
 .action-search {
     margin: 0 1rem;
@@ -343,7 +405,10 @@
     }
 }
 
-@media only screen and (max-width: 1000px) {
+@media only screen and ((min-width: 901px) and (max-width: 1024px)) {
+    .bg-white {
+        margin-top: 0rem !important;
+    }
 
     .header {
         padding: 2rem 0 1rem 0 !important;
@@ -354,19 +419,6 @@
         padding-right: 0.5rem !important;
         padding-left: 0.5rem !important;
         margin: 0 0.5rem;
-
-        .row {
-            --mdb-gutter-x: 0rem !important;
-            display: block;
-        }
-
-        .col-5,
-        .col-6,
-        .col-7,
-        .select,
-        .select-1 {
-            width: 100% !important;
-        }
 
         .action-submit {
             margin-bottom: 0.5rem;
@@ -379,29 +431,36 @@
 
                 .fa-search {
                     font-size: 16px;
-                    padding-top: 8px;
+                    padding-top: 0 !important;
                 }
             }
         }
     }
 
-    .action-add {
-        margin-top: 1rem;
+    .action-btn {
+        width: 32%;
         margin-bottom: 0.75rem;
-        margin-right: 1rem !important;
-        width: 7.5rem;
+        padding-right: 0.5rem !important;
 
         .btn-add {
-            padding-left: 6px;
+            padding-left: 4px;
             padding-top: 6px;
+            width: 138px !important;
 
             .fa-plus {
-                font-size: 18px;
-                padding-top: 2px;
+                font-size: 11pt;
             }
+        }
 
-            .pad-label {
-                font-size: 12pt;
+        .pad-label {
+            font-size: 9pt;
+        }
+
+        .btn-export {
+            width: 138px !important;
+
+            .fa-download {
+                font-size: 11pt;
             }
         }
     }
@@ -411,6 +470,7 @@
 
         table {
             margin-bottom: 0rem;
+            max-height: 650px !important;
         }
 
         .bold {
@@ -418,12 +478,20 @@
         }
     }
 
-    .action-export {
-        margin-right: 1rem !important;
+    .action-trigger-button {
+        width: 66% !important;
+
+        .btn-trigger {
+            margin-right: 0.5rem !important;
+        }
     }
 }
 
-@media only screen and (max-width: 800px) {
+@media only screen and (max-width: 900px) {
+    .bg-white {
+        margin-top: 0rem !important;
+    }
+
     .header {
         padding: 2rem 0 1rem 0 !important;
         font-weight: 600;
@@ -433,19 +501,6 @@
         padding-right: 0.5rem !important;
         padding-left: 0.5rem !important;
         margin: 0 0.5rem;
-
-        .row {
-            --mdb-gutter-x: 0rem !important;
-            display: block;
-        }
-
-        .col-5,
-        .col-6,
-        .col-7,
-        .select,
-        .select-1 {
-            width: 100% !important;
-        }
 
         .action-submit {
             margin-bottom: 0.5rem;
@@ -458,30 +513,37 @@
 
                 .fa-search {
                     font-size: 16px;
-                    padding-top: 8px;
+                    padding-top: 0 !important;
                 }
             }
         }
     }
 
-    .action-add {
-        margin-top: 1rem;
+    .action-btn {
+        width: 48% !important;
         margin-bottom: 0.75rem;
-        margin-right: 1rem !important;
-        width: 7.5rem;
+        margin-right: 0.5rem !important;
 
         .btn-add {
+            width: 152px !important;
             padding-left: 6px;
             padding-top: 6px;
 
             .fa-plus {
                 font-size: 18px;
-                padding-top: 2px;
             }
+        }
 
-            .pad-label {
-                font-size: 12pt;
+        .btn-export {
+            width: 152px !important;
+
+            .fa-download {
+                font-size: 11pt;
             }
+        }
+
+        .pad-label {
+            font-size: 11pt !important;
         }
     }
 
@@ -490,6 +552,7 @@
 
         table {
             margin-bottom: 0rem;
+            max-height: 430px !important;
         }
 
         .bold {
@@ -497,18 +560,25 @@
         }
     }
 
-    .action-export {
-        margin-right: 1rem !important;
+    .action-trigger-button {
+        width: 50% !important;
     }
 
-    .created-date {
-        margin-top: 1.5rem !important;
+    .action-group {
+
+        .btn3 {
+            margin-top: 4px !important;
+        }
+
+        .btn4 {
+            margin-top: 4px;
+        }
     }
 }
 
 @media only screen and (max-width: 600px) {
     .bg-white {
-        margin-top: 6rem !important;
+        margin-top: 1rem !important;
     }
 
     .header {
@@ -552,13 +622,16 @@
         }
     }
 
-    .action-add {
-        margin-top: 1rem;
+    .action-btn {
         margin-bottom: 0;
-        margin-right: 1rem !important;
-        width: 7.5rem;
+        margin-right: 0rem !important;
+
+        .pad-label {
+            font-size: 10pt !important;
+        }
 
         .btn-add {
+            width: 150px !important;
             padding-left: 6px;
             padding-top: 6px;
             margin-top: 0.5rem !important;
@@ -567,15 +640,20 @@
                 font-size: 17px !important;
                 padding-top: 0;
             }
+        }
 
-            .pad-label {
-                font-size: 11pt !important;
+        .btn-export {
+            margin-right: 0rem !important;
+            width: 150px !important;
+
+            .fa-download {
+                font-size: 16px !important;
             }
         }
     }
 
     .table-container {
-        padding: 1rem 0.5rem;
+        padding: 1rem 0.5rem 3rem;
 
         table {
             margin-bottom: 0rem;
@@ -591,18 +669,6 @@
         }
     }
 
-    .action-export {
-        margin-right: 1rem !important;
-
-        mat-icon {
-            font-size: 16px !important;
-        }
-
-        label {
-            font-size: 11pt !important;
-        }
-    }
-
     .created-date {
         margin-top: 1.5rem !important;
     }
@@ -612,7 +678,7 @@
         margin-left: 1rem !important;
 
         .btn3 {
-            margin-top: 6px !important;
+            margin-top: 4px !important;
         }
 
         .btn-trigger {
@@ -622,12 +688,16 @@
         .btn4 {
             margin-top: 4px;
         }
+
+        .btn2 {
+            margin-top: 4px;
+        }
     }
 }
 
 @media only screen and (max-width: 400px) {
     .bg-white {
-        margin-top: 6rem !important;
+        margin-top: 1rem !important;
     }
 
     .header {
@@ -672,13 +742,12 @@
         }
     }
 
-    .action-add {
-        margin-top: 1rem;
+    .action-btn {
         margin-bottom: 0 !important;
-        margin-right: 1rem !important;
-        width: 7.5rem;
+        margin-right: 0rem !important;
 
         .btn-add {
+            width: 140px !important;
             padding-left: 6px;
             padding-top: 6px;
             margin-top: 0.5rem !important;
@@ -687,10 +756,19 @@
                 font-size: 16px !important;
                 padding-top: 0 !important;
             }
+        }
 
-            .pad-label {
-                font-size: 11pt !important;
+        .btn-export {
+            width: 140px !important;
+            margin-right: 0rem !important;
+
+            .fa-download {
+                font-size: 16px !important;
             }
+        }
+
+        .pad-label {
+            font-size: 9pt !important;
         }
     }
 
@@ -709,18 +787,6 @@
         }
     }
 
-    .action-export {
-        margin-right: 1rem !important;
-
-        mat-icon {
-            font-size: 16px !important;
-        }
-
-        label {
-            font-size: 11pt !important;
-        }
-    }
-
     .created-date {
         margin-top: 1.5rem !important;
     }
@@ -730,7 +796,7 @@
         margin-left: 1rem !important;
 
         .btn3 {
-            margin-top: 6px !important;
+            margin-top: 4px !important;
         }
 
         .btn-trigger {
@@ -740,5 +806,9 @@
         .btn4 {
             margin-top: 4px;
         }
+    }
+
+    .action-trigger-button {
+        width: 50% !important;
     }
 }

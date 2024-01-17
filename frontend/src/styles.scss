@@ -31,6 +31,8 @@ body {
     font-family: 'Roboto', sans-serif;
     background-color: whitesmoke !important;
     display: contents;
+    overflow: hidden;
+    overflow-y: hidden;
 }
 
 .card {
