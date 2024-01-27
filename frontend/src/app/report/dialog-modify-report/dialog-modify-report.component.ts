@@ -238,12 +238,16 @@ export class DialogModifyReportComponent {
     if (agencyIds.length === 0) {
       this.showOtherStore = true;
     }
+
+    this.storeDistrictList = this.storeList.filter(x =>
+      x.provinceId === this.provinceSelected.id
+      && x.districtId === this.districtSelected.id);
   }
 
   onChangeAgency(event: any) {
     if (event) {
       this.storeDistrictList = this.storeList.filter(x =>
-        x.agencyId === event.id
+        x.agencyId === event.userId
         && x.provinceId === this.provinceSelected.id
         && x.districtId === this.districtSelected.id);
       this.showOtherStore = false;

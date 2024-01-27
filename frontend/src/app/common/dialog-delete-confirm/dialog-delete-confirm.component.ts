@@ -12,6 +12,7 @@ import { tap } from 'rxjs';
 import { DistrictService } from '../../services/district.service';
 import { StoreService } from '../../services/store.service';
 import { UserService } from '../../services/user.service';
+import { ReportService } from '../../services/report.service';
 
 @Component({
   selector: 'app-dialog-delete-confirm',
@@ -33,6 +34,7 @@ export class DialogDeleteConfirmComponent implements OnInit {
     private districtService: DistrictService,
     private storeService: StoreService,
     private userService: UserService,
+    private reportService: ReportService,
   ) { }
 
   ngOnInit(): void { }
@@ -74,6 +76,12 @@ export class DialogDeleteConfirmComponent implements OnInit {
       case SERVICE_TYPE.USERSERVICE:
         this.userService.delete(data.id).subscribe((response) => {
           this.onResponse(data.id, 'MESSAGE.DELETE_USER', response);
+        });
+        break;
+
+      case SERVICE_TYPE.REPORTSERVICE:
+        this.reportService.delete(data.id).subscribe((response) => {
+          this.onResponse(data.id, 'MESSAGE.DELETE_REPORT', response);
         });
         break;
     }

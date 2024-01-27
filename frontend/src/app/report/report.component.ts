@@ -184,8 +184,9 @@ export class ReportComponent implements OnInit {
   }
 
   onDelete(row: any) {
+    const name = !row.storeName ? row.otherStoreName : row.storeName;
     const dialogRef = this.dialog.open(DialogDeleteConfirmComponent, {
-      data: { id: row.id, type: SERVICE_TYPE.STORESERVICE, content: 'Bạn chắc chắn muốn xóa "' + row.storeName + '"?' },
+      data: { id: row.id, type: SERVICE_TYPE.REPORTSERVICE, content: 'Bạn chắc chắn muốn xóa "' + name + '"?' },
     });
 
     dialogRef.afterClosed().subscribe(result => {

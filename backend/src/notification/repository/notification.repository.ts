@@ -21,11 +21,11 @@ export class NotificationRepository extends Repository<Notification> {
                 .andWhere('n.isPublished IS TRUE');
         }
 
-        let query = await sql.groupBy('n.id')
-            .orderBy("DATE_FORMAT(n.updated_date, '%H:%i %d/%M/%y')", 'ASC')
+        let query = await sql
+            .groupBy("n.updated_date")
+            .orderBy("STR_TO_DATE(n.updated_date, '%H:%i %d/%m/%Y')", 'DESC')
             .getRawMany();
         const res: NotificationDTO[] = [];
-        query = query.reverse();
         query.forEach(x => {
             const item = new NotificationDTO();
             item.id = x.n_id;

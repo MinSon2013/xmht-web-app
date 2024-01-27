@@ -120,7 +120,8 @@
 
     <div class="action-btn col-5">
       <!-- <div class="action-export" [hidden]="dataSource.data.length === 0"> -->
-      <button mat-raised-button class="btn-export" (click)="exportToExcel()" [hidden]="!isAdmin && !isSalesman">
+      <button mat-raised-button class="btn-export" (click)="exportToExcel()"
+        [hidden]="!isAdmin && !isSalesman && !isAreaManager">
         <mat-icon aria-hidden="false" aria-label="Export icon" fontSet="fas" fontIcon="fa-download"
           class="fa-download"></mat-icon>
         <label class="pad-label">{{ "BUTTON.DOWNLOAD" | translate }}</label>
