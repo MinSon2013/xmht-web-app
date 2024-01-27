@@ -128,6 +128,7 @@ export class DialogDetailOrderComponent implements OnInit {
       this.order.sender = this.data.row.sender;
       this.order.products = this.data.row.products;
       /* this.order.approvedNumber = this.data.row.approvedNumber !== 0 ? this.data.row.approvedNumber : '-'; */
+      this.order.approvedNumber = this.data.row.approvedNumber;
       const status = this.status.find(x => x.value === this.order.status);
       this.statusSelected = status ? status : { id: null, label: '' };
       const delivery = this.deliveries.find(x => x.id === this.order.deliveryId);

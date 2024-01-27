@@ -94,7 +94,8 @@ export class DialogConfirmOrderComponent implements OnInit {
       this.order.agencyId = this.data.row.agencyId;
       this.order.confirmedDate = this.data.row.confirmedDate;
       this.order.shippingDate = this.data.row.shippingDate;
-      this.order.approvedNumber = this.data.row.approvedNumber !== 0 ? this.data.row.approvedNumber : 0;
+      // this.order.approvedNumber = this.data.row.approvedNumber !== 0 ? this.data.row.approvedNumber : 0;
+      this.order.approvedNumber = this.data.row.approvedNumber;
       this.order.agencyName = this.agencyList.find(x => x.id === this.data.row.agencyId).agencyName;
       const status = this.status.find(x => x.value === this.order.status);
       this.selectedStatus = status ? status : { id: null, label: '' };

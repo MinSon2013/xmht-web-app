@@ -113,9 +113,7 @@ export class NotificationRepository extends Repository<Notification> {
         notify.fileName = modifyDto.fileName;
         notify.note = modifyDto.note;
         notify.isPublished = modifyDto.isPublished;
-        if (!modifyDto.id) {
-            notify.createdDate = this.helper.getUpdateDate(2);
-        }
+        notify.createdDate = this.helper.getUpdateDate(2);
         notify.mimeType = modifyDto.mimeType ? modifyDto.mimeType : '';
         notify.filePath = modifyDto.filePath ? modifyDto.filePath : '';
         notify.sender = modifyDto.sender;
