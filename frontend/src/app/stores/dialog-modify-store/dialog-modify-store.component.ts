@@ -2,7 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
-import { Cities, MSG_STATUS } from '../../constants/const-data';
+import { Cities, MSG_STATUS, USER_AREA_MANAGER_ROLE } from '../../constants/const-data';
 import { Helper } from '../../helpers/helper';
 import { Store } from '../../models/store';
 import { StoreService } from '../../services/store.service';
@@ -16,6 +16,8 @@ export class DialogModifyStoreComponent {
   header: string = '';
   helper = new Helper();
   isAdmin: boolean = this.helper.isAdmin();
+  userRole: number = this.helper.getUserRole();
+  isAreaManager: boolean = this.userRole === USER_AREA_MANAGER_ROLE;
   cities = Cities;
 
   error: any = '';

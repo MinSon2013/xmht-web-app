@@ -2,7 +2,7 @@
     <h2 class="header">{{ header }}</h2>
     <mat-dialog-content class="form-create shadow-md rounded px-8 pt-6 pb-8">
         <!-- Agency -->
-        <div class="mb-3 row field p-top" [hidden]="!isAdmin">
+        <div class="mb-3 row field p-top" [hidden]="!isAdmin && !isAreaManager">
             <span class="col-5 text-label" for="agency">
                 {{'STORE.AGENCY_NAME' | translate}}
                 <label class="require">*</label>
