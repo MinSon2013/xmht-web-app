@@ -10,6 +10,7 @@ import { DialogDetailAgencyComponent } from './dialog-detail-agency/dialog-detai
 import { AgencyService } from '../services/agency.service';
 import { AGENCY_ROLE, SERVICE_TYPE, STOCKER_ROLE, USER_AREA_MANAGER_ROLE } from '../constants/const-data';
 import { Helper } from '../helpers/helper';
+import { DeviceDetectorService } from 'ngx-device-detector';
 
 @Component({
   selector: 'app-agency',
@@ -25,6 +26,7 @@ export class AgencyComponent implements OnInit {
   dataSource = new MatTableDataSource<Agency>();
   clickedRows = new Set<Agency>();
   colspan: number = 0;
+  sticky: boolean = true;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -38,7 +40,10 @@ export class AgencyComponent implements OnInit {
 
   constructor(public dialog: MatDialog,
     private agencyService: AgencyService,
-  ) { }
+    private deviceService: DeviceDetectorService,
+  ) {
+    this.epicFunction();
+  }
 
   ngOnInit(): void {
     if (this.isStocker || this.isAreaManager) {
@@ -110,6 +115,23 @@ export class AgencyComponent implements OnInit {
         }
       }
     });
+  }
+
+  private epicFunction() {
+    const deviceInfo = this.deviceService.getDeviceInfo();
+    switch (deviceInfo.deviceType) {
+      case "mobile":
+        this.sticky = false;
+        break;
+      case "tablet":
+        this.sticky = true;
+        break;
+      case "desktop":
+        this.sticky = true;
+        break;
+      default:
+        this.sticky = true;
+    }
   }
 
 }

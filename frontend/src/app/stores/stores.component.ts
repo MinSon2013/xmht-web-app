@@ -13,6 +13,7 @@ import { DialogModifyStoreComponent } from './dialog-modify-store/dialog-modify-
 import { DistrictService } from '../services/district.service';
 import { Router } from '@angular/router';
 import { AgencyService } from '../services/agency.service';
+import { DeviceDetectorService } from 'ngx-device-detector';
 
 @Component({
   selector: 'app-stores',
@@ -44,13 +45,16 @@ export class StoresComponent implements OnInit {
   isStocker: boolean = this.helper.getUserRole() === STOCKER_ROLE;
   isAreaManager: boolean = this.helper.getUserRole() === USER_AREA_MANAGER_ROLE;
   districtId: number = 0;
+  sticky: boolean = true;
 
   constructor(public dialog: MatDialog,
     private storeService: StoreService,
     private districtService: DistrictService,
     public router: Router,
     private agencyService: AgencyService,
+    private deviceService: DeviceDetectorService,
   ) {
+    this.epicFunction();
     this.getAgencys();
   }
 
@@ -238,6 +242,23 @@ export class StoresComponent implements OnInit {
     this.cacheSpan('agencyName', (d: { agencyName: string; }) => d.agencyName);
     this.cacheSpan('districtName', (d: { agencyName: string; districtName: string; }) => d.agencyName + d.districtName);
     this.cacheSpan('provinceName', (d: { agencyName: string; districtName: string; provinceName: string; }) => d.agencyName + d.districtName + d.provinceName);
+  }
+
+  private epicFunction() {
+    const deviceInfo = this.deviceService.getDeviceInfo();
+    switch (deviceInfo.deviceType) {
+      case "mobile":
+        this.sticky = false;
+        break;
+      case "tablet":
+        this.sticky = true;
+        break;
+      case "desktop":
+        this.sticky = true;
+        break;
+      default:
+        this.sticky = true;
+    }
   }
 
 }

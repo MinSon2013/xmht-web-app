@@ -17,6 +17,7 @@ import { FormControl } from '@angular/forms';
 import { CustomPaginator } from '../common/custom-paginator';
 import { AgencyService } from '../services/agency.service';
 import { CustomSocket } from '../sockets/custom-socket';
+import { DeviceDetectorService } from 'ngx-device-detector';
 
 @Component({
   selector: 'app-report',
@@ -54,6 +55,7 @@ export class ReportComponent implements OnInit {
   MAX_LENGTH_SHORT_CONTENT: number = 80;
 
   districtId: number = 0;
+  sticky: boolean = true;
 
   constructor(public dialog: MatDialog,
     private reportService: ReportService,
@@ -62,7 +64,9 @@ export class ReportComponent implements OnInit {
     private storeService: StoreService,
     private agencyService: AgencyService,
     private socket: CustomSocket,
+    private deviceService: DeviceDetectorService,
   ) {
+    this.epicFunction();
     this.getAgencys();
   }
 
@@ -329,6 +333,23 @@ export class ReportComponent implements OnInit {
       element.showLabel = " [Ẩn bớt]";
       element.showDetail = true;
       element.showContent = element.reportContent;
+    }
+  }
+
+  private epicFunction() {
+    const deviceInfo = this.deviceService.getDeviceInfo();
+    switch (deviceInfo.deviceType) {
+      case "mobile":
+        this.sticky = false;
+        break;
+      case "tablet":
+        this.sticky = true;
+        break;
+      case "desktop":
+        this.sticky = true;
+        break;
+      default:
+        this.sticky = true;
     }
   }
 

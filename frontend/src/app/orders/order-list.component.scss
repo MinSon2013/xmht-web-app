@@ -405,6 +405,15 @@
     }
 }
 
+@media only screen and (max-width: 1920px) {
+
+    span,
+    label,
+    td {
+        font-size: 10pt !important;
+    }
+}
+
 @media only screen and ((min-width: 901px) and (max-width: 1024px)) {
     .bg-white {
         margin-top: 0rem !important;

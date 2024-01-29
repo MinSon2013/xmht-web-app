@@ -11,6 +11,7 @@ import { DialogModifyUserComponent } from './dialog-modify-user/dialog-modify-us
 import { DistrictService } from '../services/district.service';
 import { UserService } from '../services/user.service';
 import { User } from '../models/user';
+import { DeviceDetectorService } from 'ngx-device-detector';
 
 @Component({
   selector: 'app-user',
@@ -37,11 +38,14 @@ export class UserComponent implements OnInit {
   districtList: any[] = [];
   roleSelected: any = null;
   roleList = USER_ROLE;
+  sticky: boolean = true;
 
   constructor(public dialog: MatDialog,
     private districtService: DistrictService,
     private userService: UserService,
+    private deviceService: DeviceDetectorService,
   ) {
+    this.epicFunction();
     this.getDistrict();
   }
 
@@ -141,6 +145,23 @@ export class UserComponent implements OnInit {
         }
       }
     });
+  }
+
+  private epicFunction() {
+    const deviceInfo = this.deviceService.getDeviceInfo();
+    switch (deviceInfo.deviceType) {
+      case "mobile":
+        this.sticky = false;
+        break;
+      case "tablet":
+        this.sticky = true;
+        break;
+      case "desktop":
+        this.sticky = true;
+        break;
+      default:
+        this.sticky = true;
+    }
   }
 
 }

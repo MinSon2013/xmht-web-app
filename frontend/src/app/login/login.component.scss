@@ -93,7 +93,7 @@
     #login-container {
         height: 100%;
         padding: 1rem !important;
-        margin-left: -1rem !important;
+        margin-left: 0 !important;
 
         .login-body {
             margin-top: 5rem !important;
@@ -103,13 +103,17 @@
             }
         }
     }
+
+    .login-form {
+        width: auto !important;
+    }
 }
 
 @media only screen and (max-width:200px) {
     #login-container {
         height: 100%;
         padding: 0.5rem !important;
-        margin-left: -1rem !important;
+        margin-left: 0 !important;
 
         .login-body {
             margin-top: 5rem !important;
@@ -118,5 +122,9 @@
                 font-size: 14px !important;
             }
         }
+    }
+
+    .login-form {
+        width: auto !important;
     }
 }
