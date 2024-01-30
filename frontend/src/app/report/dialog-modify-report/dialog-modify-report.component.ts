@@ -70,11 +70,13 @@ export class DialogModifyReportComponent {
     private toastr: ToastrService,
     private reportService: ReportService,
     private socketService: SocketService,
-  ) { dialogRef.disableClose = true; }
-
-  ngOnInit(): void {
+  ) {
+    dialogRef.disableClose = true;
     this.districtList = this.data.districtList;
     this.districtListClone = this.data.districtList;
+  }
+
+  ngOnInit(): void {
     this.storeList = this.data.storeList;
     this.agencyList = this.data.agencyList;
     this.agencyListClone = this.data.agencyList;
