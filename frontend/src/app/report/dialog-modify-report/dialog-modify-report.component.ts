@@ -72,11 +72,11 @@ export class DialogModifyReportComponent {
     private socketService: SocketService,
   ) {
     dialogRef.disableClose = true;
-    this.districtList = this.data.districtList;
-    this.districtListClone = this.data.districtList;
   }
 
   ngOnInit(): void {
+    this.districtList = this.data.districtList;
+    this.districtListClone = this.data.districtList;
     this.storeList = this.data.storeList;
     this.agencyList = this.data.agencyList;
     this.agencyListClone = this.data.agencyList;
