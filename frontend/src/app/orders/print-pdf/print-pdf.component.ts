@@ -25,7 +25,7 @@ export class PrintPdfComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  displayedColumns: string[] = ['no', 'category', 'ton', 'amount', 'note'];
+  displayedColumns: string[] = ['no', 'category', 'ton', 'amount', 'pickup_address', 'note'];
   dataSource = new MatTableDataSource<any>();
   columnsToDisplay = this.displayedColumns.slice();
 
@@ -135,19 +135,24 @@ export class PrintPdfComponent implements OnInit {
         }
 
         const arrays: any[] = [];
-        let data: { no: string, category: string, amount: string, note: string, ton: string } = {
+        let data: { no: string, category: string, amount: string, note: string, ton: string, pickupAddress: string } = {
           no: '',
           category: '',
           amount: '',
           note: '',
           ton: 'Tấn',
+          pickupAddress: '',
         }
         const _data = data;
         let idx = 0;
+        const pickupAddress = this.cities.find(x => x.id === this.data.pickupId) ? this.cities.find(x => x.id === this.data.pickupId).label : '';
         order.products.sort((a, b) => (a.id < b.id ? -1 : 1));
         order.products.forEach(x => {
           idx = idx + 1;
-          data = { no: idx + '', category: x.name, amount: x.quantity.toString(), note: order.note, ton: 'Tấn' };
+          data = {
+            no: idx + '', category: x.name, amount: x.quantity.toString(), note: order.note, ton: 'Tấn',
+            pickupAddress,
+          };
           arrays.push(data);
         });
         arrays.sort((a, b) => {
@@ -155,10 +160,12 @@ export class PrintPdfComponent implements OnInit {
         });
         this.dataSource.data = arrays;
         this.cacheSpan(arrays, 'ton', (d: { ton: any; }) => d.ton);
+        this.cacheSpan(arrays, 'pickup_address', (d: { ton: any; }) => d.ton);
         this.cacheSpan(arrays, 'note', (d: { ton: any; }) => d.ton);
       } else {
         this.dataSource.data = [];
         this.cacheSpan([], 'ton', (d: { ton: any; }) => d.ton);
+        this.cacheSpan([], 'pickup_address', (d: { ton: any; }) => d.ton);
         this.cacheSpan([], 'note', (d: { ton: any; }) => d.ton);
       }
     });
