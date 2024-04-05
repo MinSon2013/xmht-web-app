@@ -8,6 +8,7 @@ import { Reports } from '../../models/report';
 import { ReportService } from '../../services/report.service';
 import { SocketService } from '../../services/socket.service';
 import { tap } from 'rxjs';
+import { DistrictService } from '../../services/district.service';
 
 @Component({
   selector: 'app-dialog-modify-report',
@@ -62,6 +63,7 @@ export class DialogModifyReportComponent {
   };
 
   file: any;
+  districtId: number = 0;
 
   constructor(
     public dialogRef: MatDialogRef<DialogModifyReportComponent>,
@@ -70,13 +72,21 @@ export class DialogModifyReportComponent {
     private toastr: ToastrService,
     private reportService: ReportService,
     private socketService: SocketService,
+    private districtService: DistrictService,
   ) {
     dialogRef.disableClose = true;
   }
 
   ngOnInit(): void {
     this.districtList = this.data.districtList;
-    this.districtListClone = this.data.districtList;
+    if (this.districtList.length === 0) {
+      this.getDistrict();
+      if (this.isAreaManager) {
+        this.getUserDistrict();
+      }
+    } else {
+      this.districtListClone = this.data.districtList;
+    }
     this.storeList = this.data.storeList;
     this.agencyList = this.data.agencyList;
     this.agencyListClone = this.data.agencyList;
@@ -109,6 +119,24 @@ export class DialogModifyReportComponent {
     } else {
       this.showOtherStore = false;
     }
+  }
+
+  getDistrict() {
+    this.districtService.getDistrictList().subscribe((response: any) => {
+      if (response.length > 0) {
+        this.districtList = response;
+        this.districtListClone = this.districtList;
+      }
+    });
+  }
+
+  getUserDistrict() {
+    this.districtService.getUserDistrictList().subscribe((response: any) => {
+      if (response) {
+        this.districtId = response;
+        this.districtList = this.districtList.filter(x => x.id === this.districtId);
+      }
+    });
   }
 
   onSubmit() {
