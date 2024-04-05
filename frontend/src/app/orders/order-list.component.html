@@ -103,7 +103,7 @@
     </div>
   </div>
   <div class="action-group row">
-    <div class="action-trigger-button col-7">
+    <div class="action-trigger-button col-7" *ngIf="!mobile">
       <button mat-raised-button class="btn1 btn-trigger" (click)="onLoadLasted(1)">
         <label class="pad-label">{{ "BUTTON.WAITING" | translate }}</label>
       </button>
@@ -118,7 +118,7 @@
       </button>
     </div>
 
-    <div class="action-btn col-5">
+    <div class="action-btn {{!mobile ? 'col-5' : ''}}">
       <!-- <div class="action-export" [hidden]="dataSource.data.length === 0"> -->
       <button mat-raised-button class="btn-export" (click)="exportToExcel()"
         [hidden]="!isAdmin && !isSalesman && !isAreaManager">

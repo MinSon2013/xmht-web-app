@@ -78,6 +78,7 @@ export class OrderListComponent implements OnInit {
   });
 
   sticky: boolean = true;
+  mobile: boolean = false;
 
   constructor(public dialog: MatDialog,
     public router: Router,
@@ -424,15 +425,19 @@ export class OrderListComponent implements OnInit {
     const deviceInfo = this.deviceService.getDeviceInfo();
     switch (deviceInfo.deviceType) {
       case "mobile":
+        this.mobile = true;
         this.sticky = false;
         break;
       case "tablet":
+        this.mobile = false;
         this.sticky = true;
         break;
       case "desktop":
+        this.mobile = false;
         this.sticky = true;
         break;
       default:
+        this.mobile = false;
         this.sticky = true;
     }
   }
