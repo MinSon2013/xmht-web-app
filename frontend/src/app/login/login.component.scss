@@ -43,7 +43,7 @@
         padding: 1rem 1.25rem 1rem 1rem;
         border-radius: 2rem !important;
         box-shadow: 0 0.25rem 1.5rem rgb(132, 104, 235);
-        width: 50vh;
+        width: 100%;
 
         .text-label {
             color: rgb(21, 20, 20);
@@ -81,7 +81,6 @@
     #login-container {
         height: 100%;
         padding: 1rem !important;
-        margin-left: -1rem !important;
 
         .login-body {
             margin-top: 5rem !important;
@@ -93,7 +92,6 @@
     #login-container {
         height: 100%;
         padding: 1rem !important;
-        margin-left: 0 !important;
 
         .login-body {
             margin-top: 5rem !important;
@@ -113,7 +111,6 @@
     #login-container {
         height: 100%;
         padding: 0.5rem !important;
-        margin-left: 0 !important;
 
         .login-body {
             margin-top: 5rem !important;
