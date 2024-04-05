@@ -238,7 +238,8 @@ export class ReportComponent implements OnInit {
     return this.spans[index] && this.spans[index][col];
   }
 
-  convertData() {
+  convertData(up?: string) {
+    this.spans = [];
     let r = 0;
     let upd = '';
     this.dataSource.data.forEach(element => {
