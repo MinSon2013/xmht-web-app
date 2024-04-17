@@ -48,7 +48,7 @@ export class AgencyRepository extends Repository<Agency> {
         const ids = await this.getIdsNotAgency();
         const result = await this.createQueryBuilder('a')
             .innerJoinAndSelect(Users, 'u', 'u.id = a.user_id')
-            .where('a.id NOT IN (:ids)', { ids })
+            .where('a.id NOT IN (:ids)', { ids: ids.toString() })
             .getRawMany();
 
         const res: AgencyRO[] = [];

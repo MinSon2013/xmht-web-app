@@ -169,7 +169,8 @@
         "DELETE_REPORT": "Xóa thông tin cửa hàng",
         "ADD_USER": "Thêm mới USER",
         "MODIFIED_USER": "Cập nhật thông tin USER",
-        "DELETE_USER": "Xóa thông tin USER"
+        "DELETE_USER": "Xóa thông tin USER",
+        "TOKEN_EXPIRESIN": "Phiên làm việc đã hết hiệu lực. Vui lòng đăng nhập để tiếp tục."
     },
     "HEADER": {
         "MENU_ITEM_CHANGE_PASSWORD": "Thay đổi mật khẩu",

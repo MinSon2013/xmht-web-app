@@ -3,13 +3,18 @@ import { HttpInterceptor, HttpRequest, HttpHandler, HttpErrorResponse } from '@a
 import { Observable, throwError, Subject } from 'rxjs';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
+import { Helper } from '../helpers/helper';
+import { ToastrService } from 'ngx-toastr';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({
     providedIn: 'root'
 })
 export class WebReqInterceptor implements HttpInterceptor {
-
-    constructor(private authService: AuthService) { }
+    private readonly helper: Helper = new Helper();
+    constructor(private authService: AuthService,
+        private toastr: ToastrService,
+        public translate: TranslateService,) { }
 
     refreshingAccessToken: boolean = false;
 
@@ -54,6 +59,11 @@ export class WebReqInterceptor implements HttpInterceptor {
             const cloned = request.clone({
                 headers: request.headers.set("Authorization", idToken)
             });
+
+            if (!this.helper.isExpireToken()) {
+                this.helper.showWarning(this.toastr, this.helper.getMessage(this.translate, "MESSAGE.TOKEN_EXPIRESIN", 0));
+                this.authService.logout();
+            }
 
             return next.handle(cloned);
         }
