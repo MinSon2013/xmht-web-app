@@ -70,13 +70,10 @@ export class ReportComponent implements OnInit {
     this.getAgencys();
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.getStoreList();
     this.getDistrict();
 
-    if (this.isAreaManager) {
-      this.getUserDistrict();
-    }
     if (this.isSalesman) {
       this.displayedColumns = ['rowId', 'updateDateVisisble', 'provinceName', 'storeName', 'agencyName', 'storeInformation', 'reportContent', 'attachFile', 'note'];
     }
@@ -107,16 +104,20 @@ export class ReportComponent implements OnInit {
   getDistrict() {
     this.districtService.getDistrictList().subscribe((response: any) => {
       if (response.length > 0) {
-        this.districtList = response;
+        if (this.isAreaManager) {
+          this.getUserDistrict(response);
+        } else {
+          this.districtList = response;
+        }
       }
     });
   }
 
-  getUserDistrict() {
+  getUserDistrict(districtList: any[]) {
     this.districtService.getUserDistrictList().subscribe((response: any) => {
       if (response) {
         this.districtId = response;
-        this.districtList = this.districtList.filter(x => x.id === this.districtId);
+        this.districtList = districtList.filter(x => x.id === this.districtId);
       }
     });
   }

@@ -81,9 +81,6 @@ export class DialogModifyReportComponent {
     this.districtList = this.data.districtList;
     if (this.districtList.length === 0) {
       this.getDistrict();
-      if (this.isAreaManager) {
-        this.getUserDistrict();
-      }
     } else {
       this.districtListClone = this.data.districtList;
     }
@@ -124,17 +121,22 @@ export class DialogModifyReportComponent {
   getDistrict() {
     this.districtService.getDistrictList().subscribe((response: any) => {
       if (response.length > 0) {
-        this.districtList = response;
-        this.districtListClone = this.districtList;
+        if (this.isAreaManager) {
+          this.getUserDistrict(response);
+        } else {
+          this.districtList = response;
+          this.districtListClone = this.districtList;
+        }
       }
     });
   }
 
-  getUserDistrict() {
+  getUserDistrict(districtList: any[]) {
     this.districtService.getUserDistrictList().subscribe((response: any) => {
       if (response) {
         this.districtId = response;
-        this.districtList = this.districtList.filter(x => x.id === this.districtId);
+        this.districtList = districtList.filter(x => x.id === this.districtId);
+        this.districtListClone = this.districtList;
       }
     });
   }
