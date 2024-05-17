@@ -30,7 +30,7 @@
     table {
         table-layout: fixed;
         width: 100%;
-        border: 1px solid transparent;
+        border: 1px solid grey;
         border-bottom: 1.05px solid gray;
         margin-bottom: 20px;
         display: block;
@@ -86,11 +86,6 @@
                 cursor: pointer;
                 color: rgb(9, 203, 2);
             }
-        }
-
-        tr:hover {
-            background-color: #e6e6e6;
-            cursor: pointer;
         }
 
         .color-green {
@@ -164,12 +159,8 @@
     }
 
     .mat-mdc-row .mat-mdc-cell {
-        border-bottom: 1px solid transparent;
+        border-bottom: 1px solid whitesmoke;
         border-top: 1px solid transparent;
-    }
-
-    .mat-mdc-row:hover .mat-mdc-cell {
-        border-color: currentColor;
     }
 
     .demo-row-is-clicked {

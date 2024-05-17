@@ -31,7 +31,8 @@
         white-space: nowrap;
         text-align: center;
         max-height: 405px;
-        // overflow: auto;
+        /* Set border css for position sticky  */
+        border-collapse: separate;
 
         .nowrap {
             white-space: pre;
@@ -71,11 +72,6 @@
             text-align: center;
         }
 
-        tr:hover {
-            background-color: #d4cece;
-            cursor: pointer;
-        }
-
         .sticky-col {
             background-color: ghostwhite;
         }
@@ -83,9 +79,6 @@
         .mat-mdc-row .mat-mdc-cell {
             border-bottom: 1px solid whitesmoke;
             border-top: 1px solid whitesmoke;
-        }
-
-        .mat-mdc-row:hover .mat-mdc-cell {
             border-right: 1px solid whitesmoke;
         }
 

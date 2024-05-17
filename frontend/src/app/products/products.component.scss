@@ -28,6 +28,7 @@
         margin-bottom: 20px;
         max-height: 500px;
         overflow: auto;
+        display: block;
 
         .wrap-text {
             white-space: break-spaces;
@@ -49,6 +50,9 @@
             text-align: center;
             font-weight: 600;
             border-right: 1px solid whitesmoke;
+            /* Fixed table set display:block and column not full width  */
+            width: 0.1%;
+            white-space: nowrap;
         }
 
         td {
@@ -56,11 +60,6 @@
             font-size: 11pt;
             text-align: center;
             width: 25;
-        }
-
-        tr:hover {
-            background-color: #e6e6e6;
-            cursor: pointer;
         }
 
         .del-action {
@@ -71,10 +70,6 @@
     .mat-mdc-row .mat-mdc-cell {
         border-bottom: 1px solid whitesmoke;
         border-top: 1px solid whitesmoke;
-    }
-
-    .mat-mdc-row:hover .mat-mdc-cell {
-        border-color: currentColor;
         border-right: 1px solid whitesmoke;
     }
 

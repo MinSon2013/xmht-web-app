@@ -31,7 +31,7 @@
         white-space: nowrap;
         max-height: 500px;
         overflow: auto;
-        // display: block;
+        display: block;
 
         .wrap-text {
             white-space: break-spaces;
@@ -59,11 +59,6 @@
             font-size: 11pt;
         }
 
-        tr:hover {
-            background-color: #e6e6e6;
-            cursor: pointer;
-        }
-
         .w20 {
             min-width: 20rem;
         }
@@ -80,10 +75,6 @@
     .mat-mdc-row .mat-mdc-cell {
         border-bottom: 1px solid whitesmoke;
         border-top: 1px solid whitesmoke;
-    }
-
-    .mat-mdc-row:hover .mat-mdc-cell {
-        border-color: currentColor;
         border-right: 1px solid whitesmoke;
     }
 
@@ -117,7 +108,6 @@
 .action-add {
     padding-right: 1rem;
     width: 100%;
-    cursor: pointer;
     text-align: right;
 
     .btn-add {

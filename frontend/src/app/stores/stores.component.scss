@@ -7,7 +7,7 @@
 
 .container {
     height: auto;
-    min-width: 86%;
+    min-width: 100%;
     padding-top: 5rem;
     padding-bottom: 2rem;
     padding-left: 10rem;
@@ -52,6 +52,9 @@
             font-size: 12pt;
             font-weight: 600;
             border: 1px solid whitesmoke;
+            /* Fixed table set display:block and column not full width  */
+            width: 0.1%;
+            white-space: nowrap;
         }
 
         td {
@@ -63,11 +66,6 @@
             .no-data {
                 padding: 0px 0.5rem;
             }
-        }
-
-        tr:hover {
-            background-color: #e6e6e6;
-            cursor: pointer;
         }
 
         th,
@@ -91,11 +89,6 @@
     .mat-mdc-row .mat-mdc-cell {
         border-bottom: 1px solid whitesmoke;
         border-top: 1px solid whitesmoke;
-    }
-
-    .mat-mdc-row:hover .mat-mdc-cell {
-        border-color: currentColor;
-        border-right: 1px solid whitesmoke;
     }
 
     .demo-row-is-clicked {

@@ -210,7 +210,9 @@ export class NotifyComponent implements OnInit {
   };
 
   onDownload(row: any) {
-    this.notifyService.downloadFile(row.id);
+    if (row.fileName.length !== 0) {
+      this.notifyService.downloadFile(row.id);
+    }
   }
 
   onChangeCheckedAll(event: any) {
