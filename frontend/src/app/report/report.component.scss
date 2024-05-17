@@ -34,6 +34,7 @@
         overflow: auto;
         /* Set border css for position sticky  */
         border-collapse: separate;
+        border-spacing: 0;
 
         .wrap-text {
             white-space: break-spaces;
@@ -52,7 +53,6 @@
             background: #90bdf5;
             color: rgb(0, 0, 0);
             font-size: 12pt;
-            border: 1px solid whitesmoke;
             font-weight: 600;
         }
 
@@ -85,6 +85,8 @@
         th,
         td {
             padding: 6px;
+            border-bottom: 1px solid whitesmoke;
+            border-right: 1px solid whitesmoke;
         }
 
         td:first-child {
@@ -97,6 +99,10 @@
 
         .w9 {
             min-width: 9rem;
+        }
+
+        .w10 {
+            min-width: 10rem;
         }
 
         .w12 {
@@ -129,12 +135,6 @@
             min-width: 4rem;
             max-width: 4rem;
         }
-    }
-
-    .mat-mdc-row .mat-mdc-cell {
-        border-bottom: 1px solid whitesmoke;
-        border-top: 1px solid whitesmoke;
-        border-right: 1px solid whitesmoke;
     }
 
     .demo-row-is-clicked {
