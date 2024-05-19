@@ -131,7 +131,9 @@
         "AGREE": "Đồng ý đơn",
         "RECEIVED": "Đã giao",
         "CANCELED": "Đã hủy",
-        "REPORT": "Báo cáo"
+        "REPORT": "Báo cáo",
+        "SHOWSLIDE": "Trình chiếu",
+        "BACK": "Quay lại"
     },
     "DIALOG_DELETE": {
         "TITLE": "Xác nhận xóa",
@@ -180,6 +182,7 @@
         "MENU_GROUP_STATISTICS": "Thống kê",
         "MENU_ITEM_ORDER_LIST": "Danh sách đơn hàng",
         "MENU_ITEM_ADD_ORDER": "Tạo đơn hàng",
+        "MENU_ITEM_EXCEL_DETAIL": "Bảng kê chi tiết",
         "MENU_ITEM_PRODUCT": "Quản lý sản phẩm",
         "MENU_ITEM_AGENCY": "Quản lý NPP",
         "MENU_ITEM_STORE": "Quản lý cửa hàng",
@@ -267,5 +270,17 @@
         "DISTRICT": "Khu vực",
         "SELECT_ROLE": "Chọn vai trò",
         "SELECT_DISTRICT": "Chọn khu vực"
+    },
+    "SLIDESHOW": {
+        "SECTION_TITLE_1": "DANH SÁCH ĐỒNG Ý ĐƠN HÀNG",
+        "SECTION_TITLE_2": "DANH SÁCH ĐƠN HÀNG ĐÃ GIAO",
+        "MS": "MS",
+        "NPP": "NHÀ PHÂN PHỐI",
+        "PHUONGTIEN": "PHƯƠNG TIỆN",
+        "NOIGIAO": "NƠI GIAO",
+        "PHUONGTHUCNHAN": "PHƯƠNG THỨC NHẬN",
+        "SANPHAM": "SẢN PHẨM",
+        "TONG": "TỔNG",
+        "SUM_ALL": "Tổng cộng"
     }
 }

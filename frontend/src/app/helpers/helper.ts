@@ -213,7 +213,9 @@ export class Helper {
       && (ASCIICode < 48 || ASCIICode > 57)
       && (ASCIICode < 96 || ASCIICode > 105)
       && ASCIICode !== 110
-      && ASCIICode !== 190) {
+      && ASCIICode !== 190
+      && ASCIICode !== 231
+    ) {
       return false;
     }
     return true;
@@ -256,6 +258,21 @@ export class Helper {
     } else {
       return '';
     }
+  }
+
+  public sum(array: any[], key: string) {
+    var arrTotal = [];
+    for (var i = 0; i < array.length; i++) {
+      arrTotal.push(Number(array[i][key]));
+    }
+    let sum = arrTotal.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+    return Math.round(sum * 100000000) / 100000000;
+  }
+
+  public removeDuplicateElements(arr: any[]) {
+    return arr.filter((elem, index, self) => {
+      return index === self.indexOf(elem);
+    })
   }
 
 }

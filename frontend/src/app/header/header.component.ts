@@ -9,6 +9,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogChangePasswordComponent } from './dialog-change-password/dialog-change-password.component';
 import { AGENCY_ROLE, STOCKER_ROLE, USER_AREA_MANAGER_ROLE, USER_SALESMAN_ROLE } from '../constants/const-data';
+import { CONFIG } from '../common/config';
+import { DeviceDetectorService } from 'ngx-device-detector';
 
 @Component({
   selector: 'app-header',
@@ -21,6 +23,18 @@ export class HeaderComponent implements OnInit {
   @ViewChild('menuTrigger1') menuTrigger1!: MatMenuTrigger;
   @ViewChild('menuTrigger2') menuTrigger2!: MatMenuTrigger;
 
+  readonly routingOrderList = CONFIG.APP_ROUTING.ORDER.ORDERS + CONFIG.APP_ROUTING.ORDER.LIST;
+  readonly routingOrderAdd = CONFIG.APP_ROUTING.ORDER.ORDERS + CONFIG.APP_ROUTING.ORDER.ADD;
+  readonly routingDetailStatistic = CONFIG.APP_ROUTING.ORDER.ORDERS + CONFIG.APP_ROUTING.ORDER.DETAIL_STATISTIC;
+  readonly routingDashboard = CONFIG.APP_ROUTING.DASHBOARD;
+  readonly routingAgency = CONFIG.APP_ROUTING.MANAGE.AGENCY;
+  readonly routingProduct = CONFIG.APP_ROUTING.MANAGE.PRODUCT;
+  readonly routingStore = CONFIG.APP_ROUTING.MANAGE.STORE;
+  readonly routingDistrict = CONFIG.APP_ROUTING.MANAGE.DISTRICT;
+  readonly routingUser = CONFIG.APP_ROUTING.MANAGE.USER;
+  readonly routingNotification = CONFIG.APP_ROUTING.NOTIFICATION;
+  readonly routingLogout = CONFIG.APP_ROUTING.LOGOUT;
+
   helper = new Helper();
   agencyName: string = '';
   isBadgeHidden: boolean = true;
@@ -28,13 +42,13 @@ export class HeaderComponent implements OnInit {
   agencyId: number = this.helper.getAgencyId();
   isAdmin: boolean = this.helper.isAdmin();
   userRole: number = this.helper.getUserRole();
-  navigateComponent: string = 'logout';
   allowedRole = this.helper.getRoleAllowed(4);
   hidden: boolean = !this.isAdmin && !this.allowedRole.includes(this.userRole);
   isStocker: boolean = this.userRole === STOCKER_ROLE;
   isAreaManager: boolean = this.userRole === USER_AREA_MANAGER_ROLE;
   isAgency: boolean = this.userRole === AGENCY_ROLE;
   isSalesman: boolean = this.userRole === USER_SALESMAN_ROLE;
+  mobile: boolean = false;
 
   constructor(private router: Router,
     public notifyService: NotificationService,
@@ -42,7 +56,10 @@ export class HeaderComponent implements OnInit {
     private socket: CustomSocket,
     public translate: TranslateService,
     public dialog: MatDialog,
-  ) { }
+    private deviceService: DeviceDetectorService,
+  ) {
+    this.epicFunction();
+  }
 
   ngOnInit(): void {
     if (this.isAgency) {
@@ -87,7 +104,7 @@ export class HeaderComponent implements OnInit {
   }
 
   onClick() {
-    this.router.navigateByUrl('notification');
+    this.router.navigateByUrl(this.routingNotification);
   }
 
   onRouterLink(key: string) {
@@ -109,7 +126,7 @@ export class HeaderComponent implements OnInit {
   }
 
   onLogOut() {
-    this.router.navigate([this.navigateComponent]);
+    this.router.navigate([this.routingLogout]);
   }
 
   onChangePassword() {
@@ -119,5 +136,22 @@ export class HeaderComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
 
     });
+  }
+
+  private epicFunction() {
+    const deviceInfo = this.deviceService.getDeviceInfo();
+    switch (deviceInfo.deviceType) {
+      case "mobile":
+        this.mobile = true;
+        break;
+      case "tablet":
+        this.mobile = false;
+        break;
+      case "desktop":
+        this.mobile = false;
+        break;
+      default:
+        this.mobile = false;
+    }
   }
 }

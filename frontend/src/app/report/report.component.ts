@@ -18,6 +18,7 @@ import { CustomPaginator } from '../common/custom-paginator';
 import { AgencyService } from '../services/agency.service';
 import { CustomSocket } from '../sockets/custom-socket';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { CONFIG } from '../common/config';
 
 @Component({
   selector: 'app-report',
@@ -28,6 +29,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
   ]
 })
 export class ReportComponent implements OnInit {
+  readonly routingReport = CONFIG.APP_ROUTING.REPORT;
 
   displayedColumns: string[] = ['rowId', 'updateDateVisisble', 'provinceName', 'storeName', 'agencyName', 'storeInformation', 'reportContent', 'attachFile', 'note', 'deleteAction'];
   dataSource = new MatTableDataSource<Reports>();
@@ -208,7 +210,7 @@ export class ReportComponent implements OnInit {
   }
 
   onReport() {
-    this.router.navigate(['report']);
+    this.router.navigate([this.routingReport]);
   }
 
   cacheSpan(key: string, accessor: any) {

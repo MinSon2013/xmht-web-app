@@ -5,6 +5,10 @@
     padding-bottom: 1rem !important;
 }
 
+::ng-deep .body {
+    z-index: 0;
+}
+
 .bg-white {
     padding-top: 5rem;
 }
@@ -292,6 +296,31 @@
             }
         }
 
+        .btn-slideshow {
+            margin-right: 1rem;
+            cursor: pointer;
+            color: white;
+            background-color: transparent;
+            padding: 1.25rem;
+            width: 164px;
+            background: royalblue;
+            border: 1px solid royalblue;
+            border-radius: 4px;
+
+            .fa-slideshow {
+                color: #fff;
+                font-size: 18px;
+            }
+
+            .pad-label {
+                margin-left: 5px;
+            }
+
+            mat-icon {
+                width: 1.45rem !important;
+            }
+        }
+
         // }
     }
 }
@@ -405,6 +434,14 @@
     td {
         font-size: 10pt !important;
     }
+
+    .action-btn {
+        width: 49%;
+    }
+
+    .action-trigger-button {
+        width: 49% !important;
+    }
 }
 
 @media only screen and ((min-width: 901px) and (max-width: 1024px)) {
@@ -440,7 +477,7 @@
     }
 
     .action-btn {
-        width: 32%;
+        width: 56%;
         margin-bottom: 0.75rem;
         padding-right: 0.5rem !important;
 
@@ -481,7 +518,7 @@
     }
 
     .action-trigger-button {
-        width: 66% !important;
+        width: 40% !important;
 
         .btn-trigger {
             margin-right: 0.5rem !important;
@@ -575,6 +612,14 @@
         .btn4 {
             margin-top: 4px;
         }
+
+        .action-btn {
+            text-align: left !important;
+
+            .btn-slideshow {
+                margin-bottom: 0.5rem;
+            }
+        }
     }
 }
 
@@ -637,7 +682,6 @@
             width: 150px !important;
             padding-left: 6px;
             padding-top: 6px;
-            margin-top: 0.5rem !important;
 
             .fa-plus {
                 font-size: 17px !important;
@@ -646,7 +690,7 @@
         }
 
         .btn-export {
-            margin-right: 0rem !important;
+            margin-right: 0.5rem !important;
             width: 150px !important;
 
             .fa-download {
@@ -694,6 +738,14 @@
 
         .btn2 {
             margin-top: 4px;
+        }
+
+        .action-btn {
+            text-align: left !important;
+
+            .btn-slideshow {
+                margin-bottom: 0.5rem;
+            }
         }
     }
 }
@@ -754,7 +806,6 @@
             width: 140px !important;
             padding-left: 6px;
             padding-top: 6px;
-            margin-top: 0.5rem !important;
 
             .fa-plus {
                 font-size: 16px !important;
@@ -764,7 +815,7 @@
 
         .btn-export {
             width: 140px !important;
-            margin-right: 0rem !important;
+            margin-right: 0.5rem !important;
 
             .fa-download {
                 font-size: 16px !important;
@@ -810,6 +861,15 @@
         .btn4 {
             margin-top: 4px;
         }
+
+        .action-btn {
+            text-align: left !important;
+
+            .btn-slideshow {
+                margin-bottom: 0.5rem;
+            }
+        }
+
     }
 
     .action-trigger-button {

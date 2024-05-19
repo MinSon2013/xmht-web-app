@@ -83,3 +83,26 @@ export const STOCKER_ROLE = 1;
 export const USER_SALESMAN_ROLE = 2;
 export const USER_AREA_MANAGER_ROLE = 3;
 export const AGENCY_ROLE = 4;
+
+export const PRODUCT_CATEGORY = [
+  {
+    colDef: "sutu",
+    colValue1: "sư tử",
+    colValue2: "su tu",
+  },
+  {
+    colDef: "phutu",
+    colValue1: "phụ tử",
+    colValue2: "phu tu",
+  },
+  {
+    colDef: "khac",
+    colValue1: "khác",
+    colValue2: "khac",
+  }
+]
+
+export const SUTU = "sutu";
+export const PHUTU = "phutu";
+export const KHAC = "khac";
+

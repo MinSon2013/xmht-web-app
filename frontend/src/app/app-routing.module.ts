@@ -16,6 +16,8 @@ import { StoresComponent } from './stores/stores.component';
 import { DistrictComponent } from './district/district.component';
 import { UserComponent } from './user/user.component';
 import { ReportComponent } from './report/report.component';
+import { OrderDetailStatisticComponent } from './orders/order-detail-statistic/order-detail-statistic.component';
+import { OrderSlideshowComponent } from './orders/order-slideshow/order-slideshow.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -25,6 +27,8 @@ const routes: Routes = [
     path: 'orders', children: [
       { path: 'list', component: OrderListComponent, canActivate: [AuthGuardGuard] },
       { path: 'add', component: OrderAddComponent, canActivate: [AuthGuardGuard] },
+      { path: 'bang-ke-chi-tiet', component: OrderDetailStatisticComponent, canActivate: [AuthGuardGuard] },
+      { path: 'trinh-chieu', component: OrderSlideshowComponent, canActivate: [AuthGuardGuard] },
     ]
   },
   { path: 'products', component: ProductsComponent, canActivate: [AuthGuardGuard] },

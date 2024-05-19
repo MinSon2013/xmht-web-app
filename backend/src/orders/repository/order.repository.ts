@@ -329,7 +329,7 @@ export class OrderRepository extends Repository<Order> {
             item.isViewed = el.order_is_viewed;
             item.sender = el.order_sender;
             item.approvedNumber = el.order_approved_number;
-            item.receipt = el.receipt;
+            item.receipt = el.order_receipt;
             item.confirmedDate = el.order_confirmed_date;
             item.shippingDate = el.order_shipping_date;
             list1.push(item);

@@ -24,5 +24,27 @@ export const CONFIG = {
         TOKEN: 'token',
         IS_ADMIN: 'is_admin',
         ACCESS_TOKEN: 'accessToken'
+    },
+    APP_ROUTING: {
+        ORDER: {
+            ORDERS: "orders",
+            LIST: "/list",
+            ADD: "/add",
+            DETAIL_STATISTIC: "/bang-ke-chi-tiet",
+            SLIDESHOW: "/trinh-chieu"
+        },
+        DASHBOARD: "dashboard",
+        MANAGE: {
+            AGENCY: "agency",
+            PRODUCT: "products",
+            STORE: "store",
+            DISTRICT: "district",
+            USER: "user",
+        },
+        NOTIFICATION: "notification",
+        LOGOUT: "logout",
+        PRINT: "print",
+        REPORT: "report",
+        LOGIN: "/login",
     }
 }

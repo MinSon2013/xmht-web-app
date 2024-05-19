@@ -55,6 +55,8 @@ import { DialogModifyUserComponent } from './user/dialog-modify-user/dialog-modi
 import { ReportComponent } from './report/report.component';
 import { DialogModifyReportComponent } from './report/dialog-modify-report/dialog-modify-report.component';
 import { NgImageSliderModule } from 'ng-image-slider';
+import { OrderDetailStatisticComponent } from './orders/order-detail-statistic/order-detail-statistic.component';
+import { OrderSlideshowComponent } from './orders/order-slideshow/order-slideshow.component';
 
 const config: SocketIoConfig = { url: `${environment.apiUrl}`, options: {} };
 
@@ -98,6 +100,8 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     DialogModifyUserComponent,
     ReportComponent,
     DialogModifyReportComponent,
+    OrderDetailStatisticComponent,
+    OrderSlideshowComponent,
   ],
   imports: [
     BrowserModule,

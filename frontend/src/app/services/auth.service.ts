@@ -3,12 +3,14 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { WebRequestService } from './web-request.service';
 import { Router } from '@angular/router';
 import { shareReplay, tap } from 'rxjs/operators';
+import { CONFIG } from '../common/config';
 
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthService {
+    readonly routingLogin = CONFIG.APP_ROUTING.LOGIN;
 
     constructor(private webService: WebRequestService, private router: Router, private http: HttpClient) { }
 
@@ -26,7 +28,7 @@ export class AuthService {
 
     logout() {
         this.removeSession();
-        this.router.navigate(['/login']);
+        this.router.navigate([this.routingLogin]);
     }
 
     getAccessToken() {

@@ -17,11 +17,11 @@ import { DeliveryService } from '../../services/delivery.service';
 import { CONFIG } from '../../common/config';
 
 @Component({
-  selector: 'app-print-pdf',
-  templateUrl: './print-pdf.component.html',
-  styleUrls: ['./print-pdf.component.scss']
+  selector: 'app-order-detail-statistic',
+  templateUrl: './order-detail-statistic.component.html',
+  styleUrls: ['./order-detail-statistic.component.scss']
 })
-export class PrintPdfComponent implements OnInit {
+export class OrderDetailStatisticComponent implements OnInit {
   @ViewChild('pdfTable') pdfTable!: ElementRef;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;

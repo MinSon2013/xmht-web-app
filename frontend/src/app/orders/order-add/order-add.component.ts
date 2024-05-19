@@ -13,6 +13,7 @@ import { tap } from 'rxjs';
 import { DeliveryService } from '../../services/delivery.service';
 import { AgencyService } from '../../services/agency.service';
 import { ProductService } from '../../services/product.service';
+import { CONFIG } from '../../common/config';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -27,6 +28,8 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   styleUrls: ['./order-add.component.scss']
 })
 export class OrderAddComponent implements OnInit {
+  readonly routingOrderList = CONFIG.APP_ROUTING.ORDER.ORDERS + CONFIG.APP_ROUTING.ORDER.LIST;
+
   header: string = 'Thêm mới đơn hàng';
   matcher = new MyErrorStateMatcher();
 
@@ -170,7 +173,7 @@ export class OrderAddComponent implements OnInit {
         if (response) {
           this.order.id = response.id;
           this.helper.showSuccess(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.ADD_ORDER', MSG_STATUS.SUCCESS));
-          this.router.navigate(['orders/list']);
+          this.router.navigate([this.routingOrderList]);
         } else {
           this.helper.showError(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.ADD_ORDER', MSG_STATUS.FAIL));
         }
@@ -181,7 +184,7 @@ export class OrderAddComponent implements OnInit {
   }
 
   onCancel() {
-    this.router.navigate(['orders/list']);
+    this.router.navigate([this.routingOrderList]);
   }
 
   focusOut() {

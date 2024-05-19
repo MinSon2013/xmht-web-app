@@ -4,8 +4,8 @@
             <div class="head-content row">
                 <div class="head-content-left col-3">
                     <img alt="XMHT" width="72" height="72" src="./assets/images/logo.png"
-                        (click)="onRouterLink('dashboard')">
-                    <h4 class="span" (click)="onRouterLink('dashboard')">
+                        (click)="onRouterLink(routingDashboard)">
+                    <h4 class="span" (click)="onRouterLink(routingDashboard)">
                         {{ "TITLE_APP" | translate }}</h4>
                 </div>
 
@@ -27,27 +27,27 @@
                     <!-- Manage menu -->
                     <mat-menu #menu2="matMenu" [overlapTrigger]="false">
                         <span (mouseleave)="closeSubMenu(menuTrigger2)">
-                            <button mat-menu-item (click)="onRouterLink('agency')">
+                            <button mat-menu-item (click)="onRouterLink(routingAgency)">
                                 <mat-icon aria-hidden="false" aria-label="Agency icon" fontSet="fas"
                                     fontIcon="fa-user"></mat-icon>
                                 <span>{{ "HEADER.MENU_ITEM_AGENCY" | translate }}</span>
                             </button>
-                            <button mat-menu-item (click)="onRouterLink('products')" [hidden]="isAgency">
+                            <button mat-menu-item (click)="onRouterLink(routingProduct)" [hidden]="isAgency">
                                 <mat-icon aria-hidden="false" aria-label="Manage icon" fontSet="fas"
                                     fontIcon="fa-box-open"></mat-icon>
                                 <span>{{ "HEADER.MENU_ITEM_PRODUCT" | translate }}</span>
                             </button>
-                            <button mat-menu-item (click)="onRouterLink('store')" [hidden]="isAgency">
+                            <button mat-menu-item (click)="onRouterLink(routingStore)" [hidden]="isAgency">
                                 <mat-icon aria-hidden="false" aria-label="Shop icon" fontSet="fas"
                                     fontIcon="fa-shop"></mat-icon>
                                 <span>{{ "HEADER.MENU_ITEM_STORE" | translate }}</span>
                             </button>
-                            <button mat-menu-item (click)="onRouterLink('district')" [hidden]="isAgency">
+                            <button mat-menu-item (click)="onRouterLink(routingDistrict)" [hidden]="isAgency">
                                 <mat-icon aria-hidden="false" aria-label="Building icon" fontSet="fas"
                                     fontIcon="fa-building"></mat-icon>
                                 <span>{{ "HEADER.MENU_ITEM_DISTRICT" | translate }}</span>
                             </button>
-                            <button mat-menu-item (click)="onRouterLink('user')" [hidden]="isAgency">
+                            <button mat-menu-item (click)="onRouterLink(routingUser)" [hidden]="isAgency">
                                 <mat-icon aria-hidden="false" aria-label="User icon" fontSet="fas"
                                     fontIcon="fa-user-gear"></mat-icon>
                                 <span>{{ "HEADER.MENU_ITEM_USER" | translate }}</span>
@@ -86,15 +86,21 @@
                     <!-- Order menu -->
                     <mat-menu #menu1="matMenu" [overlapTrigger]="false">
                         <span (mouseleave)="closeSubMenu(menuTrigger1)">
-                            <button mat-menu-item (click)="onRouterLink('orders/list')">
+                            <button mat-menu-item (click)="onRouterLink(routingOrderList)">
                                 <mat-icon aria-hidden="false" aria-label="List icon" fontSet="fas"
                                     fontIcon="fa-list"></mat-icon>
                                 <span>{{ "HEADER.MENU_ITEM_ORDER_LIST" | translate }}</span>
                             </button>
-                            <button mat-menu-item (click)="onRouterLink('orders/add')">
+                            <button mat-menu-item (click)="onRouterLink(routingOrderAdd)">
                                 <mat-icon aria-hidden="false" aria-label="Add icon" fontSet="fas"
                                     fontIcon="fa-plus"></mat-icon>
                                 <span>{{ "HEADER.MENU_ITEM_ADD_ORDER" | translate }}</span>
+                            </button>
+
+                            <button mat-menu-item (click)="onRouterLink(routingDetailStatistic)" [hidden]="mobile">
+                                <mat-icon aria-hidden="false" aria-label="Detail icon" fontSet="fas"
+                                    fontIcon="fa-chart-bar"></mat-icon>
+                                <span>{{ "HEADER.MENU_ITEM_EXCEL_DETAIL" | translate }}</span>
                             </button>
                         </span>
                     </mat-menu>

@@ -4,6 +4,8 @@ import { environment } from '../environments/environment';
 import { Helper } from './helpers/helper';
 import { LoginService } from './services/login.service';
 import { BnNgIdleService } from 'bn-ng-idle';
+import { DisplayService } from './services/display.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -14,11 +16,15 @@ export class AppComponent implements OnInit {
   isAuthenticated: boolean = false;
   helper = new Helper();
   location!: Location;
+  showNavigation = true;
+  private destroyed: Subject<void> = new Subject<void>();
 
   constructor(public translate: TranslateService,
     public loginService: LoginService,
     private cdr: ChangeDetectorRef,
-    private bnIdle: BnNgIdleService) {
+    private bnIdle: BnNgIdleService,
+    private displayService: DisplayService,
+  ) {
     translate.setDefaultLang('i18n');
   }
 
@@ -35,6 +41,16 @@ export class AppComponent implements OnInit {
         window.location.reload();
       }
     });
+
+    this.displayService.showNavigation$
+      .pipe(takeUntil(this.destroyed))
+      .subscribe((visible: boolean) => {
+        this.showNavigation = visible;
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroyed.next();
   }
 
   ngAfterViewChecked() {

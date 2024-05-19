@@ -5,6 +5,7 @@ import { tap } from 'rxjs';
 import { Helper } from '../helpers/helper';
 import { LoginService } from '../services/login.service';
 import { SocketService } from '../services/socket.service';
+import { CONFIG } from '../common/config';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +15,7 @@ import { SocketService } from '../services/socket.service';
 export class LoginComponent implements OnInit {
   username: string = ''; // administrator
   password: string = ''; // administrator
-  navigateComponent: string = 'orders/list';
+  readonly routingOrderList = CONFIG.APP_ROUTING.ORDER.ORDERS + CONFIG.APP_ROUTING.ORDER.LIST;
 
   isUsernameValid: boolean = true;
   isPasswordValid: boolean = true;
@@ -90,7 +91,7 @@ export class LoginComponent implements OnInit {
   }
 
   navigateUrl() {
-    this.router.navigate([this.navigateComponent])
+    this.router.navigate([this.routingOrderList])
       .then(() => {
         window.location.reload();
         this.socket.openConnect();

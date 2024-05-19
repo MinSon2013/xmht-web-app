@@ -23,6 +23,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { DeliveryService } from '../services/delivery.service';
 import { ProductService } from '../services/product.service';
 import { AgencyService } from '../services/agency.service';
+import { CONFIG } from '../common/config';
 
 @Component({
   selector: 'app-order-list',
@@ -33,6 +34,9 @@ import { AgencyService } from '../services/agency.service';
   ]
 })
 export class OrderListComponent implements OnInit {
+  readonly routingOrderAdd = CONFIG.APP_ROUTING.ORDER.ORDERS + CONFIG.APP_ROUTING.ORDER.ADD;
+  readonly routingSlideShow = CONFIG.APP_ROUTING.ORDER.ORDERS + CONFIG.APP_ROUTING.ORDER.SLIDESHOW;
+  readonly routingPrint = CONFIG.APP_ROUTING.PRINT;
 
   displayedColumns: string[] = ['approvedNumber', 'agencyName', 'contract', 'createdDate', 'receivedDate', 'confirmedDate', 'shippingDate', 'deliveryId', 'pickupId', 'productName', 'quantity', 'productTotal', 'licensePlates', 'driver', 'status', 'deleteAction'];
   colspan: number = 0;
@@ -175,7 +179,7 @@ export class OrderListComponent implements OnInit {
   }
 
   onAdd() {
-    this.router.navigate(['orders/add']);
+    this.router.navigate([this.routingOrderAdd]);
   }
 
   onEdit(row: any) {
@@ -228,7 +232,7 @@ export class OrderListComponent implements OnInit {
   }
 
   onPrint(row: any) {
-    this.router.navigate(['print'], row);
+    this.router.navigate([this.routingPrint], row);
   }
 
   exportToExcel() {
@@ -440,6 +444,10 @@ export class OrderListComponent implements OnInit {
         this.mobile = false;
         this.sticky = true;
     }
+  }
+
+  onSlideShow() {
+    this.router.navigate([this.routingSlideShow]);
   }
 
 }

@@ -119,6 +119,13 @@
     </div>
 
     <div class="action-btn {{!mobile ? 'col-5' : ''}}">
+      <button mat-raised-button class="btn-slideshow" (click)="onSlideShow()"
+        [hidden]="isAgency || isAreaManager || mobile">
+        <mat-icon aria-hidden="false" aria-label="Slideshow icon" fontSet="fas" fontIcon="fa-tv" class="fa-slideshow">
+        </mat-icon>
+        <label class="pad-label">{{ "BUTTON.SHOWSLIDE" | translate }}</label>
+      </button>
+
       <button mat-raised-button class="btn-export" (click)="exportToExcel()" [hidden]="isStocker">
         <mat-icon aria-hidden="false" aria-label="Export icon" fontSet="fas" fontIcon="fa-download"
           class="fa-download"></mat-icon>

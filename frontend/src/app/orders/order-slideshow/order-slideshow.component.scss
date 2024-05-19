@@ -1,0 +1,90 @@
+.ng-container {
+    padding: 1rem;
+    overflow: scroll;
+
+    .btn-back {
+        cursor: pointer;
+        color: white;
+        background-color: transparent;
+        padding: 1.25rem;
+        width: 140px;
+        background: royalblue;
+        border: 1px solid royalblue;
+        border-radius: 4px;
+
+        .fa-back {
+            color: #fff;
+            font-size: 18px;
+        }
+
+        .pad-label {
+            margin-left: 5px;
+        }
+
+    }
+
+    .section {
+        background-color: yellow;
+        width: 100%;
+        margin: 1rem 0;
+        --mdb-gutter-x: 1.5rem;
+        --mdb-gutter-y: 0;
+        display: flex;
+
+        .title {
+            text-align: center;
+            padding-top: 0.75rem;
+        }
+
+        .section-1 {
+            // width: 60%;
+            background-color: lightgray;
+            margin-right: 1%;
+        }
+
+        .section-2 {
+            // width: 39%;
+            background-color: lightgreen;
+        }
+
+        table {
+            border: 1px solid grey;
+
+            th {
+                color: rgb(0, 0, 0);
+                font-size: 11pt;
+                width: auto;
+                text-align: center;
+                font-weight: 600;
+                padding: 0.5rem;
+            }
+
+            th,
+            td {
+                border-bottom: 1px solid grey;
+                border-right: 1px solid grey;
+                border-style: dotted;
+            }
+
+            .align-top {
+                vertical-align: text-top;
+            }
+
+            .bold {
+                font-weight: bold;
+            }
+
+            .bg-yellow {
+                background-color: yellow;
+            }
+
+            .text-flowerblue {
+                color: cornflowerblue
+            }
+
+            .text-red {
+                color: red;
+            }
+        }
+    }
+}
