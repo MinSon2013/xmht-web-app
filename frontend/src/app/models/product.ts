@@ -4,6 +4,7 @@ export interface Product {
     quantity: number,
     price: number,
     note: string,
+    category: number;
     createdDate?: string,
     updatedDate?: string,
     updatedByUserId: number;

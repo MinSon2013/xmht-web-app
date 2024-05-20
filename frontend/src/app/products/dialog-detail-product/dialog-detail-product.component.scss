@@ -54,6 +54,14 @@
         height: 18rem;
         padding: 20px 10px 20px 24px !important;
     }
+
+    .select {
+        width: 58% !important;
+    }
+
+    .focus-p {
+        border: 1px solid red !important;
+    }
 }
 
 @media only screen and (max-width:600px) {
@@ -76,13 +84,17 @@
         .col-5,
         .col-6,
         .col-7,
-        .col-9,
-        select {
+        .col-9 {
             width: 100% !important;
         }
 
+        .select {
+            width: 50% !important;
+        }
+
         input,
-        textarea {
+        textarea,
+        select {
             margin-left: 1rem !important;
         }
 
@@ -115,13 +127,17 @@
         .col-5,
         .col-6,
         .col-7,
-        .col-9,
-        select {
+        .col-9 {
             width: 100% !important;
         }
 
+        .select {
+            width: 50% !important;
+        }
+
         input,
-        textarea {
+        textarea,
+        select {
             margin-left: 1rem !important;
         }
 

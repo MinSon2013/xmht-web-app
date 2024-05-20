@@ -24,7 +24,7 @@
 
     <div class="section">
         <div id="section1" class="section-1">
-            <h3 class="title">{{'SLIDESHOW.SECTION_TITLE_1' | translate}}</h3>
+            <h4 class="title">{{'SLIDESHOW.SECTION_TITLE_1' | translate}}</h4>
 
             <table mat-table [dataSource]="dataSource1">
 
@@ -86,9 +86,9 @@
                 </ng-container>
 
                 <!-- Product Category Column -->
-                <ng-container [matColumnDef]="column.categoryLabel" *ngFor="let column of productDataSource">
+                <ng-container [matColumnDef]="column.categoryValue" *ngFor="let column of productDataSource">
                     <th mat-header-cell *matHeaderCellDef [attr.colspan]="column.pColspan"
-                        class="{{ column.categoryLabel === 'sutu' ? 'text-flowerblue' : (column.categoryLabel === 'phutu' ? 'text-red' : 'text-green')}}">
+                        class="{{getClass(column.categoryValue)}}">
                         {{column.displayedCategory}}
                     </th>
                     <!-- This column doesn't generate <td> items, so no need to add a definition for them -->
@@ -97,8 +97,9 @@
                 <!-- Product Name Column -->
                 <ng-container [matColumnDef]="item.label"
                     *ngFor="let item of displayedColumnsProductName;let i = index">
-                    <th mat-header-cell *matHeaderCellDef class="align-top">{{item.value}}</th>
-                    <td mat-cell *matCellDef="let element">
+                    <th mat-header-cell *matHeaderCellDef class="align-top {{getClass(item.label)}}">
+                        {{item.value}}</th>
+                    <td mat-cell *matCellDef="let element" class="{{getClass(item.label)}}">
                         {{element.sanpham[i].pValue > 0 ? element.sanpham[i].pValue : "-" }}
                     </td>
                 </ng-container>
@@ -120,9 +121,9 @@
 
                 <!-- Footer row sum value -->
                 <ng-container [matColumnDef]="col.label" *ngFor="let col of displayedRowSumSection1;">
-                    <th mat-footer-cell *matFooterCellDef class="">
-                        {{col.value}}
-                    </th>
+                    <td mat-footer-cell *matFooterCellDef class="bold {{getClass(col.label)}}">
+                        {{col.value > 0 ? col.value : ""}}
+                    </td>
                 </ng-container>
 
                 <tr mat-header-row *matFooterRowDef="columnDefRowSumSection1"></tr>
@@ -134,7 +135,7 @@
         </div>
 
         <div id="section2" class="section-2">
-            <h3 class="title">{{'SLIDESHOW.SECTION_TITLE_2' | translate}}</h3>
+            <h4 class="title">{{'SLIDESHOW.SECTION_TITLE_2' | translate}}</h4>
             <table mat-table [dataSource]="dataSource2">
                 <!-- MS Column -->
                 <ng-container matColumnDef="ms">
@@ -154,9 +155,9 @@
                 </ng-container>
 
                 <!-- Product Category Column -->
-                <ng-container [matColumnDef]="column.categoryLabel" *ngFor="let column of productDataSource">
+                <ng-container [matColumnDef]="column.categoryValue" *ngFor="let column of productDataSource">
                     <th mat-header-cell *matHeaderCellDef [attr.colspan]="column.pColspan"
-                        class="{{ column.categoryLabel === 'sutu' ? 'text-flowerblue' : (column.categoryLabel === 'phutu' ? 'text-red' : 'text-green')}}">
+                        class="{{getClass(column.categoryValue)}}">
                         {{column.displayedCategory}}
                     </th>
                     <!-- <td mat-cell *matCellDef="let element"> {{element[column]}} </td> -->
@@ -165,8 +166,8 @@
                 <!-- Product Name Column -->
                 <ng-container [matColumnDef]="item.label"
                     *ngFor="let item of displayedColumnsProductName;;let i = index">
-                    <th mat-header-cell *matHeaderCellDef class="align-top">{{item.value}}</th>
-                    <td mat-cell *matCellDef="let element">
+                    <th mat-header-cell *matHeaderCellDef class="align-top {{getClass(item.label)}}">{{item.value}}</th>
+                    <td mat-cell *matCellDef="let element" class="{{getClass(item.label)}}">
                         {{element.sanpham[i].pValue > 0 ? element.sanpham[i].pValue : "-" }}
                     </td>
                 </ng-container>
@@ -188,9 +189,9 @@
 
                 <!-- Footer row sum value -->
                 <ng-container [matColumnDef]="col.label" *ngFor="let col of displayedRowSumSection2;">
-                    <th mat-footer-cell *matFooterCellDef class="">
+                    <td mat-footer-cell *matFooterCellDef class="bold {{getClass(col.label)}}">
                         {{col.value > 0 ? col.value : ""}}
-                    </th>
+                    </td>
                 </ng-container>
 
                 <tr mat-header-row *matFooterRowDef="columnDefRowSumSection2"></tr>

@@ -6,7 +6,8 @@ export const CONFIG = {
         AGENCY: 'agency',
         ORDERS: {
             ORDER: 'orders',
-            SEARCH: 'orders/search'
+            SEARCH: 'orders/search',
+            SEARCH_DEATILS: 'orders/details'
         },
         NOTIFICATION: 'notification',
         NOTIFICATIONS: 'notifications',

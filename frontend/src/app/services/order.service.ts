@@ -3,13 +3,14 @@ import { Observable } from 'rxjs';
 import { CONFIG } from '../common/config';
 import { Helper } from '../helpers/helper';
 import { Order } from '../models/order';
-import { Search } from '../models/search';
+import { Search, SearchDetailsOrder } from '../models/search';
 import { WebRequestService } from './web-request.service';
 
 @Injectable({ providedIn: 'root' })
 export class OrderService {
     readonly url: string = CONFIG.URL.ORDERS.ORDER;
     readonly url1: string = CONFIG.URL.ORDERS.SEARCH;
+    readonly url2: string = CONFIG.URL.ORDERS.SEARCH_DEATILS;
     readonly helper = new Helper();
 
     constructor(
@@ -99,5 +100,21 @@ export class OrderService {
 
     delete(id: number) {
         return this.webrequestService.delete(this.url + `/${id}`);
+    }
+
+    searchDetails(obj: SearchDetailsOrder) {
+        const payload = {
+            agencyId: Number(obj.agencyId),
+            deliveryId: obj.deliveryId,
+            licensePlate: obj.licensePlate,
+            driver: obj.driver,
+            receipt: obj.receipt,
+            status: obj.status,
+            productCategory: obj.productCategory,
+            startDate: obj.startDate,
+            endDate: obj.endDate,
+            userId: this.helper.getUserId(),
+        }
+        return this.webrequestService.post(this.url2, payload);
     }
 }

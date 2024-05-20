@@ -2,6 +2,24 @@
     <h2 class="header">{{header}}</h2>
     <mat-dialog-content class="form-create shadow-md rounded px-8 pt-6 pb-8">
         <div class="mb-3 row field p-top">
+            <span class="col-5 text-label" for="category">
+                {{'PRODUCT.CATEGORY' | translate}}
+                <label class="require">*</label>
+            </span>
+            <div class="col-7" style="padding: 0;">
+                <select class="form-select select {{categoryError.length > 0 ? 'focus-p' : ''}}"
+                    [(ngModel)]="categorySelected" required>
+                    <option [ngValue]="null" [disabled]="true" [selected]="true">
+                        -- {{ "PRODUCT.SELECT_PRODUCT_CATEGORY" | translate }} --
+                    </option>
+                    <option [ngValue]="item" *ngFor="let item of categories">
+                        {{ item.label }}
+                    </option>
+                </select>
+                <span *ngIf="categoryError.length > 0" style="color: red;padding-top: 0.5rem;"> {{categoryError}}</span>
+            </div>
+        </div>
+        <div class="mb-3 row field">
             <span class="col-5 text-label" for="productName">
                 {{'PRODUCT.NAME' | translate}}
                 <label class="require">*</label>
@@ -19,8 +37,8 @@
             </span>
             <input matInput [disabled]="hidden"
                 class="col-4 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                id="quantity" type="number" placeholder="" min="0" max="999999" [(ngModel)]="product.quantity"
-                [ngModelOptions]="{standalone: true}" [errorStateMatcher]="matcher"
+                id="quantity" type="text" placeholder="0.0" maxlength="10" [(ngModel)]="product.quantity"
+                [ngModelOptions]="{standalone: true}" [errorStateMatcher]="matcher" (keydown)="onlyNumberKey($event)"
                 (keyup.enter)="focusNext('price')" />
             <span class="col-3 text-label ton">(tấn)</span>
         </div>
@@ -31,8 +49,9 @@
             </span>
             <input matInput [disabled]="hidden"
                 class="col-7 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                id="price" type="number" placeholder="" min="0" max="99999999" [(ngModel)]="product.price"
-                [ngModelOptions]="{standalone: true}" [errorStateMatcher]="matcher" (keyup.enter)="focusNext('note')" />
+                id="price" type="text" placeholder="0" maxlength="9" [(ngModel)]="product.price"
+                [ngModelOptions]="{standalone: true}" [errorStateMatcher]="matcher" (keydown)="onlyNumberKey($event)"
+                (keyup.enter)="focusNext('note')" />
         </div>
         <div class="mb-6 row field">
             <span class="col-5 text-label" for="note">

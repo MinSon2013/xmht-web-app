@@ -1,6 +1,6 @@
 .ng-container {
-    padding: 1rem;
-    overflow: scroll;
+    padding: 1rem 1rem 2rem;
+    // overflow: scroll;
 
     .btn-back {
         cursor: pointer;
@@ -24,12 +24,13 @@
     }
 
     .section {
-        background-color: yellow;
         width: 100%;
         margin: 1rem 0;
         --mdb-gutter-x: 1.5rem;
         --mdb-gutter-y: 0;
         display: flex;
+
+        background-color: lightgray;
 
         .title {
             text-align: center;
@@ -37,12 +38,21 @@
         }
 
         .section-1 {
-            background-color: lightgray;
             margin-right: 1%;
+
+            h4 {
+                background-color: lightgray;
+                padding-bottom: 0.5rem;
+                margin-bottom: 0;
+            }
         }
 
         .section-2 {
-            background-color: lightgreen;
+            h4 {
+                background-color: lightgreen;
+                padding-bottom: 0.5rem;
+                margin-bottom: 0;
+            }
         }
 
         table {
@@ -68,6 +78,8 @@
                 white-space: pre;
                 color: black;
                 font-family: serif, 'Roboto';
+                text-align: right;
+                vertical-align: middle;
             }
 
             .align-top {

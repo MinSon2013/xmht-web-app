@@ -65,7 +65,9 @@
         "QUANTITY_INVENTORY": "Số lượng",
         "QUANTITY_WAREHOUSE": "Số lượng nhập kho",
         "PRICE": "Giá sản phẩm",
-        "NOTE": "Ghi chú"
+        "NOTE": "Ghi chú",
+        "CATEGORY": "Chủng loại",
+        "SELECT_PRODUCT_CATEGORY": "Chọn chủng loại"
     },
     "AGENCY": {
         "MENU_TITLE": "Khách hàng",

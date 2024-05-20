@@ -36,24 +36,26 @@ export class ProductService {
         return this.webrequestService.post(this.url + `/${id}`);
     }
 
-    create(obj: Product) {
+    create(obj: Product | any) {
         const payload = {
             name: obj.name,
-            quantity: obj.quantity,
-            price: obj.price,
+            quantity: Number(obj.quantity),
+            price: Number(obj.price),
             note: obj.note,
+            category: obj.category,
             updatedByUserId: this.helper.getUserId(),
         };
         return this.webrequestService.post(this.url, payload);
     }
 
-    update(obj: Product) {
+    update(obj: Product | any) {
         const payload = {
             id: obj.id,
             name: obj.name,
-            quantity: obj.quantity,
-            price: obj.price,
+            quantity: Number(obj.quantity),
+            price: Number(obj.price),
             note: obj.note,
+            category: obj.category,
             updatedByUserId: this.helper.getUserId(),
         };
         return this.webrequestService.put(this.url, payload);

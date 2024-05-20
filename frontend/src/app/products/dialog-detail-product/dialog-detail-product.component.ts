@@ -6,7 +6,7 @@ import { Helper } from '../../helpers/helper';
 import { Product } from '../../models/product';
 import { MyErrorStateMatcher } from '../../orders/order-add/order-add.component';
 import { ProductService } from '../../services/product.service';
-import { MSG_STATUS, STOCKER_ROLE, USER_AREA_MANAGER_ROLE } from '../../constants/const-data';
+import { MSG_STATUS, PRODUCT_CATEGORIES, STOCKER_ROLE, USER_AREA_MANAGER_ROLE } from '../../constants/const-data';
 
 @Component({
   selector: 'app-dialog-detail-product',
@@ -22,15 +22,20 @@ export class DialogDetailProductComponent implements OnInit {
   product = {
     id: 0,
     name: '',
-    quantity: 0,
-    price: 0,
+    quantity: '',
+    price: '',
     note: '',
     updatedByUserId: 0,
+    category: 0,
   };
 
   role: number = this.helper.getUserRole();
   isStocker: boolean = this.role === STOCKER_ROLE;
   hidden: boolean = (this.role === USER_AREA_MANAGER_ROLE || this.isStocker);
+
+  categories = PRODUCT_CATEGORIES;
+  categorySelected: any = null;
+  categoryError = "";
 
   constructor(
     public dialogRef: MatDialogRef<DialogDetailProductComponent>,
@@ -45,9 +50,11 @@ export class DialogDetailProductComponent implements OnInit {
       this.translate.get('PRODUCT.TITLE_MODIFIED').subscribe(x => { this.header = x });
       this.product.id = this.data.id;
       this.product.name = this.data.name;
-      this.product.quantity = this.data.quantity;
-      this.product.price = this.data.price;
+      this.product.quantity = this.data.quantity.toString();
+      this.product.price = this.data.price.toString();
       this.product.note = this.data.note;
+      this.product.category = this.data.category;
+      this.categorySelected = PRODUCT_CATEGORIES.find(x => x.value === this.data.category);
     } else {
       this.translate.get('PRODUCT.TITLE_ADD').subscribe(x => { this.header = x });
     }
@@ -55,6 +62,7 @@ export class DialogDetailProductComponent implements OnInit {
 
   onSubmit() {
     if (this.validForm()) {
+      this.product.category = this.categorySelected.value;
       if (this.product.id === 0) {
         this.productService.create(this.product).subscribe((response: any) => {
           if (response) {
@@ -86,13 +94,19 @@ export class DialogDetailProductComponent implements OnInit {
     let isValidForm: boolean = true;
     if (this.product.name.length === 0) {
       isValidForm = false;
-    } else if (this.product.quantity === 0) {
+    } else if (this.product.quantity.length === 0) {
       isValidForm = false;
-    } else if (this.product.price === 0) {
+    } else if (this.product.price.length === 0) {
       isValidForm = false;
     } else {
       this.error = '';
       isValidForm = true;
+    }
+    if (!this.categorySelected || this.categorySelected.value === 0) {
+      isValidForm = false;
+      this.categoryError = "Vui lòng chọn chủng loại";
+    } else {
+      this.categoryError = "";
     }
 
     if (!isValidForm) {
@@ -103,5 +117,9 @@ export class DialogDetailProductComponent implements OnInit {
 
   focusNext(id: string) {
     document.getElementById(id)?.focus();
+  }
+
+  onlyNumberKey(event: any) {
+    return this.helper.onlyNumberKey(event);
   }
 }

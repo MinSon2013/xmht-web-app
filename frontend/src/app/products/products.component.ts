@@ -86,6 +86,7 @@ export class ProductsComponent implements OnInit {
           row.price = result.price;
           row.quantity = result.quantity;
           row.note = result.note;
+          row.category = result.category;
         } else {
           this.dataSource.data = [result, ...this.dataSource.data];
           this.dataSource.data = this.dataSource.data;
