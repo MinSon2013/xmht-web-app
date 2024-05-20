@@ -132,7 +132,7 @@
         "RECEIVED": "Đã giao",
         "CANCELED": "Đã hủy",
         "REPORT": "Báo cáo",
-        "SHOWSLIDE": "Trình chiếu",
+        "SHOWSLIDE": "Màn hình PXBA",
         "BACK": "Quay lại"
     },
     "DIALOG_DELETE": {
@@ -180,9 +180,9 @@
         "MENU_GROUP_MANAGE": "Quản lý",
         "MENU_GROUP_REPORT": "Báo cáo",
         "MENU_GROUP_STATISTICS": "Thống kê",
+        "MENU_GROUP_EXCEL_DETAIL": "Bảng kê chi tiết",
         "MENU_ITEM_ORDER_LIST": "Danh sách đơn hàng",
         "MENU_ITEM_ADD_ORDER": "Tạo đơn hàng",
-        "MENU_ITEM_EXCEL_DETAIL": "Bảng kê chi tiết",
         "MENU_ITEM_PRODUCT": "Quản lý sản phẩm",
         "MENU_ITEM_AGENCY": "Quản lý khách hàng",
         "MENU_ITEM_STORE": "Quản lý cửa hàng",
@@ -274,13 +274,14 @@
     "SLIDESHOW": {
         "SECTION_TITLE_1": "DANH SÁCH ĐỒNG Ý ĐƠN HÀNG",
         "SECTION_TITLE_2": "DANH SÁCH ĐƠN HÀNG ĐÃ GIAO",
-        "MS": "MS",
-        "NPP": "NHÀ PHÂN PHỐI",
-        "PHUONGTIEN": "PHƯƠNG TIỆN",
-        "NOIGIAO": "NƠI GIAO",
-        "PHUONGTHUCNHAN": "PHƯƠNG THỨC NHẬN",
-        "SANPHAM": "SẢN PHẨM",
-        "TONG": "TỔNG",
-        "SUM_ALL": "Tổng cộng"
+        "MS": "Mã số",
+        "KHACHHANG": "Khách hàng",
+        "NOIGIAO": "Nơi giao",
+        "PHUONGTIEN": "Phương tiện",
+        "PHUONGTHUCNHAN": "Phương thức nhận",
+        "SANPHAM": "Sản phẩm",
+        "TONG": "Tổng từng đơn hàng\n(Tấn)",
+        "SUM_ALL": "Tổng cộng (Tấn)",
+        "SUM_ALL1": "Tổng cộng\n(Tấn)"
     }
 }

@@ -55,6 +55,10 @@
                         </span>
                     </mat-menu>
 
+                    <a mat-button [routerLink]="'/detail-statistics'" class="menu-item">
+                        {{ "HEADER.MENU_GROUP_EXCEL_DETAIL" | translate }}
+                    </a>
+
                     <a mat-button [routerLink]="'/statistics'" class="menu-item">
                         {{ "HEADER.MENU_GROUP_STATISTICS" | translate }}
                     </a>
@@ -95,12 +99,6 @@
                                 <mat-icon aria-hidden="false" aria-label="Add icon" fontSet="fas"
                                     fontIcon="fa-plus"></mat-icon>
                                 <span>{{ "HEADER.MENU_ITEM_ADD_ORDER" | translate }}</span>
-                            </button>
-
-                            <button mat-menu-item (click)="onRouterLink(routingDetailStatistic)" [hidden]="mobile">
-                                <mat-icon aria-hidden="false" aria-label="Detail icon" fontSet="fas"
-                                    fontIcon="fa-chart-bar"></mat-icon>
-                                <span>{{ "HEADER.MENU_ITEM_EXCEL_DETAIL" | translate }}</span>
                             </button>
                         </span>
                     </mat-menu>

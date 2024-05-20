@@ -27,10 +27,10 @@ const routes: Routes = [
     path: 'orders', children: [
       { path: 'list', component: OrderListComponent, canActivate: [AuthGuardGuard] },
       { path: 'add', component: OrderAddComponent, canActivate: [AuthGuardGuard] },
-      { path: 'bang-ke-chi-tiet', component: OrderDetailStatisticComponent, canActivate: [AuthGuardGuard] },
-      { path: 'trinh-chieu', component: OrderSlideshowComponent, canActivate: [AuthGuardGuard] },
+      { path: 'slideshow-pxba', component: OrderSlideshowComponent, canActivate: [AuthGuardGuard] },
     ]
   },
+  { path: 'detail-statistics', component: OrderDetailStatisticComponent, canActivate: [AuthGuardGuard] },
   { path: 'products', component: ProductsComponent, canActivate: [AuthGuardGuard] },
   { path: 'statistics', component: StatisticsComponent, canActivate: [AuthGuardGuard] },
   { path: 'agency', component: AgencyComponent, canActivate: [AuthGuardGuard] },

@@ -25,7 +25,6 @@ export class HeaderComponent implements OnInit {
 
   readonly routingOrderList = CONFIG.APP_ROUTING.ORDER.ORDERS + CONFIG.APP_ROUTING.ORDER.LIST;
   readonly routingOrderAdd = CONFIG.APP_ROUTING.ORDER.ORDERS + CONFIG.APP_ROUTING.ORDER.ADD;
-  readonly routingDetailStatistic = CONFIG.APP_ROUTING.ORDER.ORDERS + CONFIG.APP_ROUTING.ORDER.DETAIL_STATISTIC;
   readonly routingDashboard = CONFIG.APP_ROUTING.DASHBOARD;
   readonly routingAgency = CONFIG.APP_ROUTING.MANAGE.AGENCY;
   readonly routingProduct = CONFIG.APP_ROUTING.MANAGE.PRODUCT;

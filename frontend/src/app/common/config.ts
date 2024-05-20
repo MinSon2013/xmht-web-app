@@ -30,8 +30,7 @@ export const CONFIG = {
             ORDERS: "orders",
             LIST: "/list",
             ADD: "/add",
-            DETAIL_STATISTIC: "/bang-ke-chi-tiet",
-            SLIDESHOW: "/trinh-chieu"
+            SLIDESHOW: "/slideshow-pxba"
         },
         DASHBOARD: "dashboard",
         MANAGE: {
@@ -41,6 +40,7 @@ export const CONFIG = {
             DISTRICT: "district",
             USER: "user",
         },
+        DETAIL_STATISTIC: "detail-statistics",
         NOTIFICATION: "notification",
         LOGOUT: "logout",
         PRINT: "print",

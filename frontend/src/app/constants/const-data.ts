@@ -87,17 +87,17 @@ export const AGENCY_ROLE = 4;
 export const PRODUCT_CATEGORY = [
   {
     colDef: "sutu",
-    colValue1: "sư tử",
+    colValue1: "Sư tử",
     colValue2: "su tu",
   },
   {
     colDef: "phutu",
-    colValue1: "phụ tử",
+    colValue1: "Phụ tử",
     colValue2: "phu tu",
   },
   {
     colDef: "khac",
-    colValue1: "khác",
+    colValue1: "Khác",
     colValue2: "khac",
   }
 ]

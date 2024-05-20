@@ -37,13 +37,11 @@
         }
 
         .section-1 {
-            // width: 60%;
             background-color: lightgray;
             margin-right: 1%;
         }
 
         .section-2 {
-            // width: 39%;
             background-color: lightgreen;
         }
 
@@ -52,11 +50,9 @@
 
             th {
                 color: rgb(0, 0, 0);
-                font-size: 11pt;
                 width: auto;
                 text-align: center;
                 font-weight: 600;
-                padding: 0.5rem;
             }
 
             th,
@@ -64,6 +60,14 @@
                 border-bottom: 1px solid grey;
                 border-right: 1px solid grey;
                 border-style: dotted;
+                padding: 0.5rem;
+                font-size: 12pt;
+            }
+
+            td {
+                white-space: pre;
+                color: black;
+                font-family: serif, 'Roboto';
             }
 
             .align-top {
@@ -79,11 +83,15 @@
             }
 
             .text-flowerblue {
-                color: cornflowerblue
+                color: royalblue;
             }
 
             .text-red {
                 color: red;
+            }
+
+            .pre-space {
+                white-space: pre;
             }
         }
     }

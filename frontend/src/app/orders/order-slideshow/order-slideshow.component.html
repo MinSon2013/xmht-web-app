@@ -1,9 +1,26 @@
 <div class="ng-container">
-    <button mat-raised-button class="btn-back" (click)="onBack()">
-        <mat-icon aria-hidden="false" aria-label="Back icon" fontSet="fas" fontIcon="fa-arrow-left" class="fa-back">
-        </mat-icon>
-        <label class="pad-label">{{ "BUTTON.BACK" | translate }}</label>
-    </button>
+    <div>
+        <button mat-raised-button class="btn-back" (click)="onBack()">
+            <mat-icon aria-hidden="false" aria-label="Back icon" fontSet="fas" fontIcon="fa-arrow-left" class="fa-back">
+            </mat-icon>
+            <label class="pad-label">{{ "BUTTON.BACK" | translate }}</label>
+        </button>
+        <span>{{nowDate}}</span>
+        <div class="col-6 row created-date">
+            <span class="col-5" for="nowDate">
+                {{ "ORDER.CREATEDDATE" | translate }}</span>
+            <mat-form-field appearance="fill" class="col-7 border rounded">
+                <mat-label>Chọn từ ngày đến ngày</mat-label>
+                <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+                    <input matStartDate formControlName="start" placeholder="Từ ngày" />
+                    <input matEndDate formControlName="end" placeholder="Đến ngày" (dateChange)="onDateChange()" />
+                </mat-date-range-input>
+                <mat-hint style="display: none" [hidden]="true">DD/MM/YYYY - DD/MM/YYYY</mat-hint>
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker></mat-date-range-picker>
+            </mat-form-field>
+        </div>
+    </div>
 
     <div class="section">
         <div id="section1" class="section-1">
@@ -20,13 +37,13 @@
                     </td>
                 </ng-container>
 
-                <!-- NPP Column -->
-                <ng-container matColumnDef="npp">
+                <!-- KHACHHANG Column -->
+                <ng-container matColumnDef="customer">
                     <th mat-header-cell *matHeaderCellDef class="" [attr.rowspan]="thRowspan">
-                        {{'SLIDESHOW.NPP' | translate}}
+                        {{'SLIDESHOW.KHACHHANG' | translate}}
                     </th>
                     <td mat-cell *matCellDef="let element" class="">
-                        {{element.npp}}
+                        {{element.customer}}
                     </td>
                 </ng-container>
 
@@ -156,7 +173,7 @@
 
                 <!-- Tong Column -->
                 <ng-container matColumnDef="tong">
-                    <th mat-header-cell *matHeaderCellDef class="" [attr.rowspan]="thRowspan">
+                    <th mat-header-cell *matHeaderCellDef [attr.rowspan]="thRowspan">
                         {{'SLIDESHOW.TONG' | translate}}
                     </th>
                     <td mat-cell *matCellDef="let element" class="bold">{{element.tong > 0 ? element.tong : "-" }}</td>
@@ -164,8 +181,8 @@
 
                 <!-- Footer row sum label -->
                 <ng-container matColumnDef="footer-row-label">
-                    <th mat-footer-cell *matFooterCellDef class="">
-                        {{'SLIDESHOW.SUM_ALL' | translate}}
+                    <th mat-footer-cell *matFooterCellDef class="pre-space">
+                        {{'SLIDESHOW.SUM_ALL1' | translate}}
                     </th>
                 </ng-container>
 
