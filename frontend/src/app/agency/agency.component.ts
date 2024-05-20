@@ -102,7 +102,7 @@ export class AgencyComponent implements OnInit {
 
   onDelete(row: any) {
     const dialogRef = this.dialog.open(DialogDeleteConfirmComponent, {
-      data: { row, type: SERVICE_TYPE.AGENCYSERVICE, content: 'Bạn chắc chắn muốn xóa nhà phân phối "' + row.agencyName + '"?' },
+      data: { row, type: SERVICE_TYPE.AGENCYSERVICE, content: 'Bạn chắc chắn muốn xóa khách hàng "' + row.agencyName + '"?' },
     });
 
     dialogRef.afterClosed().subscribe(result => {

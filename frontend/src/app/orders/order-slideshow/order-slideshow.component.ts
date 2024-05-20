@@ -1,7 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { ToastrService } from 'ngx-toastr';
 import { AgencyService } from '../../services/agency.service';
 import { DeliveryService } from '../../services/delivery.service';
 import { OrderService } from '../../services/order.service';
@@ -12,6 +11,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Cities, KHAC, PHUTU, PRODUCT_CATEGORY, RECEIPT, SUTU } from '../../constants/const-data';
 import { Product } from '../../models/product';
 import { Helper } from '../../helpers/helper';
+import { FormControl, FormGroup } from '@angular/forms';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 
 @Component({
   selector: 'app-order-slideshow',
@@ -19,19 +20,27 @@ import { Helper } from '../../helpers/helper';
   styleUrls: ['./order-slideshow.component.scss']
 })
 export class OrderSlideshowComponent implements OnInit, OnDestroy {
+  @Output()
+  dateChange: EventEmitter<MatDatepickerInputEvent<any>> = new EventEmitter();
+
   private helper = new Helper();
   cities: any[] = Cities;
   receipt: any[] = RECEIPT;
   receivedStatus: number = 2;
-  shippedStatus: number = 3;
+  shippedStatus: number = 4;
   sumAll: number = 0;
+  nowDate = this.helper.getDateFormat(3);
+  range = new FormGroup({
+    start: new FormControl<Date | null>(null),
+    end: new FormControl<Date | null>(null),
+  });
 
   deliveries: any[] = [];
   productList: any[] = [];
   agencyList: any[] = [];
 
   /** Defined column section1 */
-  colDefSection1: string[] = ['ms', 'npp', 'noigiao', 'phuongtien', 'phuongthucnhan'];
+  colDefSection1: string[] = ['ms', 'customer', 'noigiao', 'phuongtien', 'phuongthucnhan'];
   columnsRow1Section1: string[] = [...this.colDefSection1, 'sanpham', 'tong'];
   columnsRowProductCategory: string[] = [];
   columnsRowProductName: string[] = [];
@@ -57,16 +66,6 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
     displayedCategory: string,
     pColspan: number,
     productList: { pId: number, pLabel: string, pName: string }[],
-  }[] = [];
-
-  dataSourceObject: {
-    ms: number,
-    npp: string,
-    noigiao: string,
-    phuongtien: string,
-    phuongthucnhan: string,
-    sanpham: { pId: number, pValue: string }[],
-    tong: string,
   }[] = [];
 
   searchForm: any = {
@@ -137,6 +136,16 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
     });
   }
 
+  onDateChange(): void {
+    this.dateChange.emit();
+    this.columnDefRowSumSection1 = [];
+    this.displayedRowSumSection1 = [];
+    this.columnDefRowSumSection2 = [];
+    this.displayedRowSumSection2 = [];
+    this.setDataSourceSection(this.receivedStatus);
+    this.setDataSourceSection(this.shippedStatus);
+  }
+
   private setDisplayedColumns() {
     const CATEGORY = PRODUCT_CATEGORY;
     const replacements = [
@@ -157,8 +166,8 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
     /** Handled product name to display by category */
     this.productListResponse.forEach(element => {
       const k = CATEGORY.find(x =>
-        element.name.toLocaleLowerCase().includes(x.colValue1)
-        || element.name.toLocaleLowerCase().includes(x.colValue2));
+        element.name.toLocaleLowerCase().includes(x.colValue1.toLocaleLowerCase())
+        || element.name.toLocaleLowerCase().includes(x.colValue2.toLocaleLowerCase()));
 
       if (k) {
         let productName = replacements.reduce((acc, [oldStr, newStr]) => {
@@ -182,7 +191,7 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
     /** Handled product category to display  */
     /** Category 1 */
     this.productDataSource.push({
-      displayedCategory: CATEGORY[0].colValue1.toUpperCase(),
+      displayedCategory: CATEGORY[0].colValue1,
       categoryLabel: SUTU,
       productList: sutuList.reverse(),
       pColspan: sutuList.length,
@@ -191,7 +200,7 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
 
     /** Category 2 */
     this.productDataSource.push({
-      displayedCategory: CATEGORY[1].colValue1.toUpperCase(),
+      displayedCategory: CATEGORY[1].colValue1,
       categoryLabel: PHUTU,
       productList: phutuList.reverse(),
       pColspan: phutuList.length,
@@ -201,7 +210,7 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
     /** Category 3 */
     if (otherList.length > 0) {
       this.productDataSource.push({
-        displayedCategory: CATEGORY[2].colValue1.toUpperCase(),
+        displayedCategory: CATEGORY[2].colValue1,
         categoryLabel: KHAC,
         productList: otherList.reverse(),
         pColspan: otherList.length,
@@ -228,12 +237,31 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
   }
 
   private setDataSourceSection(status: number) {
+    // this.searchForm.startDate = this.range.value.start !== null ? this.helper.getDateFormat(3, this.range.value.start) : this.nowDate;
+    // this.searchForm.endDate = this.range.value.end !== null ? this.helper.getDateFormat(3, this.range.value.end) : this.nowDate;
     let sumCols: any[] = [];
-    this.dataSourceObject = [];
+    let dataSourceObject: {
+      ms: number,
+      customer: string,
+      noigiao: string,
+      phuongtien: string,
+      phuongthucnhan: string,
+      sanpham: { pId: number, pValue: string }[],
+      tong: string,
+    }[] = [];
+
     this.searchForm.status = status;
     const productTemplate = this.displayedColumnsProductName.map(x => ({ pId: x.id, pValue: "" }));
     this.orderService.search(this.searchForm).subscribe((response: any) => {
       if (response.length > 0) {
+
+
+        if (status === this.shippedStatus) {
+          console.log(response)
+        }
+
+
+
         response.forEach((x: any) => {
           x.agencyName = this.agencyList.find(i => i.id === x.agencyId)?.agencyName;
           let receipt = this.receipt.find(i => i.value === x.receipt);
@@ -247,9 +275,9 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
             });
           });
 
-          this.dataSourceObject.push({
+          dataSourceObject.push({
             ms: x.approvedNumber,
-            npp: x.agencyName,
+            customer: x.agencyName,
             noigiao: this.compareObj(this.cities, x.pickupId),
             phuongtien: x.licensePlates,
             phuongthucnhan: receipt ? receipt.label : "",
@@ -262,9 +290,9 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
         /** Set sum cols of every product */
         /** Set value for footer */
         let subSumCols = this.groupByValue(sumCols, 'pId');
-        this.sumAll = this.helper.sum(this.dataSourceObject, 'tong');
+        this.sumAll = this.helper.sum(dataSourceObject, 'tong');
         if (status === this.receivedStatus) {
-          this.dataSource1.data = this.dataSourceObject;
+          this.dataSource1.data = dataSourceObject;
           let sumColRow = productTemplate.map(x => ({ ...x }));
 
           subSumCols.forEach((e: any) => {
@@ -285,7 +313,7 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
           this.columnDefRowSumSection1 = ['footer-row-label', ...this.columnDefRowSumSection1];
           this.displayedRowSumSection1.push({ label: "s" + (this.thColspan + 1), value: this.sumAll });
         } else {
-          this.dataSource2.data = this.dataSourceObject;
+          this.dataSource2.data = dataSourceObject;
           let sumColRow = productTemplate.map(x => ({ ...x }));
 
           subSumCols.forEach((e: any) => {

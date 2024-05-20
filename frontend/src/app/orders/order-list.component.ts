@@ -240,7 +240,7 @@ export class OrderListComponent implements OnInit {
     let rows: any[] = [];
     const title = ['', '', '', '', '', 'DANH SÁCH ĐƠN HÀNG', '', '', '', '', '', '', '', ''];
     const empty = ['', '', '', '', '', '', '', '', '', '', '', '', '', ''];
-    const header = ['Mã số đơn hàng', 'Ngày tạo đơn', 'Nhà phân phối', 'Hợp đồng', 'Ngày nhận dự kiến', 'Ngày xác nhận', 'Ngày giao hàng', 'Nơi nhận', 'Nơi giao', 'Sản phẩm', 'Số lượng',
+    const header = ['Mã số đơn hàng', 'Ngày tạo đơn', 'Khách hàng', 'Hợp đồng', 'Ngày nhận dự kiến', 'Ngày xác nhận', 'Ngày giao hàng', 'Nơi nhận', 'Nơi giao', 'Sản phẩm', 'Số lượng',
       'Tổng số lượng', 'Số phương tiện', 'Tên tài xế'];
     rows.push(title);
     rows.push(empty);
