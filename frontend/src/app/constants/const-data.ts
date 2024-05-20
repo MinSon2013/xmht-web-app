@@ -96,13 +96,13 @@ export const PRODUCT_CATEGORY = [
     colValue2: "phu tu",
   },
   {
-    colDef: "khac",
-    colValue1: "Khác",
-    colValue2: "khac",
+    colDef: "xa",
+    colValue1: "Xá",
+    colValue2: "xa",
   }
 ]
 
 export const SUTU = "sutu";
 export const PHUTU = "phutu";
-export const KHAC = "khac";
+export const XA = "xa";
 

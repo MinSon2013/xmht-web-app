@@ -88,7 +88,7 @@
                 <!-- Product Category Column -->
                 <ng-container [matColumnDef]="column.categoryLabel" *ngFor="let column of productDataSource">
                     <th mat-header-cell *matHeaderCellDef [attr.colspan]="column.pColspan"
-                        class="{{ column.categoryLabel === 'sutu' ? 'text-flowerblue' : 'text-red'}}">
+                        class="{{ column.categoryLabel === 'sutu' ? 'text-flowerblue' : (column.categoryLabel === 'phutu' ? 'text-red' : 'text-green')}}">
                         {{column.displayedCategory}}
                     </th>
                     <!-- This column doesn't generate <td> items, so no need to add a definition for them -->
@@ -156,7 +156,7 @@
                 <!-- Product Category Column -->
                 <ng-container [matColumnDef]="column.categoryLabel" *ngFor="let column of productDataSource">
                     <th mat-header-cell *matHeaderCellDef [attr.colspan]="column.pColspan"
-                        class="{{ column.categoryLabel === 'sutu' ? 'text-flowerblue' : 'text-red'}}">
+                        class="{{ column.categoryLabel === 'sutu' ? 'text-flowerblue' : (column.categoryLabel === 'phutu' ? 'text-red' : 'text-green')}}">
                         {{column.displayedCategory}}
                     </th>
                     <!-- <td mat-cell *matCellDef="let element"> {{element[column]}} </td> -->
@@ -189,7 +189,7 @@
                 <!-- Footer row sum value -->
                 <ng-container [matColumnDef]="col.label" *ngFor="let col of displayedRowSumSection2;">
                     <th mat-footer-cell *matFooterCellDef class="">
-                        {{col.value}}
+                        {{col.value > 0 ? col.value : ""}}
                     </th>
                 </ng-container>
 

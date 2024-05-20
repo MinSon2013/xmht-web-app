@@ -8,7 +8,7 @@ import { ProductService } from '../../services/product.service';
 import { Location } from '@angular/common';
 import { DisplayService } from '../../services/display.service';
 import { MatTableDataSource } from '@angular/material/table';
-import { Cities, KHAC, PHUTU, PRODUCT_CATEGORY, RECEIPT, SUTU } from '../../constants/const-data';
+import { Cities, PHUTU, PRODUCT_CATEGORY, RECEIPT, SUTU, XA } from '../../constants/const-data';
 import { Product } from '../../models/product';
 import { Helper } from '../../helpers/helper';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -67,6 +67,10 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
     pColspan: number,
     productList: { pId: number, pLabel: string, pName: string }[],
   }[] = [];
+
+  pColspan1: number = 0;
+  pColspan2: number = 0;
+  pColspan3: number = 0;
 
   searchForm: any = {
     orderId: 0,
@@ -157,11 +161,14 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
       [" Phụ Tử", ""],
       [" Phụ tử", ""],
       [" phụ tử", ""],
+      [" XÁ", ""],
+      [" Xá", ""],
+      [" xá", ""],
     ];
 
     let sutuList: { pId: number, pLabel: string, pName: string }[] = [];
     let phutuList: { pId: number, pLabel: string, pName: string }[] = [];
-    let otherList: { pId: number, pLabel: string, pName: string }[] = [];
+    let xaList: { pId: number, pLabel: string, pName: string }[] = [];
 
     /** Handled product name to display by category */
     this.productListResponse.forEach(element => {
@@ -181,8 +188,8 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
           case PHUTU:
             phutuList.push({ pId: element.id, pLabel: k.colDef, pName: productName });
             break;
-          case KHAC:
-            otherList.push({ pId: element.id, pLabel: k.colDef, pName: productName });
+          case XA:
+            xaList.push({ pId: element.id, pLabel: k.colDef, pName: productName });
             break;
         }
       }
@@ -196,6 +203,7 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
       productList: sutuList.reverse(),
       pColspan: sutuList.length,
     });
+    this.pColspan1 = sutuList.length;
     this.columnsRowProductCategory.push(CATEGORY[0].colDef);
 
     /** Category 2 */
@@ -205,23 +213,23 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
       productList: phutuList.reverse(),
       pColspan: phutuList.length,
     });
+    this.pColspan2 = phutuList.length;
     this.columnsRowProductCategory.push(CATEGORY[1].colDef);
 
     /** Category 3 */
-    if (otherList.length > 0) {
-      this.productDataSource.push({
-        displayedCategory: CATEGORY[2].colValue1,
-        categoryLabel: KHAC,
-        productList: otherList.reverse(),
-        pColspan: otherList.length,
-      });
-      this.columnsRowProductCategory.push(CATEGORY[2].colDef);
-    }
+    this.productDataSource.push({
+      displayedCategory: CATEGORY[2].colValue1,
+      categoryLabel: XA,
+      productList: xaList.reverse(),
+      pColspan: xaList.length,
+    });
+    this.pColspan3 = xaList.length;
+    this.columnsRowProductCategory.push(CATEGORY[2].colDef);
 
     this.thColspan = this.productListResponse.length;
 
     /** Displayed column product name  */
-    const arrProduct = [...sutuList, ...phutuList, ...otherList];
+    const arrProduct = [...sutuList, ...phutuList, ...xaList];
     this.columnsRowProductName = arrProduct.map(p => p.pLabel + arrProduct.indexOf(p));
     this.displayedColumnsProductName = arrProduct.map(p =>
     ({
@@ -257,7 +265,9 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
 
 
         if (status === this.shippedStatus) {
+          response = response.slice(0, 30)
           console.log(response)
+
         }
 
 
@@ -371,6 +381,20 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
       acc[curr[key]].push(curr)
       return acc;
     }, {}));
+  }
+
+  getClass(col: any) {
+    let ind = this.pColspan1 + this.pColspan2 + this.pColspan3;
+    console.log(col)
+    if (1 < this.pColspan1) {
+      return "text-flowerblue";
+    } else if (1 < (this.pColspan1 + this.pColspan2)) {
+      return "text-red";
+    } else if (1 < (this.pColspan1 + this.pColspan2 + this.pColspan3)) {
+      return "text-green";
+    } else {
+      return "";
+    }
   }
 
 }
