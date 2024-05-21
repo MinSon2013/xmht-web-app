@@ -135,7 +135,8 @@
         "CANCELED": "Đã hủy",
         "REPORT": "Báo cáo",
         "SHOWSLIDE": "Màn hình PXBA",
-        "BACK": "Quay lại"
+        "BACK": "Quay lại",
+        "SHOW_REPORT": "Xem báo cáo"
     },
     "DIALOG_DELETE": {
         "TITLE": "Xác nhận xóa",
@@ -276,14 +277,45 @@
     "SLIDESHOW": {
         "SECTION_TITLE_1": "DANH SÁCH ĐỒNG Ý ĐƠN HÀNG",
         "SECTION_TITLE_2": "DANH SÁCH ĐƠN HÀNG ĐÃ GIAO",
-        "MS": "Mã số",
-        "KHACHHANG": "Khách hàng",
-        "NOIGIAO": "Nơi giao",
-        "PHUONGTIEN": "Phương tiện",
-        "PHUONGTHUCNHAN": "Phương thức nhận",
-        "SANPHAM": "Sản phẩm",
-        "TONG": "Tổng từng đơn hàng\n(Tấn)",
+        "NO": "Mã số",
+        "CUSTOMER": "Khách hàng",
+        "DELIVERY_ADDRESS": "Nơi giao",
+        "LICENSE_PLATE": "Phương tiện",
+        "RECEIPT": "Phương thức nhận",
+        "PRODUCTS": "Sản phẩm",
+        "SUM": "Tổng từng\n đơn hàng\n(Tấn)",
         "SUM_ALL": "Tổng cộng (Tấn)",
-        "SUM_ALL1": "Tổng cộng\n(Tấn)"
+        "SUM_ALL1": "Tổng cộng\n(Tấn)",
+        "SELECT_DATE": "Chọn mốc thời gian"
+    },
+    "DETAILS_STATISTIC": {
+        "TITLE": "Bảng kê chi tiết đơn hàng",
+        "CUSTOMER": "Khách hàng",
+        "RECEIVED_DATE": "Thời gian nhận hàng",
+        "RECEIVED_ADDRESS": "Nơi nhận hàng",
+        "LICENSE_PLATE": "Phương tiện",
+        "DRIVER": "Tên tài xế",
+        "RECEIPT": "Phương thức nhận",
+        "PRODUCTS": "Sản phẩm",
+        "SECTION_TITLE_1": "DANH SÁCH ĐỒNG Ý ĐƠN HÀNG",
+        "NO": "Mã số",
+        "DELIVERY_ADDRESS": "Nơi giao",
+        "SUM": "Tổng từng\n đơn hàng\n(Tấn)",
+        "SUM_ALL": "Tổng cộng (Tấn)",
+        "SUM_ALL1": "Tổng cộng\n(Tấn)",
+        "SELECT_CUSTOMER": "Chọn khách hàng",
+        "SELECT_RECEIVED_ADDRESS": "Chọn tỉnh",
+        "SELECT_LICENSE_PLATE": "Chọn phương tiện",
+        "SELECT_DRIVER": "Chọn tài xế",
+        "SELECT_RECEIPT": "Chọn phương thức nhận",
+        "SELECT_PRODUCTS": "Chọn sản phẩm",
+        "CREATEDATE": "Ngày tạo đơn",
+        "CONTRACT": "Hợp đồng",
+        "RECEIVEDDATE": "Ngày nhận \ndự kiến",
+        "CONFIRMDATE": "Ngày xác nhận\nđơn hàng",
+        "SHIPPINGDATE": "Ngày giao hàng",
+        "PICKUPADDRESS": "Nơi nhận",
+        "WRITER": "Người lập",
+        "DETAIL_REPORT_TITLE": "Báo cáo chi tiết"
     }
 }

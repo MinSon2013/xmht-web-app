@@ -1,6 +1,18 @@
 .ng-container {
     padding: 1rem 1rem 2rem;
-    // overflow: scroll;
+    overflow: scroll;
+
+    .div-header {
+        display: block;
+        margin-left: 0.25rem;
+        margin-bottom: 1rem;
+    }
+
+    .label {
+        margin-left: 3rem;
+        margin-right: 1rem;
+        font-weight: 500;
+    }
 
     .btn-back {
         cursor: pointer;
@@ -49,7 +61,7 @@
 
         .section-2 {
             h4 {
-                background-color: lightgreen;
+                background-color: palegreen;
                 padding-bottom: 0.5rem;
                 margin-bottom: 0;
             }
@@ -78,6 +90,11 @@
                 white-space: pre;
                 color: black;
                 font-family: serif, 'Roboto';
+                text-align: left;
+                vertical-align: middle;
+            }
+
+            .p-td {
                 text-align: right;
                 vertical-align: middle;
             }
@@ -106,9 +123,32 @@
                 color: mediumseagreen;
             }
 
+            .text-grey {
+                color: grey;
+            }
+
             .pre-space {
                 white-space: pre;
             }
         }
     }
+
+    .mat-mdc-table .mdc-data-table__header-row {
+        height: 40px;
+    }
+
+    .mat-mdc-table .mdc-data-table__row {
+        height: 40px;
+    }
+
+    .mat-mdc-form-field {
+        width: 20%;
+        flex-direction: row;
+        padding: 0;
+
+        ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+            width: 0 !important;
+        }
+    }
+
 }

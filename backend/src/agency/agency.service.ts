@@ -20,11 +20,6 @@ export class AgencyService {
         return await this.agencyRepo.findAll(agencyId);
     }
 
-    /// --- REMOVE after sync
-    async getAgencyList(): Promise<AgencyRO[]> {
-        return await this.agencyRepo.getAgencyList();
-    }
-
     async findOne(userId: number): Promise<AgencyRO> {
         return await this.agencyRepo.getByUserId(userId);
     }

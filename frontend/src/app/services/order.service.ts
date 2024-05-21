@@ -11,6 +11,7 @@ export class OrderService {
     readonly url: string = CONFIG.URL.ORDERS.ORDER;
     readonly url1: string = CONFIG.URL.ORDERS.SEARCH;
     readonly url2: string = CONFIG.URL.ORDERS.SEARCH_DEATILS;
+    readonly url3: string = CONFIG.URL.ORDERS.FILTER;
     readonly helper = new Helper();
 
     constructor(
@@ -110,11 +111,15 @@ export class OrderService {
             driver: obj.driver,
             receipt: obj.receipt,
             status: obj.status,
-            productCategory: obj.productCategory,
+            productId: obj.productId,
             startDate: obj.startDate,
             endDate: obj.endDate,
             userId: this.helper.getUserId(),
         }
         return this.webrequestService.post(this.url2, payload);
+    }
+
+    getFilterList() {
+        return this.webrequestService.get(this.url3 + `/${this.helper.getUserId()}`);
     }
 }

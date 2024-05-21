@@ -8,6 +8,9 @@ import { ProductOrderRepository } from './product-order.repository';
 import { SearchOrderDTO } from '../dto/search-order.dto';
 import { NotificationDTO } from '../../notification/dto/notification.dto';
 import { Helper } from '../../shared/helper';
+import { DetailsOrderDTO } from '../dto/details-order.dto';
+import { AgencyService } from '../../agency/agency.service';
+import { DeliveryService } from '../../delivery/delivery.service';
 
 @EntityRepository(Order)
 export class OrderRepository extends Repository<Order> {
@@ -285,18 +288,103 @@ export class OrderRepository extends Repository<Order> {
         return response;
     }
 
+    async details(detailsOrderDto: DetailsOrderDTO, productService: ProductsService, agencyIdLogin: number): Promise<Order[]> {
+        let response: Order[] = [];
+        let _status = [];
+        const productList = await productService.getAllProduct();
+
+        let sql = this.createQueryBuilder('order')
+            .select('order')
+            .addSelect('productOrder')
+            .leftJoin(ProductOrder, 'productOrder', 'productOrder.order_id = order.id')
+            .where('1=1');
+
+        if (agencyIdLogin > 0) {
+            sql = sql.andWhere('order.agencyId = :agencyId', { agencyId: agencyIdLogin })
+        } else if (detailsOrderDto.agencyId) {
+            sql = sql.andWhere('order.agency_id = :agencyId', { agencyId: detailsOrderDto.agencyId })
+        }
+        // Noi nhan
+        if (detailsOrderDto.deliveryId && detailsOrderDto.deliveryId.length > 0) {
+            sql = sql.andWhere('order.delivery_id = :deliveryId', { deliveryId: Number(detailsOrderDto.deliveryId) })
+        }
+        // So phuong tien
+        if (detailsOrderDto.licensePlate && detailsOrderDto.licensePlate.length > 0) {
+            sql = sql.andWhere('order.license_plates = :licensePlate', { licensePlate: detailsOrderDto.licensePlate })
+        }
+        // Tai xe
+        if (detailsOrderDto.driver && detailsOrderDto.driver.length > 0) {
+            sql = sql.andWhere('order.driver = :driver', { driver: detailsOrderDto.driver })
+        }
+        // Phuong thuc nhan
+        if (detailsOrderDto.receipt && detailsOrderDto.receipt.length > 0) {
+            sql = sql.andWhere('order.receipt = :receipt', { receipt: Number(detailsOrderDto.receipt) })
+        }
+        // San pham
+        if (detailsOrderDto.productId && detailsOrderDto.productId.length > 0) {
+            sql = sql.andWhere('productOrder.product_id = :productId', { productId: detailsOrderDto.productId })
+        }
+        if (detailsOrderDto.status && detailsOrderDto.status.length > 0) {
+            _status = detailsOrderDto.status.split(",");
+            if (detailsOrderDto.startDate && detailsOrderDto.startDate.length !== 0
+                && detailsOrderDto.endDate && detailsOrderDto.endDate.length !== 0) {
+                if (Number(_status[0]) === 2) { // Order confirmed
+                    sql = sql.andWhere('((order.status = :status1', { status1: Number(_status[0]) });
+                    sql = sql.andWhere(
+                        `IF(LENGTH(order.confirmed_date) > 10,
+                          STR_TO_DATE(RIGHT(order.confirmed_date, 10), '%d/%m/%Y'),
+                          STR_TO_DATE(order.confirmed_date, '%d/%m/%Y')
+                        )
+                        BETWEEN STR_TO_DATE(:start, \'%d/%m/%Y\') 
+                        AND STR_TO_DATE(:end, \'%d/%m/%Y\')
+                    )`,
+                        { start: detailsOrderDto.startDate, end: detailsOrderDto.endDate }
+                    );
+                }
+                if (Number(_status[1]) === 4) { // Order Shipped
+                    sql = sql.orWhere('(order.status = :status2', { status2: Number(_status[1]) });
+                    sql = sql.andWhere(
+                        `IF(LENGTH(order.shipping_date) > 10,
+                          STR_TO_DATE(RIGHT(order.shipping_date, 10), '%d/%m/%Y'),
+                          STR_TO_DATE(order.shipping_date, '%d/%m/%Y')
+                        )
+                        BETWEEN STR_TO_DATE(:start, \'%d/%m/%Y\') 
+                        AND STR_TO_DATE(:end, \'%d/%m/%Y\')
+                        )) `,
+                        { start: detailsOrderDto.startDate, end: detailsOrderDto.endDate }
+                    );
+                }
+            }
+        } else if (detailsOrderDto.startDate && detailsOrderDto.startDate.length !== 0
+            && detailsOrderDto.endDate && detailsOrderDto.endDate.length !== 0) {
+            sql = sql.andWhere(
+                `IF(LENGTH(order.created_date) > 10,
+                  STR_TO_DATE(RIGHT(order.created_date, 10), '%d/%m/%Y'),
+                  STR_TO_DATE(order.created_date, '%d/%m/%Y')
+                )
+                BETWEEN STR_TO_DATE(:start, \'%d/%m/%Y\') 
+                AND STR_TO_DATE(:end, \'%d/%m/%Y\') `,
+                { start: detailsOrderDto.startDate, end: detailsOrderDto.endDate }
+            );
+        }
+        const orderList = await sql.orderBy('order.id').groupBy('order.id').addGroupBy('order.status').getRawMany();
+        const dataMap = this.mappingSearch(orderList, productList);
+        response = dataMap;
+        return response;
+    }
+
     private mappingOrder(modifyOrderDto: ModifyOrderDTO): Order {
         const order = new Order();
         order.createdDate = modifyOrderDto.createdDate;
         order.deliveryId = modifyOrderDto.deliveryId;
         order.pickupId = modifyOrderDto.pickupId;
         order.productTotal = modifyOrderDto.productTotal;
-        order.driver = modifyOrderDto.driver;
+        order.driver = modifyOrderDto.driver.trim();
         order.transport = modifyOrderDto.transport;
-        order.licensePlates = modifyOrderDto.licensePlates;
+        order.licensePlates = modifyOrderDto.licensePlates.trim();
         order.receivedDate = modifyOrderDto.receivedDate;
         order.status = modifyOrderDto.status;
-        order.note = modifyOrderDto.note;
+        order.note = modifyOrderDto.note.trim();
         order.contract = modifyOrderDto.contract;
         order.agencyId = modifyOrderDto.agencyId;
         order.isViewed = modifyOrderDto.isViewed;
@@ -424,5 +512,39 @@ export class OrderRepository extends Repository<Order> {
         }
 
         return str;
+    }
+
+    async getfilterList(
+        agencyId: number,
+        productService: ProductsService,
+        agencyService: AgencyService,
+        deliveryService: DeliveryService,
+    ): Promise<any> {
+        let driverList = [];
+        let licensePlateList = [];
+        let agencyList = [];
+        let deliveryList = [];
+        let productList = [];
+
+        let orders = await this.find();
+
+        driverList = orders.map(x => x.driver);
+        driverList = driverList.filter((elem, index, self) => {
+            return index === self.indexOf(elem);
+        })
+        licensePlateList = orders.map(x => x.licensePlates);
+        licensePlateList = licensePlateList.filter((elem, index, self) => {
+            return index === self.indexOf(elem);
+        })
+
+        productList = await productService.getAllProduct();
+
+        if (agencyId === 0) {
+            agencyList = await agencyService.findAll(0);
+        }
+
+        deliveryList = await deliveryService.findAll();
+
+        return { productList, agencyList, driverList, licensePlateList, deliveryList };
     }
 }

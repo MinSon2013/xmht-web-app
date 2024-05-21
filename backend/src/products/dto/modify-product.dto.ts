@@ -5,4 +5,5 @@ export class ProductDTO {
   price: number;
   note: string;
   updatedByUserId: number;
+  category: number;
 }

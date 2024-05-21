@@ -35,6 +35,7 @@ export class ProductRepository extends Repository<Product> {
     product.quantity = modifyProductDto.quantity;
     product.price = modifyProductDto.price;
     product.note = modifyProductDto.note;
+    product.category = modifyProductDto.category;
     product.updatedByUserId = modifyProductDto.updatedByUserId;
     if (modifyProductDto.id && modifyProductDto.id !== 0) {
       product.updatedDate = this.helper.getUpdateDate(2);

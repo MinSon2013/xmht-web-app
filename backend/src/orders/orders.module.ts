@@ -17,6 +17,8 @@ import { ProductsModule } from '../products/products.module';
 import { AuthModule } from '../auth/auth.module';
 import { PassportModule } from '@nestjs/passport';
 import { UserDistrictRepository } from '../user/repository/user-district.repository';
+import { DeliveryRepository } from '../delivery/repository/delivery.repository';
+import { DeliveryService } from '../delivery/delivery.service';
 
 @Module({
   controllers: [OrdersController],
@@ -30,6 +32,7 @@ import { UserDistrictRepository } from '../user/repository/user-district.reposit
       AgencyRepository,
       UserRepository,
       UserDistrictRepository,
+      DeliveryRepository,
     ]),
     AuthModule,
     ProductsModule,
@@ -41,6 +44,7 @@ import { UserDistrictRepository } from '../user/repository/user-district.reposit
     UserService,
     NotificationService,
     AgencyService,
+    DeliveryService,
   ],
 })
 export class OrdersModule { }

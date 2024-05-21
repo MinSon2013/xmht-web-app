@@ -4,6 +4,7 @@ import { ModifyOrderDTO } from './dto/modify-order.dto';
 import { SearchOrderDTO } from './dto/search-order.dto';
 import { Order } from './entities/order.entity';
 import { OrdersService } from './orders.service';
+import { DetailsOrderDTO } from './dto/details-order.dto';
 
 @Controller('orders')
 export class OrdersController {
@@ -13,6 +14,12 @@ export class OrdersController {
   @Get(':userId')
   findAll(@Param('userId', ParseIntPipe) userId: number): Promise<Order[]> {
     return this.ordersService.findAll(userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/filters/:userId')
+  filters(@Param('userId', ParseIntPipe) userId: number): Promise<Order[]> {
+    return this.ordersService.filters(userId);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -56,5 +63,11 @@ export class OrdersController {
   @Post('/search')
   search(@Body() searchOderDto: SearchOrderDTO): Promise<Order[]> {
     return this.ordersService.search(searchOderDto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('/details')
+  details(@Body() detailsOrderDto: DetailsOrderDTO): Promise<Order[]> {
+    return this.ordersService.details(detailsOrderDto);
   }
 }

@@ -15,9 +15,9 @@ export interface SearchDetailsOrder {
     licensePlate: string;
     driver: string;
     receipt: string;
-    status: string;//"a,b"
-    productCategory: string;
+    status: string;
+    productId: string;
     startDate: string;
     endDate: string;
-    userId: number; // Login userId
+    userId: number;
 }

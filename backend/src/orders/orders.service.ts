@@ -10,6 +10,8 @@ import { AgencyService } from '../agency/agency.service';
 import { ProductOrderRepository } from './repository/product-order.repository';
 import { UserService } from '../user/user.service';
 import { ADMIN_ROLE, STOCKER_ROLE, USER_AREA_MANAGER_ROLE, USER_SALESMAN_ROLE } from '../config/constant';
+import { DetailsOrderDTO } from './dto/details-order.dto';
+import { DeliveryService } from '../delivery/delivery.service';
 
 @Injectable()
 export class OrdersService {
@@ -22,6 +24,7 @@ export class OrdersService {
     private readonly agencyService: AgencyService,
     public readonly productOrderRepo: ProductOrderRepository,
     public readonly userService: UserService,
+    public readonly deliveryService: DeliveryService,
   ) { }
 
   async findAll(userId: number): Promise<Order[]> {
@@ -72,6 +75,26 @@ export class OrdersService {
       agencyId = agency.id;
     }
     return await this.orderRepo.search(searchOderDto, this.productService, agencyId);
+  }
+
+  async details(detailsOrderDto: DetailsOrderDTO): Promise<Order[]> {
+    const user = await this.userService.getOne(detailsOrderDto.userId);
+    let agencyId = 0;
+    if (!this.userRole.includes(user.role)) {
+      const agency = await this.agencyService.findOne(detailsOrderDto.userId);
+      agencyId = agency.id;
+    }
+    return await this.orderRepo.details(detailsOrderDto, this.productService, agencyId);
+  }
+
+  async filters(userId: number): Promise<any[]> {
+    const user = await this.userService.getOne(userId);
+    let agencyId = 0;
+    if (!this.userRole.includes(user.role)) {
+      const agency = await this.agencyService.findOne(userId);
+      agencyId = agency.id;
+    }
+    return await this.orderRepo.getfilterList(agencyId, this.productService, this.agencyService, this.deliveryService);
   }
 }
 

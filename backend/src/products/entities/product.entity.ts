@@ -17,6 +17,9 @@ export class Product {
   @Column({ length: 500 })
   note: string;
 
+  @Column()
+  category: number;
+
   @Column({ name: 'created_date', length: 20 })
   createdDate: string;
 

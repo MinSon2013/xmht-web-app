@@ -43,31 +43,6 @@ export class AgencyRepository extends Repository<Agency> {
         return res;
     }
 
-    // -- REMOVE after sync -----
-    async getAgencyList() {
-        const ids = await this.getIdsNotAgency();
-        const result = await this.createQueryBuilder('a')
-            .innerJoinAndSelect(Users, 'u', 'u.id = a.user_id')
-            .where('a.id NOT IN (:ids)', { ids: ids.toString() })
-            .getRawMany();
-
-        const res: AgencyRO[] = [];
-        result.forEach(element => {
-            const item = new AgencyRO();
-            item.id = element.a_id;
-            item.agencyName = element.a_agency_name;
-            item.address = element.a_address;
-            item.contract = element.a_contract;
-            item.note = element.a_note;
-            item.email = element.a_email;
-            item.phone = element.a_phone;
-            item.userId = element.u_id;
-            item.userName = element.u_username;
-            res.push(item);
-        });
-        return res;
-    }
-
     async getByUserId(userId: number): Promise<AgencyRO> {
         const res = await this.createQueryBuilder('a')
             .innerJoinAndSelect(Users, 'u', 'u.id = a.user_id')
