@@ -10,7 +10,7 @@ export interface Search {
 }
 
 export interface SearchDetailsOrder {
-    agencyId: number;
+    agencyId: string;
     deliveryId: string;
     pickupId: string;
     licensePlate: string;

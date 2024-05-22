@@ -26,7 +26,7 @@ export const ExcelDetailsConfig = {
   },
   r2c0TitleStyle: {
     font: { name: 'Times New Roman', sz: 13, bold: true },
-    alignment: { wrapText: false, vertical: 'center', horizontal: 'left' }
+    alignment: { wrapText: false, vertical: 'center', horizontal: 'right' }
   },
   rf0Style: {
     font: { name: 'Times New Roman', sz: 12, bold: true },

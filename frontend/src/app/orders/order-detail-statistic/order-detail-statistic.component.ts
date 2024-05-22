@@ -81,7 +81,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
   }[] = [];
 
   searchForm: SearchDetailsOrder = {
-    agencyId: 0,
+    agencyId: "",
     deliveryId: "",
     pickupId: "",
     licensePlate: '',
@@ -115,13 +115,55 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
 
   onShow() {
     this.progressLoading = true;
-    this.fromToDate = `Từ ngày ${this.helper.getDateFormat(3, this.range.value.start)} 
-                      đến ngày ${this.helper.getDateFormat(3, this.range.value.end)}`;
+    this.showDetailOrderTable = false;
+    this.fromToDate = `Từ ngày ${this.helper.getDateFormat(3, this.range.value.start)} đến ngày ${this.helper.getDateFormat(3, this.range.value.end)}`;
+    this.searchForm.agencyId = this.customerSelected ? this.customerSelected.id : "";
+    this.searchForm.startDate = this.range.value.start !== null ? this.helper.getDateFormat(3, this.range.value.start) : "";
+    this.searchForm.endDate = this.range.value.end !== null ? this.helper.getDateFormat(3, this.range.value.end) : "";
+    this.searchForm.deliveryId = this.receivedAdressSelected ? this.receivedAdressSelected.id : "";
+    this.searchForm.licensePlate = this.licensePlateSelected ? this.licensePlateSelected : "";
+    this.searchForm.driver = this.driverSelected ? this.driverSelected : "";
+    this.searchForm.receipt = this.receiptSelected ? this.receiptSelected.value : "";
+    this.searchForm.productId = this.productSelected ? this.productSelected.id : "";
+    this.resetFormSearch();
     this.getDataSource();
   }
 
   emitSocket() {
     ///////////////
+  }
+
+  resetFormSearch() {
+    this.invalid();
+
+    // Reset search filter
+    this.receivedAdressSelected = null;
+    this.receiptSelected = null;
+    this.productSelected = null;
+    this.driverSelected = null;
+    this.licensePlateSelected = null;
+
+    this.columnsRowProductCategory = [];
+    this.columnsRowProductName = [];
+    this.displayedColumnsSection = [];
+    this.columnDefRowSumSection = [];
+    this.displayedRowSumSection = [];
+  }
+
+  invalid() {
+    if (this.range.value.start !== null || this.range.value.end !== null) {
+      this.fromToDate = `Từ ngày ${this.helper.getDateFormat(3, this.range.value.start)} đến ngày ${this.helper.getDateFormat(3, this.range.value.end)}`;
+      this.range.reset();
+    } else {
+      this.fromToDate = "Từ ngày.....................đến ngày.....................";
+    }
+
+    if (this.customerSelected) {
+      this.customer = "   " + this.customerSelected?.agencyName;
+      this.customerSelected = null;
+    } else {
+      this.customer = "";
+    }
   }
 
   getFilterList() {
@@ -141,7 +183,6 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
         this.driverList = this.sortAZ(driverList);
 
         this.progressLoading = false;
-
       }
     });
   }
@@ -168,15 +209,16 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
     this.nowDay = `..........., ngày ${m[0]} tháng ${m[1]} năm ${m[2]}`;
 
     if (this.isAgency) {
-      this.customer = this.helper.getAgencyName();
+      this.customer = "   " + this.helper.getAgencyName();
     }
   }
 
   onChangeCustomer(event: any) {
-    this.customer = this.customerSelected?.agencyName;
+    this.customer = "   " + this.customerSelected?.agencyName;
   }
 
   private setDisplayedColumns() {
+    this.productDataSource = [];
     const replacements = [
       [" SƯ TỬ", ""],
       [" Sư Tử", ""],
@@ -296,16 +338,14 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
   }
 
   private setDataSourceSection() {
-    this.searchForm.startDate = this.range.value.start !== null ? this.helper.getDateFormat(3, this.range.value.start) : "";
-    this.searchForm.endDate = this.range.value.end !== null ? this.helper.getDateFormat(3, this.range.value.end) : "";
+    this.dataSourceObject = [];
     let sumCol: any[] = [];
-
     const productTemplate = this.displayedColumnsProductName.map(x => ({ pId: x.id, pValue: "", pCategory: x.label }));
     this.orderService.searchDetails(this.searchForm).subscribe((response: any) => {
       if (response.length > 0) {
         /** Mapping data cell for Section 1 */
         /*** Hanled datasource for display on a cell */
-        response.reverse().slice(0, 10).forEach((x: any) => {
+        response.forEach((x: any) => {
           x.agencyName = this.customerList.find(i => i.id === x.agencyId)?.agencyName;
           let receipt = this.receipt.find(i => i.value === x.receipt);
           let products = productTemplate.map(x => ({ ...x }));
@@ -321,7 +361,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
             no: x.approvedNumber,
             customer: x.agencyName,
             deliveryAddress: this.compareObj(this.deliveries, x.deliveryId),
-            licensePlate: x.licensePlates,
+            licensePlate: x.licensePlates.trim(),
             receipt: receipt ? receipt.label : "",
             products: products,
             sum: x.productTotal.toString(),
@@ -330,7 +370,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
             receivedDate: x.receivedDate,
             confirmedDate: this.replaceTextInDate(x.confirmedDate),
             shippingDate: this.replaceTextInDate(x.shippingDate),
-            pickupAddress: this.cities.find(k => k.id === x.pickupId)!.label,
+            pickupAddress: this.cities.find(k => k.id === x.pickupId) ? this.cities.find(k => k.id === x.pickupId).label : "",
             driver: x.driver.trim(),
           });
           sumCol = [...sumCol, ...products];
@@ -364,20 +404,8 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
         this.displayedRowSumSection.push({ label: "s" + (this.thColspan + 2), value: sumAll1 });
 
       } else {
-        let sumAll = 0;
         this.dataSource.data = [];
-        productTemplate.forEach(e => {
-          this.columnDefRowSumSection.push("s" + productTemplate.indexOf(e));
-          this.displayedRowSumSection.push({ label: "s" + productTemplate.indexOf(e), value: 0 });
-        });
-
-        this.columnDefRowSumSection.push("s" + (this.thColspan + 1));
-        this.columnDefRowSumSection.push("s" + (this.thColspan + 2));
-        this.columnDefRowSumSection = ['footer-row-label', ...this.columnDefRowSumSection];
-        this.displayedRowSumSection.push({ label: "s" + (this.thColspan + 1), value: 0 });
-        this.displayedRowSumSection.push({ label: "s" + (this.thColspan + 1), value: sumAll });
       }
-
       this.showDetailOrderTable = true;
       this.progressLoading = false;
     });
@@ -543,7 +571,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
     mergeColRow.push({ s: { r: 1, c: colMiddleIdx }, e: { r: 1, c: colMiddleIdx + (rightHeader.length - 1) } });
     mergeColRow.push({ s: { r: 2, c: colMiddleIdx }, e: { r: 2, c: colMiddleIdx + (rightHeader.length - 1) } });
     mergeColRow.push({ s: { r: 3, c: leftHeader.length }, e: { r: 3, c: (leftHeader.length + 4) } });
-    mergeColRow.push({ s: { r: 3, c: 0 }, e: { r: 3, c: 2 } });
+    mergeColRow.push({ s: { r: 3, c: 0 }, e: { r: 3, c: 1 } });
     for (let i = 0; i < leftHeader.length; i++) {
       mergeColRow.push({ s: { r: topRowNumber, c: i }, e: { r: topRowNumber + 2, c: i } });
     }

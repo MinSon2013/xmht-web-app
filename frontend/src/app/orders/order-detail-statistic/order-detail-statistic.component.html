@@ -114,7 +114,12 @@
         </div>
     </div>
 
-    <div id="excelTabel" *ngIf="showDetailOrderTable" class="section">
+    <div *ngIf="showDetailOrderTable && !progressLoading && dataSource.data.length === 0"
+        class="d-flex justify-content-center" style="padding: 1rem;">
+        {{"MESSAGE.NO_DATA" | translate}}
+    </div>
+
+    <div id="excelTabel" *ngIf="showDetailOrderTable && dataSource.data.length > 0" class="section">
         <div id="section1" class="section-1">
             <div class="div-header">
                 <div class="div-header-right">
@@ -132,7 +137,7 @@
                     <th mat-header-cell *matHeaderCellDef [attr.rowspan]="thRowspan">
                         {{ "DETAILS_STATISTIC.NO" | translate }}</th>
                     <td mat-cell *matCellDef="let element">
-                        {{element.no}}
+                        {{ element.no !== 0 ? element.no : "-" }}
                     </td>
                 </ng-container>
 

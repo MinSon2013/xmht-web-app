@@ -55,7 +55,7 @@
         --mdb-gutter-x: 1.5rem;
         --mdb-gutter-y: 0;
         display: block;
-        border-top: 1px solid lightgrey;
+        display: inline-grid;
 
         .section-1 {
 
@@ -71,6 +71,7 @@
             .div-header {
                 padding-bottom: 1rem;
                 padding-left: 1rem;
+                border-top: 1px solid lightgrey;
 
                 span {
                     color: black;

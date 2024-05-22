@@ -64,7 +64,7 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
   }[] = [];
 
   searchForm: SearchDetailsOrder = {
-    agencyId: 0,
+    agencyId: "",
     deliveryId: "",
     pickupId: "",
     licensePlate: '',

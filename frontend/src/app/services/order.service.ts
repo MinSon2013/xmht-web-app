@@ -105,14 +105,14 @@ export class OrderService {
 
     searchDetails(obj: SearchDetailsOrder) {
         const payload = {
-            agencyId: Number(obj.agencyId),
-            deliveryId: obj.deliveryId,
-            pickupId: obj.pickupId,
-            licensePlate: obj.licensePlate,
-            driver: obj.driver,
-            receipt: obj.receipt,
+            agencyId: obj.agencyId.toString(),
+            deliveryId: obj.deliveryId.toString(),
+            pickupId: obj.pickupId.toString(),
+            licensePlate: obj.licensePlate.trim(),
+            driver: obj.driver.trim(),
+            receipt: obj.receipt.toString(),
             status: obj.status,
-            productId: obj.productId,
+            productId: obj.productId.toString(),
             startDate: obj.startDate,
             endDate: obj.endDate,
             userId: this.helper.getUserId(),
