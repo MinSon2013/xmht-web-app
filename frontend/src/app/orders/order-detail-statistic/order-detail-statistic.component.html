@@ -5,7 +5,8 @@
         <div *ngIf="!isAgency" class="div-header row">
             <span class="label">{{ "DETAILS_STATISTIC.CUSTOMER" | translate }}</span>
             <div class="" style="padding: 0;">
-                <select class="form-select select" [(ngModel)]="customerSelected">
+                <select class="form-select select" [(ngModel)]="customerSelected"
+                    (ngModelChange)="onChangeCustomer($event)">
                     <option [ngValue]="null" [disabled]="true" [selected]="true">
                         -- {{ "DETAILS_STATISTIC.SELECT_CUSTOMER" | translate }} --
                     </option>
@@ -22,7 +23,7 @@
                 <mat-label>Chọn từ ngày đến ngày</mat-label>
                 <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
                     <input matStartDate formControlName="start" placeholder="Từ ngày" />
-                    <input matEndDate formControlName="end" placeholder="Đến ngày" (dateChange)="dateRangeChange()" />
+                    <input matEndDate formControlName="end" placeholder="Đến ngày" />
                 </mat-date-range-input>
                 <mat-hint style="display: none" [hidden]="true">DD/MM/YYYY - DD/MM/YYYY</mat-hint>
                 <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
@@ -113,13 +114,15 @@
         </div>
     </div>
 
-    <div id="excelTabel" class="section">
-        <!-- <div id="excelTabel" *ngIf="showDetailOrderTable" class="section"> -->
+    <div id="excelTabel" *ngIf="showDetailOrderTable" class="section">
         <div id="section1" class="section-1">
-            <div>
-                <span>Ten khach hang</span>
+            <div class="div-header">
+                <div class="div-header-right">
+                    <span>{{"DETAILS_STATISTIC.TITLE1" | translate}}</span>
+                    <span class="span2">{{fromToDate}}</span>
+                </div>
                 <h4 class="title">{{'DETAILS_STATISTIC.DETAIL_REPORT_TITLE' | translate}}</h4>
-                <div style="background-color: white; text-align: right;">............</div>
+                <span>{{"DETAILS_STATISTIC.CUSTOMER_NAME" | translate}}{{customer}}</span>
             </div>
 
             <table mat-table [dataSource]="dataSource">
@@ -196,7 +199,7 @@
                 <!-- PICKUP ADDRESS Column -->
                 <ng-container matColumnDef="pickupAddress">
                     <th mat-header-cell *matHeaderCellDef [attr.rowspan]="thRowspan">
-                        {{'DETAILS_STATISTIC.PICKUPADDRESS' | translate}}
+                        {{'DETAILS_STATISTIC.PICKUP_ADDRESS' | translate}}
                     </th>
                     <td mat-cell *matCellDef="let element">
                         {{element.pickupAddress}}
@@ -204,12 +207,12 @@
                 </ng-container>
 
                 <!-- DELIVERY_ADDRESS Column -->
-                <ng-container matColumnDef="delivery">
+                <ng-container matColumnDef="deliveryAddress">
                     <th mat-header-cell *matHeaderCellDef [attr.rowspan]="thRowspan">
                         {{'DETAILS_STATISTIC.DELIVERY_ADDRESS' | translate}}
                     </th>
                     <td mat-cell *matCellDef="let element">
-                        {{element.delivery}}
+                        {{element.deliveryAddress}}
                     </td>
                 </ng-container>
 
@@ -302,9 +305,9 @@
         </div>
 
         <div class="div-footer-right">
-            <span>{{nowDay}}</span>
+            <span style="font-style: italic;">{{nowDay}}</span>
             <br />
-            <span>{{"DETAILS_STATISTIC.WRITER" | translate}}</span>
+            <span style="font-weight: 600;">{{"DETAILS_STATISTIC.WRITER" | translate}}</span>
         </div>
 
         <div class="div-footer div-btn">

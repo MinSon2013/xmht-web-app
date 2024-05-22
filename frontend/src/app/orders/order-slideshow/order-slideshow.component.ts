@@ -22,7 +22,7 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
   dateChange: EventEmitter<MatDatepickerInputEvent<any>> = new EventEmitter();
 
   private helper = new Helper();
-  cities: any[] = Cities;
+  pickupCities: any[] = Cities;
   receipt: any[] = RECEIPT;
   receivedStatus: number = 2;
   shippedStatus: number = 4;
@@ -32,7 +32,6 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
     end: new FormControl<Date | null>(new Date()),
   });
 
-  deliveries: any[] = [];
   productList: Product[] = [];
   agencyList: any[] = [];
 
@@ -67,6 +66,7 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
   searchForm: SearchDetailsOrder = {
     agencyId: 0,
     deliveryId: "",
+    pickupId: "",
     licensePlate: '',
     driver: '',
     receipt: '',
@@ -76,6 +76,8 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
     endDate: '',
     userId: 0,
   }
+
+  loading: boolean = true;
 
   constructor(
     public router: Router,
@@ -108,9 +110,6 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
       if (response) {
         this.agencyList = response.agencyList;
         this.productList = response.productList;
-        this.deliveries = response.deliveryList;
-        // this.progressLoading = false;
-
         this.setDisplayedColumns();
         this.setDataSourceSection();
       }
@@ -120,6 +119,7 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
   dateRangeChange(): void {
     this.dateChange.emit();
     this.range.get('end')?.valueChanges.subscribe((endDate: any) => {
+      this.loading = true;
       this.columnDefRowSumSection1 = [];
       this.displayedRowSumSection1 = [];
       this.columnDefRowSumSection2 = [];
@@ -305,7 +305,7 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
           dataSourceObject1.push({
             no: x.approvedNumber,
             customer: x.agencyName,
-            delivery: this.compareObj(this.cities, x.pickupId),
+            delivery: this.compareObj(this.pickupCities, x.pickupId),
             licensePlate: x.licensePlates,
             receipt: receipt ? receipt.label : "",
             products: products,
@@ -358,7 +358,7 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
           dataSourceObject2.push({
             no: x.approvedNumber,
             customer: x.agencyName,
-            delivery: this.compareObj(this.cities, x.pickupId),
+            delivery: this.compareObj(this.pickupCities, x.pickupId),
             licensePlate: x.licensePlates,
             receipt: receipt ? receipt.label : "",
             products: products,
@@ -397,10 +397,10 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
         this.dataSource1.data = [];
         this.dataSource2.data = [];
         productTemplate.forEach(e => {
-          this.columnDefRowSumSection1.push(e.pCategory + ".s" + productTemplate.indexOf(e));
+          this.columnDefRowSumSection1.push("s" + productTemplate.indexOf(e));
           this.displayedRowSumSection1.push({ label: "s" + productTemplate.indexOf(e), value: 0 });
 
-          this.columnDefRowSumSection2.push(e.pCategory + ".s" + productTemplate.indexOf(e));
+          this.columnDefRowSumSection2.push("s" + productTemplate.indexOf(e));
           this.displayedRowSumSection2.push({ label: "s" + productTemplate.indexOf(e), value: 0 });
         });
 
@@ -414,6 +414,8 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
         this.columnDefRowSumSection2 = ['footer-row-label', ...this.columnDefRowSumSection2];
         this.displayedRowSumSection2.push({ label: "s" + (this.thColspan + 1), value: sumAll });
       }
+
+      this.loading = false;
     });
   }
 

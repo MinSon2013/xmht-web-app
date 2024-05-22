@@ -299,7 +299,6 @@
         "PRODUCTS": "Sản phẩm",
         "SECTION_TITLE_1": "DANH SÁCH ĐỒNG Ý ĐƠN HÀNG",
         "NO": "Mã số",
-        "DELIVERY_ADDRESS": "Nơi giao",
         "SUM": "Tổng từng\n đơn hàng\n(Tấn)",
         "SUM_ALL": "Tổng cộng (Tấn)",
         "SUM_ALL1": "Tổng cộng\n(Tấn)",
@@ -314,8 +313,11 @@
         "RECEIVEDDATE": "Ngày nhận \ndự kiến",
         "CONFIRMDATE": "Ngày xác nhận\nđơn hàng",
         "SHIPPINGDATE": "Ngày giao hàng",
-        "PICKUPADDRESS": "Nơi nhận",
+        "DELIVERY_ADDRESS": "Nơi nhận",
+        "PICKUP_ADDRESS": "Nơi giao",
         "WRITER": "Người lập",
-        "DETAIL_REPORT_TITLE": "Báo cáo chi tiết"
+        "DETAIL_REPORT_TITLE": "BÁO CÁO CHI TIẾT",
+        "CUSTOMER_NAME": "Tên khách hàng\t",
+        "TITLE1": "BẢNG CHI TIẾT XUẤT HÀNG THEO MÃ SỐ"
     }
 }

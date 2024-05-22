@@ -18,7 +18,13 @@
         </mat-form-field>
     </div>
 
-    <div class="section">
+    <div *ngIf="loading" class="d-flex justify-content-center">
+        <div class="spinner-border" role="status">
+            <span class="sr-only" id="loading"></span>
+        </div>
+    </div>
+
+    <div class="section" *ngIf="!loading">
         <div id="section1" class="section-1">
             <h4 class="title">{{'SLIDESHOW.SECTION_TITLE_1' | translate}}</h4>
 

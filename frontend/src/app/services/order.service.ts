@@ -107,6 +107,7 @@ export class OrderService {
         const payload = {
             agencyId: Number(obj.agencyId),
             deliveryId: obj.deliveryId,
+            pickupId: obj.pickupId,
             licensePlate: obj.licensePlate,
             driver: obj.driver,
             receipt: obj.receipt,

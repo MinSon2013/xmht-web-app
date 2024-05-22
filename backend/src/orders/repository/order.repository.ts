@@ -305,6 +305,10 @@ export class OrderRepository extends Repository<Order> {
             sql = sql.andWhere('order.agency_id = :agencyId', { agencyId: detailsOrderDto.agencyId })
         }
         // Noi nhan
+        if (detailsOrderDto.pickupId && detailsOrderDto.pickupId.length > 0) {
+            sql = sql.andWhere('order.pickup_id = :pickupId', { pickupId: Number(detailsOrderDto.pickupId) })
+        }
+        // Noi giao
         if (detailsOrderDto.deliveryId && detailsOrderDto.deliveryId.length > 0) {
             sql = sql.andWhere('order.delivery_id = :deliveryId', { deliveryId: Number(detailsOrderDto.deliveryId) })
         }
