@@ -121,7 +121,7 @@ export class StatisticsComponent implements OnInit {
 
   emitSocket() {
     this.socket.on('emitGetProductList', (response: Product[]) => {
-      this.getProducts();
+      this.getProducts(1);
     })
     this.socket.on('emitGetOrderList', (response: Order[]) => {
       this.getDataChartByDate();
@@ -129,9 +129,13 @@ export class StatisticsComponent implements OnInit {
     })
   }
 
-  getProducts() {
+  getProducts(n?: number) {
     this.productService.getProductList().subscribe((response: any) => {
       this.productList = response;
+
+      if (n) {
+        this.getDataChartPie();
+      }
     });
   }
 

@@ -167,6 +167,9 @@ export class OrderListComponent implements OnInit {
     this.socket.on('emitGetOrderList', (response: Order[]) => {
       this.onSearch();
     })
+    this.socket.on('emitGetProductList', (response: Order[]) => {
+      this.onSearch();
+    })
   }
 
   ngAfterViewInit() {

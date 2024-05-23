@@ -95,14 +95,14 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
   }
 
   emitSocket() {
-    this.socket.on('emitGetProductList', (response: Product[]) => {
-      this.getProductList();
-    })
     this.socket.on('emitGetOrderList', (response: Product[]) => {
       this.setDataSourceSection();
     })
     this.socket.on('statusOrderChanged', (response: Product[]) => {
       this.setDataSourceSection();
+    })
+    this.socket.on('emitGetProductList', (response: Product[]) => {
+      this.getProductList();
     })
   }
 
@@ -111,6 +111,8 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
       if (response.length > 0) {
         this.productList = response;
         this.productList.sort((a, b) => (a.category < b.category ? -1 : 1));
+        this.setDisplayedColumns();
+        this.setDataSourceSection();
       } else {
         this.productList = [];
       }

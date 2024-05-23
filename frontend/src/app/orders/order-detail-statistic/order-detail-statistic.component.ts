@@ -119,11 +119,11 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
   }
 
   emitSocket() {
-    this.socket.on('emitGetProductList', (response: Product[]) => {
-      this.getProductList();
-    })
     this.socket.on('emitGetOrderList', (response: Product[]) => {
       this.getDataSource();
+    });
+    this.socket.on('emitGetProductList', (response: Product[]) => {
+      this.getProductList();
     })
   }
 
@@ -132,6 +132,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
       if (response.length > 0) {
         this.productList = response;
         this.productList.sort((a, b) => (a.category < b.category ? -1 : 1));
+        this.onShow();
       } else {
         this.productList = [];
       }
@@ -154,6 +155,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
       this.searchForm.agencyId = this.helper.getAgencyId() + "";
     }
     this.getDataSource();
+    this.autoScrollView();
   }
 
   resetFormSearch() {
@@ -439,7 +441,6 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
           this.displayedRowSumSection.push({ label: "s" + productTemplate.indexOf(e), value: 0 });
         });
 
-        // Section1
         this.columnDefRowSumSection.push("s" + (this.thColspan + 1));
         this.columnDefRowSumSection = ['footer-row-label', ...this.columnDefRowSumSection];
         this.displayedRowSumSection.push({ label: "s" + (this.thColspan + 1), value: 0 });
@@ -483,6 +484,11 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
         break;
     }
     return cls;
+  }
+
+  autoScrollView() {
+    const element = document.getElementById("excelTabel");
+    element?.scrollIntoView();
   }
 
   onExportExcel() {
