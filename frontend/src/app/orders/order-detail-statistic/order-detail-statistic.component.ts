@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { OrderService } from '../../services/order.service';
@@ -106,6 +106,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
     public translate: TranslateService,
     private socket: CustomSocket,
     private productService: ProductService,
+    private changeDetectorRefs: ChangeDetectorRef,
   ) {
   }
 
@@ -120,7 +121,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
 
   emitSocket() {
     this.socket.on('emitGetOrderList', (response: Product[]) => {
-      this.getDataSource();
+      this.setDisplayedColumns();
     });
     this.socket.on('emitGetProductList', (response: Product[]) => {
       this.getProductList();
@@ -131,7 +132,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
     this.productService.getProductList().subscribe((response: any) => {
       if (response.length > 0) {
         this.productList = response;
-        this.productList.sort((a, b) => (a.category < b.category ? -1 : 1));
+        this.productList.sort((a, b) => (a.category > b.category ? -1 : 1));
         this.onShow();
       } else {
         this.productList = [];
@@ -154,8 +155,8 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
     if (this.isAgency) {
       this.searchForm.agencyId = this.helper.getAgencyId() + "";
     }
-    this.getDataSource();
     this.autoScrollView();
+    this.setDisplayedColumns();
   }
 
   resetFormSearch() {
@@ -207,11 +208,6 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
         this.progressLoading = false;
       }
     });
-  }
-
-  getDataSource() {
-    this.setDisplayedColumns();
-    this.setDataSourceSection();
   }
 
   sortAZ(array: any[]) {
@@ -361,6 +357,9 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
 
     /** Handle columndef for section1 */
     this.displayedColumnsSection = [...this.colDefSection, ...this.columnsRowProductName, 'receipt', 'sum', 'license_plate', 'driver']
+    this.changeDetectorRefs.detectChanges();
+
+    this.setDataSourceSection();
   }
 
   private setDataSourceSection() {
