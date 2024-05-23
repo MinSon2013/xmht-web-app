@@ -10,6 +10,8 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { SearchDetailsOrder } from '../../models/search';
 import * as XLSX from 'xlsx-js-style';
 import { ExcelDetailsConfig } from '../../helpers/excel-details.config';
+import { ProductService } from '../../services/product.service';
+import { CustomSocket } from '../../sockets/custom-socket';
 
 @Component({
   selector: 'app-order-detail-statistic',
@@ -102,6 +104,8 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
     public router: Router,
     private orderService: OrderService,
     public translate: TranslateService,
+    private socket: CustomSocket,
+    private productService: ProductService,
   ) {
   }
 
@@ -111,6 +115,27 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.getFilterList();
     this.initHeader();
+    this.emitSocket();
+  }
+
+  emitSocket() {
+    this.socket.on('emitGetProductList', (response: Product[]) => {
+      this.getProductList();
+    })
+    this.socket.on('emitGetOrderList', (response: Product[]) => {
+      this.getDataSource();
+    })
+  }
+
+  getProductList() {
+    this.productService.getProductList().subscribe((response: any) => {
+      if (response.length > 0) {
+        this.productList = response;
+        this.productList.sort((a, b) => (a.category < b.category ? -1 : 1));
+      } else {
+        this.productList = [];
+      }
+    });
   }
 
   onShow() {
@@ -125,29 +150,20 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
     this.searchForm.driver = this.driverSelected ? this.driverSelected : "";
     this.searchForm.receipt = this.receiptSelected ? this.receiptSelected.value : "";
     this.searchForm.productId = this.productSelected ? this.productSelected.id : "";
-    this.resetFormSearch();
+    if (this.isAgency) {
+      this.searchForm.agencyId = this.helper.getAgencyId() + "";
+    }
     this.getDataSource();
-  }
-
-  emitSocket() {
-    ///////////////
   }
 
   resetFormSearch() {
     this.invalid();
-
     // Reset search filter
     this.receivedAdressSelected = null;
     this.receiptSelected = null;
     this.productSelected = null;
     this.driverSelected = null;
     this.licensePlateSelected = null;
-
-    this.columnsRowProductCategory = [];
-    this.columnsRowProductName = [];
-    this.displayedColumnsSection = [];
-    this.columnDefRowSumSection = [];
-    this.displayedRowSumSection = [];
   }
 
   invalid() {
@@ -164,6 +180,9 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
     } else {
       this.customer = "";
     }
+    if (this.isAgency) {
+      this.customer = "   " + this.helper.getAgencyName();
+    }
   }
 
   getFilterList() {
@@ -171,6 +190,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
       if (response) {
         this.customerList = response.agencyList;
         this.productList = response.productList;
+        this.productList.sort((a, b) => (a.category < b.category ? -1 : 1));
         this.deliveries = response.deliveryList;
         let licensePlateList = response.licensePlateList;
         let driverList = response.driverList;
@@ -219,6 +239,10 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
 
   private setDisplayedColumns() {
     this.productDataSource = [];
+    this.columnsRowProductCategory = [];
+    this.columnsRowProductName = [];
+    this.displayedColumnsSection = [];
+
     const replacements = [
       [" SƯ TỬ", ""],
       [" Sư Tử", ""],
@@ -288,7 +312,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
     this.productDataSource.push({
       displayedCategory: PRODUCT_CATEGORIES[0].label,
       categoryValue: PRODUCT_CATEGORIES[0].value.toString(),
-      productList: sutuList.reverse(),
+      productList: sutuList,
       pColspan: sutuList.length,
     });
 
@@ -296,7 +320,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
     this.productDataSource.push({
       displayedCategory: PRODUCT_CATEGORIES[1].label,
       categoryValue: PRODUCT_CATEGORIES[1].value.toString(),
-      productList: phutuList.reverse(),
+      productList: phutuList,
       pColspan: phutuList.length,
     });
 
@@ -304,7 +328,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
     this.productDataSource.push({
       displayedCategory: PRODUCT_CATEGORIES[2].label,
       categoryValue: PRODUCT_CATEGORIES[2].value.toString(),
-      productList: xaList.reverse(),
+      productList: xaList,
       pColspan: xaList.length,
     });
 
@@ -312,7 +336,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
     this.productDataSource.push({
       displayedCategory: PRODUCT_CATEGORIES[3].label,
       categoryValue: PRODUCT_CATEGORIES[3].value.toString(),
-      productList: khacList.reverse(),
+      productList: khacList,
       pColspan: khacList.length,
     });
 
@@ -359,7 +383,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
 
           this.dataSourceObject.push({
             no: x.approvedNumber,
-            customer: x.agencyName,
+            customer: x.agencyName ? x.agencyName : this.helper.getAgencyName(),
             deliveryAddress: this.compareObj(this.deliveries, x.deliveryId),
             licensePlate: x.licensePlates.trim(),
             receipt: receipt ? receipt.label : "",
@@ -375,6 +399,9 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
           });
           sumCol = [...sumCol, ...products];
         });
+
+        this.columnDefRowSumSection = [];
+        this.displayedRowSumSection = [];
 
         /** Set sum value footẻ of every product */
         let subSumColsSection = this.groupByValue(sumCol, 'pCategory');
@@ -405,6 +432,17 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
 
       } else {
         this.dataSource.data = [];
+        this.columnDefRowSumSection = [];
+        this.displayedRowSumSection = [];
+        productTemplate.forEach(e => {
+          this.columnDefRowSumSection.push("s" + productTemplate.indexOf(e));
+          this.displayedRowSumSection.push({ label: "s" + productTemplate.indexOf(e), value: 0 });
+        });
+
+        // Section1
+        this.columnDefRowSumSection.push("s" + (this.thColspan + 1));
+        this.columnDefRowSumSection = ['footer-row-label', ...this.columnDefRowSumSection];
+        this.displayedRowSumSection.push({ label: "s" + (this.thColspan + 1), value: 0 });
       }
       this.showDetailOrderTable = true;
       this.progressLoading = false;

@@ -325,7 +325,6 @@
         margin-top: 0.25rem;
         margin-right: 1rem;
         width: 100%;
-        cursor: pointer;
         text-align: right;
 
         .btn-search {
@@ -352,6 +351,19 @@
                 padding-bottom: 5px;
             }
         }
+
+        .span-clear-filter {
+            font-style: italic;
+            cursor: pointer;
+            font-weight: 400;
+            margin-right: 1rem;
+            color: darkgray;
+            font-family: 'Roboto';
+        }
+
+        .span-clear-filter:hover {
+            color: black
+        }
     }
 
     span {
@@ -366,11 +378,13 @@
 
     .select-1 {
         width: 58% !important;
+        cursor: pointer;
     }
 
     select {
         width: 50% !important;
         max-height: 40px;
+        cursor: pointer;
     }
 
     .id {

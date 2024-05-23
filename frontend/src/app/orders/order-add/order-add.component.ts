@@ -14,6 +14,8 @@ import { DeliveryService } from '../../services/delivery.service';
 import { AgencyService } from '../../services/agency.service';
 import { ProductService } from '../../services/product.service';
 import { CONFIG } from '../../common/config';
+import { CustomSocket } from '../../sockets/custom-socket';
+import { Product } from '../../models/product';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -95,12 +97,20 @@ export class OrderAddComponent implements OnInit {
     private deliveryService: DeliveryService,
     private agencyService: AgencyService,
     private productService: ProductService,
+    private socket: CustomSocket,
   ) { }
 
   ngOnInit(): void {
     this.getAgencys();
     this.getProducts();
     this.getDelivery();
+    this.emitSocket();
+  }
+
+  emitSocket() {
+    this.socket.on('emitGetProductList', (response: Product[]) => {
+      this.getProducts();
+    })
   }
 
   getAgencys() {
@@ -117,6 +127,7 @@ export class OrderAddComponent implements OnInit {
     this.productService.getProductList().subscribe((response: any) => {
       this.productList = response;
       this.setProductOrder();
+      this.productList.sort((a, b) => (a.category < b.category ? -1 : 1));
     });
   }
 
@@ -133,11 +144,11 @@ export class OrderAddComponent implements OnInit {
         id: element.id,
         name: element.name,
         quantity: '',
+        category: element.category,
       };
       list.push(item);
     });
-    list.sort((a, b) => (a.id < b.id ? -1 : 1));
-    this.order.products = list;
+    this.order.products = list.sort((a, b) => a.category < b.category ? -1 : 1);
   }
 
   onSubmit() {
@@ -191,6 +202,7 @@ export class OrderAddComponent implements OnInit {
     this.order.productTotal = 0;
     this.order.products.forEach(element => {
       this.order.productTotal += Number(element.quantity);
+      this.order.productTotal = Math.round(this.order.productTotal * 100000000) / 100000000;
     });
   }
 

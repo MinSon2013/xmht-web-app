@@ -24,6 +24,7 @@ import { DeliveryService } from '../services/delivery.service';
 import { ProductService } from '../services/product.service';
 import { AgencyService } from '../services/agency.service';
 import { CONFIG } from '../common/config';
+import { Product } from '../models/product';
 
 @Component({
   selector: 'app-order-list',
@@ -73,7 +74,8 @@ export class OrderListComponent implements OnInit {
     productId: 0,
     status: 0,
     startDate: '',
-    endDate: ''
+    endDate: '',
+    approvedNumber: ''
   }
 
   range = new FormGroup({
@@ -120,6 +122,7 @@ export class OrderListComponent implements OnInit {
         this.dataSource.data.forEach(x => {
           x.agencyName = this.agencyList.find(i => i.id === x.agencyId)?.agencyName;
           x.products.sort((a, b) => (a.id < b.id ? -1 : 1));
+          x.products.sort((a, b) => (a.category < b.category ? -1 : 1));
         });
         if (this.isStocker) {
           this.dataSource.data = this.dataSource.data.filter(
@@ -150,6 +153,7 @@ export class OrderListComponent implements OnInit {
   getProducts() {
     this.productService.getProductList().subscribe((response: any) => {
       this.productList = response;
+      this.productList.sort((a, b) => (a.category < b.category ? -1 : 1));
     });
   }
 
@@ -161,7 +165,7 @@ export class OrderListComponent implements OnInit {
 
   emitSocket() {
     this.socket.on('emitGetOrderList', (response: Order[]) => {
-      this.getData();
+      this.onSearch();
     })
   }
 
@@ -186,7 +190,7 @@ export class OrderListComponent implements OnInit {
     const elements = Array.from(
       document.getElementsByClassName('body') as HTMLCollectionOf<HTMLElement>,
     );
-    if (row && row.status !== 1 || this.isAreaManager) {
+    if (row && row.status !== 1 && row.status !== 2 || this.isAreaManager) {
       const dialogRef = this.dialog.open(DialogConfirmOrderComponent, {
         data: {
           row,
@@ -353,6 +357,8 @@ export class OrderListComponent implements OnInit {
   }
 
   getProductName(products: any[]): string {
+    products.sort((a, b) => (a.id < b.id ? -1 : 1));
+    products.sort((a, b) => (a.category < b.category ? -1 : 1));
     let str = '';
     products.forEach(el => {
       str += el.name + '\n';
@@ -382,12 +388,10 @@ export class OrderListComponent implements OnInit {
         });
         this.dataSourceClone = new MatTableDataSource<Order>(this.dataSource.data);
         this.hasData = true;
-        this.resetFormSearch();
       } else {
         this.dataSource.data = [];
         this.hasData = false;
         this.helper.showWarning(this.toastr, "Không có thông tin cần tìm.");
-        this.resetFormSearch();
       }
     });
   }
@@ -409,7 +413,7 @@ export class OrderListComponent implements OnInit {
     this.productSelected = null;
     this.selectedStatus = null;
     this.range.reset();
-    this.searchForm.approvedNumber = 0;
+    this.searchForm.approvedNumber = '';
     this.searchForm.agencyId = 0;
     this.searchForm.productId = 0;
     this.searchForm.status = 0;
@@ -448,6 +452,10 @@ export class OrderListComponent implements OnInit {
 
   onSlideShow() {
     this.router.navigate([this.routingSlideShow]);
+  }
+
+  onlyNumberKey(event: any) {
+    return this.helper.onlyNumberKey(event);
   }
 
 }

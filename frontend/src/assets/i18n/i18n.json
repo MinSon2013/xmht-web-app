@@ -53,7 +53,8 @@
         "SELECT_AGENCY": "Chọn khách hàng",
         "SELECT_PRODUCT": "Chọn sản phẩm",
         "CONFIRMED_DATE": "Ngày xác nhận",
-        "SHIPPING_DATE": "Ngày giao hàng"
+        "SHIPPING_DATE": "Ngày giao hàng",
+        "RESET_FORM_SEARCH": "Xóa bộ lọc"
     },
     "PRODUCT": {
         "MENU_TITLE": "Sản phẩm",

@@ -149,6 +149,7 @@ export class PrintPdfComponent implements OnInit {
         let idx = 0;
         const pickupAddress = this.cities.find(x => x.id === this.data.pickupId) ? this.cities.find(x => x.id === this.data.pickupId).label : '';
         order.products.sort((a, b) => (a.id < b.id ? -1 : 1));
+        order.products.sort((a, b) => (a.category < b.category ? -1 : 1));
         order.products.forEach(x => {
           idx = idx + 1;
           data = {

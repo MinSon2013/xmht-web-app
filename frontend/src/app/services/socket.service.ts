@@ -4,6 +4,7 @@ import { Notify } from '../models/notify';
 import { Order } from '../models/order';
 import { CustomSocket } from '../sockets/custom-socket';
 import { Reports } from '../models/report';
+import { Product } from '../models/product';
 
 @Injectable({
     providedIn: 'root'
@@ -213,6 +214,33 @@ export class SocketService {
         this.socket.emit('deleteReport', id);
         return new Observable((subscribe) => {
             this.socket.on('reportDeleted', (data: any) => {
+                subscribe.next(data);
+            });
+        })
+    }
+
+    createdProduct(product: Product | any) {
+        this.socket.emit('addProduct', product);
+        return new Observable((subscribe) => {
+            this.socket.on('productAdded', (data: any) => {
+                subscribe.next(data);
+            });
+        })
+    }
+
+    updatedProduct(product: Product | any) {
+        this.socket.emit('updateProduct', product);
+        return new Observable((subscribe) => {
+            this.socket.on('productUpdated', (data: any) => {
+                subscribe.next(data);
+            });
+        })
+    }
+
+    deleteProduct(id: number) {
+        this.socket.emit('deleteProduct', id);
+        return new Observable((subscribe) => {
+            this.socket.on('productDeleted', (data: any) => {
                 subscribe.next(data);
             });
         })

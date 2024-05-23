@@ -7,7 +7,8 @@
         <span class="col-6" for="id">{{ "ORDER.SEARCH_ID" | translate }}</span>
         <input matInput
           class="col-6 appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="id" type="text" maxlength="20" [(ngModel)]="searchForm.approvedNumber" />
+          id="id" type="text" maxlength="20" [(ngModel)]="searchForm.approvedNumber"
+          (keydown)="onlyNumberKey($event)" />
       </div>
       <div class="col-6 row created-date">
         <span class="col-5" for="createdDate">{{
@@ -95,6 +96,7 @@
       </div>
     </div>
     <div class="action-submit">
+      <span (click)="resetFormSearch()" class="span-clear-filter">{{ "ORDER.RESET_FORM_SEARCH" | translate }}</span>
       <button mat-raised-button type="submit" class="btn-search" (click)="onSearch()">
         <mat-icon aria-hidden="false" aria-label="Search icon" fontSet="fas" fontIcon="fa-magnifying-glass"
           class="fa-search"></mat-icon>

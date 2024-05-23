@@ -10,6 +10,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { FormGroup } from '@angular/forms';
 import { STATUS, STOCKER_ROLE, USER_AREA_MANAGER_ROLE } from '../constants/const-data';
 import { AgencyService } from '../services/agency.service';
+import { CustomSocket } from '../sockets/custom-socket';
+import { Product } from '../models/product';
+import { Order } from '../models/order';
 
 export interface Label { }
 export interface ChartDataSets {
@@ -104,6 +107,7 @@ export class StatisticsComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     public translate: TranslateService,
     private agencyService: AgencyService,
+    private socket: CustomSocket,
   ) {
     this.getProducts();
     this.getAgencys();
@@ -112,6 +116,17 @@ export class StatisticsComponent implements OnInit {
   ngOnInit() {
     this.getDataChartPie();
     this.getDataChartByDate();
+    this.emitSocket();
+  }
+
+  emitSocket() {
+    this.socket.on('emitGetProductList', (response: Product[]) => {
+      this.getProducts();
+    })
+    this.socket.on('emitGetOrderList', (response: Order[]) => {
+      this.getDataChartByDate();
+      this.getDataChartPie();
+    })
   }
 
   getProducts() {

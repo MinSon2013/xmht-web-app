@@ -164,7 +164,6 @@ export class DialogDetailNotifyComponent implements OnInit {
           tap((res) => { })
         ).subscribe((response: any) => {
           if (response) {
-            console.log(response.id)
             this.notify.id = response.id;
             if (this.notify.file) {
               this.notify.fileName = this.getFilename(this.notify.fileName);

@@ -1,6 +1,7 @@
 .ng-container {
     padding: 1rem 1rem 2rem;
     overflow: scroll;
+    height: 100%;
 
     .div-header {
         display: block;
@@ -51,6 +52,7 @@
 
         .section-1 {
             margin-right: 1%;
+            background-color: lightgray;
 
             h4 {
                 background-color: lightgray;
@@ -60,6 +62,8 @@
         }
 
         .section-2 {
+            background-color: palegreen;
+
             h4 {
                 background-color: palegreen;
                 padding-bottom: 0.5rem;
@@ -82,7 +86,7 @@
                 border-bottom: 1px solid grey;
                 border-right: 1px solid grey;
                 border-style: dotted;
-                padding: 0.5rem;
+                padding: 0.5rem 0.25rem;
                 font-size: 12pt;
             }
 

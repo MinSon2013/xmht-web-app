@@ -87,7 +87,7 @@ export class DialogConfirmOrderComponent implements OnInit {
       this.order.receivedDate = this.data.row.receivedDate;
       this.order.status = this.data.row.status;
       this.order.note = this.data.row.note;
-      this.order.products = this.data.row.products;
+      this.order.products = this.data.row.products.sort((a: any, b: any) => a.category < b.category ? -1 : 1);
       this.order.contract = this.data.row.contract;
       this.order.sender = this.data.row.sender;
       this.order.isViewed = this.data.row.isViewed;

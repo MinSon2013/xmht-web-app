@@ -18,6 +18,8 @@ import { NotificationDTO } from '../notification/dto/notification.dto';
 import { Notification } from '../notification/entities/notification.entity';
 import { ModifyReportDTO } from '../report/dto/modify-report.dto';
 import { ReportService } from '../report/report.service';
+import { ProductsService } from '../products/products.service';
+import { ProductDTO } from '../products/dto/modify-product.dto';
 
 @WebSocketGateway({ cors: { origin: '*' } })
 export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect, OnModuleInit {
@@ -31,6 +33,7 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect, 
     private reportService: ReportService,
     private readonly jwtService: JwtService,
     private configService: ConfigService,
+    private productService: ProductsService,
   ) { }
 
   async onModuleInit() {
@@ -240,4 +243,36 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect, 
     await this.server.to(client.id).emit('reportDeleted', deleteReport);
     await this.emitGetReportList(client);
   }
+
+  /** Product events service */
+  /** START Product */
+  @SubscribeMessage('addProduct')
+  async onAddProduct(client: Socket, payload: ProductDTO) {
+    console.log('api-gateway: onAddProduct....' + JSON.stringify(client.data))
+    const addProduct = await this.productService.create(payload);
+    await this.server.to(client.id).emit('productAdded', addProduct);
+    await this.emitGetProductList(client);
+  }
+
+  @SubscribeMessage('updateProduct')
+  async onUpdateProduct(client: Socket, payload: ProductDTO) {
+    console.log('api-gateway: onUpdateProduct....' + JSON.stringify(client.data))
+    const updateProduct = await this.productService.update(payload);
+    await this.server.to(client.id).emit('productUpdated', updateProduct);
+    await this.emitGetProductList(client);
+  }
+
+  @SubscribeMessage('deleteProduct')
+  async deleteProduct(client: Socket, payload: any) {
+    console.log('api-gateway: deleteProduct....' + JSON.stringify(client.data))
+    const deleteProduct = await this.productService.delete(payload);
+    await this.server.to(client.id).emit('productDeleted', deleteProduct);
+    await this.emitGetProductList(client);
+  }
+
+  async emitGetProductList(client: Socket) {
+    console.log('api-gateway: emitGetProductList..... + ' + client.data.agencyId)
+    return this.server.emit('emitGetProductList', 'emitGetProductList');
+  }
+  /** END Product */
 }

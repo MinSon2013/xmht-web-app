@@ -36,4 +36,5 @@ export interface ProductItem {
   id: number;
   name: string;
   quantity: string;
+  category: number;
 }

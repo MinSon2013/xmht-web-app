@@ -121,7 +121,9 @@ export class HeaderComponent implements OnInit {
   }
 
   closeSubMenu(submenu: MatMenuTrigger) {
-    submenu.closeMenu();
+    if (submenu) {
+      submenu.closeMenu();
+    }
   }
 
   onLogOut() {

@@ -1,5 +1,5 @@
 export class DetailsOrderDTO {
-    agencyId: number;
+    agencyId: string;
     deliveryId: string; // Giao
     pickupId: string; // Nhan
     licensePlate: string;

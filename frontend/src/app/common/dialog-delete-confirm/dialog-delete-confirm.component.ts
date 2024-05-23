@@ -41,11 +41,6 @@ export class DialogDeleteConfirmComponent implements OnInit {
 
   onSubmit(data: any) {
     switch (data.type) {
-      case SERVICE_TYPE.PRODUCTSERVICE:
-        this.productService.delete(data.id).subscribe((response) => {
-          this.onResponse(data.id, 'MESSAGE.DELETE_PRODUCT', response);
-        });
-        break;
       case SERVICE_TYPE.AGENCYSERVICE:
         this.agencyService.delete(data.row.id, data.row.userId).subscribe((response) => {
           this.onResponse(data.id, 'MESSAGE.DELETE_AGENCY', response);
@@ -78,10 +73,18 @@ export class DialogDeleteConfirmComponent implements OnInit {
           this.onResponse(data.id, 'MESSAGE.DELETE_USER', response);
         });
         break;
-
       case SERVICE_TYPE.REPORTSERVICE:
-        this.reportService.delete(data.id).subscribe((response) => {
+        this.socketService.deleteReport(data.id).pipe(
+          tap((res) => { })
+        ).subscribe((response: any) => {
           this.onResponse(data.id, 'MESSAGE.DELETE_REPORT', response);
+        });
+        break;
+      case SERVICE_TYPE.PRODUCTSERVICE:
+        this.socketService.deleteProduct(data.id).pipe(
+          tap((res) => { })
+        ).subscribe((response: any) => {
+          this.onResponse(data.id, 'MESSAGE.DELETE_PRODUCT', response);
         });
         break;
     }

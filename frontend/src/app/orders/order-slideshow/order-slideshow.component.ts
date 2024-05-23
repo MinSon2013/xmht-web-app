@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { OrderService } from '../../services/order.service';
@@ -9,8 +9,9 @@ import { Cities, PRODUCT_CATEGORIES, RECEIPT } from '../../constants/const-data'
 import { Product } from '../../models/product';
 import { Helper } from '../../helpers/helper';
 import { FormControl, FormGroup } from '@angular/forms';
-import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { SearchDetailsOrder } from '../../models/search';
+import { CustomSocket } from '../../sockets/custom-socket';
+import { ProductService } from '../../services/product.service';
 
 @Component({
   selector: 'app-order-slideshow',
@@ -18,9 +19,6 @@ import { SearchDetailsOrder } from '../../models/search';
   styleUrls: ['./order-slideshow.component.scss']
 })
 export class OrderSlideshowComponent implements OnInit, OnDestroy {
-  @Output()
-  dateChange: EventEmitter<MatDatepickerInputEvent<any>> = new EventEmitter();
-
   private helper = new Helper();
   pickupCities: any[] = Cities;
   receipt: any[] = RECEIPT;
@@ -85,16 +83,38 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
     public translate: TranslateService,
     private location: Location,
     private displayService: DisplayService,
+    private socket: CustomSocket,
+    private productService: ProductService,
   ) {
   }
 
   ngOnInit() {
     this.displayService.setNavigationVisibility(false);
     this.getFilterList();
+    this.emitSocket();
   }
 
   emitSocket() {
-    ///////////////
+    this.socket.on('emitGetProductList', (response: Product[]) => {
+      this.getProductList();
+    })
+    this.socket.on('emitGetOrderList', (response: Product[]) => {
+      this.setDataSourceSection();
+    })
+    this.socket.on('statusOrderChanged', (response: Product[]) => {
+      this.setDataSourceSection();
+    })
+  }
+
+  getProductList() {
+    this.productService.getProductList().subscribe((response: any) => {
+      if (response.length > 0) {
+        this.productList = response;
+        this.productList.sort((a, b) => (a.category < b.category ? -1 : 1));
+      } else {
+        this.productList = [];
+      }
+    });
   }
 
   ngOnDestroy() {
@@ -116,16 +136,11 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
     });
   }
 
-  dateRangeChange(): void {
-    this.dateChange.emit();
-    this.range.get('end')?.valueChanges.subscribe((endDate: any) => {
+  dateRangeChange(dateRangeStart: HTMLInputElement, dateRangeEnd: HTMLInputElement) {
+    if (dateRangeEnd.value) {
       this.loading = true;
-      this.columnDefRowSumSection1 = [];
-      this.displayedRowSumSection1 = [];
-      this.columnDefRowSumSection2 = [];
-      this.displayedRowSumSection2 = [];
       this.setDataSourceSection();
-    })
+    }
   }
 
   private setDisplayedColumns() {
@@ -198,7 +213,7 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
     this.productDataSource.push({
       displayedCategory: PRODUCT_CATEGORIES[0].label,
       categoryValue: PRODUCT_CATEGORIES[0].value.toString(),
-      productList: sutuList.reverse(),
+      productList: sutuList,
       pColspan: sutuList.length,
     });
 
@@ -206,7 +221,7 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
     this.productDataSource.push({
       displayedCategory: PRODUCT_CATEGORIES[1].label,
       categoryValue: PRODUCT_CATEGORIES[1].value.toString(),
-      productList: phutuList.reverse(),
+      productList: phutuList,
       pColspan: phutuList.length,
     });
 
@@ -214,7 +229,7 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
     this.productDataSource.push({
       displayedCategory: PRODUCT_CATEGORIES[2].label,
       categoryValue: PRODUCT_CATEGORIES[2].value.toString(),
-      productList: xaList.reverse(),
+      productList: xaList,
       pColspan: xaList.length,
     });
 
@@ -222,7 +237,7 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
     this.productDataSource.push({
       displayedCategory: PRODUCT_CATEGORIES[3].label,
       categoryValue: PRODUCT_CATEGORIES[3].value.toString(),
-      productList: khacList.reverse(),
+      productList: khacList,
       pColspan: khacList.length,
     });
 
@@ -272,151 +287,188 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
       sum: string,
     }[] = [];
 
-    let responseReceived = [];
-    let responseShipped = [];
+    let responseReceived: any[] = [];
+    let responseShipped: any[] = [];
 
     const productTemplate = this.displayedColumnsProductName.map(x => ({ pId: x.id, pValue: "", pCategory: x.label }));
+
     this.orderService.searchDetails(this.searchForm).subscribe((response: any) => {
       if (response.length > 0) {
         let groupByResponse: any[] = this.groupByValue(response, 'status');
-        if (groupByResponse[0][0].status === this.receivedStatus) {
-          responseReceived = groupByResponse[0];
-          responseShipped = groupByResponse[1];
-        } else {
-          responseShipped = groupByResponse[0];
-          responseReceived = groupByResponse[1];
+        if (groupByResponse.length > 0 && groupByResponse[0] !== undefined) {
+          if (groupByResponse[0][0].status === this.receivedStatus) {
+            responseReceived = groupByResponse[0]
+          } else {
+            responseShipped = groupByResponse[0];
+          }
         }
+        if (groupByResponse.length > 0 && groupByResponse[1] !== undefined) {
+          if (groupByResponse[1][0].status === this.shippedStatus) {
+            responseShipped = groupByResponse[1];
+          } else {
+            responseReceived = groupByResponse[1];
+          }
+        }
+
 
         /** Mapping data cell for Section 1 */
         /** START */
         /*** Hanled datasource for display on a cell */
-        responseReceived.forEach((x: any) => {
-          x.agencyName = this.agencyList.find(i => i.id === x.agencyId)?.agencyName;
-          let receipt = this.receipt.find(i => i.value === x.receipt);
-          let products = productTemplate.map(x => ({ ...x }));
-          x.products.forEach((k: any) => {
-            products.map(y => {
-              if (y.pId === k.id) {
-                y.pValue = k.quantity;
+        if (responseReceived.length > 0) {
+          responseReceived.forEach((x: any) => {
+            x.agencyName = this.agencyList.find(i => i.id === x.agencyId)?.agencyName;
+            let receipt = this.receipt.find(i => i.value === x.receipt);
+            let products = productTemplate.map(x => ({ ...x }));
+            x.products.forEach((k: any) => {
+              products.map(y => {
+                if (y.pId === k.id) {
+                  y.pValue = k.quantity;
+                }
+              });
+            });
+
+            dataSourceObject1.push({
+              no: x.approvedNumber,
+              customer: x.agencyName,
+              delivery: this.compareObj(this.pickupCities, x.pickupId),
+              licensePlate: x.licensePlates,
+              receipt: receipt ? receipt.label : "",
+              products: products,
+              sum: x.productTotal.toString(),
+            });
+            sumCols1 = [...sumCols1, ...products];
+          });
+
+          this.columnDefRowSumSection1 = [];
+          this.displayedRowSumSection1 = [];
+
+          /** Set sum value footẻ of every product */
+          let subSumColsSection1 = this.groupByValue(sumCols1, 'pCategory');
+          // Sum all of sum
+          let sumAll1 = this.helper.sum(dataSourceObject1, 'sum');
+
+          this.dataSource1.data = dataSourceObject1;
+          let sumColRow1 = productTemplate.map(x => ({ ...x }));
+          subSumColsSection1.forEach((e: any) => {
+            this.columnDefRowSumSection1.push(e[0].pCategory + ".s" + subSumColsSection1.indexOf(e));
+            let sum = this.helper.sum(e, 'pValue');
+            sumColRow1.map(y => {
+              if (y.pId === e[0].pId) {
+                y.pValue = sum + "";
               }
             });
           });
 
-          dataSourceObject1.push({
-            no: x.approvedNumber,
-            customer: x.agencyName,
-            delivery: this.compareObj(this.pickupCities, x.pickupId),
-            licensePlate: x.licensePlates,
-            receipt: receipt ? receipt.label : "",
-            products: products,
-            sum: x.productTotal.toString(),
+          sumColRow1.forEach(e => {
+            this.displayedRowSumSection1.push({ label: e.pCategory + ".s" + sumColRow1.indexOf(e), value: Number(e.pValue) });
           });
-          sumCols1 = [...sumCols1, ...products];
-        });
 
-        /** Set sum value footẻ of every product */
-        let subSumColsSection1 = this.groupByValue(sumCols1, 'pCategory');
-        // Sum all of sum
-        let sumAll1 = this.helper.sum(dataSourceObject1, 'sum');
-
-        this.dataSource1.data = dataSourceObject1;
-        let sumColRow1 = productTemplate.map(x => ({ ...x }));
-        subSumColsSection1.forEach((e: any) => {
-          this.columnDefRowSumSection1.push(e[0].pCategory + ".s" + subSumColsSection1.indexOf(e));
-          let sum = this.helper.sum(e, 'pValue');
-          sumColRow1.map(y => {
-            if (y.pId === e[0].pId) {
-              y.pValue = sum + "";
-            }
-          });
-        });
-
-        sumColRow1.forEach(e => {
-          this.displayedRowSumSection1.push({ label: e.pCategory + ".s" + sumColRow1.indexOf(e), value: Number(e.pValue) });
-        });
-
-        this.columnDefRowSumSection1.push("s" + (this.thColspan + 1));
-        this.columnDefRowSumSection1 = ['footer-row-label', ...this.columnDefRowSumSection1];
-        this.displayedRowSumSection1.push({ label: "s" + (this.thColspan + 1), value: sumAll1 });
+          this.columnDefRowSumSection1.push("s" + (this.thColspan + 1));
+          this.columnDefRowSumSection1 = ['footer-row-label', ...this.columnDefRowSumSection1];
+          this.displayedRowSumSection1.push({ label: "s" + (this.thColspan + 1), value: sumAll1 });
+        } else {
+          this.displayedColumnRowSection1(productTemplate);
+        }
         /** END */
 
         /** Mapping data cell for Section 1 */
         /** START */
         /***Hanled datasource for display on a cell */
-        responseShipped.forEach((x: any) => {
-          x.agencyName = this.agencyList.find(i => i.id === x.agencyId)?.agencyName;
-          let receipt = this.receipt.find(i => i.value === x.receipt);
-          let products = productTemplate.map(x => ({ ...x }));
-          x.products.forEach((k: any) => {
-            products.map(y => {
-              if (y.pId === k.id) {
-                y.pValue = k.quantity;
+        if (responseShipped.length > 0) {
+          responseShipped.forEach((x: any) => {
+            x.agencyName = this.agencyList.find(i => i.id === x.agencyId)?.agencyName;
+            let receipt = this.receipt.find(i => i.value === x.receipt);
+            let products = productTemplate.map(x => ({ ...x }));
+            x.products.forEach((k: any) => {
+              products.map(y => {
+                if (y.pId === k.id) {
+                  y.pValue = k.quantity;
+                }
+              });
+            });
+
+            dataSourceObject2.push({
+              no: x.approvedNumber,
+              customer: x.agencyName,
+              delivery: this.compareObj(this.pickupCities, x.pickupId),
+              licensePlate: x.licensePlates,
+              receipt: receipt ? receipt.label : "",
+              products: products,
+              sum: x.productTotal.toString(),
+            });
+            sumCols2 = [...sumCols2, ...products];
+          });
+
+          this.columnDefRowSumSection2 = [];
+          this.displayedRowSumSection2 = [];
+
+          /** Set sum cols of every product */
+          /** Set value for footer */
+          let subSumColsSection2 = this.groupByValue(sumCols2, 'pCategory');
+          // Sum all of sum
+          let sumAll2 = this.helper.sum(dataSourceObject2, 'sum');
+
+          this.dataSource2.data = dataSourceObject2;
+          let sumColRow2 = productTemplate.map(x => ({ ...x }));
+
+          subSumColsSection2.forEach((e: any) => {
+            this.columnDefRowSumSection2.push(e[0].pCategory + ".s" + subSumColsSection2.indexOf(e));
+            let sum = this.helper.sum(e, 'pValue');
+            sumColRow2.map(y => {
+              if (y.pId === e[0].pId) {
+                y.pValue = sum + "";
               }
             });
           });
-
-          dataSourceObject2.push({
-            no: x.approvedNumber,
-            customer: x.agencyName,
-            delivery: this.compareObj(this.pickupCities, x.pickupId),
-            licensePlate: x.licensePlates,
-            receipt: receipt ? receipt.label : "",
-            products: products,
-            sum: x.productTotal.toString(),
+          sumColRow2.forEach(e => {
+            this.displayedRowSumSection2.push({ label: e.pCategory + ".s" + sumColRow2.indexOf(e), value: Number(e.pValue) });
           });
-          sumCols2 = [...sumCols2, ...products];
-        });
-
-        /** Set sum cols of every product */
-        /** Set value for footer */
-        let subSumColsSection2 = this.groupByValue(sumCols2, 'pCategory');
-        // Sum all of sum
-        let sumAll2 = this.helper.sum(dataSourceObject2, 'sum');
-
-        this.dataSource2.data = dataSourceObject2;
-        let sumColRow2 = productTemplate.map(x => ({ ...x }));
-
-        subSumColsSection2.forEach((e: any) => {
-          this.columnDefRowSumSection2.push(e[0].pCategory + ".s" + subSumColsSection2.indexOf(e));
-          let sum = this.helper.sum(e, 'pValue');
-          sumColRow2.map(y => {
-            if (y.pId === e[0].pId) {
-              y.pValue = sum + "";
-            }
-          });
-        });
-        sumColRow2.forEach(e => {
-          this.displayedRowSumSection2.push({ label: e.pCategory + ".s" + sumColRow2.indexOf(e), value: Number(e.pValue) });
-        });
-        this.columnDefRowSumSection2.push("s" + (this.thColspan + 1));
-        this.columnDefRowSumSection2 = ['footer-row-label', ...this.columnDefRowSumSection2];
-        this.displayedRowSumSection2.push({ label: "s" + (this.thColspan + 1), value: sumAll2 });
+          this.columnDefRowSumSection2.push("s" + (this.thColspan + 1));
+          this.columnDefRowSumSection2 = ['footer-row-label', ...this.columnDefRowSumSection2];
+          this.displayedRowSumSection2.push({ label: "s" + (this.thColspan + 1), value: sumAll2 });
+        } else {
+          this.displayedColumnRowSection2(productTemplate);
+        }
         /** END */
       } else {
-        let sumAll = 0;
-        this.dataSource1.data = [];
-        this.dataSource2.data = [];
-        productTemplate.forEach(e => {
-          this.columnDefRowSumSection1.push("s" + productTemplate.indexOf(e));
-          this.displayedRowSumSection1.push({ label: "s" + productTemplate.indexOf(e), value: 0 });
-
-          this.columnDefRowSumSection2.push("s" + productTemplate.indexOf(e));
-          this.displayedRowSumSection2.push({ label: "s" + productTemplate.indexOf(e), value: 0 });
-        });
-
-        // Section1
-        this.columnDefRowSumSection1.push("s" + (this.thColspan + 1));
-        this.columnDefRowSumSection1 = ['footer-row-label', ...this.columnDefRowSumSection1];
-        this.displayedRowSumSection1.push({ label: "s" + (this.thColspan + 1), value: sumAll });
-
-        // Section2
-        this.columnDefRowSumSection2.push("s" + (this.thColspan + 1));
-        this.columnDefRowSumSection2 = ['footer-row-label', ...this.columnDefRowSumSection2];
-        this.displayedRowSumSection2.push({ label: "s" + (this.thColspan + 1), value: sumAll });
+        this.displayedColumnRowSection1(productTemplate);
+        this.displayedColumnRowSection2(productTemplate);
       }
 
       this.loading = false;
     });
+  }
+
+  private displayedColumnRowSection1(productTemplate: any[]) {
+    this.dataSource1.data = [];
+    this.columnDefRowSumSection1 = [];
+    this.displayedRowSumSection1 = [];
+
+    productTemplate.forEach(e => {
+      this.columnDefRowSumSection1.push("s" + productTemplate.indexOf(e));
+      this.displayedRowSumSection1.push({ label: "s" + productTemplate.indexOf(e), value: 0 });
+    });
+
+    // Section1
+    this.columnDefRowSumSection1.push("s" + (this.thColspan + 1));
+    this.columnDefRowSumSection1 = ['footer-row-label', ...this.columnDefRowSumSection1];
+    this.displayedRowSumSection1.push({ label: "s" + (this.thColspan + 1), value: 0 });
+  }
+
+  private displayedColumnRowSection2(productTemplate: any[]) {
+    this.dataSource2.data = [];
+    this.columnDefRowSumSection2 = [];
+    this.displayedRowSumSection2 = [];
+
+    productTemplate.forEach(e => {
+      this.columnDefRowSumSection2.push("s" + productTemplate.indexOf(e));
+      this.displayedRowSumSection2.push({ label: "s" + productTemplate.indexOf(e), value: 0 });
+    });
+
+    // Section2
+    this.columnDefRowSumSection2.push("s" + (this.thColspan + 1));
+    this.columnDefRowSumSection2 = ['footer-row-label', ...this.columnDefRowSumSection2];
+    this.displayedRowSumSection2.push({ label: "s" + (this.thColspan + 1), value: 0 });
   }
 
   private compareObj(obj1: any[], obj2: any): string {
@@ -437,7 +489,6 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
 
   getClass(categoryValue: string) {
     let k = categoryValue.split(".");
-    // console.log(k)
     let cls: string = "";
     switch (Number(k[0])) {
       case 1:

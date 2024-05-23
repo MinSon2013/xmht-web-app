@@ -32,7 +32,6 @@ export class DashboardComponent {
   }
 
   imageClickHandler(index: number | any) {
-    console.log(index)
     const ele = document.getElementById("desciption");
     this.desciption = this.imageProducts[index].desciption;
     if (ele && this.desciption.length > 0) {

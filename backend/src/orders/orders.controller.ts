@@ -25,7 +25,7 @@ export class OrdersController {
   @UseGuards(JwtAuthGuard)
   @Get(':id/:userId')
   get(@Param('id', ParseIntPipe) id: number,
-    @Param('userId', ParseIntPipe) userId: number,): Promise<Order> {
+    @Param('userId', ParseIntPipe) userId: number,): Promise<any> {
     return this.ordersService.findOne(id, userId);
   }
 

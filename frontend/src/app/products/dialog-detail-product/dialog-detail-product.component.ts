@@ -7,6 +7,7 @@ import { Product } from '../../models/product';
 import { MyErrorStateMatcher } from '../../orders/order-add/order-add.component';
 import { ProductService } from '../../services/product.service';
 import { MSG_STATUS, PRODUCT_CATEGORIES, STOCKER_ROLE, USER_AREA_MANAGER_ROLE } from '../../constants/const-data';
+import { SocketService } from '../../services/socket.service';
 
 @Component({
   selector: 'app-dialog-detail-product',
@@ -43,6 +44,7 @@ export class DialogDetailProductComponent implements OnInit {
     public translate: TranslateService,
     private toastr: ToastrService,
     private productService: ProductService,
+    private socketService: SocketService,
   ) { dialogRef.disableClose = true; }
 
   ngOnInit(): void {
@@ -64,7 +66,7 @@ export class DialogDetailProductComponent implements OnInit {
     if (this.validForm()) {
       this.product.category = this.categorySelected.value;
       if (this.product.id === 0) {
-        this.productService.create(this.product).subscribe((response: any) => {
+        this.socketService.createdProduct(this.product).subscribe((response: any) => {
           if (response) {
             this.product.id = response.id;
             this.helper.showSuccess(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.ADD_PRODUCT', MSG_STATUS.SUCCESS));
@@ -74,7 +76,7 @@ export class DialogDetailProductComponent implements OnInit {
           }
         });
       } else {
-        this.productService.update(this.product).subscribe((response: any) => {
+        this.socketService.updatedProduct(this.product).subscribe((response: any) => {
           if (response) {
             this.helper.showSuccess(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.MODIFIED_PRODUCT', MSG_STATUS.SUCCESS));
             this.dialogRef.close(this.product);

@@ -10,6 +10,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import { SocketService } from '../../services/socket.service';
 import { tap } from 'rxjs';
+import { Product } from '../../models/product';
+import { CustomSocket } from '../../sockets/custom-socket';
+import { ProductService } from '../../services/product.service';
+import { OrderService } from '../../services/order.service';
 
 export const MY_FORMATS = {
   parse: {
@@ -90,6 +94,7 @@ export class DialogDetailOrderComponent implements OnInit {
   isAdmin: boolean = this.helper.isAdmin();
   isSalesman: boolean = this.userRole === USER_SALESMAN_ROLE;
   isAgency: boolean = this.userRole === AGENCY_ROLE;
+  disabled: boolean = false;
 
   constructor(
     public dialogRef: MatDialogRef<DialogDetailOrderComponent>,
@@ -98,6 +103,9 @@ export class DialogDetailOrderComponent implements OnInit {
     public translate: TranslateService,
     private toastr: ToastrService,
     private socketService: SocketService,
+    private socket: CustomSocket,
+    private productService: ProductService,
+    private orderService: OrderService,
   ) { dialogRef.disableClose = true; }
 
   ngOnInit(): void {
@@ -105,55 +113,92 @@ export class DialogDetailOrderComponent implements OnInit {
     this.productList = this.data.productList ? this.data.productList : [];
     this.deliveries = this.data.deliveries ? this.data.deliveries : [];
     if (this.data.row && this.data.row.id !== 0) {
-      this.header = 'Cập nhật thông tin đơn hàng';
-      this.order.id = this.data.row.id;
-      this.order.createdDate = this.data.row.createdDate;
-      this.order.deliveryId = this.data.row.deliveryId;
-      this.order.pickupId = this.data.row.pickupId;
-      this.order.productTotal = this.data.row.productTotal;
-      this.order.driver = this.data.row.driver;
-      this.order.note = this.data.row.note;
-      this.order.transport = this.data.row.transport;
-      this.order.receipt = this.data.row.receipt;
-      this.order.licensePlates = this.data.row.licensePlates;
-      this.order.receivedDate = this.data.row.receivedDate;
-      this.order.confirmedDate = this.data.row.confirmedDate;
-      this.order.shippingDate = this.data.row.shippingDate;
-      this.order.status = this.data.row.status;
-      this.order.note = this.data.row.note;
-      this.order.contract = this.data.row.contract;
-      this.order.agencyId = this.data.row.agencyId;
-      this.order.agencyName = this.data.row.agencyName;
-      this.order.isViewed = this.data.row.isViewed;
-      this.order.sender = this.data.row.sender;
-      this.order.products = this.data.row.products;
-      /* this.order.approvedNumber = this.data.row.approvedNumber !== 0 ? this.data.row.approvedNumber : '-'; */
-      this.order.approvedNumber = this.data.row.approvedNumber;
-      const status = this.status.find(x => x.value === this.order.status);
-      this.statusSelected = status ? status : { id: null, label: '' };
-      const delivery = this.deliveries.find(x => x.id === this.order.deliveryId);
-      this.deliverySelected = delivery ? delivery : { id: null, label: '' };
-      const pickup = this.cities.find(x => x.id === this.order.pickupId);
-      this.pickupSelected = pickup ? pickup : { id: null, label: '' };
-      const transport = this.transport.find(x => x.id === this.order.transport);
-      this.transportSelected = transport ? transport : { id: null, label: '' };
-      const agency = this.agencyList.find(x => x.id === this.order.agencyId);
-      this.agencySelected = agency ? agency : { id: null, label: '' };
-      const receipt = this.receipt.find(x => x.value === this.order.receipt);
-      this.receiptSelected = receipt ? receipt : { id: null, label: '' };
-      this.setProductOrder();
+      this.mappingData(this.data.row, this.data.row.products);
+    }
+    this.emitSocket();
+  }
 
-      // set valuefor receivedDate picker
-      const [day, month, year] = this.order.receivedDate.split('/');
-      const date = new Date(+year, +month - 1, +day);
-      this.testForm = new FormGroup({
-        date: new FormControl(date),
-      })
+  emitSocket() {
+    this.socket.on('emitGetProductList', (response: Product[]) => {
+      this.getOneOrder(this.data.row.id);
+    })
+    this.socket.on('emitGetOrderList', (response: Order[]) => {
+      this.getOneOrder(this.data.row.id);
+    })
+  }
+
+  getOneOrder(id: number) {
+    this.orderService.getOneOrder(id).subscribe((response: any) => {
+      if (response) {
+        this.productList = response.productList;
+        this.productList.sort((a, b) => (a.category < b.category ? -1 : 1));
+        this.mappingData(response.order, response.products);
+      } else {
+        this.helper.showWarning(this.toastr, 'Không thể cập nhật thông tin đơn hàng do đơn hàng này đã xóa.');
+        this.dialogRef.close(null);
+      }
+    });
+  }
+
+  mappingData(row: any, products: any[]) {
+    this.header = 'Cập nhật thông tin đơn hàng';
+    this.order.id = row.id;
+    this.order.createdDate = row.createdDate;
+    this.order.deliveryId = row.deliveryId;
+    this.order.pickupId = row.pickupId;
+    this.order.productTotal = row.productTotal;
+    this.order.driver = row.driver;
+    this.order.note = row.note;
+    this.order.transport = row.transport;
+    this.order.receipt = row.receipt;
+    this.order.licensePlates = row.licensePlates;
+    this.order.receivedDate = row.receivedDate;
+    this.order.confirmedDate = row.confirmedDate;
+    this.order.shippingDate = row.shippingDate;
+    this.order.status = row.status;
+    this.order.note = row.note;
+    this.order.contract = row.contract;
+    this.order.agencyId = row.agencyId;
+    this.order.agencyName = row.agencyName;
+    this.order.isViewed = row.isViewed;
+    this.order.sender = row.sender;
+    this.order.products = products;
+    this.order.approvedNumber = row.approvedNumber;
+    const status = this.status.find(x => x.value === this.order.status);
+    this.statusSelected = status ? status : { id: null, label: '' };
+    const delivery = this.deliveries.find(x => x.id === this.order.deliveryId);
+    this.deliverySelected = delivery ? delivery : { id: null, label: '' };
+    const pickup = this.cities.find(x => x.id === this.order.pickupId);
+    this.pickupSelected = pickup ? pickup : { id: null, label: '' };
+    const transport = this.transport.find(x => x.id === this.order.transport);
+    this.transportSelected = transport ? transport : { id: null, label: '' };
+    const agency = this.agencyList.find(x => x.id === this.order.agencyId);
+    this.agencySelected = agency ? agency : { id: null, label: '' };
+    const receipt = this.receipt.find(x => x.value === this.order.receipt);
+    this.receiptSelected = receipt ? receipt : { id: null, label: '' };
+    this.setProductOrder(this.order.products);
+
+    // set valuefor receivedDate picker
+    const [day, month, year] = this.order.receivedDate.split('/');
+    const date = new Date(+year, +month - 1, +day);
+    this.testForm = new FormGroup({
+      date: new FormControl(date),
+    })
+
+    if (this.order.status === STATUS[0].value
+      || (this.order.status === STATUS[1].value && (this.isAdmin || this.isSalesman)
+      )) {
+      this.disabled = false;
+    } else {
+      this.disabled = true;
+    }
+    if (this.order.status === STATUS[1].value && (!this.isAdmin && !this.isSalesman)) {
+      this.header = 'Chi tiết đơn hàng';
     }
   }
 
-  setProductOrder() {
-    const products: any[] = this.data.row.products;
+  setProductOrder(product: any[]) {
+    const products: any[] = product;
     this.order.products = this.productList;
     let listMap = this.order.products.map((e, i) => {
       let temp = products.find(element => element.id === e.id)
@@ -171,10 +216,10 @@ export class DialogDetailOrderComponent implements OnInit {
         id: element.id,
         name: element.name,
         quantity: element.quantity,
+        category: element.category,
       };
       list.push(item);
     });
-    list.sort((a, b) => (a.id < b.id ? -1 : 1));
     this.order.products = list;
   }
 
@@ -247,6 +292,7 @@ export class DialogDetailOrderComponent implements OnInit {
     this.order.productTotal = 0;
     this.order.products.forEach(element => {
       this.order.productTotal += Number(element.quantity);
+      this.order.productTotal = Math.round(this.order.productTotal * 100000000) / 100000000;
     });
   }
 

@@ -48,6 +48,7 @@ export class OrderRepository extends Repository<Order> {
                             id: i.productId,
                             name: p.name ? p.name : '',
                             quantity: i.quantity,
+                            category: p.category,
                         };
                         el.products.push(temp);
                     }
@@ -60,11 +61,10 @@ export class OrderRepository extends Repository<Order> {
     async getOne(id: number, userId: number, agencyId: number,
         productService: ProductsService,
         productOrderRepo: ProductOrderRepository,
-    ): Promise<Order> {
-        let response = new Order();
+    ): Promise<any> {
         let orderList: any;
         if (agencyId !== 0) {
-            orderList = await this.find({
+            orderList = await this.findOne({
                 where: {
                     id,
                     agencyId,
@@ -73,21 +73,18 @@ export class OrderRepository extends Repository<Order> {
         } else {
             orderList = await this.findOne({ id });
         }
-        response = orderList;
         const productList = await productService.getAllProduct();
-        const productOrderList = await productOrderRepo.find();
-        const items = productOrderList.filter(x => x.orderId === response.id);
-        if (items.length > 0) {
-            items.forEach(i => {
-                const temp = {
-                    id: i.productId,
-                    name: productList.find(x => x.id === i.productId).name,
-                    quantity: i.quantity,
-                };
-                response.products.push(temp);
-            });
-        }
-        return response;
+        const productOrderList = await productOrderRepo.find({ orderId: orderList.id });
+        let products = [];
+        productOrderList.forEach(i => {
+            const temp = {
+                id: i.productId,
+                name: productList.find(x => x.id === i.productId).name,
+                quantity: i.quantity,
+            };
+            products.push(temp);
+        });
+        return { order: orderList, products: products, productList };
     }
 
     async createOrder(modifyOrderDto: ModifyOrderDTO,
@@ -120,7 +117,7 @@ export class OrderRepository extends Repository<Order> {
         notificationService: NotificationService,
         productOrderRepo: ProductOrderRepository): Promise<UpdateResult | any> {
         const orderOld = await this.findOne({ id: modifyOrderDto.id });
-        if (orderOld.status > 1 && !modifyOrderDto.isAdmin) {
+        if (orderOld.status > 2 && !modifyOrderDto.isAdmin) {
             return { code: 404, error: 'Not allow update' };
         }
         const order = this.mappingOrder(modifyOrderDto);
@@ -301,7 +298,7 @@ export class OrderRepository extends Repository<Order> {
 
         if (agencyIdLogin > 0) {
             sql = sql.andWhere('order.agencyId = :agencyId', { agencyId: agencyIdLogin })
-        } else if (detailsOrderDto.agencyId) {
+        } else if (detailsOrderDto.agencyId && detailsOrderDto.agencyId.length > 0) {
             sql = sql.andWhere('order.agency_id = :agencyId', { agencyId: detailsOrderDto.agencyId })
         }
         // Noi nhan
@@ -314,11 +311,12 @@ export class OrderRepository extends Repository<Order> {
         }
         // So phuong tien
         if (detailsOrderDto.licensePlate && detailsOrderDto.licensePlate.length > 0) {
-            sql = sql.andWhere('order.license_plates = :licensePlate', { licensePlate: detailsOrderDto.licensePlate })
+            sql = sql.andWhere("order.license_plates LIKE :licensePlate", { licensePlate: `%${detailsOrderDto.licensePlate}%` })
         }
         // Tai xe
         if (detailsOrderDto.driver && detailsOrderDto.driver.length > 0) {
-            sql = sql.andWhere('order.driver = :driver', { driver: detailsOrderDto.driver })
+            sql = sql.andWhere("order.driver LIKE :driver", { driver: `${detailsOrderDto.driver}` })
+            // sql = sql.andWhere("order.driver LIKE :driver", { driver: `%${detailsOrderDto.driver}%` })
         }
         // Phuong thuc nhan
         if (detailsOrderDto.receipt && detailsOrderDto.receipt.length > 0) {
@@ -362,16 +360,24 @@ export class OrderRepository extends Repository<Order> {
         } else if (detailsOrderDto.startDate && detailsOrderDto.startDate.length !== 0
             && detailsOrderDto.endDate && detailsOrderDto.endDate.length !== 0) {
             sql = sql.andWhere(
-                `IF(LENGTH(order.created_date) > 10,
-                  STR_TO_DATE(RIGHT(order.created_date, 10), '%d/%m/%Y'),
-                  STR_TO_DATE(order.created_date, '%d/%m/%Y')
+                `IF(LENGTH(order.received_date) > 10,
+                  STR_TO_DATE(RIGHT(order.received_date, 10), '%d/%m/%Y'),
+                  STR_TO_DATE(order.received_date, '%d/%m/%Y')
                 )
                 BETWEEN STR_TO_DATE(:start, \'%d/%m/%Y\') 
                 AND STR_TO_DATE(:end, \'%d/%m/%Y\') `,
                 { start: detailsOrderDto.startDate, end: detailsOrderDto.endDate }
             );
         }
-        const orderList = await sql.orderBy('order.id').groupBy('order.id').addGroupBy('order.status').getRawMany();
+
+        let orderList: any[] = [];
+        if (detailsOrderDto.status && detailsOrderDto.status.length > 0) {
+            // Request from SlideShow screen
+            orderList = await sql.orderBy('order.approved_number', 'DESC').getRawMany();
+        } else {
+            // Request from Details Statistic screen
+            orderList = await sql.orderBy('order.id', 'DESC').limit(1000).getRawMany();
+        }
         const dataMap = this.mappingSearch(orderList, productList);
         response = dataMap;
         return response;

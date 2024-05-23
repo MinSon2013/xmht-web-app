@@ -22,6 +22,10 @@ export class OrderService {
         return this.webrequestService.get(this.url + `/${this.helper.getUserId()}`);
     }
 
+    getOneOrder(id: number) {
+        return this.webrequestService.get(this.url + `/${id}/${this.helper.getUserId()}`);
+    }
+
     search(obj: Search) {
         const payload = {
             approvedNumber: Number(obj.approvedNumber),
