@@ -179,6 +179,14 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
               }, x.name);
             sutuList.push({ pId: x.id, pCategory: x.category, pName: productNameReplacement });
           });
+
+          this.productDataSource.push({
+            displayedCategory: PRODUCT_CATEGORIES[0].label,
+            categoryValue: PRODUCT_CATEGORIES[0].value.toString(),
+            productList: sutuList,
+            pColspan: sutuList.length,
+          });
+          this.columnsRowProductCategory.push(PRODUCT_CATEGORIES[0].value.toString());
           break;
         case PRODUCT_CATEGORIES[1].value:
           e.forEach((x: any) => {
@@ -188,6 +196,15 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
               }, x.name);
             phutuList.push({ pId: x.id, pCategory: x.category, pName: productNameReplacement });
           });
+
+          this.productDataSource.push({
+            displayedCategory: PRODUCT_CATEGORIES[1].label,
+            categoryValue: PRODUCT_CATEGORIES[1].value.toString(),
+            productList: phutuList,
+            pColspan: phutuList.length,
+          });
+
+          this.columnsRowProductCategory.push(PRODUCT_CATEGORIES[1].value.toString());
           break;
         case PRODUCT_CATEGORIES[2].value:
           e.forEach((x: any) => {
@@ -197,6 +214,13 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
               }, x.name);
             xaList.push({ pId: x.id, pCategory: x.category, pName: productNameReplacement });
           });
+          this.productDataSource.push({
+            displayedCategory: PRODUCT_CATEGORIES[2].label,
+            categoryValue: PRODUCT_CATEGORIES[2].value.toString(),
+            productList: xaList,
+            pColspan: xaList.length,
+          });
+          this.columnsRowProductCategory.push(PRODUCT_CATEGORIES[2].value.toString());
           break;
         case PRODUCT_CATEGORIES[3].value:
           e.forEach((x: any) => {
@@ -206,48 +230,16 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
               }, x.name);
             khacList.push({ pId: x.id, pCategory: x.category, pName: productNameReplacement });
           });
+          this.productDataSource.push({
+            displayedCategory: PRODUCT_CATEGORIES[3].label,
+            categoryValue: PRODUCT_CATEGORIES[3].value.toString(),
+            productList: khacList,
+            pColspan: khacList.length,
+          });
+          this.columnsRowProductCategory.push(PRODUCT_CATEGORIES[3].value.toString());
           break;
       }
     });
-
-    /** Handled product category to display  */
-    /** Category Su tu */
-    this.productDataSource.push({
-      displayedCategory: PRODUCT_CATEGORIES[0].label,
-      categoryValue: PRODUCT_CATEGORIES[0].value.toString(),
-      productList: sutuList,
-      pColspan: sutuList.length,
-    });
-
-    /** Category Phu tu */
-    this.productDataSource.push({
-      displayedCategory: PRODUCT_CATEGORIES[1].label,
-      categoryValue: PRODUCT_CATEGORIES[1].value.toString(),
-      productList: phutuList,
-      pColspan: phutuList.length,
-    });
-
-    /** Category Xa */
-    this.productDataSource.push({
-      displayedCategory: PRODUCT_CATEGORIES[2].label,
-      categoryValue: PRODUCT_CATEGORIES[2].value.toString(),
-      productList: xaList,
-      pColspan: xaList.length,
-    });
-
-    /** Category Khac */
-    this.productDataSource.push({
-      displayedCategory: PRODUCT_CATEGORIES[3].label,
-      categoryValue: PRODUCT_CATEGORIES[3].value.toString(),
-      productList: khacList,
-      pColspan: khacList.length,
-    });
-
-    /** Set displayed columns product categories */
-    this.columnsRowProductCategory.push(PRODUCT_CATEGORIES[0].value.toString());
-    this.columnsRowProductCategory.push(PRODUCT_CATEGORIES[1].value.toString());
-    this.columnsRowProductCategory.push(PRODUCT_CATEGORIES[2].value.toString());
-    this.columnsRowProductCategory.push(PRODUCT_CATEGORIES[3].value.toString());
 
     /** Displayed column product name  */
     const arrProduct = [...sutuList, ...phutuList, ...xaList, ...khacList];
