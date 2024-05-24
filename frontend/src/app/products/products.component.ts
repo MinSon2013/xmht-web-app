@@ -4,7 +4,7 @@ import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Product } from '../models/product';
-import { CustomPaginator } from '../common/custom-paginator';
+import { CustomMatPaginatorIntl } from '../common/custom-paginator';
 import { DialogDeleteConfirmComponent } from '../common/dialog-delete-confirm/dialog-delete-confirm.component';
 import { ProductService } from '../services/product.service';
 import { DialogDetailProductComponent } from './dialog-detail-product/dialog-detail-product.component';
@@ -16,7 +16,7 @@ import { Helper } from '../helpers/helper';
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.scss'],
   providers: [
-    { provide: MatPaginatorIntl, useValue: CustomPaginator() }
+    { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl }
   ]
 })
 export class ProductsComponent implements OnInit {

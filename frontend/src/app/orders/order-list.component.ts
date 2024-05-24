@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -10,7 +10,7 @@ import { DialogDetailOrderComponent } from './dialog-detail-order/dialog-detail-
 import { Helper } from '../helpers/helper';
 import { DialogConfirmOrderComponent } from './dialog-confirm-order/dialog-confirm-order.component';
 import { AGENCY_ROLE, Cities, SERVICE_TYPE, STATUS, STOCKER_ROLE, USER_AREA_MANAGER_ROLE, USER_SALESMAN_ROLE } from '../constants/const-data';
-import { CustomPaginator } from '../common/custom-paginator';
+import { CustomMatPaginatorIntl } from '../common/custom-paginator';
 import * as moment from 'moment';
 import { FormControl, FormGroup } from '@angular/forms';
 import { OrderService } from '../services/order.service';
@@ -20,18 +20,16 @@ import * as XLSX from 'xlsx-js-style';
 import { CustomSocket } from '../sockets/custom-socket';
 import { ExcelConfig } from '../helpers/excel.config';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { DeliveryService } from '../services/delivery.service';
-import { ProductService } from '../services/product.service';
-import { AgencyService } from '../services/agency.service';
 import { CONFIG } from '../common/config';
-import { Product } from '../models/product';
+import { concatMap, finalize, tap } from 'rxjs';
+import { RoutesService } from '../services/routes.service';
 
 @Component({
   selector: 'app-order-list',
   templateUrl: './order-list.component.html',
   styleUrls: ['./order-list.component.scss'],
   providers: [
-    { provide: MatPaginatorIntl, useValue: CustomPaginator() }
+    { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl }
   ]
 })
 export class OrderListComponent implements OnInit {
@@ -44,8 +42,25 @@ export class OrderListComponent implements OnInit {
   dataSource = new MatTableDataSource<Order>();
   dataSourceClone = new MatTableDataSource<Order>();
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
+  // Set paginator using static data
+  // @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
+
+  // Set paginator using dynamic data from Api
+  @ViewChild(MatPaginator, { static: false })
+  set paginator(value: MatPaginator) {
+    if (this.dataSource) {
+      this.dataSource.paginator = value;
+    }
+  }
+  // @ViewChild(MatSort) sort!: MatSort;
+
+  // Set sort using dynamic data from Api
+  @ViewChild(MatSort, { static: false })
+  set sort(value: MatSort) {
+    if (this.dataSource) {
+      this.dataSource.sort = value;
+    }
+  }
 
   cities: any[] = Cities;
   deliveries: any[] = [];
@@ -85,6 +100,7 @@ export class OrderListComponent implements OnInit {
 
   sticky: boolean = true;
   mobile: boolean = false;
+  loading: boolean = true;
 
   constructor(public dialog: MatDialog,
     public router: Router,
@@ -93,14 +109,10 @@ export class OrderListComponent implements OnInit {
     public translate: TranslateService,
     private socket: CustomSocket,
     private deviceService: DeviceDetectorService,
-    private deliveryService: DeliveryService,
-    private agencyService: AgencyService,
-    private productService: ProductService,
+    private routesService: RoutesService,
+    private cdr: ChangeDetectorRef,
   ) {
     this.epicFunction();
-    this.getAgencys();
-    this.getProducts();
-    this.getDelivery();
   }
 
   ngOnInit(): void {
@@ -110,57 +122,70 @@ export class OrderListComponent implements OnInit {
     if (this.isAgency) {
       this.displayedColumns = ['approvedNumber', 'contract', 'createdDate', 'receivedDate', 'confirmedDate', 'shippingDate', 'deliveryId', 'pickupId', 'productName', 'quantity', 'productTotal', 'licensePlates', 'driver', 'status', 'deleteAction'];
     }
+    if (this.isStocker) {
+      this.status = this.status.slice(0, 3);
+    }
     this.colspan = this.displayedColumns.length;
-    this.getData();
+
+    this.onRequestServer();
     this.emitSocket();
   }
 
-  getData() {
-    this.orderService.getOrderList().subscribe((response: any) => {
-      if (response.length > 0) {
-        this.dataSource.data = response.length > 0 ? response.reverse() : [];
-        this.dataSource.data.forEach(x => {
-          x.agencyName = this.agencyList.find(i => i.id === x.agencyId)?.agencyName;
-          x.products.sort((a, b) => (a.id < b.id ? -1 : 1));
-          x.products.sort((a, b) => (a.category < b.category ? -1 : 1));
-        });
-        if (this.isStocker) {
-          this.dataSource.data = this.dataSource.data.filter(
-            x => x.status === STATUS[1].value
-              || x.status === STATUS[2].value
-              || x.status === STATUS[3].value
-          );
-        }
-      } else {
-        this.dataSource.data = [];
-      }
+  onRequestServer() {
+    this.loading = true;
+    this.routesService.getFilterList().pipe(
+      tap((res) => {
+        this.generalResponseToList(res);
+      }),
+      concatMap(() => this.routesService.getOrderList()),
+      tap((res1) => {
+        this.generalResponseToDataSource(res1);
+      }),
+      // concatMap(res1 => this.getAgencys()),
+      // tap((res) => console.log('first result', res)),
+      // concatMap(res1 => this.getDelivery()),
 
-      if (this.dataSource.data.length === 0) {
-        this.hasData = false;
-      } else {
-        this.hasData = true;
-      }
-      this.dataSourceClone = new MatTableDataSource<Order>(this.dataSource.data);
-    });
+      finalize(() => this.loading = false)
+    ).subscribe(success => {
+      // here you will get response of LAST request (fourthPOSTCallToAPI)
+    }, errorData => { /* display error msg */ })
+
   }
 
-  getAgencys() {
-    this.agencyService.getAgencyList().subscribe((response: any) => {
-      this.agencyList = response;
-    });
+  generalResponseToDataSource(response: any[]) {
+    if (response.length > 0) {
+      response.forEach(x => {
+        x.agencyName = this.agencyList.find(i => i.id === x.agencyId)?.agencyName || "";
+        x.products = this.helper.sortAZ(x.products, 'id');
+        x.products = this.helper.sortAZ(x.products, 'category');
+      });
+      // if (this.isStocker) {
+      //   response = response.filter(
+      //     x => x.status === STATUS[1].value
+      //       || x.status === STATUS[2].value
+      //       || x.status === STATUS[3].value
+      //   );
+      // }
+      this.dataSource = new MatTableDataSource(response);
+      this.hasData = true;
+    } else {
+      this.hasData = false;
+      let data: Order[] = [];
+      this.dataSource = new MatTableDataSource(data);
+    }
+    this.cdr.detectChanges();
+    this.dataSource.paginator = this.paginator;
+    // this.dataSourceClone = new MatTableDataSource<Order>(this.dataSource.data);
+    // setTimeout(() => this.dataSource.paginator = this.paginator);
   }
 
-  getProducts() {
-    this.productService.getProductList().subscribe((response: any) => {
-      this.productList = response;
-      this.productList.sort((a, b) => (a.category < b.category ? -1 : 1));
-    });
-  }
-
-  getDelivery() {
-    this.deliveryService.getDeliveryList().subscribe((response: any) => {
-      this.deliveries = response;
-    });
+  generalResponseToList(response: any) {
+    if (response) {
+      this.agencyList = this.helper.sortAZ(response.agencyList, 'agencyName');
+      this.productList = this.helper.sortAZ(response.productList, 'id');
+      this.productList = this.helper.sortAZ(this.productList, 'category');
+      this.deliveries = response.deliveryList;
+    }
   }
 
   emitSocket() {
@@ -359,9 +384,9 @@ export class OrderListComponent implements OnInit {
     XLSX.writeFile(wb, this.fileNameExcel, { cellStyles: true });
   }
 
-  getProductName(products: any[]): string {
-    products.sort((a, b) => (a.id < b.id ? -1 : 1));
-    products.sort((a, b) => (a.category < b.category ? -1 : 1));
+  private getProductName(products: any[]): string {
+    products = this.helper.sortAZ(products, 'id');
+    products = this.helper.sortAZ(products, 'category');
     let str = '';
     products.forEach(el => {
       str += el.name + '\n';
@@ -369,7 +394,7 @@ export class OrderListComponent implements OnInit {
     return str.trimEnd();
   }
 
-  getProductQuantity(products: any[]): string {
+  private getProductQuantity(products: any[]): string {
     let str = '';
     products.forEach(el => {
       str += el.quantity + '\n';
@@ -425,11 +450,7 @@ export class OrderListComponent implements OnInit {
   }
 
   compareObj(obj1: any[], obj2: any): string {
-    const obj = obj1.find(x => x.id === obj2);
-    if (obj) {
-      return obj.label;
-    }
-    return '';
+    return this.helper.compareObj(obj1, obj2);
   }
 
   private epicFunction() {

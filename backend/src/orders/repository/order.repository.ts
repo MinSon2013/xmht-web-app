@@ -1,5 +1,5 @@
 import { Order } from '../entities/order.entity';
-import { DeleteResult, EntityRepository, Repository, UpdateResult } from 'typeorm'
+import { DeleteResult, EntityRepository, In, Repository, UpdateResult } from 'typeorm'
 import { ModifyOrderDTO } from '../dto/modify-order.dto';
 import { ProductOrder } from '../entities/product-order.entity';
 import { NotificationService } from '../../notification/notification.service';
@@ -11,6 +11,7 @@ import { Helper } from '../../shared/helper';
 import { DetailsOrderDTO } from '../dto/details-order.dto';
 import { AgencyService } from '../../agency/agency.service';
 import { DeliveryService } from '../../delivery/delivery.service';
+import { STOCKER_ROLE } from '../../config/constant';
 
 @EntityRepository(Order)
 export class OrderRepository extends Repository<Order> {
@@ -21,20 +22,38 @@ export class OrderRepository extends Repository<Order> {
         super();
     }
 
-    async getOrderList(agencyId: number,
+    async getOrderList(role: number, agencyId: number,
         productService: ProductsService,
         productOrderRepo: ProductOrderRepository,
     ): Promise<Order[]> {
+        let statusForOrder = [1, 2, 3, 4, 5];
+        if (role === STOCKER_ROLE) {
+            // Case user is stocker
+            // GET order with status = [1,2,3]
+            statusForOrder = [1, 2, 3];
+        }
+
         let response: Order[] = [];
         if (agencyId !== 0) {
             response = await this.find({
                 where: {
-                    agencyId
-                }
+                    agencyId, status: In(statusForOrder)
+                },
+                order: { approvedNumber: 'DESC', id: 'DESC' }
             });
         } else {
-            response = await this.find();
+            response = await this.find({
+                where: {
+                    status: In(statusForOrder)
+                },
+                order: { approvedNumber: 'DESC', id: 'DESC' }
+            });
         }
+
+        ////
+        response = response.slice(0, 1000);
+        //////
+
         const productList = await productService.getAllProduct();
         const productOrderList = await productOrderRepo.find();
         response.forEach(el => {
@@ -243,8 +262,10 @@ export class OrderRepository extends Repository<Order> {
         return await this.delete(id);
     }
 
-    async search(searchOderDto: SearchOrderDTO, productService: ProductsService, agencyIdLogin: number): Promise<Order[]> {
+    async search(searchOderDto: SearchOrderDTO, role: number, productService: ProductsService, agencyIdLogin: number): Promise<Order[]> {
         let response: Order[] = [];
+        let statusForOrder = [1, 2, 3, 4, 5];
+
         const productList = await productService.getAllProduct();
 
         let sql = this.createQueryBuilder('order')
@@ -252,6 +273,13 @@ export class OrderRepository extends Repository<Order> {
             .addSelect('productOrder')
             .leftJoin(ProductOrder, 'productOrder', 'productOrder.order_id = order.id')
             .where('1=1');
+
+        if (role === STOCKER_ROLE) {
+            // Case user is stocker
+            // GET order with status = [1,2,3]
+            statusForOrder = [1, 2, 3];
+            sql = sql.andWhere('order.status IN (:statusAll)', { statusAll: statusForOrder })
+        }
 
         if (agencyIdLogin > 0) {
             sql = sql.andWhere('order.agencyId = :agencyId', { agencyId: agencyIdLogin })
@@ -279,6 +307,7 @@ export class OrderRepository extends Repository<Order> {
                 { start: searchOderDto.startDate, end: searchOderDto.endDate }
             );
         }
+
         const orderList = await sql.orderBy('order.id').getRawMany();
         const dataMap = this.mappingSearch(orderList, productList);
         response = dataMap;

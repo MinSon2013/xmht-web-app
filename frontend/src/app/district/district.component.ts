@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
-import { CustomPaginator } from '../common/custom-paginator';
+import { CustomMatPaginatorIntl } from '../common/custom-paginator';
 import { DialogDeleteConfirmComponent } from '../common/dialog-delete-confirm/dialog-delete-confirm.component';
 import { Cities, SERVICE_TYPE, USER_AREA_MANAGER_ROLE } from '../constants/const-data';
 import { MatDialog } from '@angular/material/dialog';
@@ -17,7 +17,7 @@ import { Pickup } from '../models/pickup';
   templateUrl: './district.component.html',
   styleUrls: ['./district.component.scss'],
   providers: [
-    { provide: MatPaginatorIntl, useValue: CustomPaginator() }
+    { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl }
   ]
 })
 export class DistrictComponent implements OnInit {

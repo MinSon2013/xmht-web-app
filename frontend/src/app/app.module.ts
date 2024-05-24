@@ -24,7 +24,7 @@ import { DialogDetailProductComponent } from './products/dialog-detail-product/d
 import { DialogConfirmOrderComponent } from './orders/dialog-confirm-order/dialog-confirm-order.component';
 import { DialogDeleteConfirmComponent } from './common/dialog-delete-confirm/dialog-delete-confirm.component';
 import { MatPaginatorIntl } from '@angular/material/paginator';
-import { CustomPaginator } from './common/custom-paginator';
+import { CustomMatPaginatorIntl } from './common/custom-paginator';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { NotifyComponent } from './notify/notify.component';
@@ -57,6 +57,7 @@ import { DialogModifyReportComponent } from './report/dialog-modify-report/dialo
 import { NgImageSliderModule } from 'ng-image-slider';
 import { OrderDetailStatisticComponent } from './orders/order-detail-statistic/order-detail-statistic.component';
 import { OrderSlideshowComponent } from './orders/order-slideshow/order-slideshow.component';
+import { RoutesService } from './services/routes.service';
 
 const config: SocketIoConfig = { url: `${environment.apiUrl}`, options: {} };
 
@@ -141,12 +142,13 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
   ],
   providers: [
     { provide: DateAdapter, useClass: DateFormat },
-    { provide: MatPaginatorIntl, useValue: CustomPaginator() },
+    { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl },
     { provide: HTTP_INTERCEPTORS, useClass: WebReqInterceptor, multi: true },
     { provide: NgChartsConfiguration, useValue: { generateColors: false } },
     BnNgIdleService,
     NgxPrintElementDirective,
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' } },
+    RoutesService,
   ],
   bootstrap: [AppComponent]
 })

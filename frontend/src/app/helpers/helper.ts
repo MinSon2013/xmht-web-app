@@ -275,5 +275,21 @@ export class Helper {
     })
   }
 
+  public sortAZ(array: any[], key: string) {
+    return array.sort((a, b) => (a[key] < b[key] ? -1 : 1));
+  }
+
+  public sortZA(array: any[], key: string) {
+    return array.sort((a, b) => (a[key] > b[key] ? -1 : 1));
+  }
+
+  public compareObj(obj1: any[], obj2: any): string {
+    const obj = obj1.find(x => x.id === obj2);
+    if (obj) {
+      return obj.label;
+    }
+    return '';
+  }
+
 }
 

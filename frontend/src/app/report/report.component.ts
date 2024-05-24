@@ -14,7 +14,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Reports } from '../models/report';
 import { ReportService } from '../services/report.service';
 import { FormControl } from '@angular/forms';
-import { CustomPaginator } from '../common/custom-paginator';
+import { CustomMatPaginatorIntl } from '../common/custom-paginator';
 import { AgencyService } from '../services/agency.service';
 import { CustomSocket } from '../sockets/custom-socket';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -25,7 +25,7 @@ import { CONFIG } from '../common/config';
   templateUrl: './report.component.html',
   styleUrls: ['./report.component.scss'],
   providers: [
-    { provide: MatPaginatorIntl, useValue: CustomPaginator() }
+    { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl }
   ]
 })
 export class ReportComponent implements OnInit {

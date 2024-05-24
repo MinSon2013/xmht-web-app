@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { CustomPaginator } from '../common/custom-paginator';
+import { CustomMatPaginatorIntl } from '../common/custom-paginator';
 import { DialogDeleteConfirmComponent } from '../common/dialog-delete-confirm/dialog-delete-confirm.component';
 import { SERVICE_TYPE, USER_ROLE } from '../constants/const-data';
 import { Helper } from '../helpers/helper';
@@ -18,7 +18,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.scss'],
   providers: [
-    { provide: MatPaginatorIntl, useValue: CustomPaginator() }
+    { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl }
   ]
 })
 export class UserComponent implements OnInit {

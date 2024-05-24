@@ -4,7 +4,7 @@ import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Agency } from '../models/agency';
-import { CustomPaginator } from '../common/custom-paginator';
+import { CustomMatPaginatorIntl } from '../common/custom-paginator';
 import { DialogDeleteConfirmComponent } from '../common/dialog-delete-confirm/dialog-delete-confirm.component';
 import { DialogDetailAgencyComponent } from './dialog-detail-agency/dialog-detail-agency.component';
 import { AgencyService } from '../services/agency.service';
@@ -17,7 +17,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
   templateUrl: './agency.component.html',
   styleUrls: ['./agency.component.scss'],
   providers: [
-    { provide: MatPaginatorIntl, useValue: CustomPaginator() }
+    { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl }
   ]
 })
 export class AgencyComponent implements OnInit {

@@ -34,7 +34,7 @@ export class OrdersService {
       const agency = await this.agencyService.findOne(userId);
       agencyId = agency.id;
     }
-    return await this.orderRepo.getOrderList(agencyId, this.productService, this.productOrderRepo);
+    return await this.orderRepo.getOrderList(user.role, agencyId, this.productService, this.productOrderRepo);
   }
 
   async findOne(id: number, userId: number): Promise<Order> {
@@ -74,7 +74,7 @@ export class OrdersService {
       const agency = await this.agencyService.findOne(searchOderDto.userId);
       agencyId = agency.id;
     }
-    return await this.orderRepo.search(searchOderDto, this.productService, agencyId);
+    return await this.orderRepo.search(searchOderDto, user.role, this.productService, agencyId);
   }
 
   async details(detailsOrderDto: DetailsOrderDTO): Promise<Order[]> {
