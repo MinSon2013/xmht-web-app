@@ -6,7 +6,6 @@ import { OrdersService } from '../orders/orders.service';
 import { AgencyService } from '../agency/agency.service';
 import { NotificationService } from '../notification/notification.service';
 import { ProductsService } from '../products/products.service';
-import { MenuService } from '../menu/menu.service';
 import { DeliveryService } from '../delivery/delivery.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserRepository } from '../user/repository/user.repository';
@@ -16,7 +15,6 @@ import { OrderRepository } from '../orders/repository/order.repository';
 import { ProductRepository } from '../products/repository/product.repository';
 import { AgencyRepository } from '../agency/repository/agency.repository';
 import { ProductOrderRepository } from '../orders/repository/product-order.repository';
-import { MenuRepository } from '../menu/repository/menu.repository';
 import { DeliveryRepository } from '../delivery/repository/delivery.repository';
 import { JwtService } from '@nestjs/jwt';
 import { UserDistrictRepository } from '../user/repository/user-district.repository';
@@ -33,7 +31,6 @@ import { ReportRepository } from '../report/repository/report.repository';
             ProductRepository,
             AgencyRepository,
             ProductOrderRepository,
-            MenuRepository,
             DeliveryRepository,
             UserDistrictRepository,
             ReportRepository,
@@ -47,7 +44,6 @@ import { ReportRepository } from '../report/repository/report.repository';
         ProductsService,
         AgencyService,
         NotificationService,
-        MenuService,
         DeliveryService,
         ReportService,
         JwtService

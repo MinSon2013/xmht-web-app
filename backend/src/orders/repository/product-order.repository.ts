@@ -11,7 +11,6 @@ export class ProductOrderRepository extends Repository<ProductOrder> {
   // Get product total for order status = 4 (Đã giao hàng)
   // Screen: Statistics
   async sumProduct(body: SearchOrderDTO, agencyIdLogin: number): Promise<ProductRO[]> {
-    let res: ProductRO[] = [];
     let sql = this.createQueryBuilder('po')
       .select('SUM(po.quantity)', 'total')
       .addSelect('p.name', 'name')
@@ -46,8 +45,7 @@ export class ProductOrderRepository extends Repository<ProductOrder> {
       );
     }
 
-    let query = await sql.groupBy('p.name').getRawMany();
-    res = query;
-    return query;
+    let result = await sql.groupBy('p.name').getRawMany();
+    return result;
   }
 }

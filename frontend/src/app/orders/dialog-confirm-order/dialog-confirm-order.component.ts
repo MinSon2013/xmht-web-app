@@ -6,6 +6,9 @@ import { Helper } from '../../helpers/helper';
 import { TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import { SocketService } from '../../services/socket.service';
+import { CustomSocket } from '../../sockets/custom-socket';
+import { Product } from '../../models/product';
+import { OrderService } from '../../services/order.service';
 
 @Component({
   selector: 'app-dialog-confirm-order',
@@ -67,6 +70,8 @@ export class DialogConfirmOrderComponent implements OnInit {
     public translate: TranslateService,
     private toastr: ToastrService,
     private socketService: SocketService,
+    private socket: CustomSocket,
+    private orderService: OrderService,
   ) { dialogRef.disableClose = true; }
 
   ngOnInit(): void {
@@ -74,40 +79,68 @@ export class DialogConfirmOrderComponent implements OnInit {
     this.productList = this.data.productList ? this.data.productList : [];
     this.deliveries = this.data.deliveries ? this.data.deliveries : [];
     if (this.data.row && this.data.row.id !== 0) {
-      this.order.id = this.data.row.id;
-      this.order.createdDate = this.data.row.createdDate;
-      this.order.deliveryId = this.data.row.deliveryId;
-      this.order.pickupId = this.data.row.pickupId;
-      this.order.productTotal = this.data.row.productTotal;
-      this.order.driver = this.data.row.driver;
-      this.order.note = this.data.row.note;
-      this.order.transport = this.data.row.transport;
-      this.order.receipt = this.data.row.receipt;
-      this.order.licensePlates = this.data.row.licensePlates;
-      this.order.receivedDate = this.data.row.receivedDate;
-      this.order.status = this.data.row.status;
-      this.order.note = this.data.row.note;
-      this.order.products = this.data.row.products.sort((a: any, b: any) => a.category < b.category ? -1 : 1);
-      this.order.contract = this.data.row.contract;
-      this.order.sender = this.data.row.sender;
-      this.order.isViewed = this.data.row.isViewed;
-      this.order.agencyId = this.data.row.agencyId;
-      this.order.confirmedDate = this.data.row.confirmedDate;
-      this.order.shippingDate = this.data.row.shippingDate;
-      // this.order.approvedNumber = this.data.row.approvedNumber !== 0 ? this.data.row.approvedNumber : 0;
-      this.order.approvedNumber = this.data.row.approvedNumber;
-      this.order.agencyName = this.agencyList.find(x => x.id === this.data.row.agencyId).agencyName;
-      const status = this.status.find(x => x.value === this.order.status);
-      this.selectedStatus = status ? status : { id: null, label: '' };
-      const delivery = this.deliveries.find(x => x.id === this.order.deliveryId);
-      this.selectedDelivery = delivery ? delivery : { id: null, label: '' };
-      const pickup = this.cities.find(x => x.id === this.order.pickupId);
-      this.selectedPickup = pickup ? pickup : { id: null, label: '' };
-      const transport = this.transport.find(x => x.id === this.order.transport);
-      this.selectedTransport = transport ? transport : { id: null, label: '' };
-      const receipt = this.receipt.find(x => x.value === this.order.receipt);
-      this.selectedReceipt = receipt ? receipt : { id: null, label: '' };
+      this.mappingData(this.data.row, this.data.row.products);
     }
+
+    this.emitSocket();
+  }
+
+  mappingData(row: any, products: any[]) {
+    this.order.id = this.data.row.id;
+    this.order.createdDate = this.data.row.createdDate;
+    this.order.deliveryId = this.data.row.deliveryId;
+    this.order.pickupId = this.data.row.pickupId;
+    this.order.productTotal = this.data.row.productTotal;
+    this.order.driver = this.data.row.driver;
+    this.order.note = this.data.row.note;
+    this.order.transport = this.data.row.transport;
+    this.order.receipt = this.data.row.receipt;
+    this.order.licensePlates = this.data.row.licensePlates;
+    this.order.receivedDate = this.data.row.receivedDate;
+    this.order.status = this.data.row.status;
+    this.order.note = this.data.row.note;
+    this.order.products = this.data.row.products.sort((a: any, b: any) => a.category < b.category ? -1 : 1);
+    this.order.contract = this.data.row.contract;
+    this.order.sender = this.data.row.sender;
+    this.order.isViewed = this.data.row.isViewed;
+    this.order.agencyId = this.data.row.agencyId;
+    this.order.confirmedDate = this.data.row.confirmedDate;
+    this.order.shippingDate = this.data.row.shippingDate;
+    // this.order.approvedNumber = this.data.row.approvedNumber !== 0 ? this.data.row.approvedNumber : 0;
+    this.order.approvedNumber = this.data.row.approvedNumber;
+    this.order.agencyName = this.agencyList.find(x => x.id === this.data.row.agencyId).agencyName;
+    const status = this.status.find(x => x.value === this.order.status);
+    this.selectedStatus = status ? status : { id: null, label: '' };
+    const delivery = this.deliveries.find(x => x.id === this.order.deliveryId);
+    this.selectedDelivery = delivery ? delivery : { id: null, label: '' };
+    const pickup = this.cities.find(x => x.id === this.order.pickupId);
+    this.selectedPickup = pickup ? pickup : { id: null, label: '' };
+    const transport = this.transport.find(x => x.id === this.order.transport);
+    this.selectedTransport = transport ? transport : { id: null, label: '' };
+    const receipt = this.receipt.find(x => x.value === this.order.receipt);
+    this.selectedReceipt = receipt ? receipt : { id: null, label: '' };
+  }
+
+  emitSocket() {
+    this.socket.on('emitGetProductList', (response: Product[]) => {
+      this.getOneOrder(this.data.row.id);
+    })
+    this.socket.on('emitGetOrderList', (response: Order[]) => {
+      this.getOneOrder(this.data.row.id);
+    })
+  }
+
+  getOneOrder(id: number) {
+    this.orderService.getOneOrder(id).subscribe((response: any) => {
+      if (response) {
+        this.productList = response.productList;
+        this.productList.sort((a, b) => (a.category < b.category ? -1 : 1));
+        this.mappingData(response.order, response.products);
+      } else {
+        this.helper.showWarning(this.toastr, 'Không thể cập nhật thông tin đơn hàng do đơn hàng này đã xóa.');
+        this.dialogRef.close(null);
+      }
+    });
   }
 
   onSubmit() {

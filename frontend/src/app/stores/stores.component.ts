@@ -10,10 +10,10 @@ import { Helper } from '../helpers/helper';
 import { Store } from '../models/store';
 import { StoreService } from '../services/store.service';
 import { DialogModifyStoreComponent } from './dialog-modify-store/dialog-modify-store.component';
-import { DistrictService } from '../services/district.service';
 import { Router } from '@angular/router';
-import { AgencyService } from '../services/agency.service';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { concatMap, of, switchMap, tap } from 'rxjs';
+import { RoutesService } from '../services/routes.service';
 
 @Component({
   selector: 'app-stores',
@@ -49,13 +49,11 @@ export class StoresComponent implements OnInit {
 
   constructor(public dialog: MatDialog,
     private storeService: StoreService,
-    private districtService: DistrictService,
     public router: Router,
-    private agencyService: AgencyService,
     private deviceService: DeviceDetectorService,
+    private routesService: RoutesService,
   ) {
     this.epicFunction();
-    this.getAgencys();
   }
 
   ngOnInit(): void {
@@ -63,50 +61,66 @@ export class StoresComponent implements OnInit {
       this.displayedColumns = ['agencyName', 'districtName', 'provinceName', 'storeName', 'address', 'phone'];
     }
     this.colspan = this.displayedColumns.length;
-    if (this.isAreaManager) {
-      this.getUserDistrict();
+
+    this.onRequestServer();
+  }
+
+  onRequestServer() {
+    this.routesService.getAgencyList().pipe(
+      tap((res) => {
+        if (res.length > 0) {
+          this.agencyList = res;
+        }
+      }),
+      switchMap((result) => {
+        if (!this.isAreaManager) {
+          console.log('not true');
+          return of(result);
+        } else {
+          return this.routesService.getUserDistrictList();
+        }
+      }),
+      tap((res1) => {
+        if (res1) {
+          this.districtId = res1;
+        }
+      }),
+      concatMap(() => this.routesService.getDistrictList()),
+      tap((res1) => {
+        if (res1.length > 0) {
+          this.districtList = res1;
+          if (this.isAreaManager) {
+            this.districtList = this.districtList.filter(x => x.id === this.districtId);
+          }
+        }
+      }),
+      concatMap(() => this.routesService.getStoreList()),
+      tap((res2) => {
+        this.generalStoreList(res2);
+      }),
+    ).subscribe(success => {
+      console.log('success');
+    }, errorData => {
+      console.log('error');
+    })
+  }
+
+  generalStoreList(response: any[]) {
+    if (response.length > 0) {
+      this.dataSource.data = response;
+      if (this.isAreaManager) {
+        this.dataSource.data = this.dataSource.data.filter(x => x.districtId === this.districtId);
+      }
+      this.convertData();
+    } else {
+      this.dataSource.data = [];
     }
-    this.getDistrict();
-    this.getData();
+    this.hideShowNoDataRow();
   }
 
-  getData() {
+  getStoreList() {
     this.storeService.getStoreList().subscribe((response: any) => {
-      if (response.length > 0) {
-        this.dataSource.data = response;
-        if (this.isAreaManager) {
-          this.dataSource.data = this.dataSource.data.filter(x => x.districtId === this.districtId);
-        }
-        this.convertData();
-      } else {
-        this.dataSource.data = [];
-      }
-      this.hideShowNoDataRow();
-    });
-  }
-
-  getDistrict() {
-    this.districtService.getDistrictList().subscribe((response: any) => {
-      if (response.length > 0) {
-        this.districtList = response;
-        if (this.isAreaManager) {
-          this.districtList = this.districtList.filter(x => x.id === this.districtId);
-        }
-      }
-    });
-  }
-
-  getAgencys() {
-    this.agencyService.getAgencyList().subscribe((response: any) => {
-      this.agencyList = response;
-    });
-  }
-
-  getUserDistrict() {
-    this.districtService.getUserDistrictList().subscribe((response: any) => {
-      if (response) {
-        this.districtId = response;
-      }
+      this.generalStoreList(response);
     });
   }
 
@@ -168,7 +182,7 @@ export class StoresComponent implements OnInit {
         } else {
           this.spans = [];
           this.dataSource.data = [];
-          this.getData();
+          this.getStoreList();
 
         }
       }
@@ -184,7 +198,7 @@ export class StoresComponent implements OnInit {
       if (result) {
         this.spans = [];
         this.dataSource.data = [];
-        this.getData();
+        this.getStoreList();
         if (this.dataSource.data.length === 0) {
           this.hasData = false;
         } else {

@@ -5,7 +5,6 @@ import { ProductsModule } from './products/products.module';
 import { AgencyModule } from './agency/agency.module';
 import { OrdersModule } from './orders/orders.module';
 import { DeliveryModule } from './delivery/delivery.module';
-import { MenuModule } from './menu/menu.module';
 import { UserModule } from './user/user.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import Joi from 'joi';
@@ -47,7 +46,6 @@ import { ReportModule } from './report/report.module';
     AgencyModule,
     OrdersModule,
     DeliveryModule,
-    MenuModule,
     UserModule,
     NotificationModule,
     EventsModule,

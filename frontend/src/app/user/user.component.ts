@@ -8,10 +8,10 @@ import { DialogDeleteConfirmComponent } from '../common/dialog-delete-confirm/di
 import { SERVICE_TYPE, USER_ROLE } from '../constants/const-data';
 import { Helper } from '../helpers/helper';
 import { DialogModifyUserComponent } from './dialog-modify-user/dialog-modify-user.component';
-import { DistrictService } from '../services/district.service';
-import { UserService } from '../services/user.service';
 import { User } from '../models/user';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { RoutesService } from '../services/routes.service';
+import { concatMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-user',
@@ -41,12 +41,10 @@ export class UserComponent implements OnInit {
   sticky: boolean = true;
 
   constructor(public dialog: MatDialog,
-    private districtService: DistrictService,
-    private userService: UserService,
     private deviceService: DeviceDetectorService,
+    private routesService: RoutesService,
   ) {
     this.epicFunction();
-    this.getDistrict();
   }
 
   ngOnInit(): void {
@@ -54,27 +52,35 @@ export class UserComponent implements OnInit {
       this.displayedColumns = ['id', 'username', 'fullName', 'role', 'district'];
     }
     this.colspan = this.displayedColumns.length;
-    this.getData();
+    this.onRequestServer();
   }
 
-  getData() {
-    this.userService.getUserList().subscribe((response: any) => {
-      if (response.length > 0) {
-        this.dataSource.data = response;
-        this.convertData();
-      } else {
-        this.dataSource.data = [];
-      }
-      this.hideShowNoDataRow();
-    });
+  onRequestServer() {
+    this.routesService.getDistrictList().pipe(
+      tap((res) => {
+        if (res.length > 0) {
+          this.districtList = res;
+        }
+      }),
+      concatMap(() => this.routesService.getUserList()),
+      tap((res1) => {
+        this.generalUserList(res1);
+      }),
+    ).subscribe(success => {
+      console.log('success');
+    }, errorData => {
+      console.log('error');
+    })
   }
 
-  getDistrict() {
-    this.districtService.getDistrictList().subscribe((response: any) => {
-      if (response.length > 0) {
-        this.districtList = response;
-      }
-    });
+  generalUserList(response: any[]) {
+    if (response.length > 0) {
+      this.dataSource.data = response;
+      this.convertData();
+    } else {
+      this.dataSource.data = [];
+    }
+    this.hideShowNoDataRow();
   }
 
   convertData() {

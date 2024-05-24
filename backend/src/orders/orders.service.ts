@@ -28,23 +28,13 @@ export class OrdersService {
   ) { }
 
   async findAll(userId: number): Promise<Order[]> {
-    const user = await this.userService.getOne(userId);
-    let agencyId = 0;
-    if (!this.userRole.includes(user.role)) {
-      const agency = await this.agencyService.findOne(userId);
-      agencyId = agency.id;
-    }
-    return await this.orderRepo.getOrderList(user.role, agencyId, this.productService, this.productOrderRepo);
+    let user = await this.checkUseRole(userId);
+    return await this.orderRepo.getOrderList(user.role, user.agencyId, this.productService, this.productOrderRepo);
   }
 
   async findOne(id: number, userId: number): Promise<Order> {
-    const user = await this.userService.getOne(userId);
-    let agencyId = 0;
-    if (!this.userRole.includes(user.role)) {
-      const agency = await this.agencyService.findOne(userId);
-      agencyId = agency.id;
-    }
-    return await this.orderRepo.getOne(id, userId, agencyId, this.productService, this.productOrderRepo);
+    let user = await this.checkUseRole(userId);
+    return await this.orderRepo.getOne(id, userId, user.agencyId, this.productService, this.productOrderRepo);
   }
 
   async create(modifyOrderDto: ModifyOrderDTO): Promise<ModifyOrderDTO> {
@@ -68,33 +58,29 @@ export class OrdersService {
   }
 
   async search(searchOderDto: SearchOrderDTO): Promise<Order[]> {
-    const user = await this.userService.getOne(searchOderDto.userId);
-    let agencyId = 0;
-    if (!this.userRole.includes(user.role)) {
-      const agency = await this.agencyService.findOne(searchOderDto.userId);
-      agencyId = agency.id;
-    }
-    return await this.orderRepo.search(searchOderDto, user.role, this.productService, agencyId);
+    let user = await this.checkUseRole(searchOderDto.userId);
+    return await this.orderRepo.search(searchOderDto, this.productService, user.agencyId, user.role);
   }
 
   async details(detailsOrderDto: DetailsOrderDTO): Promise<Order[]> {
-    const user = await this.userService.getOne(detailsOrderDto.userId);
-    let agencyId = 0;
-    if (!this.userRole.includes(user.role)) {
-      const agency = await this.agencyService.findOne(detailsOrderDto.userId);
-      agencyId = agency.id;
-    }
-    return await this.orderRepo.details(detailsOrderDto, this.productService, agencyId);
+    let user = await this.checkUseRole(detailsOrderDto.userId);
+    return await this.orderRepo.details(detailsOrderDto, this.productService, user.agencyId);
   }
 
   async filters(userId: number): Promise<any[]> {
+    let user = await this.checkUseRole(userId);
+    return await this.orderRepo.getfilterList(user.agencyId, this.productService, this.agencyService, this.deliveryService);
+  }
+
+  private async checkUseRole(userId: number) {
     const user = await this.userService.getOne(userId);
     let agencyId = 0;
     if (!this.userRole.includes(user.role)) {
       const agency = await this.agencyService.findOne(userId);
       agencyId = agency.id;
     }
-    return await this.orderRepo.getfilterList(agencyId, this.productService, this.agencyService, this.deliveryService);
+
+    return { agencyId, role: user.role };
   }
 }
 

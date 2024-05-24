@@ -104,7 +104,6 @@ export class DialogDetailOrderComponent implements OnInit {
     private toastr: ToastrService,
     private socketService: SocketService,
     private socket: CustomSocket,
-    private productService: ProductService,
     private orderService: OrderService,
   ) { dialogRef.disableClose = true; }
 

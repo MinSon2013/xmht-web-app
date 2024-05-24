@@ -14,7 +14,6 @@ export const CONFIG = {
         NOTIFICATIONS: 'notifications',
         STATISTICS: 'statistics',
         DELIVERY: 'delivery',
-        MENU: 'menu',
         USER: 'users',
         DISTRICT: 'district',
         STORE: 'store',

@@ -34,6 +34,7 @@ export class AuthService {
                 delete payload.password;
 
                 let agencyId = 0;
+
                 if (!this.userRole.includes(payload.role)) {
                     const agency: AgencyRO = await this.agencyService.findOne(foundUser.id);
                     agencyId = agency.id;

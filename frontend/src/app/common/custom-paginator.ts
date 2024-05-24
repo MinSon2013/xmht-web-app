@@ -10,10 +10,11 @@ export class CustomMatPaginatorIntl extends MatPaginatorIntl {
   }
 
   getAndInitTranslations() {
-
     this.itemsPerPageLabel = 'Số dòng hiển thị:';
-    // this.nextPageLabel = "test";
-    // this.previousPageLabel = "test";
+    this.firstPageLabel = "Trang đầu";
+    this.nextPageLabel = "Trang sau";
+    this.lastPageLabel = "Trang cuối";
+    this.previousPageLabel = "Trang trước";
     this.changes.next();
 
   }

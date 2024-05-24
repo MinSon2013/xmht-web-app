@@ -34,6 +34,9 @@ export class LoginService {
                 } else if (response.body.statusCode === HttpStatusCode.NotFound) {
                     this.errorSubject.next('Tên đăng nhập không đúng.');
                     this.helper.showError(this.toastr, 'Tên đăng nhập không đúng.');
+                } else if (response.body.statusCode === HttpStatusCode.InternalServerError) {
+                    this.errorSubject.next('Lỗi server. Vui long liên hệ với quản trị viên.');
+                    this.helper.showError(this.toastr, 'Lỗi server. Vui long liên hệ với quản trị viên.');
                 }
             }),
             catchError((err) => {

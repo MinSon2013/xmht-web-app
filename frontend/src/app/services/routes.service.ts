@@ -21,39 +21,69 @@ export class RoutesService {
             .pipe(catchError(this.errorHandler));
     }
 
-    getFilterList() {
+    getFilterList(): Observable<any> {
         return this.http.get(this.url3 + `/${this.helper.getUserId()}`);
     }
 
-    secondPOSTCallToAPI(): Observable<any> {
-        return this.http
-            .get('https://jsonplaceholder.typicode.com/todos/2')
-            .pipe(catchError(this.errorHandler));
+    getDistrictList(): Observable<any> {
+        return this.http.get(CONFIG.URL.DISTRICT);
     }
 
-    thirdPOSTCallToAPI(): Observable<any> {
-        return this.http
-            .get('https://jsonplaceholder.typicode.com/todos/3')
-            .pipe(catchError(this.errorHandler));
+    getUserDistrictList(): Observable<any> {
+        const userId = this.helper.getUserId();
+        return this.http.get('users/district' + `/${userId}`);
     }
 
-    fourthPOSTCallToAPI(): Observable<any> {
-        return this.http
-            .get('https://jsonplaceholder.typicode.com/todos/4')
-            .pipe(catchError(this.errorHandler));
+    getUserList(): Observable<any> {
+        const userId = this.helper.getUserId();
+        return this.http.get(CONFIG.URL.USER + `/${userId}`);
     }
 
-    invoicePOSTCallToAPI(): Observable<any> {
-        return this.http
-            .get('https://jsonplaceholder.typicode.com/todos/5')
-            .pipe(catchError(this.errorHandler));
+    getAgencyList(): Observable<any> {
+        const agencyId = this.helper.getAgencyId();
+        return this.http.get(CONFIG.URL.AGENCY + `/${agencyId}`);
     }
 
-    sixthPOSTCallToAPI(): Observable<any> {
-        return this.http
-            .get('https://jsonplaceholder.typicode.com/todos/6')
-            .pipe(catchError(this.errorHandler));
+    getStoreList(): Observable<any> {
+        const userId = this.helper.getUserId();
+        const agencyId = this.helper.getAgencyId();
+        return this.http.get(CONFIG.URL.STORE + `/${userId}/${agencyId}`);
     }
+
+    getReportList(): Observable<any> {
+        const userId = this.helper.getUserId();
+        return this.http.get(CONFIG.URL.REPORT + `/${userId}`);
+    }
+
+    // secondPOSTCallToAPI(): Observable<any> {
+    //     return this.http
+    //         .get('https://jsonplaceholder.typicode.com/todos/2')
+    //         .pipe(catchError(this.errorHandler));
+    // }
+
+    // thirdPOSTCallToAPI(): Observable<any> {
+    //     return this.http
+    //         .get('https://jsonplaceholder.typicode.com/todos/3')
+    //         .pipe(catchError(this.errorHandler));
+    // }
+
+    // fourthPOSTCallToAPI(): Observable<any> {
+    //     return this.http
+    //         .get('https://jsonplaceholder.typicode.com/todos/4')
+    //         .pipe(catchError(this.errorHandler));
+    // }
+
+    // invoicePOSTCallToAPI(): Observable<any> {
+    //     return this.http
+    //         .get('https://jsonplaceholder.typicode.com/todos/5')
+    //         .pipe(catchError(this.errorHandler));
+    // }
+
+    // sixthPOSTCallToAPI(): Observable<any> {
+    //     return this.http
+    //         .get('https://jsonplaceholder.typicode.com/todos/6')
+    //         .pipe(catchError(this.errorHandler));
+    // }
 
     errorHandler(error: any) {
         let errorMessage = '';

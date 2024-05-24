@@ -53,7 +53,6 @@ export const SERVICE_TYPE = {
   REPORTSERVICE: 8,
 }
 
-
 export const NOTIFY_TYPE = {
   GENERAL: 1,
   COUPON: 2,
@@ -83,37 +82,10 @@ export const STOCKER_ROLE = 1;
 export const USER_SALESMAN_ROLE = 2;
 export const USER_AREA_MANAGER_ROLE = 3;
 export const AGENCY_ROLE = 4;
+
 export const PRODUCT_CATEGORIES = [
   { value: 1, label: 'Sư tử' },
   { value: 2, label: 'Phụ tử' },
   { value: 3, label: 'Xá' },
   { value: 4, label: 'Khác' },
 ]
-
-// export const SUTU = "sutu";
-// export const PHUTU = "phutu";
-// export const XA = "xa";
-// export const OTHER = "khac";
-// export const PRODUCT_CATEGORY = [
-//   {
-//     colDef: "sutu",
-//     colValue1: "Sư tử",
-//     colValue2: "su tu",
-//   },
-//   {
-//     colDef: "phutu",
-//     colValue1: "Phụ tử",
-//     colValue2: "phu tu",
-//   },
-//   {
-//     colDef: "xa",
-//     colValue1: "Xá",
-//     colValue2: "xa",
-//   },
-//   {
-//     colDef: "khac",
-//     colValue1: "Khác",
-//     colValue2: "khac",
-//   }
-// ]
-

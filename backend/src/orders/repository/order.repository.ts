@@ -17,6 +17,8 @@ import { STOCKER_ROLE } from '../../config/constant';
 export class OrderRepository extends Repository<Order> {
     private NOTIFY_TYPE_GENERAL = 1;
     private readonly helper = new Helper();
+    private readonly statusOrderForAll = [1, 2, 3, 4, 5];
+    private readonly statusOrderForStocker = [1, 2, 3,]; // Case user is stocker. GET order with status = [1,2,3]
 
     constructor() {
         super();
@@ -26,14 +28,12 @@ export class OrderRepository extends Repository<Order> {
         productService: ProductsService,
         productOrderRepo: ProductOrderRepository,
     ): Promise<Order[]> {
-        let statusForOrder = [1, 2, 3, 4, 5];
+        let response: Order[] = [];
+        let statusForOrder = this.statusOrderForAll;
         if (role === STOCKER_ROLE) {
-            // Case user is stocker
-            // GET order with status = [1,2,3]
-            statusForOrder = [1, 2, 3];
+            statusForOrder = this.statusOrderForStocker;
         }
 
-        let response: Order[] = [];
         if (agencyId !== 0) {
             response = await this.find({
                 where: {
@@ -262,9 +262,9 @@ export class OrderRepository extends Repository<Order> {
         return await this.delete(id);
     }
 
-    async search(searchOderDto: SearchOrderDTO, role: number, productService: ProductsService, agencyIdLogin: number): Promise<Order[]> {
+    async search(searchOderDto: SearchOrderDTO, productService: ProductsService, agencyIdLogin: number, role: number): Promise<Order[]> {
         let response: Order[] = [];
-        let statusForOrder = [1, 2, 3, 4, 5];
+        let statusForOrder = this.statusOrderForAll;
 
         const productList = await productService.getAllProduct();
 
@@ -275,9 +275,7 @@ export class OrderRepository extends Repository<Order> {
             .where('1=1');
 
         if (role === STOCKER_ROLE) {
-            // Case user is stocker
-            // GET order with status = [1,2,3]
-            statusForOrder = [1, 2, 3];
+            statusForOrder = this.statusOrderForStocker;
             sql = sql.andWhere('order.status IN (:statusAll)', { statusAll: statusForOrder })
         }
 
@@ -308,7 +306,10 @@ export class OrderRepository extends Repository<Order> {
             );
         }
 
-        const orderList = await sql.orderBy('order.id').getRawMany();
+        const orderList = await sql
+            .orderBy('order.approved_number', 'DESC')
+            .addOrderBy('order.id', 'DESC')
+            .getRawMany();
         const dataMap = this.mappingSearch(orderList, productList);
         response = dataMap;
         return response;
@@ -345,7 +346,6 @@ export class OrderRepository extends Repository<Order> {
         // Tai xe
         if (detailsOrderDto.driver && detailsOrderDto.driver.length > 0) {
             sql = sql.andWhere("order.driver LIKE :driver", { driver: `${detailsOrderDto.driver}` })
-            // sql = sql.andWhere("order.driver LIKE :driver", { driver: `%${detailsOrderDto.driver}%` })
         }
         // Phuong thuc nhan
         if (detailsOrderDto.receipt && detailsOrderDto.receipt.length > 0) {
@@ -405,11 +405,45 @@ export class OrderRepository extends Repository<Order> {
             orderList = await sql.orderBy('order.approved_number', 'DESC').getRawMany();
         } else {
             // Request from Details Statistic screen
-            orderList = await sql.orderBy('order.id', 'DESC').limit(1000).getRawMany();
+            orderList = await sql.orderBy('order.approved_number', 'DESC').limit(1000).getRawMany();///////
         }
         const dataMap = this.mappingSearch(orderList, productList);
         response = dataMap;
         return response;
+    }
+
+    async getfilterList(
+        agencyId: number,
+        productService: ProductsService,
+        agencyService: AgencyService,
+        deliveryService: DeliveryService,
+    ): Promise<any> {
+        let driverList = [];
+        let licensePlateList = [];
+        let agencyList = [];
+        let deliveryList = [];
+        let productList = [];
+
+        let orders = await this.find();
+
+        driverList = orders.map(x => x.driver);
+        driverList = driverList.filter((elem, index, self) => {
+            return index === self.indexOf(elem);
+        })
+        licensePlateList = orders.map(x => x.licensePlates);
+        licensePlateList = licensePlateList.filter((elem, index, self) => {
+            return index === self.indexOf(elem);
+        })
+
+        productList = await productService.getAllProduct();
+
+        if (agencyId === 0) {
+            agencyList = await agencyService.findAll(0);
+        }
+
+        deliveryList = await deliveryService.findAll();
+
+        return { productList, agencyList, driverList, licensePlateList, deliveryList };
     }
 
     private mappingOrder(modifyOrderDto: ModifyOrderDTO): Order {
@@ -551,39 +585,5 @@ export class OrderRepository extends Repository<Order> {
         }
 
         return str;
-    }
-
-    async getfilterList(
-        agencyId: number,
-        productService: ProductsService,
-        agencyService: AgencyService,
-        deliveryService: DeliveryService,
-    ): Promise<any> {
-        let driverList = [];
-        let licensePlateList = [];
-        let agencyList = [];
-        let deliveryList = [];
-        let productList = [];
-
-        let orders = await this.find();
-
-        driverList = orders.map(x => x.driver);
-        driverList = driverList.filter((elem, index, self) => {
-            return index === self.indexOf(elem);
-        })
-        licensePlateList = orders.map(x => x.licensePlates);
-        licensePlateList = licensePlateList.filter((elem, index, self) => {
-            return index === self.indexOf(elem);
-        })
-
-        productList = await productService.getAllProduct();
-
-        if (agencyId === 0) {
-            agencyList = await agencyService.findAll(0);
-        }
-
-        deliveryList = await deliveryService.findAll();
-
-        return { productList, agencyList, driverList, licensePlateList, deliveryList };
     }
 }

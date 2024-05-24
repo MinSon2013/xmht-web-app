@@ -49,6 +49,10 @@ export class AgencyRepository extends Repository<Agency> {
             .where('a.user_id = :userId', { userId })
             .getRawOne();
 
+        if (!res) {
+            throw new HttpException('Agency not found', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
         const agencyRo = new AgencyRO();
         agencyRo.id = res.a_id;
         agencyRo.agencyName = res.a_agency_name;
@@ -119,44 +123,5 @@ export class AgencyRepository extends Repository<Agency> {
         entity.updatedByUserId = modifiedDto.updatedByUserId;
         entity.updatedDate = this.helper.getUpdateDate(1);
         return entity;
-    }
-
-    //----- REMOVE ----------
-    public async getIdsNotAgency() {
-        const res = await this.createQueryBuilder('a')
-            .leftJoin(Users, 'u', 'u.id = a.user_id')
-            .where('u.is_admin IS TRUE')
-            .orWhere('u.role IN (1, 2, 3)')
-            .getMany();
-
-        const ids: number[] = [];
-        res.forEach(element => {
-            ids.push(element.id);
-        });
-        return ids;
-    }
-
-    public async getUserNotAgency() {
-        const res = await this.createQueryBuilder('a')
-            .leftJoinAndSelect(Users, 'u', 'u.id = a.user_id')
-            .where('u.is_admin IS TRUE')
-            .orWhere('u.role IN (1, 2, 3)')
-            .getRawMany();
-
-        const result: AgencyRO[] = [];
-        res.forEach(element => {
-            const item = new AgencyRO();
-            item.id = element.a_id;
-            item.agencyName = element.a_agency_name;
-            item.address = element.a_address;
-            item.contract = element.a_contract;
-            item.note = element.a_note;
-            item.email = element.a_email;
-            item.userId = element.u_id;
-            item.phone = element.a_phone;
-            item.userName = element.u_username;
-            result.push(item);
-        });
-        return result;
     }
 }

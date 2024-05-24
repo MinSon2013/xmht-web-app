@@ -16,7 +16,6 @@ import { JwtAuthGuard } from './guards/jwt.guard';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { MenuModule } from '../menu/menu.module';
 import { UserDistrictRepository } from '../user/repository/user-district.repository';
 
 @Module({
@@ -38,8 +37,6 @@ import { UserDistrictRepository } from '../user/repository/user-district.reposit
         signOptions: { expiresIn: '10000s' }
       })
     }),
-    MenuModule,
-
   ],
   providers: [
     AuthService,

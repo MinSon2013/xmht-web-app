@@ -42,9 +42,6 @@ export class OrderListComponent implements OnInit {
   dataSource = new MatTableDataSource<Order>();
   dataSourceClone = new MatTableDataSource<Order>();
 
-  // Set paginator using static data
-  // @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
-
   // Set paginator using dynamic data from Api
   @ViewChild(MatPaginator, { static: false })
   set paginator(value: MatPaginator) {
@@ -52,7 +49,6 @@ export class OrderListComponent implements OnInit {
       this.dataSource.paginator = value;
     }
   }
-  // @ViewChild(MatSort) sort!: MatSort;
 
   // Set sort using dynamic data from Api
   @ViewChild(MatSort, { static: false })
@@ -141,14 +137,10 @@ export class OrderListComponent implements OnInit {
       tap((res1) => {
         this.generalResponseToDataSource(res1);
       }),
-      // concatMap(res1 => this.getAgencys()),
-      // tap((res) => console.log('first result', res)),
-      // concatMap(res1 => this.getDelivery()),
-
       finalize(() => this.loading = false)
     ).subscribe(success => {
-      // here you will get response of LAST request (fourthPOSTCallToAPI)
-    }, errorData => { /* display error msg */ })
+      console.log('success');
+    }, errorData => { console.log('error'); })
 
   }
 
@@ -159,13 +151,6 @@ export class OrderListComponent implements OnInit {
         x.products = this.helper.sortAZ(x.products, 'id');
         x.products = this.helper.sortAZ(x.products, 'category');
       });
-      // if (this.isStocker) {
-      //   response = response.filter(
-      //     x => x.status === STATUS[1].value
-      //       || x.status === STATUS[2].value
-      //       || x.status === STATUS[3].value
-      //   );
-      // }
       this.dataSource = new MatTableDataSource(response);
       this.hasData = true;
     } else {
@@ -175,8 +160,6 @@ export class OrderListComponent implements OnInit {
     }
     this.cdr.detectChanges();
     this.dataSource.paginator = this.paginator;
-    // this.dataSourceClone = new MatTableDataSource<Order>(this.dataSource.data);
-    // setTimeout(() => this.dataSource.paginator = this.paginator);
   }
 
   generalResponseToList(response: any) {
@@ -201,15 +184,7 @@ export class OrderListComponent implements OnInit {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
   }
-
-  @HostListener('click', ['$event'])
-  onClick(event: any) {
-    const element = document.getElementsByClassName('mat-mdc-paginator-page-size-label');
-    if (element.length > 0) {
-      element[0].innerHTML = 'Số dòng hiển thị: ';
-    }
-  }
-
+  
   onAdd() {
     this.router.navigate([this.routingOrderAdd]);
   }

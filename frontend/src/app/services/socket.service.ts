@@ -13,17 +13,15 @@ export class SocketService {
     constructor(private socket: CustomSocket) {
         socket.on('disconnected', (s: any) => {
             console.log('disconnected')
-            //this.socket.connect();
         });
 
         socket.on('disconnect', (s: string) => {
-            console.log('disconnect');//
+            console.log('disconnect');
             console.log(s);
-            //this.socket.connect();
         });
 
         socket.on("connect", (s: any) => {
-            console.log("connect");//
+            console.log("connect");
         });
 
         socket.on("connection", (s: any) => {
@@ -35,14 +33,11 @@ export class SocketService {
         });
 
         socket.on("connect_error", (s: any) => {
-            console.log('connect_error');//
-            // setTimeout(() => {
-            //     this.socket.connect();
-            // }, 1000);
+            console.log('connect_error');
         });
 
         socket.on("connect_timeout", (s: any) => {
-            console.log('connect_timeout');//
+            console.log('connect_timeout');
             setTimeout(() => {
                 this.socket.connect();
             }, 1000);

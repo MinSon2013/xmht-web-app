@@ -36,14 +36,4 @@ export class AgencyService {
         await this.agencyRepo.deleteAgency(id);
         return await this.userService.deleteUser(userId);
     }
-
-    //-- REMOVE after sync
-    async deleteSync(id: number): Promise<DeleteResult> {
-        return await this.agencyRepo.deleteAgency(id);
-    }
-
-    // -- REMOVE ------------------
-    async getUserNotAgency(): Promise<AgencyRO[]> {
-        return await this.agencyRepo.getUserNotAgency();
-    }
 }

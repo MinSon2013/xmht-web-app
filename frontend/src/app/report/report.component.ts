@@ -6,8 +6,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
 import { Helper } from '../helpers/helper';
 import { Store } from '../models/store';
-import { StoreService } from '../services/store.service';
-import { DistrictService } from '../services/district.service';
 import { Router } from '@angular/router';
 import { DialogModifyReportComponent } from './dialog-modify-report/dialog-modify-report.component';
 import { MatTableDataSource } from '@angular/material/table';
@@ -15,10 +13,11 @@ import { Reports } from '../models/report';
 import { ReportService } from '../services/report.service';
 import { FormControl } from '@angular/forms';
 import { CustomMatPaginatorIntl } from '../common/custom-paginator';
-import { AgencyService } from '../services/agency.service';
 import { CustomSocket } from '../sockets/custom-socket';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { CONFIG } from '../common/config';
+import { RoutesService } from '../services/routes.service';
+import { concatMap, of, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-report',
@@ -45,9 +44,9 @@ export class ReportComponent implements OnInit {
   hasData: boolean = true;
   agencyList: any[] = [];
   districtList: any[] = [];
+  storeList: any[] = [];
   districtSelected: any = null;
   cities = Cities;
-  storeList: any[] = [];
 
   userRole: number = this.helper.getUserRole();
   isAreaManager: boolean = this.userRole === USER_AREA_MANAGER_ROLE;
@@ -61,80 +60,89 @@ export class ReportComponent implements OnInit {
 
   constructor(public dialog: MatDialog,
     private reportService: ReportService,
-    private districtService: DistrictService,
     public router: Router,
-    private storeService: StoreService,
-    private agencyService: AgencyService,
     private socket: CustomSocket,
     private deviceService: DeviceDetectorService,
+    private routesService: RoutesService,
   ) {
     this.epicFunction();
-    this.getAgencys();
   }
 
   ngOnInit() {
-    this.getStoreList();
-    this.getDistrict();
-
     if (this.isSalesman) {
       this.displayedColumns = ['rowId', 'updateDateVisisble', 'provinceName', 'storeName', 'agencyName', 'storeInformation', 'reportContent', 'attachFile', 'note'];
     }
     this.colspan = this.displayedColumns.length;
 
-    this.getData();
+    this.onRequestServer();
     this.emitSocket();
   }
 
-  getData() {
-    this.reportService.getReportList().subscribe((response: any) => {
-      if (response.length > 0) {
-        this.dataSource.data = response;
-        this.convertData();
-      } else {
-        this.dataSource.data = [];
-      }
-      this.hideShowNoDataRow();
-    });
+  onRequestServer() {
+    this.routesService.getAgencyList().pipe(
+      tap((res) => {
+        if (res.length > 0) {
+          this.agencyList = res;
+        }
+      }),
+      concatMap(() => this.routesService.getStoreList()),
+      tap((res0) => {
+        if (res0.length > 0) {
+          this.storeList = res0;
+        }
+      }),
+      switchMap((result) => {
+        if (!this.isAreaManager) {
+          console.log('not true');
+          return of(result);
+        } else {
+          return this.routesService.getUserDistrictList();
+        }
+      }),
+      tap((res1) => {
+        if (res1) {
+          this.districtId = res1;
+        }
+      }),
+      concatMap(() => this.routesService.getDistrictList()),
+      tap((res2) => {
+        if (res2.length > 0) {
+          this.districtList = res2;
+          if (this.isAreaManager) {
+            this.districtList = this.districtList.filter(x => x.id === this.districtId);
+          }
+        }
+      }),
+      concatMap(() => this.routesService.getReportList()),
+      tap((res3) => {
+        this.generalReportList(res3);
+      }),
+    ).subscribe(success => {
+      console.log('success');
+    }, errorData => {
+      console.log('error');
+    })
+  }
+
+  generalReportList(response: any[]) {
+    if (response.length > 0) {
+      this.dataSource.data = response;
+      this.convertData();
+    } else {
+      this.dataSource.data = [];
+    }
+    this.hideShowNoDataRow();
   }
 
   emitSocket() {
     this.socket.on('emitGetReportList', (response: Reports[]) => {
-      this.getData();
+      this.getReportList();
     })
   }
 
-  getDistrict() {
-    this.districtService.getDistrictList().subscribe((response: any) => {
-      if (response.length > 0) {
-        if (this.isAreaManager) {
-          this.getUserDistrict(response);
-        } else {
-          this.districtList = response;
-        }
-      }
-    });
-  }
-
-  getUserDistrict(districtList: any[]) {
-    this.districtService.getUserDistrictList().subscribe((response: any) => {
-      if (response) {
-        this.districtId = response;
-        this.districtList = districtList.filter(x => x.id === this.districtId);
-      }
-    });
-  }
-
-  getStoreList() {
-    this.storeService.getStoreList().subscribe((response: any) => {
-      if (response.length > 0) {
-        this.storeList = response;
-      }
-    });
-  }
-
-  getAgencys() {
-    this.agencyService.getAgencyList().subscribe((response: any) => {
-      this.agencyList = response;
+  getReportList() {
+    this.reportService.getReportList().subscribe((response: any) => {
+      this.generalReportList(response);
     });
   }
 
@@ -183,7 +191,7 @@ export class ReportComponent implements OnInit {
         } else {
           this.spans = [];
           this.dataSource.data = [];
-          this.getData();
+          this.getReportList();
         }
       }
     });
@@ -199,7 +207,7 @@ export class ReportComponent implements OnInit {
       if (result) {
         this.spans = [];
         this.dataSource.data = [];
-        this.getData();
+        this.getReportList();
         if (this.dataSource.data.length === 0) {
           this.hasData = false;
         } else {
