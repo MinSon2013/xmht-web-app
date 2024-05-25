@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AGENCY_ROLE, Cities, MSG_STATUS, RECEIPT, STATUS, Transports, USER_SALESMAN_ROLE } from '../../constants/const-data';
-import { Order, ProductItem } from '../../models/order';
+import { Order } from '../../models/order';
 import { MyErrorStateMatcher } from '../order-add/order-add.component';
 import { Helper } from '../../helpers/helper';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -12,7 +12,6 @@ import { SocketService } from '../../services/socket.service';
 import { tap } from 'rxjs';
 import { Product } from '../../models/product';
 import { CustomSocket } from '../../sockets/custom-socket';
-import { ProductService } from '../../services/product.service';
 import { OrderService } from '../../services/order.service';
 
 export const MY_FORMATS = {
@@ -175,7 +174,7 @@ export class DialogDetailOrderComponent implements OnInit {
     this.agencySelected = agency ? agency : { id: null, label: '' };
     const receipt = this.receipt.find(x => x.value === this.order.receipt);
     this.receiptSelected = receipt ? receipt : { id: null, label: '' };
-    this.setProductOrder(this.order.products);
+    this.generalProductOrder();
 
     // set valuefor receivedDate picker
     const [day, month, year] = this.order.receivedDate.split('/');
@@ -196,30 +195,20 @@ export class DialogDetailOrderComponent implements OnInit {
     }
   }
 
-  setProductOrder(product: any[]) {
-    const products: any[] = product;
-    this.order.products = this.productList;
-    let listMap = this.order.products.map((e, i) => {
-      let temp = products.find(element => element.id === e.id)
-      if (temp) {
-        e.quantity = temp.quantity;
-      } else {
-        e.quantity = '';
+  private generalProductOrder() {
+    const products: any[] = this.productList.map(e => ({
+      id: e.id,
+      name: e.name,
+      quantity: "",
+      category: e.category,
+    }));
+    this.order.products.forEach(x => {
+      let item = products.find(element => element.id === x.id);
+      if (item) {
+        item.quantity = x.quantity;
       }
-      return e;
     });
-
-    const list: ProductItem[] = [];
-    listMap.forEach(element => {
-      const item = {
-        id: element.id,
-        name: element.name,
-        quantity: element.quantity,
-        category: element.category,
-      };
-      list.push(item);
-    });
-    this.order.products = list;
+    this.order.products = products;
   }
 
   onSubmit() {

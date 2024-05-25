@@ -96,9 +96,10 @@ export class OrderRepository extends Repository<Order> {
         const productOrderList = await productOrderRepo.find({ orderId: orderList.id });
         let products = [];
         productOrderList.forEach(i => {
+            let pName = productList.find(x => x.id === i.productId);
             const temp = {
                 id: i.productId,
-                name: productList.find(x => x.id === i.productId).name,
+                name: pName ? pName.name : "",
                 quantity: i.quantity,
             };
             products.push(temp);

@@ -10,12 +10,10 @@ import { ToastrService } from 'ngx-toastr';
 import { TranslateService } from '@ngx-translate/core';
 import { SocketService } from '../../services/socket.service';
 import { tap } from 'rxjs';
-import { DeliveryService } from '../../services/delivery.service';
-import { AgencyService } from '../../services/agency.service';
-import { ProductService } from '../../services/product.service';
 import { CONFIG } from '../../common/config';
 import { CustomSocket } from '../../sockets/custom-socket';
 import { Product } from '../../models/product';
+import { OrderService } from '../../services/order.service';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -94,50 +92,37 @@ export class OrderAddComponent implements OnInit {
     public translate: TranslateService,
     private toastr: ToastrService,
     private socketService: SocketService,
-    private deliveryService: DeliveryService,
-    private agencyService: AgencyService,
-    private productService: ProductService,
     private socket: CustomSocket,
+    private orderService: OrderService,
   ) { }
 
   ngOnInit(): void {
-    this.getAgencys();
-    this.getProducts();
-    this.getDelivery();
     this.emitSocket();
   }
 
   emitSocket() {
     this.socket.on('emitGetProductList', (response: Product[]) => {
-      this.getProducts();
+      this.getFilterList();
     })
   }
 
-  getAgencys() {
-    this.agencyService.getAgencyList().subscribe((response: any) => {
-      this.agencyList = response;
-      if (this.isAgency) {
-        const agency = this.agencyList.find(x => x.id === this.helper.getAgencyId());
-        this.order.contract = agency.contract;
+  getFilterList() {
+    this.orderService.getFilterList().subscribe((response: any) => {
+      if (response) {
+        this.agencyList = this.helper.sortAZ(response.agencyList, 'agencyName');
+        this.productList = this.helper.sortAZ(response.productList, 'id');
+        this.productList = this.helper.sortAZ(this.productList, 'category');
+        this.deliveries = response.deliveryList;
+        this.generalProductOrder();
+        if (this.isAgency) {
+          const agency = this.agencyList.find(x => x.id === this.helper.getAgencyId());
+          this.order.contract = agency.contract;
+        }
       }
-    });
+    })
   }
 
-  getProducts() {
-    this.productService.getProductList().subscribe((response: any) => {
-      this.productList = response;
-      this.setProductOrder();
-      this.productList.sort((a, b) => (a.category < b.category ? -1 : 1));
-    });
-  }
-
-  getDelivery() {
-    this.deliveryService.getDeliveryList().subscribe((response: any) => {
-      this.deliveries = response;
-    });
-  }
-
-  setProductOrder() {
+  private generalProductOrder() {
     const list: ProductItem[] = [];
     this.productList.forEach(element => {
       const item = {
