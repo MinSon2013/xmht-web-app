@@ -104,20 +104,20 @@
         <div class="div-header div-btn">
             <span (click)="resetFormSearch()" class="span-clear-filter">{{ "ORDER.RESET_FORM_SEARCH" | translate
                 }}</span>
-            <button mat-raised-button class="btn-filter" (click)="onShow()" [disabled]="progressLoading">
+            <button mat-raised-button class="btn-filter" (click)="onShow()" [disabled]="loading">
                 {{ "BUTTON.SHOW_REPORT" | translate }}
             </button>
         </div>
     </div>
 
-    <div *ngIf="progressLoading" class="d-flex justify-content-center">
+    <div *ngIf="loading" class="d-flex justify-content-center">
         <div class="spinner-border" role="status">
             <span class="sr-only" id="loading"></span>
         </div>
     </div>
 
-    <div *ngIf="showDetailOrderTable && !progressLoading && dataSource.data.length === 0"
-        class="d-flex justify-content-center" style="padding: 1rem;">
+    <div *ngIf="showDetailOrderTable && !loading && dataSource.data.length === 0" class="d-flex justify-content-center"
+        style="padding: 1rem;">
         {{"MESSAGE.NO_DATA" | translate}}
     </div>
 
@@ -242,7 +242,7 @@
 
                 <!-- Product Name Column -->
                 <ng-container [matColumnDef]="item.label"
-                    *ngFor="let item of displayedColumnsProductName;let i = index">
+                    *ngFor="let item of displayedColumnsProductName;trackBy: customTrackBy;let i = index">
                     <th mat-header-cell *matHeaderCellDef class="align-top {{getClass(item.label)}}">
                         {{item.value}}</th>
                     <td mat-cell *matCellDef="let element" class="p-td {{getClass(item.label)}}">
@@ -306,7 +306,7 @@
                 <tr mat-header-row *matFooterRowDef="columnDefRowSumSection"></tr>
                 <tr mat-header-row *matHeaderRowDef="columnsRow1Section"></tr>
                 <tr mat-header-row *matHeaderRowDef="columnsRowProductCategory"></tr>
-                <tr mat-header-row *matHeaderRowDef="columnsRowProductName"></tr>
+                <tr mat-header-row *matHeaderRowDef="columnsDefProductName"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumnsSection;"></tr>
             </table>
         </div>

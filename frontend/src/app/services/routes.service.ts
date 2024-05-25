@@ -4,11 +4,11 @@ import { catchError } from 'rxjs/operators';
 import { WebRequestService } from './web-request.service';
 import { CONFIG } from '../common/config';
 import { Helper } from '../helpers/helper';
+import { SearchDetailsOrder } from '../models/search';
 
 @Injectable()
 export class RoutesService {
     readonly url: string = CONFIG.URL.ORDERS.ORDER;
-    readonly url1: string = CONFIG.URL.ORDERS.SEARCH;
     readonly url2: string = CONFIG.URL.ORDERS.SEARCH_DEATILS;
     readonly url3: string = CONFIG.URL.ORDERS.FILTER;
     readonly helper = new Helper();
@@ -25,13 +25,30 @@ export class RoutesService {
         return this.http.get(this.url3 + `/${this.helper.getUserId()}`);
     }
 
+    getOrderDetails(obj: SearchDetailsOrder): Observable<any> {
+        const payload = {
+            agencyId: obj.agencyId.toString(),
+            deliveryId: obj.deliveryId.toString(),
+            pickupId: obj.pickupId.toString(),
+            licensePlate: obj.licensePlate.trim(),
+            driver: obj.driver.trim(),
+            receipt: obj.receipt.toString(),
+            status: obj.status,
+            productId: obj.productId.toString(),
+            startDate: obj.startDate,
+            endDate: obj.endDate,
+            userId: this.helper.getUserId(),
+        }
+        return this.http.post(this.url2, payload);
+    }
+
     getDistrictList(): Observable<any> {
         return this.http.get(CONFIG.URL.DISTRICT);
     }
 
     getUserDistrictList(): Observable<any> {
         const userId = this.helper.getUserId();
-        return this.http.get('users/district' + `/${userId}`);
+        return this.http.get(CONFIG.URL.USER + "/" + CONFIG.URL.DISTRICT + `/${userId}`);
     }
 
     getUserList(): Observable<any> {
@@ -54,36 +71,6 @@ export class RoutesService {
         const userId = this.helper.getUserId();
         return this.http.get(CONFIG.URL.REPORT + `/${userId}`);
     }
-
-    // secondPOSTCallToAPI(): Observable<any> {
-    //     return this.http
-    //         .get('https://jsonplaceholder.typicode.com/todos/2')
-    //         .pipe(catchError(this.errorHandler));
-    // }
-
-    // thirdPOSTCallToAPI(): Observable<any> {
-    //     return this.http
-    //         .get('https://jsonplaceholder.typicode.com/todos/3')
-    //         .pipe(catchError(this.errorHandler));
-    // }
-
-    // fourthPOSTCallToAPI(): Observable<any> {
-    //     return this.http
-    //         .get('https://jsonplaceholder.typicode.com/todos/4')
-    //         .pipe(catchError(this.errorHandler));
-    // }
-
-    // invoicePOSTCallToAPI(): Observable<any> {
-    //     return this.http
-    //         .get('https://jsonplaceholder.typicode.com/todos/5')
-    //         .pipe(catchError(this.errorHandler));
-    // }
-
-    // sixthPOSTCallToAPI(): Observable<any> {
-    //     return this.http
-    //         .get('https://jsonplaceholder.typicode.com/todos/6')
-    //         .pipe(catchError(this.errorHandler));
-    // }
 
     errorHandler(error: any) {
         let errorMessage = '';

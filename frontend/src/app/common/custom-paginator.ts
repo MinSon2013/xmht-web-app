@@ -16,7 +16,6 @@ export class CustomMatPaginatorIntl extends MatPaginatorIntl {
     this.lastPageLabel = "Trang cuối";
     this.previousPageLabel = "Trang trước";
     this.changes.next();
-
   }
 
   override getRangeLabel = (page: number, pageSize: number, length: number) => {

@@ -385,7 +385,7 @@ export class OrderListComponent implements OnInit {
     this.searchForm.endDate = this.range.value.end !== null ? this.helper.getDateFormat(3, this.range.value.end) : '';
     this.orderService.search(this.searchForm).subscribe((response: any) => {
       if (response.length > 0) {
-        this.dataSource.data = response.reverse();
+        this.dataSource.data = response;
         this.dataSource.data.forEach(x => {
           x.agencyName = this.agencyList.find(i => i.id === x.agencyId)?.agencyName;
         });

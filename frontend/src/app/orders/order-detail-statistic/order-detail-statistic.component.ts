@@ -26,7 +26,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
     end: new FormControl<Date | null>(null),
   });
   showDetailOrderTable: boolean = false;
-  progressLoading: boolean = true;
+  loading: boolean = true;
   fileNameExcel: string = "Bang-chi-tiet-xuat-hang-theo-ma-so.xlsx";
 
   cities: any[] = Cities;
@@ -48,7 +48,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
   colDefSection: string[] = ['no', 'customer', 'createDate', 'contract', 'receivedDate', 'confirmDate', 'shippingDate', 'deliveryAddress', 'pickupAddress'];
   columnsRow1Section: string[] = [...this.colDefSection, 'products', 'receipt', 'sum', 'license_plate', 'driver'];
   columnsRowProductCategory: string[] = [];
-  columnsRowProductName: string[] = [];
+  columnsDefProductName: string[] = [];
   displayedColumnsProductName: { id: number, label: string, value: string }[] = [];
   displayedColumnsSection: string[] = [];
   columnDefRowSumSection: string[] = [];
@@ -106,7 +106,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
     public translate: TranslateService,
     private socket: CustomSocket,
     private productService: ProductService,
-    private changeDetectorRefs: ChangeDetectorRef,
+    private cdr: ChangeDetectorRef,
   ) {
   }
 
@@ -114,6 +114,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.loading = true;
     this.getFilterList();
     this.initHeader();
     this.emitSocket();
@@ -123,17 +124,21 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
     this.socket.on('emitGetOrderList', (response: Product[]) => {
       this.setDisplayedColumns();
     });
+    this.socket.on('statusOrderChanged', (response: Product[]) => {
+      this.setDisplayedColumns();
+    })
     this.socket.on('emitGetProductList', (response: Product[]) => {
-      this.getProductList();
+      this.getOrderDetailData();
     })
   }
 
-  getProductList() {
+  getOrderDetailData() {
     this.productService.getProductList().subscribe((response: any) => {
       if (response.length > 0) {
         this.productList = response;
         this.productList.sort((a, b) => (a.category > b.category ? -1 : 1));
-        this.onShow();
+        this.autoScrollView();
+        this.setDisplayedColumns();
       } else {
         this.productList = [];
       }
@@ -141,7 +146,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
   }
 
   onShow() {
-    this.progressLoading = true;
+    this.loading = true;
     this.showDetailOrderTable = false;
     this.fromToDate = `Từ ngày ${this.helper.getDateFormat(3, this.range.value.start)} đến ngày ${this.helper.getDateFormat(3, this.range.value.end)}`;
     this.searchForm.agencyId = this.customerSelected ? this.customerSelected.id : "";
@@ -156,14 +161,11 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
       this.searchForm.agencyId = this.helper.getAgencyId() + "";
     }
     this.autoScrollView();
-    console.time('setDisplayedColumns')
     this.setDisplayedColumns();
-    console.timeEnd('setDisplayedColumns')
   }
 
   resetFormSearch() {
     this.invalid();
-    // Reset search filter
     this.receivedAdressSelected = null;
     this.receiptSelected = null;
     this.productSelected = null;
@@ -207,7 +209,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
         this.licensePlateList = this.sortAZ(licensePlateList);
         this.driverList = this.sortAZ(driverList);
 
-        this.progressLoading = false;
+        this.loading = false;
       }
     });
   }
@@ -240,22 +242,9 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
   private setDisplayedColumns() {
     this.productDataSource = [];
     this.columnsRowProductCategory = [];
-    this.columnsRowProductName = [];
+    this.columnsDefProductName = [];
+    this.displayedColumnsProductName = [];
     this.displayedColumnsSection = [];
-
-    const replacements = [
-      [" SƯ TỬ", ""],
-      [" Sư Tử", ""],
-      [" Sư tử", ""],
-      [" sư tử", ""],
-      [" PHỤ TỬ", ""],
-      [" Phụ Tử", ""],
-      [" Phụ tử", ""],
-      [" phụ tử", ""],
-      [" XÁ", ""],
-      [" Xá", ""],
-      [" xá", ""],
-    ];
 
     let sutuList: { pId: number, pCategory: number, pName: string }[] = [];
     let phutuList: { pId: number, pCategory: number, pName: string }[] = [];
@@ -263,18 +252,13 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
     let khacList: { pId: number, pCategory: number, pName: string }[] = [];
     this.thColspan = this.productList.length;
 
-    /** Phan tung loai san pham */
     /** Replacement product name for displayed columns */
     let subProductList = this.groupByValue(this.productList, 'category');
     subProductList.forEach((e: any) => {
       switch (e[0].category) {
         case PRODUCT_CATEGORIES[0].value:
           e.forEach((x: any) => {
-            let productNameReplacement = replacements.reduce(
-              (acc, [oldStr, newStr]) => {
-                return acc.replaceAll(oldStr, newStr);
-              }, x.name);
-            sutuList.push({ pId: x.id, pCategory: x.category, pName: productNameReplacement });
+            sutuList.push({ pId: x.id, pCategory: x.category, pName: this.replaceProductName(x.name) });
           });
           this.productDataSource.push({
             displayedCategory: PRODUCT_CATEGORIES[0].label,
@@ -286,11 +270,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
           break;
         case PRODUCT_CATEGORIES[1].value:
           e.forEach((x: any) => {
-            let productNameReplacement = replacements.reduce(
-              (acc, [oldStr, newStr]) => {
-                return acc.replaceAll(oldStr, newStr);
-              }, x.name);
-            phutuList.push({ pId: x.id, pCategory: x.category, pName: productNameReplacement });
+            phutuList.push({ pId: x.id, pCategory: x.category, pName: this.replaceProductName(x.name) });
           });
           this.productDataSource.push({
             displayedCategory: PRODUCT_CATEGORIES[1].label,
@@ -302,11 +282,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
           break;
         case PRODUCT_CATEGORIES[2].value:
           e.forEach((x: any) => {
-            let productNameReplacement = replacements.reduce(
-              (acc, [oldStr, newStr]) => {
-                return acc.replaceAll(oldStr, newStr);
-              }, x.name);
-            xaList.push({ pId: x.id, pCategory: x.category, pName: productNameReplacement });
+            xaList.push({ pId: x.id, pCategory: x.category, pName: this.replaceProductName(x.name) });
           });
           this.productDataSource.push({
             displayedCategory: PRODUCT_CATEGORIES[2].label,
@@ -318,11 +294,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
           break;
         case PRODUCT_CATEGORIES[3].value:
           e.forEach((x: any) => {
-            let productNameReplacement = replacements.reduce(
-              (acc, [oldStr, newStr]) => {
-                return acc.replaceAll(oldStr, newStr);
-              }, x.name);
-            khacList.push({ pId: x.id, pCategory: x.category, pName: productNameReplacement });
+            khacList.push({ pId: x.id, pCategory: x.category, pName: this.replaceProductName(x.name) });
           });
           this.productDataSource.push({
             displayedCategory: PRODUCT_CATEGORIES[3].label,
@@ -336,29 +308,33 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
     });
 
     /** Displayed column product name  */
-    const arrProduct = [...sutuList, ...phutuList, ...xaList, ...khacList];
-    this.columnsRowProductName = arrProduct.map(p => p.pCategory.toString() + "." + arrProduct.indexOf(p));
-    this.displayedColumnsProductName = arrProduct.map(p =>
+    const displayedProductList = [...sutuList, ...phutuList, ...xaList, ...khacList];
+    this.columnsDefProductName = displayedProductList.map(p => p.pCategory.toString() + "." + displayedProductList.indexOf(p));
+    this.displayedColumnsProductName = displayedProductList.map(p =>
     ({
       id: p.pId,
-      label: p.pCategory.toString() + "." + arrProduct.indexOf(p),
+      label: p.pCategory.toString() + "." + displayedProductList.indexOf(p),
       value: p.pName
     })
     );
 
     /** Handle columndef for section1 */
-    this.displayedColumnsSection = [...this.colDefSection, ...this.columnsRowProductName, 'receipt', 'sum', 'license_plate', 'driver']
-    this.changeDetectorRefs.detectChanges();
+    this.displayedColumnsSection = [...this.colDefSection, ...this.columnsDefProductName, 'receipt', 'sum', 'license_plate', 'driver']
+    this.cdr.detectChanges();
 
-    this.setDataSourceSection();
+    this.generalOrderDetailToTable();
   }
 
-  private setDataSourceSection() {
+  private generalOrderDetailToTable() {
     this.dataSourceObject = [];
-    let sumCol: any[] = [];
+    let sumRow: any[] = [];
     const productTemplate = this.displayedColumnsProductName.map(x => ({ pId: x.id, pValue: "", pCategory: x.label }));
+
     this.orderService.searchDetails(this.searchForm).subscribe((response: any) => {
       if (response.length > 0) {
+        this.columnDefRowSumSection = [];
+        this.displayedRowSumSection = [];
+
         /** Mapping data cell for Section 1 */
         /*** Hanled datasource for display on a cell */
         response.forEach((x: any) => {
@@ -389,38 +365,37 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
             pickupAddress: this.cities.find(k => k.id === x.pickupId) ? this.cities.find(k => k.id === x.pickupId).label : "",
             driver: x.driver.trim(),
           });
-          sumCol = [...sumCol, ...products];
+          sumRow = [...sumRow, ...products];
         });
 
-        this.columnDefRowSumSection = [];
-        this.displayedRowSumSection = [];
+        this.dataSource.data = this.dataSourceObject;
 
         /** Set sum value footẻ of every product */
-        let subSumColsSection = this.groupByValue(sumCol, 'pCategory');
-        // Sum all of sum
-        let sumAll1 = this.helper.sum(this.dataSourceObject, 'sum');
+        let groupSumColsSection = this.groupByValue(sumRow, 'pCategory');
 
-        this.dataSource.data = this.dataSourceObject;
-        let sumColRow1 = productTemplate.map(x => ({ ...x }));
-        subSumColsSection.forEach((e: any) => {
-          this.columnDefRowSumSection.push(e[0].pCategory + ".s" + subSumColsSection.indexOf(e));
+        // Sum all of sum
+        let sumTotal = this.helper.sum(this.dataSourceObject, 'sum');
+
+        let sumColRow = productTemplate.map(x => ({ ...x }));
+        groupSumColsSection.forEach((e: any) => {
+          this.columnDefRowSumSection.push(e[0].pCategory + ".s" + groupSumColsSection.indexOf(e));
           let sum = this.helper.sum(e, 'pValue');
-          sumColRow1.map(y => {
+          sumColRow.map(y => {
             if (y.pId === e[0].pId) {
               y.pValue = sum + "";
             }
           });
         });
 
-        sumColRow1.forEach(e => {
-          this.displayedRowSumSection.push({ label: e.pCategory + ".s" + sumColRow1.indexOf(e), value: Number(e.pValue) });
+        sumColRow.forEach(e => {
+          this.displayedRowSumSection.push({ label: e.pCategory + ".s" + sumColRow.indexOf(e), value: Number(e.pValue) });
         });
 
         this.columnDefRowSumSection.push("s" + (this.thColspan + 1));
         this.columnDefRowSumSection.push("s" + (this.thColspan + 2));
         this.columnDefRowSumSection = ['footer-row-label', ...this.columnDefRowSumSection];
         this.displayedRowSumSection.push({ label: "s" + (this.thColspan + 1), value: 0 });
-        this.displayedRowSumSection.push({ label: "s" + (this.thColspan + 2), value: sumAll1 });
+        this.displayedRowSumSection.push({ label: "s" + (this.thColspan + 2), value: sumTotal });
 
       } else {
         this.dataSource.data = [];
@@ -436,7 +411,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
         this.displayedRowSumSection.push({ label: "s" + (this.thColspan + 1), value: 0 });
       }
       this.showDetailOrderTable = true;
-      this.progressLoading = false;
+      this.loading = false;
     });
   }
 
@@ -454,6 +429,28 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
       acc[curr[key]].push(curr)
       return acc;
     }, {}));
+  }
+
+  private replaceProductName(name: string) {
+    const replacements = [
+      [" SƯ TỬ", ""],
+      [" Sư Tử", ""],
+      [" Sư tử", ""],
+      [" sư tử", ""],
+      [" PHỤ TỬ", ""],
+      [" Phụ Tử", ""],
+      [" Phụ tử", ""],
+      [" phụ tử", ""],
+      [" XÁ", ""],
+      [" Xá", ""],
+      [" xá", ""],
+    ];
+
+    let _name = replacements.reduce(
+      (acc, [oldStr, newStr]) => {
+        return acc.replaceAll(oldStr, newStr);
+      }, name);
+    return _name;
   }
 
   getClass(categoryValue: string) {
@@ -821,4 +818,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
     return str = str.replace(":", "h").replace(" ", "' ");
   }
 
+  customTrackBy(index: any, item: any) {
+    return item.label;
+  }
 }
