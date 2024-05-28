@@ -17,9 +17,6 @@ export class NotificationService {
     ) { }
 
     getNotificationList(take: number, skip: number): Observable<any> {
-        // const agencyId = this.helper.getAgencyId();
-        // return this.webrequestService.get(this.url + `/${agencyId}`);
-
         let params = new HttpParams();
         params = params.append("agencyId", this.helper.getAgencyId());
         params = params.append("take", take);

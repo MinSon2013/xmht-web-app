@@ -67,7 +67,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
   getData() {
     this.routesService.getProductList().subscribe((response: any) => {
       if (response.length > 0) {
-        this.dataSource.data = response.reverse();
+        this.dataSource.data = this.helper.sortAZ(response, 'category');
       } else {
         this.dataSource.data = [];
       }

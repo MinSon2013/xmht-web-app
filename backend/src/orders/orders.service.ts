@@ -70,7 +70,7 @@ export class OrdersService {
 
   async filters(userId: number): Promise<any[]> {
     let user = await this.checkUseRole(userId);
-    return await this.orderRepo.getfilterList(user.agencyId, this.productService, this.agencyService, this.deliveryService);
+    return await this.orderRepo.getfilterList(userId, user.agencyId, this.productService, this.agencyService, this.deliveryService);
   }
 
   private async checkUseRole(userId: number) {

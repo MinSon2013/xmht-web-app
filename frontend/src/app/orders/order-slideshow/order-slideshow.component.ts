@@ -123,7 +123,7 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
       }),
       concatMap(() => this.routesService.getOrderDetails(this.searchForm)),
       tap((res1) => {
-        this.mappingOrderDetail(res1);
+        this.mappingOrderDetail(res1.orders);
       }),
       finalize(() => this.loading = false)
     ).subscribe(success => {

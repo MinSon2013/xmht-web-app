@@ -46,7 +46,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
 
   /** Defined column section1 */
   colDefSection: string[] = ['no', 'customer', 'createDate', 'contract', 'receivedDate', 'confirmDate', 'shippingDate', 'deliveryAddress', 'pickupAddress'];
-  columnsRow1Section: string[] = [...this.colDefSection, 'products', 'receipt', 'sum', 'license_plate', 'driver'];
+  columnsRow1Section: string[] = [...this.colDefSection, 'products', 'sum', 'receipt', 'license_plate', 'driver'];
   columnsRowProductCategory: string[] = [];
   columnsDefProductName: string[] = [];
   displayedColumnsProductName: { id: number, label: string, value: string }[] = [];
@@ -383,7 +383,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
     );
 
     /** Handle columndef for section1 */
-    this.displayedColumnsSection = [...this.colDefSection, ...this.columnsDefProductName, 'receipt', 'sum', 'license_plate', 'driver']
+    this.displayedColumnsSection = [...this.colDefSection, ...this.columnsDefProductName, 'sum', 'receipt', 'license_plate', 'driver']
   }
 
   getOrderDetailData() {
@@ -482,8 +482,8 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
     this.columnDefRowSumSection.push("s" + (this.thColspan + 1));
     this.columnDefRowSumSection.push("s" + (this.thColspan + 2));
     this.columnDefRowSumSection = ['footer-row-label', ...this.columnDefRowSumSection];
-    this.displayedRowSumSection.push({ label: "s" + (this.thColspan + 1), value: 0 });
-    this.displayedRowSumSection.push({ label: "s" + (this.thColspan + 2), value: sumTotal });
+    this.displayedRowSumSection.push({ label: "s" + (this.thColspan + 1), value: sumTotal });
+    this.displayedRowSumSection.push({ label: "s" + (this.thColspan + 2), value: 0 });
 
     this.cdr.detectChanges();
   }
@@ -559,7 +559,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
       'Nơi nhận',
       'Nơi giao',
     ];
-    const rightHeader = ['Phương thức\n nhận', 'Tổng từng\n đơn hàng', 'Phương tiện', 'Tên tài xế'];
+    const rightHeader = ['Tổng từng\n đơn hàng', 'Phương thức\n nhận', 'Phương tiện', 'Tên tài xế'];
 
     // Convert header of table excel
     let productType: string[] = [];
@@ -644,8 +644,8 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
         row.push(p.pValue); // Cell 9......n
       });
 
-      row.push(e.receipt); // Cell 10
-      row.push(e.sum); // Cell 11
+      row.push(e.sum); // Cell 10
+      row.push(e.receipt); // Cell 11
       row.push(e.licensePlate); // Cell 12
       row.push(e.driver); // Cell 13
 
@@ -716,8 +716,8 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
       wscols.push({ wch: 10 });
     });
 
-    wscols.push({ wch: 12 });
     wscols.push({ wch: 15 });
+    wscols.push({ wch: 12 });
     wscols.push({ wch: 15 });
     wscols.push({ wch: 20 });
 
@@ -871,7 +871,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
       ws[rowSum].s = ExcelDetailsConfig.rowSumStyle;
     }
 
-    const colFs = XLSX.utils.encode_cell({ c: colMiddleIdx + 1, r: (rows.length - 3) });
+    const colFs = XLSX.utils.encode_cell({ c: colMiddleIdx, r: (rows.length - 3) });
     delete ws[colFs].w;
     ws[colFs].s = ExcelDetailsConfig.styleSumFooter;
     /** END - set css style for cells */

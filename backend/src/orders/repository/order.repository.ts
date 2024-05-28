@@ -466,6 +466,7 @@ export class OrderRepository extends Repository<Order> {
     }
 
     async getfilterList(
+        userId: number,
         agencyId: number,
         productService: ProductsService,
         agencyService: AgencyService,
@@ -492,6 +493,9 @@ export class OrderRepository extends Repository<Order> {
 
         if (agencyId === 0) {
             agencyList = await agencyService.findAll(0);
+        } else {
+            let agency = await agencyService.findOne(userId);
+            agencyList = [agency];
         }
 
         deliveryList = await deliveryService.findAll();

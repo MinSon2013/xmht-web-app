@@ -1,5 +1,5 @@
 <app-header id="app-header" *ngIf="loginService.isAuthenticated() && showNavigation"></app-header>
 <app-body></app-body>
-<div class="footer text-center text-xs">
+<div class="footer text-center text-xs" *ngIf="showNavigation">
     &copy;{{'COPY_RIGHT' | translate}}
 </div>
