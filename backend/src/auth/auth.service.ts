@@ -116,6 +116,7 @@ export class AuthService {
 
     // -- REMOVE ---------
     async loginXX(user: AuthDto) {
+        console.log('bat dau chay dong bo')
         await this.syncDatabase();
     }
 
@@ -129,10 +130,12 @@ export class AuthService {
         const userList = await this.userService.getAllUserList();
 
         try {
+            console.log('... dang dong bo')
             for (let el of userList) {
                 // Update user-role, full-name for agency in `users`
                 const f = agencyListNotUser.find(x => x.userId === el.id);
                 if (f) {
+                    console.log('... dong bo khach hang')
                     await this.userService.syncUser(el.id, f.agencyName, f.role);
                     // await this.userService.syncUser(el.id, f.agencyName, 4);
                 }
@@ -140,13 +143,15 @@ export class AuthService {
                 // Update full-name for user in `users`
                 const ff = agencyListUser.find(y => y.userId === el.id);
                 if (ff) {
+                    console.log('...  dong bo admin, thukho')
                     // delete admin, thukho khoi agency
                     await this.userService.syncUser(el.id, ff.agencyName, 0);
                     await this.agencyService.deleteSync(ff.id);
                 }
             }
-
+            console.log('ket thuc chay dong bo')
         } catch (err) {
+            console.log('loi dong bo err')
             throw new HttpException('sync fail', HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
