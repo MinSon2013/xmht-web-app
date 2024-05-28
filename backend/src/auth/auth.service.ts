@@ -25,7 +25,7 @@ export class AuthService {
         private configService: ConfigService,
     ) { }
 
-    async loginXX(user: AuthDto) {
+    async login(user: AuthDto) {
         const foundUser: Users = await this.userService.findByUsername(user.username);
         if (foundUser) {
             const matches: boolean = await this.validatePassword(user.password, foundUser.password);
@@ -115,7 +115,7 @@ export class AuthService {
     }
 
     // -- REMOVE ---------
-    async login(user: AuthDto) {
+    async loginXX(user: AuthDto) {
         await this.syncDatabase();
     }
 
