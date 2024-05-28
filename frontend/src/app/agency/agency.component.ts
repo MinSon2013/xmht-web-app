@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -7,10 +7,10 @@ import { Agency } from '../models/agency';
 import { CustomMatPaginatorIntl } from '../common/custom-paginator';
 import { DialogDeleteConfirmComponent } from '../common/dialog-delete-confirm/dialog-delete-confirm.component';
 import { DialogDetailAgencyComponent } from './dialog-detail-agency/dialog-detail-agency.component';
-import { AgencyService } from '../services/agency.service';
 import { AGENCY_ROLE, SERVICE_TYPE, STOCKER_ROLE, USER_AREA_MANAGER_ROLE } from '../constants/const-data';
 import { Helper } from '../helpers/helper';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { RoutesService } from '../services/routes.service';
 
 @Component({
   selector: 'app-agency',
@@ -20,7 +20,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
     { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl }
   ]
 })
-export class AgencyComponent implements OnInit {
+export class AgencyComponent implements OnInit, OnDestroy {
 
   displayedColumns: string[] = ['id', 'agencyName', 'address', 'phone', 'email', 'contract', 'note', 'deleteAction'];
   dataSource = new MatTableDataSource<Agency>();
@@ -39,7 +39,7 @@ export class AgencyComponent implements OnInit {
   isAgency: boolean = this.userRole === AGENCY_ROLE;
 
   constructor(public dialog: MatDialog,
-    private agencyService: AgencyService,
+    private routesService: RoutesService,
     private deviceService: DeviceDetectorService,
   ) {
     this.epicFunction();
@@ -50,7 +50,7 @@ export class AgencyComponent implements OnInit {
       this.displayedColumns = ['id', 'agencyName', 'address', 'phone', 'email', 'contract', 'note'];
     }
     this.colspan = this.displayedColumns.length;
-    this.agencyService.getAgencyList().subscribe((response: any) => {
+    this.routesService.getAgencyList().subscribe((response: any) => {
       if (response.length > 0) {
         this.dataSource.data = response.reverse();
       } else {
@@ -60,18 +60,12 @@ export class AgencyComponent implements OnInit {
     });
   }
 
-  hideShowNoDataRow() {
-    if (this.dataSource.data.length === 0) {
-      this.hasData = false;
-    } else {
-      this.hasData = true;
-    }
-  }
-
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
   }
+
+  ngOnDestroy(): void { }
 
   onEdit(row: any) {
     const elements = Array.from(
@@ -107,7 +101,8 @@ export class AgencyComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.dataSource.data = this.dataSource.data.filter(x => x.id !== row.id);
+        let data = this.dataSource.data.filter(x => x.id !== row.id);
+        this.dataSource.data = data;
         if (this.dataSource.data.length === 0) {
           this.hasData = false;
         } else {
@@ -134,5 +129,12 @@ export class AgencyComponent implements OnInit {
     }
   }
 
+  private hideShowNoDataRow() {
+    if (this.dataSource.data.length === 0) {
+      this.hasData = false;
+    } else {
+      this.hasData = true;
+    }
+  }
 }
 

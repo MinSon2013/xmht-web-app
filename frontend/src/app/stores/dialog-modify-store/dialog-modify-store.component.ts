@@ -145,18 +145,14 @@ export class DialogModifyStoreComponent {
     return isValidForm;
   }
 
-  onChangeAgency(event: any) {
-
-  }
+  onChangeAgency(event: any) { }
 
   onChangeDistrict(event: any) {
     this.provinceList = [];
     this.getProvinceList();
   }
 
-  onChangeProvince(event: any) {
-
-  }
+  onChangeProvince(event: any) { }
 
   getProvinceList() {
     const provinId: string[] = this.districtSelected?.provinceId.split(',') || [];

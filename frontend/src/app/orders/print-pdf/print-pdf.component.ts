@@ -1,8 +1,8 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Cities } from '../../constants/const-data';
+import { Router } from '@angular/router';
+import { AGENCY_ROLE, Cities } from '../../constants/const-data';
 import { Helper } from '../../helpers/helper';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -12,16 +12,16 @@ import { OrderService } from '../../services/order.service';
 import { Location } from '@angular/common';
 import { NumToVietnameseText } from '../../common/num-to-vietnamese-text';
 import { Order } from '../../models/order';
-import { AgencyService } from '../../services/agency.service';
-import { DeliveryService } from '../../services/delivery.service';
 import { CONFIG } from '../../common/config';
+import { RoutesService } from '../../services/routes.service';
+import { SocketService } from '../../services/socket.service';
 
 @Component({
   selector: 'app-print-pdf',
   templateUrl: './print-pdf.component.html',
   styleUrls: ['./print-pdf.component.scss']
 })
-export class PrintPdfComponent implements OnInit {
+export class PrintPdfComponent implements OnInit, OnDestroy {
   @ViewChild('pdfTable') pdfTable!: ElementRef;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -35,6 +35,9 @@ export class PrintPdfComponent implements OnInit {
   cities: any[] = Cities;
   agencyList: any[] = [];
   deliveries: any[] = [];
+
+  userRole: number = this.helper.getUserRole();
+  isAgency: boolean = this.userRole === AGENCY_ROLE;
 
   header: string = '';
   agency: string = '';
@@ -53,25 +56,22 @@ export class PrintPdfComponent implements OnInit {
 
   constructor(public dialog: MatDialog,
     public router: Router,
-    private route: ActivatedRoute,
     public print: NgxPrintElementService,
     public translate: TranslateService,
     private orderService: OrderService,
     private location: Location,
-    private agencyService: AgencyService,
-    private deliveryService: DeliveryService,
+    private routesService: RoutesService,
+    private socketService: SocketService,
   ) {
     const navigation = this.router.getCurrentNavigation();
     this.data = navigation?.extras;
-    this.getAgencys();
-    this.getDelivery();
   }
 
   ngOnInit(): void {
     if (!this.data.agencyId) {
       this.location.back();
     } else {
-      // this.agency = this.agencyList.find(y => y.id === this.data.agencyId)!.agencyName;
+      this.getFilterList();
       this.translate.get('TITLE_APP').subscribe(x => {
         this.header = x;
       });
@@ -107,16 +107,38 @@ export class PrintPdfComponent implements OnInit {
           '.w-0 {width: 0%}',
         ]
       }
-      this.getData();
+      this.getOneOrder();
+      this.emitSocket();
     }
   }
 
-  getData() {
-    this.orderService.getOrderList().subscribe((response: any) => {
-      if (response.length > 0) {
-        const orderList = response;
-        const order: Order = orderList.find((x: Order) => x.id === this.data.id);
+  ngOnDestroy(): void { }
 
+  emitSocket() {
+    // Listening updated order
+    this.socketService.socketOnOrderUpdated().subscribe((result) => {
+      this.getOneOrder();
+    });
+  }
+
+  getFilterList() {
+    this.routesService.getFilterList().subscribe((response: any) => {
+      if (response) {
+        this.agencyList = this.helper.sortAZ(response.agencyList, 'agencyName');
+        if (this.isAgency) {
+          this.agency = this.helper.getAgencyName();
+        } else {
+          this.agency = this.agencyList.find(y => y.id === this.data.agencyId)!.agencyName;
+        }
+        this.deliveries = response.deliveryList;
+      }
+    })
+  }
+
+  getOneOrder() {
+    this.orderService.getOneOrder(this.data.id).subscribe((response: any) => {
+      if (response) {
+        const order: Order = response.order;
         if (order.confirmedDate.length > 0) {
           const k = order.confirmedDate.split(' ');
           const m = k[1].split('/');
@@ -145,21 +167,17 @@ export class PrintPdfComponent implements OnInit {
           ton: 'Tấn',
           pickupAddress: '',
         }
-        const _data = data;
         let idx = 0;
         const pickupAddress = this.cities.find(x => x.id === this.data.pickupId) ? this.cities.find(x => x.id === this.data.pickupId).label : '';
-        order.products.sort((a, b) => (a.id < b.id ? -1 : 1));
-        order.products.sort((a, b) => (a.category < b.category ? -1 : 1));
-        order.products.forEach(x => {
+        response.products = this.helper.sortAZ(response.products, 'id');
+        response.products = this.helper.sortAZ(response.products, 'category');
+        response.products.forEach((x: any) => {
           idx = idx + 1;
           data = {
             no: idx + '', category: x.name, amount: x.quantity.toString(), note: order.note, ton: 'Tấn',
             pickupAddress,
           };
           arrays.push(data);
-        });
-        arrays.sort((a, b) => {
-          return a.no - b.no;
         });
         this.dataSource.data = arrays;
         this.cacheSpan(arrays, 'ton', (d: { ton: any; }) => d.ton);
@@ -174,29 +192,16 @@ export class PrintPdfComponent implements OnInit {
     });
   }
 
-  getAgencys() {
-    this.agencyService.getAgencyList().subscribe((response: any) => {
-      this.agencyList = response;
-      this.agency = this.agencyList.find(y => y.id === this.data.agencyId)!.agencyName;
-    });
-  }
-
-  getDelivery() {
-    this.deliveryService.getDeliveryList().subscribe((response: any) => {
-      this.deliveries = response;
-    });
-  }
-
-  compareObj(obj1: any[], obj2: any): string {
-    const obj = obj1.find(x => x.id === obj2);
-    if (obj) {
-      return obj.label;
-    }
-    return '';
+  onPrint() {
+    this.print.print(this.pdfTable, { ...this.config, printMode: 'template' });
   }
 
   onCancel() {
     this.router.navigate([this.routingOrderList]);
+  }
+
+  compareObj(obj1: any[], obj2: any): string {
+    return this.helper.compareObj(obj1, obj2);
   }
 
   getRowSpan(col: string, index: number) {
@@ -227,10 +232,6 @@ export class PrintPdfComponent implements OnInit {
       this.spans[i][key] = count;
       i += count;
     }
-  }
-
-  onPrint() {
-    this.print.print(this.pdfTable, { ...this.config, printMode: 'template' });
   }
 
 }

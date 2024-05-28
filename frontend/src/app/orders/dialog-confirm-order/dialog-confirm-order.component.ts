@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AGENCY_ROLE, Cities, MSG_STATUS, RECEIPT, STATUS, STOCKER_ROLE, Transports, USER_AREA_MANAGER_ROLE, USER_SALESMAN_ROLE } from '../../constants/const-data';
 import { Order } from '../../models/order';
@@ -6,8 +6,6 @@ import { Helper } from '../../helpers/helper';
 import { TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import { SocketService } from '../../services/socket.service';
-import { CustomSocket } from '../../sockets/custom-socket';
-import { Product } from '../../models/product';
 import { OrderService } from '../../services/order.service';
 
 @Component({
@@ -15,7 +13,7 @@ import { OrderService } from '../../services/order.service';
   templateUrl: './dialog-confirm-order.component.html',
   styleUrls: ['./dialog-confirm-order.component.scss']
 })
-export class DialogConfirmOrderComponent implements OnInit {
+export class DialogConfirmOrderComponent implements OnInit, OnDestroy {
 
   helper: Helper = new Helper();
   order: Order = {
@@ -70,7 +68,6 @@ export class DialogConfirmOrderComponent implements OnInit {
     public translate: TranslateService,
     private toastr: ToastrService,
     private socketService: SocketService,
-    private socket: CustomSocket,
     private orderService: OrderService,
   ) { dialogRef.disableClose = true; }
 
@@ -80,35 +77,34 @@ export class DialogConfirmOrderComponent implements OnInit {
     this.deliveries = this.data.deliveries ? this.data.deliveries : [];
     if (this.data.row && this.data.row.id !== 0) {
       this.mappingData(this.data.row, this.data.row.products);
-    }
 
-    this.emitSocket();
+      this.emitSocket();
+    }
   }
 
-  mappingData(row: any, products: any[]) {
-    this.order.id = this.data.row.id;
-    this.order.createdDate = this.data.row.createdDate;
-    this.order.deliveryId = this.data.row.deliveryId;
-    this.order.pickupId = this.data.row.pickupId;
-    this.order.productTotal = this.data.row.productTotal;
-    this.order.driver = this.data.row.driver;
-    this.order.note = this.data.row.note;
-    this.order.transport = this.data.row.transport;
-    this.order.receipt = this.data.row.receipt;
-    this.order.licensePlates = this.data.row.licensePlates;
-    this.order.receivedDate = this.data.row.receivedDate;
-    this.order.status = this.data.row.status;
-    this.order.note = this.data.row.note;
-    this.order.products = this.data.row.products.sort((a: any, b: any) => a.category < b.category ? -1 : 1);
-    this.order.contract = this.data.row.contract;
-    this.order.sender = this.data.row.sender;
-    this.order.isViewed = this.data.row.isViewed;
-    this.order.agencyId = this.data.row.agencyId;
-    this.order.confirmedDate = this.data.row.confirmedDate;
-    this.order.shippingDate = this.data.row.shippingDate;
-    // this.order.approvedNumber = this.data.row.approvedNumber !== 0 ? this.data.row.approvedNumber : 0;
-    this.order.approvedNumber = this.data.row.approvedNumber;
-    this.order.agencyName = this.agencyList.find(x => x.id === this.data.row.agencyId).agencyName;
+  private mappingData(row: any, products: any[]) {
+    this.order.id = row.id;
+    this.order.createdDate = row.createdDate;
+    this.order.deliveryId = row.deliveryId;
+    this.order.pickupId = row.pickupId;
+    this.order.productTotal = row.productTotal;
+    this.order.driver = row.driver;
+    this.order.note = row.note;
+    this.order.transport = row.transport;
+    this.order.receipt = row.receipt;
+    this.order.licensePlates = row.licensePlates;
+    this.order.receivedDate = row.receivedDate;
+    this.order.status = row.status;
+    this.order.note = row.note;
+    this.order.products = products.sort((a: any, b: any) => a.category < b.category ? -1 : 1);
+    this.order.contract = row.contract;
+    this.order.sender = row.sender;
+    this.order.isViewed = row.isViewed;
+    this.order.agencyId = row.agencyId;
+    this.order.confirmedDate = row.confirmedDate;
+    this.order.shippingDate = row.shippingDate;
+    this.order.approvedNumber = row.approvedNumber;
+    this.order.agencyName = this.agencyList.find(x => x.id === row.agencyId).agencyName;
     const status = this.status.find(x => x.value === this.order.status);
     this.selectedStatus = status ? status : { id: null, label: '' };
     const delivery = this.deliveries.find(x => x.id === this.order.deliveryId);
@@ -122,13 +118,18 @@ export class DialogConfirmOrderComponent implements OnInit {
   }
 
   emitSocket() {
-    this.socket.on('emitGetProductList', (response: Product[]) => {
+    // Listening updated order
+    this.socketService.socketOnOrderUpdated().subscribe((result) => {
       this.getOneOrder(this.data.row.id);
-    })
-    this.socket.on('emitGetOrderList', (response: Order[]) => {
+    });
+
+    // Listening order status changed
+    this.socketService.socketOnOrderStatusChanged().subscribe((result) => {
       this.getOneOrder(this.data.row.id);
-    })
+    });
   }
+
+  ngOnDestroy(): void { }
 
   getOneOrder(id: number) {
     this.orderService.getOneOrder(id).subscribe((response: any) => {

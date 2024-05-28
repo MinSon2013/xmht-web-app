@@ -124,4 +124,70 @@ export class AgencyRepository extends Repository<Agency> {
         entity.updatedDate = this.helper.getUpdateDate(1);
         return entity;
     }
+
+
+    // -- REMOVE after sync -----
+    async getAgencyList() {
+        const ids = await this.getIdsNotAgency();
+        const result = await this.createQueryBuilder('a')
+            .innerJoinAndSelect(Users, 'u', 'u.id = a.user_id')
+            .where('a.id NOT IN (:ids)', { ids: ids.toString() })
+            .getRawMany();
+
+        const res: AgencyRO[] = [];
+        result.forEach(element => {
+            const item = new AgencyRO();
+            item.id = element.a_id;
+            item.agencyName = element.a_agency_name;
+            item.address = element.a_address;
+            item.contract = element.a_contract;
+            item.note = element.a_note;
+            item.email = element.a_email;
+            item.phone = element.a_phone;
+            item.userId = element.u_id;
+            item.userName = element.u_username;
+            res.push(item);
+        });
+        return res;
+    }
+
+    //----- REMOVE ----------
+    public async getIdsNotAgency() {
+        const res = await this.createQueryBuilder('a')
+            .leftJoin(Users, 'u', 'u.id = a.user_id')
+            .where('u.is_admin IS TRUE')
+            .orWhere('u.role IN (1, 2, 3)')
+            .getMany();
+
+        const ids: number[] = [];
+        res.forEach(element => {
+            ids.push(element.id);
+        });
+        return ids;
+    }
+
+    //----- REMOVE ----------
+    public async getUserNotAgency() {
+        const res = await this.createQueryBuilder('a')
+            .leftJoinAndSelect(Users, 'u', 'u.id = a.user_id')
+            .where('u.is_admin IS TRUE')
+            .orWhere('u.role IN (1, 2, 3)')
+            .getRawMany();
+
+        const result: AgencyRO[] = [];
+        res.forEach(element => {
+            const item = new AgencyRO();
+            item.id = element.a_id;
+            item.agencyName = element.a_agency_name;
+            item.address = element.a_address;
+            item.contract = element.a_contract;
+            item.note = element.a_note;
+            item.email = element.a_email;
+            item.userId = element.u_id;
+            item.phone = element.a_phone;
+            item.userName = element.u_username;
+            result.push(item);
+        });
+        return result;
+    }
 }

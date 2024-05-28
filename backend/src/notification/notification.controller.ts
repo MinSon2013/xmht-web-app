@@ -1,4 +1,4 @@
-import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { UseInterceptors } from '@nestjs/common/decorators/core/use-interceptors.decorator';
 import { NotificationService } from './notification.service';
 import { NotificationDTO } from './dto/notification.dto';
@@ -11,10 +11,26 @@ export class NotificationController {
   constructor(private readonly notificationService: NotificationService) { }
 
   @UseGuards(JwtAuthGuard)
-  @Get(':agencyId')
-  getAll(@Param('agencyId', ParseIntPipe) agencyId: number): Promise<any> {
-    return this.notificationService.getAll(agencyId);
+  @Get('/list')
+  findAll(
+    @Query('agencyId', ParseIntPipe) agencyId: number,
+    @Query('take', ParseIntPipe) take: number,
+    @Query('skip', ParseIntPipe) skip: number,
+  ): Promise<any> {
+    return this.notificationService.getAll(agencyId, take, skip);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/get/:id')
+  getOne(@Param('id', ParseIntPipe) id: number): Promise<any> {
+    return this.notificationService.getOne(id);
+  }
+
+  // @UseGuards(JwtAuthGuard)
+  // @Get(':agencyId')
+  // getAll(@Param('agencyId', ParseIntPipe) agencyId: number): Promise<any> {
+  //   return this.notificationService.getAll(agencyId);
+  // }
 
   @Post('/badge')
   getBadge(@Body() body): Promise<any[]> {

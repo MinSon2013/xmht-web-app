@@ -89,24 +89,8 @@ export class DialogModifyReportComponent {
     this.agencyListClone = this.data.agencyList;
     if (this.data.row && this.data.row.id !== 0) {
       this.translate.get('REPORT.TITLE_MODIFIED').subscribe(x => { this.header = x });
-      this.report.id = this.data.row.id;
-      this.report.storeInformation = this.data.row.storeInformation;
-      this.report.reportContent = this.data.row.reportContent;
-      this.report.note = this.data.row.note;
-      this.report.agencyId = this.data.row.agencyId;
-      this.report.districtId = this.data.row.districtId;
-      this.report.provinceId = this.data.row.provinceId;
-      this.report.storeId = this.data.row.storeId;
-      this.report.otherStoreName = this.data.row.otherStoreName;
-      this.report.filePath = this.data.row.filePath;
-      this.report.attachFile = this.data.row.attachFile;
-      const agency = this.agencyList.find(x => x.id === this.data.row.agencyId);
-      this.agencySelected = agency ? agency : null;
-      this.districtSelected = this.districtList.find(x => x.id === this.data.row.districtId);
-      this.getProvinceList();
-      this.provinceSelected = this.provinceList.find(x => x.id === this.data.row.provinceId);
-      this.storeDistrictList = this.storeList.filter(x => x.provinceId === this.data.row.provinceId);
-      this.storeSelected = this.storeList.find(x => x.id === this.data.row.storeId);
+      this.mappingReport(this.data.row);
+      this.emitSocket();
     } else {
       this.translate.get('REPORT.TITLE_ADD').subscribe(x => { this.header = x });
     }
@@ -116,6 +100,34 @@ export class DialogModifyReportComponent {
     } else {
       this.showOtherStore = false;
     }
+  }
+
+  emitSocket() {
+    this.socketService.socketOnReportUpdated().subscribe((res) => {
+      this.mappingReport(res);
+    })
+  }
+
+  private mappingReport(row: any) {
+    this.report.id = row.id;
+    this.report.storeInformation = row.storeInformation;
+    this.report.reportContent = row.reportContent;
+    this.report.note = row.note;
+    this.report.agencyId = row.agencyId;
+    this.report.districtId = row.districtId;
+    this.report.provinceId = row.provinceId;
+    this.report.storeId = row.storeId;
+    this.report.otherStoreName = row.otherStoreName;
+    this.report.filePath = row.filePath;
+    this.report.attachFile = row.attachFile;
+    const agency = this.agencyList.find(x => x.id === row.agencyId);
+    this.agencySelected = agency ? agency : null;
+    this.districtSelected = this.districtList.find(x => x.id === row.districtId);
+    this.getProvinceList();
+    this.provinceSelected = this.provinceList.find(x => x.id === row.provinceId);
+    this.storeDistrictList = this.storeList.filter(x => x.provinceId === row.provinceId);
+    this.storeSelected = this.storeList.find(x => x.id === row.storeId);
+
   }
 
   getDistrict() {

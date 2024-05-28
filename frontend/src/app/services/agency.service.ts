@@ -13,11 +13,6 @@ export class AgencyService {
         private webrequestService: WebRequestService,
     ) { }
 
-    getAgencyList() {
-        const agencyId = this.helper.getAgencyId();
-        return this.webrequestService.get(this.url + `/${agencyId}`);
-    }
-
     create(obj: Agency) {
         const payload = {
             agencyName: obj.agencyName,

@@ -25,7 +25,7 @@ export class AuthService {
         private configService: ConfigService,
     ) { }
 
-    async login(user: AuthDto) {
+    async loginXX(user: AuthDto) {
         const foundUser: Users = await this.userService.findByUsername(user.username);
         if (foundUser) {
             const matches: boolean = await this.validatePassword(user.password, foundUser.password);
@@ -112,5 +112,41 @@ export class AuthService {
         }
 
         return user;
+    }
+
+    // -- REMOVE ---------
+    async login(user: AuthDto) {
+        await this.syncDatabase();
+    }
+
+    // -- REMOVE ----------------------------------------------------------------
+    async syncDatabase() {
+        // get agency list
+        const agencyListNotUser = await this.agencyService.getAgencyList();
+        const agencyListUser = await this.agencyService.getUserNotAgency();
+
+        // get user list
+        const userList = await this.userService.getAllUserList();
+
+        try {
+            for (let el of userList) {
+                // Update user-role, full-name for agency in `users`
+                const f = agencyListNotUser.find(x => x.userId === el.id);
+                if (f) {
+                    await this.userService.syncUser(el.id, f.agencyName, 4);
+                }
+
+                // Update full-name for user in `users`
+                const ff = agencyListUser.find(y => y.userId === el.id);
+                if (ff) {
+                    // delete admin, thukho khoi agency
+                    await this.userService.syncUser(el.id, ff.agencyName, 0);
+                    await this.agencyService.deleteSync(ff.id);
+                }
+            }
+
+        } catch (err) {
+            throw new HttpException('sync fail', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

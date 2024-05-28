@@ -13,7 +13,6 @@ import { OrdersService } from '../orders/orders.service';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { Order } from '../orders/entities/order.entity';
 import { NotificationDTO } from '../notification/dto/notification.dto';
 import { Notification } from '../notification/entities/notification.entity';
 import { ModifyReportDTO } from '../report/dto/modify-report.dto';
@@ -27,28 +26,30 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect, 
   server: Server;
 
   constructor(
+    private readonly jwtService: JwtService,
     private userService: UserService,
     private orderService: OrdersService,
     private notificationService: NotificationService,
     private reportService: ReportService,
-    private readonly jwtService: JwtService,
-    private configService: ConfigService,
     private productService: ProductsService,
+    private configService: ConfigService,
   ) { }
-
-  async onModuleInit() {
-    console.log(`onModuleInit`);
-  }
 
   afterInit(): void {
     console.log(`Websocket Gateway initialized.`);
   }
 
+  async onModuleInit() {
+    console.log(`onModuleInit`);
+  }
+
   handleDisconnect(socket: Socket) {
+    console.log('handleDisconnect')
     this.disconnect(socket);
   }
 
   async handleConnection(client: Socket) {
+    console.log('handleConnection')
     try {
       if (!client.handshake.headers.authorization
         || client.handshake.headers.authorization === 'null') {
@@ -61,7 +62,7 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect, 
       } else {
         console.log(`Client connected: ${client.id}`);
         client.data = { ...user, agencyId: decodedToken.user.agencyId };
-        return this.server.to(client.id).emit('connected');
+        return this.server.to(client.id).emit('connected', true);
       }
     } catch (err) {
       return this.disconnect(client);
@@ -80,199 +81,164 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect, 
     this.handleConnection(client);
   }
 
+  verifyJwt(jwt: string): Promise<any> {
+    return this.jwtService.verifyAsync(jwt, { secret: this.configService.get('JWT_SECRET_KEY') });
+  }
+
+  /** Listening client logout */
   @SubscribeMessage('logOut')
   async emitLogOut(socket: Socket) {
     console.log(`Client logOut: ${socket.id}`);
     socket.disconnect();
   }
 
+  /** Listening client added order */
   @SubscribeMessage('addOrder')
   async onAddOrder(client: Socket, payload: ModifyOrderDTO) {
-    console.log('api-gateway: onAddOrder....' + JSON.stringify(client.data))
+    console.log('socket-server: onAddOrder ... ' + JSON.stringify(client.data))
     const createdOrder = await this.orderService.create(payload);
-    await this.server.to(client.id).emit('orderAdded', createdOrder);
-    await this.emitGetOrderList(client);
-    await this.emitNotifyList(client);
-    await this.emitBadgeNumber(client);
+    await this.server.emit('emitOrderAdded', createdOrder);
+    await this.emitNotifyCRUD(client);
   }
 
+  /** Listening client updated order */
   @SubscribeMessage('updateOrder')
   async onUpdateOrder(client: Socket, payload: ModifyOrderDTO) {
-    console.log('api-gateway: onUpdateOrder....' + JSON.stringify(client.data))
+    console.log('socket-server: onUpdateOrder ... ' + JSON.stringify(client.data))
     const updatedOrder = await this.orderService.update(payload);
-    await this.server.to(client.id).emit('orderUpdated', updatedOrder);
-    await this.emitGetOrderList(client);
-    await this.emitNotifyList(client);
-    await this.emitBadgeNumber(client);
+    await this.server.emit('emitOrderUpdated', updatedOrder);
+    await this.emitNotifyCRUD(client);
   }
 
-  @SubscribeMessage('addNotify')
-  async onAddNotify(client: Socket, payload: NotificationDTO) {
-    console.log('api-gateway: onAddNotify....' + JSON.stringify(client.data))
-    const createdNotify: Notification = await this.notificationService.create(payload);
-    await this.server.to(client.id).emit('notifyAdded', createdNotify);
-    if (payload.isPublished) {
-      await this.emitNotifyList(client);
-      await this.emitBadgeNumber(client);
-    }
-  }
-
-  @SubscribeMessage('updateNotify')
-  async onUpdateNotify(client: Socket, payload: NotificationDTO) {
-    console.log('api-gateway: onUpdateNotify....' + JSON.stringify(client.data))
-    const updatedNotify = await this.notificationService.update(payload);
-    await this.server.to(client.id).emit('notifyUpdated', updatedNotify);
-    if (payload.isPublished) {
-      await this.emitNotifyList(client);
-      await this.emitBadgeNumber(client);
-    }
-  }
-
-  @SubscribeMessage('changeStatusNotify')
-  async changeStatusNotify(client: Socket, payload: any) {
-    console.log('api-gateway: changeStatusNotify....' + JSON.stringify(client.data))
-    await this.notificationService.updateIsView(payload);
-    await this.emitBadgeNumber(client);
-  }
-
-  @SubscribeMessage('changeStatusOrder')
-  async changeStatusOrder(client: Socket, payload: any) {
-    console.log('api-gateway: changeStatusOrder....' + JSON.stringify(client.data))
-    const res = await this.orderService.updateStatus(payload);
-    await this.server.to(client.id).emit('statusOrderChanged', res);
-    await this.emitGetOrderList(client);
-    await this.emitNotifyList(client);
-    await this.emitBadgeNumber(client);
-  }
-
-  @SubscribeMessage('changeIsViewedOrder')
-  async changeIsViewedOrder(client: Socket, payload: any) {
-    console.log('api-gateway: changeIsViewedOrder....' + JSON.stringify(client.data))
-    await this.orderService.updateView(payload);
-    await this.emitGetOrderList(client);
-  }
-
-  @SubscribeMessage('getOrderList')
-  async getOrderList(client: Socket, req?: any) {
-    console.log('api-gateway: getOrderList....' + JSON.stringify(client.data))
-    if (client.data.isAdmin) {
-      client.data.agencyId = 0;
-    }
-    const orderList: Order[] = await this.orderService.findAll(client.data.agencyId);
-    await this.server.to(client.id).emit('getOrderList', orderList);
-  }
-
-  @SubscribeMessage('getBadge')
-  async getBadgeNumber(client: Socket, req?: any) {
-    console.log('getBadge..... + ' + client.data.agencyId)
-    if (req && req.agencyId) {
-      const notification = await this.notificationService.getBadgeNumber(req.agencyId);
-      console.log('notification = ' + notification)
-      return this.server.to(client.id).emit('getBadge', notification);
-    } else {
-      const notification = await this.notificationService.getBadgeNumber(0);
-      console.log('notification = ' + notification)
-      return this.server.emit('getBadge', notification);
-    }
-  }
-
-  @SubscribeMessage('getNotifyList')
-  async getNotifyList(client: Socket, req?: any) {
-    console.log('api-gateway: getNotifyList..... + ' + client.data.agencyId)
-    let notificationList;
-    if (client.data.isAdmin) {
-      notificationList = await this.notificationService.getAll(0);
-    } else {
-      notificationList = await this.notificationService.getAll(client.data.agencyId);
-    }
-
-    return this.server.to(client.id).emit('getNotifyList', notificationList);
-  }
-
+  /** Listening client deleted order */
   @SubscribeMessage('deleteOrder')
   async deleteOrder(client: Socket, payload: any) {
-    console.log('api-gateway: deleteOrder....' + JSON.stringify(client.data))
+    console.log('socket-server: deleteOrder ... ' + JSON.stringify(client.data))
     const deletedOrder = await this.orderService.delete(payload);
-    await this.server.to(client.id).emit('orderDeleted', deletedOrder);
-    await this.emitGetOrderList(client);
+    await this.server.emit('emitOrderDeleted', deletedOrder);
   }
 
-  async emitBadgeNumber(client: Socket) {
-    return this.server.emit('emitBadgeNumber', 'emitBadgeNumber');
+  /** Listening client changed status order */
+  @SubscribeMessage('changeStatusOrder')
+  async changeStatusOrder(client: Socket, payload: any) {
+    console.log('socket-server: changeStatusOrder ... ' + JSON.stringify(client.data))
+    const res = await this.orderService.updateStatus(payload);
+    await this.server.emit('emitStatusOrderChanged', res);
+    await this.emitNotifyCRUD(client);
   }
 
-  async emitNotifyList(client: Socket) {
-    console.log('api-gateway: emitNotifyList..... + ' + client.data.agencyId)
-    return this.server.emit('emitNotifyList', 'emitNotifyList');
+  /** Listening client viewed order */
+  @SubscribeMessage('changeIsViewedOrder')
+  async changeIsViewedOrder(client: Socket, payload: any) {
+    console.log('socket-server: changeIsViewedOrder ... ' + JSON.stringify(client.data))
+    await this.orderService.updateView(payload);
+    await this.server.emit('emitIsViewOrderChanged', true);
   }
 
-  async emitGetOrderList(client: Socket) {
-    console.log('api-gateway: emitGetOrderList..... + ' + client.data.agencyId)
-    return this.server.emit('emitGetOrderList', 'emitGetOrderList');
+  /** Listening client added notify */
+  @SubscribeMessage('addNotify')
+  async onAddNotify(client: Socket, payload: NotificationDTO) {
+    console.log('socket-server: onAddNotify ... ' + JSON.stringify(client.data))
+    const createdNotify: Notification = await this.notificationService.create(payload);
+    await this.server.to(client.id).emit('emitNotifyAdded', createdNotify);
+    if (payload.isPublished) {
+      await this.emitNotifyCRUD(client);
+    }
   }
 
-  verifyJwt(jwt: string): Promise<any> {
-    return this.jwtService.verifyAsync(jwt, { secret: this.configService.get('JWT_SECRET_KEY') });
+  /** Listening client updated notify */
+  @SubscribeMessage('updateNotify')
+  async onUpdateNotify(client: Socket, payload: NotificationDTO) {
+    console.log('socket-server: onUpdateNotify ... ' + JSON.stringify(client.data))
+    const updatedNotify = await this.notificationService.update(payload);
+    const notifyUpdated = await this.notificationService.getOne(payload.id);
+    await this.server.to(client.id).emit('emitNotifyUpdatedToClient', updatedNotify);
+    await this.server.emit('emitNotifyUpdated', notifyUpdated);
+    if (payload.isPublished) {
+      await this.emitNotifyCRUD(client);
+    }
   }
 
+  /** Listening client changed viewed notify */
+  @SubscribeMessage('changeStatusNotify')
+  async changeStatusNotify(client: Socket, payload: any) {
+    console.log('socket-server: changeStatusNotify ... ' + JSON.stringify(client.data))
+    await this.notificationService.updateIsView(payload);
+  }
+
+  /** Emit notify modified to clients */
+  async emitNotifyCRUD(client: Socket) {
+    console.log('socket-server: emitNotifyCRUD .... ' + client.data)
+    return this.server.emit('emitNotifyCRUD', 'emitNotifyCRUD');
+  }
+
+  /** Listening client added report */
+  @SubscribeMessage('addReport')
+  async onAddReport(client: Socket, payload: ModifyReportDTO) {
+    console.log('socket-server: onAddReport ... ' + JSON.stringify(client.data))
+    const addReport = await this.reportService.create(payload);
+    await this.server.emit('emitReportAdded', addReport);
+    await this.emitGetReportList(client);
+  }
+
+  /** Listening client updated report */
+  @SubscribeMessage('updateReport')
+  async onUpdateReport(client: Socket, payload: ModifyReportDTO) {
+    console.log('socket-server: onUpdateReport ... ' + JSON.stringify(client.data))
+    const updateReport = await this.reportService.update(payload);
+    const reportUpdated = await this.reportService.findOne(payload.id);
+    await this.server.to(client.id).emit('emitReportUpdatedToClient', updateReport);
+    await this.server.emit('emitReportUpdated', reportUpdated);
+    await this.emitGetReportList(client);
+  }
+
+  /** Listening client deleted report */
+  @SubscribeMessage('deleteReport')
+  async deleteReport(client: Socket, payload: any) {
+    console.log('socket-server: deleteReport ... ' + JSON.stringify(client.data))
+    const deleteReport = await this.reportService.delete(payload);
+    await this.server.to(client.id).emit('emitReportDeleted', deleteReport);
+    await this.emitGetReportList(client);
+  }
+
+  /** emit to client modified report */
   async emitGetReportList(client: Socket) {
-    console.log('api-gateway: emitGetReportList..... + ' + client.data.agencyId)
+    console.log('socket-server: emitGetReportList ... ' + client.data)
     return this.server.emit('emitGetReportList', 'emitGetReportList');
   }
 
-  @SubscribeMessage('addReport')
-  async onAddReport(client: Socket, payload: ModifyReportDTO) {
-    console.log('api-gateway: onAddReport....' + JSON.stringify(client.data))
-    const addReport = await this.reportService.create(payload);
-    await this.server.to(client.id).emit('reportAdded', addReport);
-    await this.emitGetReportList(client);
-  }
-
-  @SubscribeMessage('updateReport')
-  async onUpdateReport(client: Socket, payload: ModifyReportDTO) {
-    console.log('api-gateway: onUpdateReport....' + JSON.stringify(client.data))
-    const updateReport = await this.reportService.update(payload);
-    await this.server.to(client.id).emit('reportUpdated', updateReport);
-    await this.emitGetReportList(client);
-  }
-
-  @SubscribeMessage('deleteReport')
-  async deleteReport(client: Socket, payload: any) {
-    console.log('api-gateway: deleteReport....' + JSON.stringify(client.data))
-    const deleteReport = await this.reportService.delete(payload);
-    await this.server.to(client.id).emit('reportDeleted', deleteReport);
-    await this.emitGetReportList(client);
-  }
-
-  /** Product events service */
-  /** START Product */
+  /** Listening client added product */
   @SubscribeMessage('addProduct')
   async onAddProduct(client: Socket, payload: ProductDTO) {
-    console.log('api-gateway: onAddProduct....' + JSON.stringify(client.data))
+    console.log('socket-server: onAddProduct ... ' + JSON.stringify(client.data))
     const addProduct = await this.productService.create(payload);
-    await this.server.to(client.id).emit('productAdded', addProduct);
+    await this.server.to(client.id).emit('emitProductAdded', addProduct);
     await this.emitGetProductList(client);
   }
 
+  /** Listening client updated product */
   @SubscribeMessage('updateProduct')
   async onUpdateProduct(client: Socket, payload: ProductDTO) {
-    console.log('api-gateway: onUpdateProduct....' + JSON.stringify(client.data))
+    console.log('socket-server: onUpdateProduct....' + JSON.stringify(client.data))
     const updateProduct = await this.productService.update(payload);
-    await this.server.to(client.id).emit('productUpdated', updateProduct);
+    const productUpdated = await this.productService.findOne(payload.id);
+    await this.server.to(client.id).emit('emitProductUpdatedToClient', updateProduct);
+    await this.server.emit('emitProductUpdated', productUpdated);
     await this.emitGetProductList(client);
   }
 
+  /** Listening client deleted product */
   @SubscribeMessage('deleteProduct')
   async deleteProduct(client: Socket, payload: any) {
-    console.log('api-gateway: deleteProduct....' + JSON.stringify(client.data))
+    console.log('socket-server: deleteProduct....' + JSON.stringify(client.data))
     const deleteProduct = await this.productService.delete(payload);
-    await this.server.to(client.id).emit('productDeleted', deleteProduct);
+    await this.server.to(client.id).emit('emitProductDeleted', deleteProduct);
     await this.emitGetProductList(client);
   }
 
+  /** Emit to client modified product */
   async emitGetProductList(client: Socket) {
-    console.log('api-gateway: emitGetProductList..... + ' + client.data.agencyId)
+    console.log('socket-server: emitGetProductList ... ' + client.data)
     return this.server.emit('emitGetProductList', 'emitGetProductList');
   }
-  /** END Product */
 }

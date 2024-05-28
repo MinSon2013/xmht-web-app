@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { DialogDeleteConfirmComponent } from '../common/dialog-delete-confirm/dialog-delete-confirm.component';
 import { Cities, SERVICE_TYPE, USER_AREA_MANAGER_ROLE, USER_SALESMAN_ROLE } from '../constants/const-data';
@@ -13,11 +13,11 @@ import { Reports } from '../models/report';
 import { ReportService } from '../services/report.service';
 import { FormControl } from '@angular/forms';
 import { CustomMatPaginatorIntl } from '../common/custom-paginator';
-import { CustomSocket } from '../sockets/custom-socket';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { CONFIG } from '../common/config';
 import { RoutesService } from '../services/routes.service';
 import { concatMap, of, switchMap, tap } from 'rxjs';
+import { SocketService } from '../services/socket.service';
 
 @Component({
   selector: 'app-report',
@@ -27,7 +27,7 @@ import { concatMap, of, switchMap, tap } from 'rxjs';
     { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl }
   ]
 })
-export class ReportComponent implements OnInit {
+export class ReportComponent implements OnInit, OnDestroy {
   readonly routingReport = CONFIG.APP_ROUTING.REPORT;
 
   displayedColumns: string[] = ['rowId', 'updateDateVisisble', 'provinceName', 'storeName', 'agencyName', 'storeInformation', 'reportContent', 'attachFile', 'note', 'deleteAction'];
@@ -61,9 +61,9 @@ export class ReportComponent implements OnInit {
   constructor(public dialog: MatDialog,
     private reportService: ReportService,
     public router: Router,
-    private socket: CustomSocket,
     private deviceService: DeviceDetectorService,
     private routesService: RoutesService,
+    private socketService: SocketService,
   ) {
     this.epicFunction();
   }
@@ -77,6 +77,13 @@ export class ReportComponent implements OnInit {
     this.onRequestServer();
     this.emitSocket();
   }
+
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+  }
+
+  ngOnDestroy(): void { }
 
   onRequestServer() {
     this.routesService.getAgencyList().pipe(
@@ -93,7 +100,6 @@ export class ReportComponent implements OnInit {
       }),
       switchMap((result) => {
         if (!this.isAreaManager) {
-          console.log('not true');
           return of(result);
         } else {
           return this.routesService.getUserDistrictList();
@@ -135,13 +141,13 @@ export class ReportComponent implements OnInit {
   }
 
   emitSocket() {
-    this.socket.on('emitGetReportList', (response: Reports[]) => {
+    this.socketService.socketOnGetReportList().subscribe((res) => {
       this.getReportList();
     })
   }
 
   getReportList() {
-    this.reportService.getReportList().subscribe((response: any) => {
+    this.routesService.getReportList().subscribe((response: any) => {
       this.generalReportList(response);
     });
   }
@@ -152,11 +158,6 @@ export class ReportComponent implements OnInit {
     } else {
       this.hasData = true;
     }
-  }
-
-  ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
   }
 
   onEdit(row: any) {
@@ -302,7 +303,9 @@ export class ReportComponent implements OnInit {
   }
 
   onDownload(row: any) {
-    this.reportService.downloadFile(row.id)
+    if (row.filePath !== null) {
+      this.reportService.downloadFile(row.id)
+    }
   }
 
   onSelected(event: any) {

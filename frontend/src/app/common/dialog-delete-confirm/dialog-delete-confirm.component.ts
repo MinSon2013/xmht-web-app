@@ -4,7 +4,6 @@ import { ToastrService } from 'ngx-toastr';
 import { Helper } from '../../helpers/helper';
 import { MSG_STATUS, SERVICE_TYPE } from '../../constants/const-data';
 import { AgencyService } from '../../services/agency.service';
-import { ProductService } from '../../services/product.service';
 import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '../../services/notification.service';
 import { SocketService } from '../../services/socket.service';
@@ -12,7 +11,6 @@ import { tap } from 'rxjs';
 import { DistrictService } from '../../services/district.service';
 import { StoreService } from '../../services/store.service';
 import { UserService } from '../../services/user.service';
-import { ReportService } from '../../services/report.service';
 
 @Component({
   selector: 'app-dialog-delete-confirm',
@@ -25,7 +23,6 @@ export class DialogDeleteConfirmComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<DialogDeleteConfirmComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private productService: ProductService,
     private agencyService: AgencyService,
     private notifyService: NotificationService,
     private toastr: ToastrService,
@@ -34,7 +31,6 @@ export class DialogDeleteConfirmComponent implements OnInit {
     private districtService: DistrictService,
     private storeService: StoreService,
     private userService: UserService,
-    private reportService: ReportService,
   ) { }
 
   ngOnInit(): void { }
@@ -93,7 +89,7 @@ export class DialogDeleteConfirmComponent implements OnInit {
   onResponse(id: number | number[], key: string, response: any) {
     if (response) {
       this.helper.showSuccess(this.toastr, this.helper.getMessage(this.translate, key, MSG_STATUS.SUCCESS));
-      this.dialogRef.close(id);
+      this.dialogRef.close(response);
     } else {
       this.helper.showError(this.toastr, this.helper.getMessage(this.translate, key, MSG_STATUS.FAIL));
     }

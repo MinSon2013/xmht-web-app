@@ -118,7 +118,7 @@ export class DialogDetailAgencyComponent implements OnInit {
     this.dialogRef.close(null);
   }
 
-  validForm(): boolean {
+  private validForm(): boolean {
     let isValidForm: boolean = true;
     if (this.agency.agencyName.length === 0) {
       isValidForm = false;
@@ -165,7 +165,7 @@ export class DialogDetailAgencyComponent implements OnInit {
     return isValidForm;
   }
 
-  passwordsMatching() {
+  private passwordsMatching() {
     if ((this.agency.password === this.agency.confirmPassword)
       && (this.agency.password !== null && this.agency.confirmPassword !== null)
       && (this.agency.password.length !== 0 && this.agency.confirmPassword.length !== 0)

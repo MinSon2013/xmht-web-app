@@ -50,16 +50,36 @@ export class DialogDetailProductComponent implements OnInit {
   ngOnInit(): void {
     if (this.data && this.data.id !== 0) {
       this.translate.get('PRODUCT.TITLE_MODIFIED').subscribe(x => { this.header = x });
-      this.product.id = this.data.id;
-      this.product.name = this.data.name;
-      this.product.quantity = this.data.quantity.toString();
-      this.product.price = this.data.price.toString();
-      this.product.note = this.data.note;
-      this.product.category = this.data.category;
-      this.categorySelected = PRODUCT_CATEGORIES.find(x => x.value === this.data.category);
+      this.mappingProduct(this.data);
+      this.emitSocket();
     } else {
       this.translate.get('PRODUCT.TITLE_ADD').subscribe(x => { this.header = x });
     }
+  }
+
+  private mappingProduct(data: any) {
+    this.product.id = data.id;
+    this.product.name = data.name;
+    this.product.quantity = data.quantity.toString();
+    this.product.price = data.price.toString();
+    this.product.note = data.note;
+    this.product.category = data.category;
+    this.categorySelected = PRODUCT_CATEGORIES.find(x => x.value === data.category);
+  }
+
+  emitSocket() {
+    // Listening product CRUD
+    this.socketService.socketOnProductUpdated().subscribe((result) => {
+      this.getProduct();
+    })
+  }
+
+  getProduct() {
+    this.productService.getOne(this.data.id).subscribe((response: any) => {
+      if (response) {
+        this.mappingProduct(response);
+      }
+    });
   }
 
   onSubmit() {

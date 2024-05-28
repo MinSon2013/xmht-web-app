@@ -13,11 +13,6 @@ export class ReportService {
         private webrequestService: WebRequestService,
     ) { }
 
-    getReportList() {
-        const userId = this.helper.getUserId();
-        return this.webrequestService.get(this.url + `/${userId}`);
-    }
-
     create(obj: Reports) {
         const payload = {
             storeId: obj.storeId,

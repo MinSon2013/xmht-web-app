@@ -10,9 +10,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import { SocketService } from '../../services/socket.service';
 import { tap } from 'rxjs';
-import { Product } from '../../models/product';
-import { CustomSocket } from '../../sockets/custom-socket';
 import { OrderService } from '../../services/order.service';
+import { RoutesService } from '../../services/routes.service';
 
 export const MY_FORMATS = {
   parse: {
@@ -102,8 +101,8 @@ export class DialogDetailOrderComponent implements OnInit {
     public translate: TranslateService,
     private toastr: ToastrService,
     private socketService: SocketService,
-    private socket: CustomSocket,
     private orderService: OrderService,
+    private routesService: RoutesService,
   ) { dialogRef.disableClose = true; }
 
   ngOnInit(): void {
@@ -117,15 +116,31 @@ export class DialogDetailOrderComponent implements OnInit {
   }
 
   emitSocket() {
-    this.socket.on('emitGetProductList', (response: Product[]) => {
-      this.getOneOrder(this.data.row.id);
+    // Listening product CRUD
+    this.socketService.socketOnGetProductList().subscribe((result) => {
+      this.getProductList();
     })
-    this.socket.on('emitGetOrderList', (response: Order[]) => {
+
+    // Listening updated order
+    this.socketService.socketOnOrderUpdated().subscribe((result) => {
       this.getOneOrder(this.data.row.id);
+    });
+
+    // Listening order status changed
+    this.socketService.socketOnOrderStatusChanged().subscribe((result) => {
+      this.getOneOrder(this.data.row.id);
+    });
+  }
+
+  private getProductList() {
+    this.routesService.getProductList().subscribe((res) => {
+      this.productList = this.helper.sortAZ(res, 'id');
+      this.productList = this.helper.sortAZ(this.productList, 'category');
+      this.generalProductOrder(this.order.products);
     })
   }
 
-  getOneOrder(id: number) {
+  private getOneOrder(id: number) {
     this.orderService.getOneOrder(id).subscribe((response: any) => {
       if (response) {
         this.productList = response.productList;
@@ -138,7 +153,7 @@ export class DialogDetailOrderComponent implements OnInit {
     });
   }
 
-  mappingData(row: any, products: any[]) {
+  private mappingData(row: any, products: any[]) {
     this.header = 'Cập nhật thông tin đơn hàng';
     this.order.id = row.id;
     this.order.createdDate = row.createdDate;
@@ -160,7 +175,6 @@ export class DialogDetailOrderComponent implements OnInit {
     this.order.agencyName = row.agencyName;
     this.order.isViewed = row.isViewed;
     this.order.sender = row.sender;
-    this.order.products = products;
     this.order.approvedNumber = row.approvedNumber;
     const status = this.status.find(x => x.value === this.order.status);
     this.statusSelected = status ? status : { id: null, label: '' };
@@ -174,7 +188,7 @@ export class DialogDetailOrderComponent implements OnInit {
     this.agencySelected = agency ? agency : { id: null, label: '' };
     const receipt = this.receipt.find(x => x.value === this.order.receipt);
     this.receiptSelected = receipt ? receipt : { id: null, label: '' };
-    this.generalProductOrder();
+    this.generalProductOrder(products);
 
     // set valuefor receivedDate picker
     const [day, month, year] = this.order.receivedDate.split('/');
@@ -195,14 +209,14 @@ export class DialogDetailOrderComponent implements OnInit {
     }
   }
 
-  private generalProductOrder() {
+  private generalProductOrder(_product: any) {
     const products: any[] = this.productList.map(e => ({
       id: e.id,
       name: e.name,
       quantity: "",
       category: e.category,
     }));
-    this.order.products.forEach(x => {
+    _product.forEach((x: any) => {
       let item = products.find(element => element.id === x.id);
       if (item) {
         item.quantity = x.quantity;
@@ -220,7 +234,7 @@ export class DialogDetailOrderComponent implements OnInit {
       this.order.receipt = Number(this.receiptSelected.value);
       this.order.products = this.order.products.filter(x => x.quantity && x.quantity.toString() !== '0' && x.quantity.toString() !== '');
       this.order.receivedDate = this.helper.getDateFormat(3, this.testForm.value.date);
-      this.order.agencyId = this.agencySelected.id;
+      this.order.agencyId = this.agencySelected.id ?? this.order.agencyId;
       if (!this.order.isViewed) {
         if ((this.agencyId === this.order.agencyId) || this.isAdmin) {
           this.order.isViewed = true;
@@ -242,13 +256,11 @@ export class DialogDetailOrderComponent implements OnInit {
       if (this.order.status === STATUS[3].value) {
         this.order.shippingDate = this.helper.getDateFormat(2);
       }
-      this.socketService.updatedOrder(this.order).pipe(
-        tap((res) => { })
-      ).subscribe((response: any) => {
-        if (response.affected && response.affected !== 0) {
+      this.socketService.updatedOrder(this.order).subscribe((response: any) => {
+        if (response.result.affected && response.result.affected !== 0) {
           this.helper.showSuccess(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.MODIFIED_ORDER', MSG_STATUS.SUCCESS));
-          this.dialogRef.close(this.order);
-        } else if (response.code === 404) {
+          this.dialogRef.close(null);
+        } else if (response.result.code === 404) {
           this.helper.showWarning(this.toastr, 'Không thể cập nhật thông tin đơn hàng do đơn hàng này đã được duyệt.');
           this.dialogRef.close(null);
         } else {

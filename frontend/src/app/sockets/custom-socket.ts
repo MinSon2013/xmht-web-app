@@ -112,7 +112,7 @@ export interface ExtendedSocketIoConfig extends SocketIoConfig {
 }
 
 const config: ExtendedSocketIoConfig = {
-  url: environment.apiUrl, 
+  url: environment.apiUrl,
   options: {
     extraHeaders: {
       Authorization: tokenGetter()

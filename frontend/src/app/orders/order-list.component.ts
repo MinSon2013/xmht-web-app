@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -17,12 +17,12 @@ import { OrderService } from '../services/order.service';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateService } from '@ngx-translate/core';
 import * as XLSX from 'xlsx-js-style';
-import { CustomSocket } from '../sockets/custom-socket';
 import { ExcelConfig } from '../helpers/excel.config';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { CONFIG } from '../common/config';
 import { concatMap, finalize, tap } from 'rxjs';
 import { RoutesService } from '../services/routes.service';
+import { SocketService } from '../services/socket.service';
 
 @Component({
   selector: 'app-order-list',
@@ -32,7 +32,7 @@ import { RoutesService } from '../services/routes.service';
     { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl }
   ]
 })
-export class OrderListComponent implements OnInit {
+export class OrderListComponent implements OnInit, OnDestroy {
   readonly routingOrderAdd = CONFIG.APP_ROUTING.ORDER.ORDERS + CONFIG.APP_ROUTING.ORDER.ADD;
   readonly routingSlideShow = CONFIG.APP_ROUTING.ORDER.ORDERS + CONFIG.APP_ROUTING.ORDER.SLIDESHOW;
   readonly routingPrint = CONFIG.APP_ROUTING.PRINT;
@@ -41,12 +41,16 @@ export class OrderListComponent implements OnInit {
   colspan: number = 0;
   dataSource = new MatTableDataSource<Order>();
   dataSourceClone = new MatTableDataSource<Order>();
+  dataElement: Order[] = [];
 
+  // Binding total items count to paginator Mat table
+  mpPaginator: MatPaginator | undefined;
   // Set paginator using dynamic data from Api
   @ViewChild(MatPaginator, { static: false })
   set paginator(value: MatPaginator) {
     if (this.dataSource) {
-      this.dataSource.paginator = value;
+      this.mpPaginator = value;
+      this.dataSource.paginator = this.paginator;
     }
   }
 
@@ -97,15 +101,21 @@ export class OrderListComponent implements OnInit {
   sticky: boolean = true;
   mobile: boolean = false;
   loading: boolean = true;
+  isEnabledSearch: boolean = false;
+  totalItems: number = 0;
+  pageSize: number = 10;
+  skip: number = 0;
+  takeLimitQuery: number = 100;
+  pageIndex: number = 0;
 
   constructor(public dialog: MatDialog,
     public router: Router,
     private orderService: OrderService,
     private toastr: ToastrService,
     public translate: TranslateService,
-    private socket: CustomSocket,
     private deviceService: DeviceDetectorService,
     private routesService: RoutesService,
+    private socketService: SocketService,
     private cdr: ChangeDetectorRef,
   ) {
     this.epicFunction();
@@ -127,42 +137,136 @@ export class OrderListComponent implements OnInit {
     this.emitSocket();
   }
 
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+  }
+
+  ngOnDestroy(): void { }
+
   onRequestServer() {
     this.loading = true;
     this.routesService.getFilterList().pipe(
       tap((res) => {
-        this.generalResponseToList(res);
+        this.generalFiltersToList(res);
       }),
-      concatMap(() => this.routesService.getOrderList()),
+      concatMap(() => this.routesService.getOrderList(this.takeLimitQuery, this.skip)),
       tap((res1) => {
-        this.generalResponseToDataSource(res1);
+        this.generalResponseToDataSource(res1, this.pageIndex);
       }),
       finalize(() => this.loading = false)
     ).subscribe(success => {
       console.log('success');
-    }, errorData => { console.log('error'); })
+    }, errorData => {
+      console.log(errorData);
+      this.loading = false
+    })
 
   }
 
-  generalResponseToDataSource(response: any[]) {
-    if (response.length > 0) {
-      response.forEach(x => {
-        x.agencyName = this.agencyList.find(i => i.id === x.agencyId)?.agencyName || "";
-        x.products = this.helper.sortAZ(x.products, 'id');
-        x.products = this.helper.sortAZ(x.products, 'category');
-      });
-      this.dataSource = new MatTableDataSource(response);
-      this.hasData = true;
-    } else {
-      this.hasData = false;
-      let data: Order[] = [];
-      this.dataSource = new MatTableDataSource(data);
-    }
+  emitSocket() {
+    // Listening product CRUD
+    this.socketService.socketOnGetProductList().subscribe((result) => {
+      this.getProductList();
+    })
+
+    // Listening order status changed
+    this.socketService.socketOnOrderStatusChanged().subscribe((result) => {
+      this.mappingOrderStatusChanged(result);
+    });
+
+    // Listening added order
+    this.socketService.socketOnOrderAdded().subscribe((result) => {
+      this.pageIndex = 0;
+      this.totalItems = this.totalItems + 1;
+      this.mappingOrderAddedSuccess(result);
+    });
+
+    // Listening updated order
+    this.socketService.socketOnOrderUpdated().subscribe((result) => {
+      this.mappingOrderUpdatedSuccess(result);
+    });
+
+    // listening deleted order
+    this.socketService.socketOnOrderDeleted().subscribe((result) => {
+      this.totalItems = this.totalItems - 1;
+      this.mappingOrderDeletedSuccess(result.id);
+    });
+
+    // Listening order isView changed
+    this.socketService.socketOnOrderIsViewedChanged().subscribe((result) => {
+      this.mappingOrderIsviewChanged(result.id);
+    });
+  }
+
+  private mappingOrderAddedSuccess(result: any) {
+    result.order.agencyName = this.agencyList.find(i => i.id === result.order.agencyId)?.agencyName || "";
+    result.products.forEach((p: any) => {
+      const product = this.productList.find(k => k.id === p.id);
+      if (product) {
+        p.category = product.category;
+        p.name = product.name;
+      }
+    });
+    result.order.products = this.helper.sortAZ(result.products, 'id');
+    result.order.products = this.helper.sortAZ(result.products, 'category');
+
+    this.dataElement = [result.order, ...this.dataElement,];
+    this.dataSourceClone = new MatTableDataSource<Order>(this.dataElement);
+    this.dataSource = new MatTableDataSource(this.claimDataSource(this.pageIndex));
     this.cdr.detectChanges();
-    this.dataSource.paginator = this.paginator;
   }
 
-  generalResponseToList(response: any) {
+  private mappingOrderUpdatedSuccess(result: any) {
+    result.order.agencyName = this.agencyList.find(i => i.id === result.order.agencyId)?.agencyName || "";
+    result.products.forEach((p: any) => {
+      const product = this.productList.find(k => k.id === p.id);
+      if (product) {
+        p.category = product.category;
+        p.name = product.name;
+      }
+    });
+    result.order.products = this.helper.sortAZ(result.products, 'id');
+    result.order.products = this.helper.sortAZ(result.products, 'category');
+
+    this.dataElement = this.dataElement.map(x => (x.id === result.order.id) ? result.order : x)
+    this.dataSourceClone = new MatTableDataSource<Order>(this.dataElement);
+    this.dataSource = new MatTableDataSource(this.claimDataSource(this.pageIndex));
+  }
+
+  private mappingOrderDeletedSuccess(id: number) {
+    this.dataElement = this.dataElement.filter(x => x.id !== id)
+    this.dataSourceClone = new MatTableDataSource<Order>(this.dataElement);
+    this.dataSource = new MatTableDataSource(this.claimDataSource(this.pageIndex));
+  }
+
+  private mappingOrderStatusChanged(result: any) {
+    const item = this.dataElement.find(k => k.id === result.id);
+    if (item) {
+      item.status = result.status;
+      item.note = result.note;
+      item.approvedNumber = result.approvedNumber;
+      item.shippingDate = result.shippingDate;
+      item.isViewed = result.isViewed;
+
+      this.dataElement = this.dataElement.map(x => (x.id === result.id) ? item : x)
+      this.dataSourceClone = new MatTableDataSource<Order>(this.dataElement);
+      this.dataSource = new MatTableDataSource(this.claimDataSource(this.pageIndex));
+    }
+  }
+
+  private mappingOrderIsviewChanged(id: number) {
+    const item = this.dataElement.find(k => k.id === id);
+    if (item) {
+      item.isViewed = true;
+      this.dataElement = this.dataElement.map(x => (x.id === id) ? item : x)
+
+      this.dataSourceClone = new MatTableDataSource<Order>(this.dataElement);
+      this.dataSource = new MatTableDataSource(this.claimDataSource(this.pageIndex));
+    }
+  }
+
+  generalFiltersToList(response: any) {
     if (response) {
       this.agencyList = this.helper.sortAZ(response.agencyList, 'agencyName');
       this.productList = this.helper.sortAZ(response.productList, 'id');
@@ -171,20 +275,84 @@ export class OrderListComponent implements OnInit {
     }
   }
 
-  emitSocket() {
-    this.socket.on('emitGetOrderList', (response: Order[]) => {
-      this.onSearch();
-    })
-    this.socket.on('emitGetProductList', (response: Order[]) => {
-      this.onSearch();
+  generalResponseToDataSource(response: any, pageIndex: number) {
+    if (response.orderList.length > 0) {
+      response.orderList.forEach((x: any) => {
+        x.agencyName = this.agencyList.find(i => i.id === x.agencyId)?.agencyName || "";
+        x.products = this.helper.sortAZ(x.products, 'category');
+      });
+
+      this.dataElement = [...this.dataElement, ...response.orderList];
+      this.dataSourceClone = new MatTableDataSource<Order>(this.dataElement);
+      this.dataSource = new MatTableDataSource(this.claimDataSource(pageIndex));
+
+      this.hasData = true;
+    } else {
+      this.hasData = false;
+      if (pageIndex === 0) {
+        this.dataElement = [];
+      }
+    }
+    this.totalItems = response.totalCount;
+    this.cdr.detectChanges();
+  }
+
+  onSearch() {
+    this.isEnabledSearch = true;
+    this.loading = true;
+
+    // Reset property
+    this.dataElement = [];
+    this.dataSource.data = [];
+    this.dataSourceClone = new MatTableDataSource<Order>(this.dataElement);
+    this.totalItems = 0;
+    this.skip = 0;
+    this.pageIndex = 0;
+
+    // Get value from search form
+    this.searchForm.agencyId = this.agencySelected !== null ? this.agencySelected.id : 0;
+    this.searchForm.productId = this.productSelected !== null ? this.productSelected.id : 0;
+    this.searchForm.status = this.selectedStatus !== null ? this.selectedStatus.value : 0;
+    this.searchForm.startDate = this.range.value.start !== null ? this.helper.getDateFormat(3, this.range.value.start) : '';
+    this.searchForm.endDate = this.range.value.end !== null ? this.helper.getDateFormat(3, this.range.value.end) : '';
+    this.orderService.search(this.searchForm, this.takeLimitQuery, this.skip).subscribe((response: any) => {
+      this.generalResponseToDataSource(response, this.pageIndex);
+      this.loading = false;
+    });
+  }
+
+  changePaging(event: any) {
+    this.pageSize = event.pageSize;
+    let itemIndex = (event.pageIndex + 1) * event.pageSize;
+    if (itemIndex <= this.dataElement.length) {
+      this.dataSource = new MatTableDataSource(this.claimDataSource(event.pageIndex));
+
+    } else {
+      this.skip += 1; this.skip += 1;
+      if (this.isEnabledSearch) {
+        this.onLazyLoadSearchOrderCallAPI(event.pageIndex);
+      } else {
+        this.onLazyLoadOrderCallAPI(event.pageIndex);
+      }
+    }
+  }
+
+  claimDataSource(pageIndex: number) {
+    return this.dataElement.slice(pageIndex * this.pageSize, (pageIndex + 1) * this.pageSize)
+  }
+
+  onLazyLoadOrderCallAPI(pageIndex: number) {
+    this.routesService.getOrderList(this.takeLimitQuery, this.skip).subscribe((response) => {
+      this.generalResponseToDataSource(response, pageIndex);
     })
   }
 
-  ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
+  onLazyLoadSearchOrderCallAPI(pageIndex: number) {
+    this.orderService.search(this.searchForm, this.takeLimitQuery, this.skip).subscribe((response) => {
+      this.generalResponseToDataSource(response, pageIndex);
+    })
   }
-  
+
   onAdd() {
     this.router.navigate([this.routingOrderAdd]);
   }
@@ -228,8 +396,9 @@ export class OrderListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.dataSource.data = this.dataSource.data.filter(x => x.id !== row.id);
-        if (this.dataSource.data.length === 0) {
+        this.dataElement = this.dataElement.filter(x => x.id !== row.id);
+        this.dataSource = new MatTableDataSource(this.claimDataSource(this.pageIndex));
+        if (this.dataElement.length === 0) {
           this.hasData = false;
         } else {
           this.hasData = true;
@@ -253,7 +422,7 @@ export class OrderListComponent implements OnInit {
     rows.push(empty);
     rows.push(header);
 
-    this.dataSource.data.forEach(e => {
+    this.dataElement.forEach(e => {
       const row: any[] = [];
       row.push(e.approvedNumber !== 0 ? e.approvedNumber.toString() : "-");
       row.push(e.createdDate);
@@ -377,35 +546,19 @@ export class OrderListComponent implements OnInit {
     return str.trimEnd();
   }
 
-  onSearch() {
-    this.searchForm.agencyId = this.agencySelected !== null ? this.agencySelected.id : 0;
-    this.searchForm.productId = this.productSelected !== null ? this.productSelected.id : 0;
-    this.searchForm.status = this.selectedStatus !== null ? this.selectedStatus.value : 0;
-    this.searchForm.startDate = this.range.value.start !== null ? this.helper.getDateFormat(3, this.range.value.start) : '';
-    this.searchForm.endDate = this.range.value.end !== null ? this.helper.getDateFormat(3, this.range.value.end) : '';
-    this.orderService.search(this.searchForm).subscribe((response: any) => {
-      if (response.length > 0) {
-        this.dataSource.data = response;
-        this.dataSource.data.forEach(x => {
-          x.agencyName = this.agencyList.find(i => i.id === x.agencyId)?.agencyName;
-        });
-        this.dataSourceClone = new MatTableDataSource<Order>(this.dataSource.data);
-        this.hasData = true;
-      } else {
-        this.dataSource.data = [];
-        this.hasData = false;
-        this.helper.showWarning(this.toastr, "Không có thông tin cần tìm.");
-      }
-    });
+  private getProductList() {
+    this.routesService.getProductList().subscribe((res) => {
+      this.productList = this.helper.sortAZ(res, 'id');
+      this.productList = this.helper.sortAZ(this.productList, 'category');
+    })
   }
 
-  onLoadLasted(key: number) {
-    this.dataSource.data = this.dataSourceClone.data;
+  onLoadOrderByStatus(key: number) {
     const nowDate = moment(new Date(), 'HH:mm DD/MM/YYYY');
-    const subDate = nowDate.subtract(7, 'days');
-    const newList = this.dataSource.data.filter(x => x.status === key && subDate < (moment(x.createdDate, 'HH:mm DD/MM/YYYY')));
+    let subDate = nowDate.subtract(7, 'days');
+    const newList = this.dataElement.filter(x => x.status === key && subDate < (moment(x.createdDate, 'HH:mm DD/MM/YYYY')));
     if (newList.length > 0) {
-      this.dataSource.data = newList;
+      this.dataSource = new MatTableDataSource(newList);
     } else {
       this.helper.showWarning(this.toastr, "Không có thông tin cần tìm.");
     }
@@ -422,6 +575,15 @@ export class OrderListComponent implements OnInit {
     this.searchForm.status = 0;
     this.searchForm.startDate = null;
     this.searchForm.endDate = null;
+    this.isEnabledSearch = false;
+
+    // Reset property
+    this.dataElement = [];
+    this.dataSource.data = [];
+    this.dataSourceClone = new MatTableDataSource<Order>(this.dataElement);
+    this.totalItems = 0;
+    this.skip = 0;
+    this.pageIndex = 0;
   }
 
   compareObj(obj1: any[], obj2: any): string {

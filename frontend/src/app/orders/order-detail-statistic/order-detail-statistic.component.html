@@ -22,8 +22,10 @@
             <mat-form-field appearance="fill" class=" border rounded">
                 <mat-label>Chọn từ ngày đến ngày</mat-label>
                 <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
-                    <input matStartDate formControlName="start" placeholder="Từ ngày" />
-                    <input matEndDate formControlName="end" placeholder="Đến ngày" />
+                    <input matStartDate formControlName="start" placeholder="Từ ngày" #dateRangeStart
+                        (dateChange)="dateRangeChange(dateRangeStart, dateRangeEnd)" />
+                    <input matEndDate formControlName="end" placeholder="Đến ngày" #dateRangeEnd
+                        (dateChange)="dateRangeChange(dateRangeStart, dateRangeEnd)" />
                 </mat-date-range-input>
                 <mat-hint style="display: none" [hidden]="true">DD/MM/YYYY - DD/MM/YYYY</mat-hint>
                 <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
@@ -309,6 +311,11 @@
                 <tr mat-header-row *matHeaderRowDef="columnsDefProductName"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumnsSection;"></tr>
             </table>
+        </div>
+
+        <div *ngIf="isShowLoadmore" style="margin-top: 0.5rem; padding-left: 1rem;">
+            <span (click)="getOrderDetailData()" class="s-load-more">
+                {{"DETAILS_STATISTIC.LOAD_MORE_DATA" | translate}}</span>
         </div>
 
         <div class="div-footer-right">

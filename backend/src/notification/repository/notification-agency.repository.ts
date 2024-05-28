@@ -25,12 +25,15 @@ export class NotificationAgencyRepository extends Repository<NotificationAgency>
             .execute();
     }
 
-    async getNotificationAgencyByAgencyId(agencyId: number) {
+    async getNotificationAgencyByAgencyId(agencyId: number, notifyIdList?: any[]) {
         const res: NotificationAgencyDTO[] = [];
 
         let sql = this.createQueryBuilder('na');
         if (agencyId !== 0) {
             sql = sql.where('na.agency_id = :agencyId', { agencyId });
+        }
+        if (notifyIdList && notifyIdList.length > 0) {
+            sql = sql.andWhere("na.notification_id IN (:notifyIdList)", { notifyIdList })
         }
         const query = await sql.getMany();
         query.forEach(el => {

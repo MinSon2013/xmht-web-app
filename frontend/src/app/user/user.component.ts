@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -21,7 +21,7 @@ import { concatMap, tap } from 'rxjs';
     { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl }
   ]
 })
-export class UserComponent implements OnInit {
+export class UserComponent implements OnInit, OnDestroy {
 
   displayedColumns: string[] = ['id', 'username', 'fullName', 'role', 'district', 'deleteAction'];
   dataSource = new MatTableDataSource<User>();
@@ -54,6 +54,13 @@ export class UserComponent implements OnInit {
     this.colspan = this.displayedColumns.length;
     this.onRequestServer();
   }
+
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+  }
+
+  ngOnDestroy(): void { }
 
   onRequestServer() {
     this.routesService.getDistrictList().pipe(
@@ -102,11 +109,6 @@ export class UserComponent implements OnInit {
     }
   }
 
-  ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-  }
-
   onEdit(row: any) {
     const elements = Array.from(
       document.getElementsByClassName('body') as HTMLCollectionOf<HTMLElement>,
@@ -143,7 +145,8 @@ export class UserComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.dataSource.data = this.dataSource.data.filter(x => x.id !== row.id);
+        let data = this.dataSource.data.filter(x => x.id !== row.id);
+        this.dataSource.data = data;
         if (this.dataSource.data.length === 0) {
           this.hasData = false;
         } else {

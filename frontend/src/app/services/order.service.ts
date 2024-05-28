@@ -18,15 +18,11 @@ export class OrderService {
         private webrequestService: WebRequestService,
     ) { }
 
-    getOrderList() {
-        return this.webrequestService.get(this.url + `/${this.helper.getUserId()}`);
-    }
-
     getOneOrder(id: number) {
         return this.webrequestService.get(this.url + `/${id}/${this.helper.getUserId()}`);
     }
 
-    search(obj: Search) {
+    search(obj: Search, take: number, skip: number) {
         const payload = {
             approvedNumber: Number(obj.approvedNumber),
             startDate: obj.startDate,
@@ -35,6 +31,8 @@ export class OrderService {
             productId: Number(obj.productId),
             status: Number(obj.status),
             userId: this.helper.getUserId(),
+            take,
+            skip,
         };
         return this.webrequestService.post(this.url1, payload);
     }
@@ -107,7 +105,7 @@ export class OrderService {
         return this.webrequestService.delete(this.url + `/${id}`);
     }
 
-    searchDetails(obj: SearchDetailsOrder) {
+    searchDetails(obj: SearchDetailsOrder, take?: number, skip?: number) {
         const payload = {
             agencyId: obj.agencyId.toString(),
             deliveryId: obj.deliveryId.toString(),
@@ -120,11 +118,9 @@ export class OrderService {
             startDate: obj.startDate,
             endDate: obj.endDate,
             userId: this.helper.getUserId(),
+            take: take ?? 0,
+            skip: skip ?? 0,
         }
         return this.webrequestService.post(this.url2, payload);
-    }
-
-    getFilterList() {
-        return this.webrequestService.get(this.url3 + `/${this.helper.getUserId()}`);
     }
 }

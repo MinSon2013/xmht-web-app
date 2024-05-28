@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -6,10 +6,11 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Product } from '../models/product';
 import { CustomMatPaginatorIntl } from '../common/custom-paginator';
 import { DialogDeleteConfirmComponent } from '../common/dialog-delete-confirm/dialog-delete-confirm.component';
-import { ProductService } from '../services/product.service';
 import { DialogDetailProductComponent } from './dialog-detail-product/dialog-detail-product.component';
 import { SERVICE_TYPE, STOCKER_ROLE, USER_AREA_MANAGER_ROLE } from '../constants/const-data';
 import { Helper } from '../helpers/helper';
+import { RoutesService } from '../services/routes.service';
+import { SocketService } from '../services/socket.service';
 
 @Component({
   selector: 'app-products',
@@ -19,7 +20,7 @@ import { Helper } from '../helpers/helper';
     { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl }
   ]
 })
-export class ProductsComponent implements OnInit {
+export class ProductsComponent implements OnInit, OnDestroy {
 
   displayedColumns: string[] = ['id', 'productName', 'quantity', 'price', 'note', 'deleteAction'];
   dataSource = new MatTableDataSource<Product>();
@@ -35,7 +36,8 @@ export class ProductsComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(public dialog: MatDialog,
-    private productService: ProductService,
+    private routesService: RoutesService,
+    private socketService: SocketService,
   ) { }
 
   ngOnInit(): void {
@@ -44,10 +46,26 @@ export class ProductsComponent implements OnInit {
     }
     this.colspan = this.displayedColumns.length;
     this.getData();
+
+    this.emitSocket();
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+  }
+
+  ngOnDestroy(): void { }
+
+  emitSocket() {
+    // Listening product CRUD
+    this.socketService.socketOnGetProductList().subscribe((result) => {
+      this.getData();
+    })
   }
 
   getData() {
-    this.productService.getProductList().subscribe((response: any) => {
+    this.routesService.getProductList().subscribe((response: any) => {
       if (response.length > 0) {
         this.dataSource.data = response.reverse();
       } else {
@@ -63,11 +81,6 @@ export class ProductsComponent implements OnInit {
     } else {
       this.hasData = true;
     }
-  }
-
-  ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
   }
 
   onEdit(row: any) {
@@ -88,8 +101,7 @@ export class ProductsComponent implements OnInit {
           row.note = result.note;
           row.category = result.category;
         } else {
-          this.dataSource.data = [result, ...this.dataSource.data];
-          this.dataSource.data = this.dataSource.data;
+          this.getData();
           this.hideShowNoDataRow();
         }
       }
@@ -103,7 +115,8 @@ export class ProductsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.dataSource.data = this.dataSource.data.filter(x => x.id !== row.id);
+        let data = this.dataSource.data.filter(x => x.id !== row.id);
+        this.dataSource.data = data;
         if (this.dataSource.data.length === 0) {
           this.hasData = false;
         } else {

@@ -12,6 +12,7 @@ import { UserService } from '../user/user.service';
 import { ADMIN_ROLE, STOCKER_ROLE, USER_AREA_MANAGER_ROLE, USER_SALESMAN_ROLE } from '../config/constant';
 import { DetailsOrderDTO } from './dto/details-order.dto';
 import { DeliveryService } from '../delivery/delivery.service';
+import { OrderRO } from './ro/order.ro';
 
 @Injectable()
 export class OrdersService {
@@ -27,9 +28,9 @@ export class OrdersService {
     public readonly deliveryService: DeliveryService,
   ) { }
 
-  async findAll(userId: number): Promise<Order[]> {
+  async findAll(userId: number, take: number, skip: number): Promise<OrderRO> {
     let user = await this.checkUseRole(userId);
-    return await this.orderRepo.getOrderList(user.role, user.agencyId, this.productService, this.productOrderRepo);
+    return await this.orderRepo.getOrderList(user.role, user.agencyId, take, skip, this.productService, this.productOrderRepo);
   }
 
   async findOne(id: number, userId: number): Promise<Order> {
@@ -53,16 +54,16 @@ export class OrdersService {
     return await this.orderRepo.updateView(body);
   }
 
-  async delete(id: number): Promise<DeleteResult> {
+  async delete(id: number): Promise<any> {
     return await this.orderRepo.deleteOrder(id, this.productOrderRepo);
   }
 
-  async search(searchOderDto: SearchOrderDTO): Promise<Order[]> {
+  async search(searchOderDto: SearchOrderDTO): Promise<OrderRO> {
     let user = await this.checkUseRole(searchOderDto.userId);
     return await this.orderRepo.search(searchOderDto, this.productService, user.agencyId, user.role);
   }
 
-  async details(detailsOrderDto: DetailsOrderDTO): Promise<Order[]> {
+  async details(detailsOrderDto: DetailsOrderDTO): Promise<any> {
     let user = await this.checkUseRole(detailsOrderDto.userId);
     return await this.orderRepo.details(detailsOrderDto, this.productService, user.agencyId);
   }

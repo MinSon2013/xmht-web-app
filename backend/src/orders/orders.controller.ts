@@ -1,25 +1,30 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { ModifyOrderDTO } from './dto/modify-order.dto';
 import { SearchOrderDTO } from './dto/search-order.dto';
 import { Order } from './entities/order.entity';
 import { OrdersService } from './orders.service';
 import { DetailsOrderDTO } from './dto/details-order.dto';
+import { OrderRO } from './ro/order.ro';
 
 @Controller('orders')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) { }
 
   @UseGuards(JwtAuthGuard)
-  @Get(':userId')
-  findAll(@Param('userId', ParseIntPipe) userId: number): Promise<Order[]> {
-    return this.ordersService.findAll(userId);
-  }
-
-  @UseGuards(JwtAuthGuard)
   @Get('/filters/:userId')
   filters(@Param('userId', ParseIntPipe) userId: number): Promise<Order[]> {
     return this.ordersService.filters(userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/list')
+  findAll(
+    @Query('userId', ParseIntPipe) userId: number,
+    @Query('take', ParseIntPipe) take: number,
+    @Query('skip', ParseIntPipe) skip: number,
+  ): Promise<OrderRO> {
+    return this.ordersService.findAll(userId, take, skip);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -61,13 +66,13 @@ export class OrdersController {
 
   @UseGuards(JwtAuthGuard)
   @Post('/search')
-  search(@Body() searchOderDto: SearchOrderDTO): Promise<Order[]> {
+  search(@Body() searchOderDto: SearchOrderDTO): Promise<OrderRO> {
     return this.ordersService.search(searchOderDto);
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('/details')
-  details(@Body() detailsOrderDto: DetailsOrderDTO): Promise<Order[]> {
+  details(@Body() detailsOrderDto: DetailsOrderDTO): Promise<any> {
     return this.ordersService.details(detailsOrderDto);
   }
 }

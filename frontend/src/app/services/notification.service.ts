@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, catchError, throwError } from 'rxjs';
 import { CONFIG } from '../common/config';
 import { Helper } from '../helpers/helper';
 import { WebRequestService } from './web-request.service';
+import { HttpParams } from '@angular/common/http';
 
 @Injectable({
     providedIn: 'root'
@@ -15,9 +16,21 @@ export class NotificationService {
         private webrequestService: WebRequestService,
     ) { }
 
-    getNotificationList(): Observable<any> {
-        const agencyId = this.helper.getAgencyId();
-        return this.webrequestService.get(this.url + `/${agencyId}`);
+    getNotificationList(take: number, skip: number): Observable<any> {
+        // const agencyId = this.helper.getAgencyId();
+        // return this.webrequestService.get(this.url + `/${agencyId}`);
+
+        let params = new HttpParams();
+        params = params.append("agencyId", this.helper.getAgencyId());
+        params = params.append("take", take);
+        params = params.append("skip", skip);
+        return this.webrequestService
+            .getWithParams(this.url + "/list/", params)
+            .pipe(catchError(this.errorHandler));
+    }
+
+    getNotification(id: number): Observable<any> {
+        return this.webrequestService.get(this.url + `/get/${id}`);
     }
 
     getBadgeNumber(agencyId: number): Observable<any> {
@@ -79,5 +92,17 @@ export class NotificationService {
     deleteMany(id: number[]) {
         const payload = { id };
         return this.webrequestService.deleteAll(this.url + `/deleteall`, payload);
+    }
+
+    errorHandler(error: any) {
+        let errorMessage = '';
+        if (error.error instanceof ErrorEvent) {
+            //Get client-side error
+            errorMessage = error.error.message;
+        } else {
+            // Get server-side error
+            errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+        }
+        return throwError(() => new Error('getNotificationList with param {take, skip}'));
     }
 }

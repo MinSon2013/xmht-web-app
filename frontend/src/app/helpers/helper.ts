@@ -291,5 +291,13 @@ export class Helper {
     return '';
   }
 
+  public groupByValue(arr: any[], key: string) {
+    return Object.values(arr.reduce((acc, curr) => {
+      if (!acc[curr[key]]) acc[curr[key]] = [];
+      acc[curr[key]].push(curr)
+      return acc;
+    }, {}));
+  }
+
 }
 

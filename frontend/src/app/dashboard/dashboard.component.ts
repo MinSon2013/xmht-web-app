@@ -1,4 +1,4 @@
-import { Component, } from '@angular/core';
+import { Component, OnDestroy, OnInit, } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { IMAGEOBJECTS, IMAGEPRODUCTS } from '../mock-data/dashboard.data';
 
@@ -7,7 +7,7 @@ import { IMAGEOBJECTS, IMAGEPRODUCTS } from '../mock-data/dashboard.data';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit, OnDestroy {
   readonly imageObjects = IMAGEOBJECTS;
   readonly imageProducts: any[] = IMAGEPRODUCTS;
   showDetail: boolean = false;
@@ -16,6 +16,8 @@ export class DashboardComponent {
   constructor(public translate: TranslateService,) { }
 
   ngOnInit() { }
+
+  ngOnDestroy(): void { }
 
   onShowDetail() {
     this.showDetail = !this.showDetail;

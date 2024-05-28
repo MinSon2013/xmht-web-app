@@ -88,32 +88,9 @@ export class DialogDetailNotifyComponent implements OnInit {
       if (!this.isAdmin) {
         this.translate.get('NOTIFY.DETAIL').subscribe(x => { this.header = x });
       }
-      this.notify.id = this.data.row.id;
-      this.notify.agencyList = this.data.row.agencyList;
-      this.notify.contents = this.data.row.contents;
-      this.notify.fileName = this.data.row.fileName;
-      this.notify.note = this.data.row.note;
-      this.notify.isPublished = this.data.row.isPublished;
-      this.notify.createdDate = this.data.row.createdDate;
-      this.notify.filePath = this.data.row.filePath;
-      this.notify.mimeType = this.data.row.mimeType;
-      if (this.data.row.agencyList && this.data.row.agencyList.length === 1) {
-        const id = this.data.row.agencyList[0];
-        const agency = this.agencyListSelectOption.find(x => x.id === id);
-        this.agencySelected = agency ? agency : this.agencyListSelectOption[0];
-      } else if (this.data.row.agencyList && this.data.row.agencyList.length > 1) {
-        this.agencySelected = this.agencyListSelectOption[0];
-      } else {
-        this.agencySelected = this.agencyListSelectOption[0];
-      }
-      this.notify.agencyId = this.data.row.agencyId;
-      this.html = this.notify.contents;
-      this.notify.sender = this.data.row.sender;
-      this.isEdit = (this.notify.sender === this.helper.getUserId());
-      this.couponChecked = this.data.row.notificationType === 2 ? true : false
-      this.notify.notificationType = this.data.row.notificationType;
-      this.notify.orderId = this.data.row.orderId;
-      this.notify.statusOrder = this.data.row.statusOrder;
+      this.mappingNotify(this.data.row);
+
+      this.emitSocket();
     } else {
       this.notify.id = 0;
       this.notify.agencyList = [];
@@ -135,6 +112,47 @@ export class DialogDetailNotifyComponent implements OnInit {
 
   ngOnDestroy(): void {
     this.editor.destroy();
+  }
+
+  private mappingNotify(row: any) {
+    this.notify.id = row.id;
+    this.notify.agencyList = row.agencyList;
+    this.notify.contents = row.contents;
+    this.notify.fileName = row.fileName;
+    this.notify.note = row.note;
+    this.notify.isPublished = row.isPublished;
+    this.notify.createdDate = row.createdDate;
+    this.notify.filePath = row.filePath;
+    this.notify.mimeType = row.mimeType;
+    if (row.agencyList && row.agencyList.length === 1) {
+      const id = row.agencyList[0];
+      const agency = this.agencyListSelectOption.find(x => x.id === id);
+      this.agencySelected = agency ? agency : this.agencyListSelectOption[0];
+    } else if (row.agencyList && row.agencyList.length > 1) {
+      this.agencySelected = this.agencyListSelectOption[0];
+    } else {
+      this.agencySelected = this.agencyListSelectOption[0];
+    }
+    this.notify.agencyId = row.agencyId;
+    this.html = this.notify.contents;
+    this.notify.sender = row.sender;
+    this.isEdit = (this.notify.sender === this.helper.getUserId());
+    this.couponChecked = row.notificationType === 2 ? true : false
+    this.notify.notificationType = row.notificationType;
+    this.notify.orderId = row.orderId;
+    this.notify.statusOrder = row.statusOrder;
+  }
+
+  emitSocket() {
+    this.socketService.socketOnNotifyUpdated().subscribe((response: any) => {
+      this.getNotify();
+    })
+  }
+
+  getNotify() {
+    this.notifyService.getNotification(this.notify.id).subscribe((response: any) => {
+      this.mappingNotify(response);
+    });
   }
 
   onSubmit(isPublished: boolean) {

@@ -10,4 +10,7 @@ export class DetailsOrderDTO {
     startDate: string;
     endDate: string;
     userId: number; // Login userId
+
+    take: number;
+    skip: number;
 }

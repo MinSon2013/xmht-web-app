@@ -10,7 +10,7 @@ import { Helper } from '../../shared/helper';
 export class NotificationRepository extends Repository<Notification> {
     private readonly helper = new Helper();
 
-    async getAll(agencyId: number): Promise<any> {
+    async getAll(agencyId: number, take: number, skip: number): Promise<any> {
         let sql = this.createQueryBuilder('n')
             .select('n')
             .addSelect('GROUP_CONCAT(DISTINCT na.agency_id SEPARATOR ", ") as agencyList')
@@ -25,6 +25,13 @@ export class NotificationRepository extends Repository<Notification> {
             .groupBy("n.updated_date")
             .orderBy("STR_TO_DATE(n.updated_date, '%H:%i %d/%m/%Y')", 'DESC')
             .getRawMany();
+
+        let totalCount = query.length;
+        // If take = 0 then get all orders
+        if (take > 0) {
+            query = query.slice(skip * take, (skip + 1) * take);
+        }
+
         const res: NotificationDTO[] = [];
         query.forEach(x => {
             const item = new NotificationDTO();
@@ -46,7 +53,8 @@ export class NotificationRepository extends Repository<Notification> {
             res.push(item);
         });
 
-        return res;
+        // return res;
+        return { notifyList: res, totalCount };
     }
 
     async getByReportId(reportId: number): Promise<Notification> {
@@ -55,6 +63,10 @@ export class NotificationRepository extends Repository<Notification> {
                 reportId
             },
         })
+    }
+
+    async getOne(id: number) {
+        return await this.findOne({ id });
     }
 
     async createNotification(createDto: NotificationDTO, notifyAgencyRepo: NotificationAgencyRepository): Promise<Notification | any> {

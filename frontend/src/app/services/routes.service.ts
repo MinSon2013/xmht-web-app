@@ -5,24 +5,26 @@ import { WebRequestService } from './web-request.service';
 import { CONFIG } from '../common/config';
 import { Helper } from '../helpers/helper';
 import { SearchDetailsOrder } from '../models/search';
+import { HttpParams } from '@angular/common/http';
 
 @Injectable()
 export class RoutesService {
-    readonly url: string = CONFIG.URL.ORDERS.ORDER;
-    readonly url2: string = CONFIG.URL.ORDERS.SEARCH_DEATILS;
-    readonly url3: string = CONFIG.URL.ORDERS.FILTER;
     readonly helper = new Helper();
 
     constructor(private http: WebRequestService) { }
 
-    getOrderList(): Observable<any> {
+    getOrderList(take: number, skip: number): Observable<any> {
+        let params = new HttpParams();
+        params = params.append("userId", this.helper.getUserId());
+        params = params.append("take", take);
+        params = params.append("skip", skip);
         return this.http
-            .get(this.url + `/${this.helper.getUserId()}`)
+            .getWithParams(CONFIG.URL.ORDERS.ORDER + "/list/", params)
             .pipe(catchError(this.errorHandler));
     }
 
     getFilterList(): Observable<any> {
-        return this.http.get(this.url3 + `/${this.helper.getUserId()}`);
+        return this.http.get(CONFIG.URL.ORDERS.FILTER + `/${this.helper.getUserId()}`);
     }
 
     getOrderDetails(obj: SearchDetailsOrder): Observable<any> {
@@ -39,7 +41,7 @@ export class RoutesService {
             endDate: obj.endDate,
             userId: this.helper.getUserId(),
         }
-        return this.http.post(this.url2, payload);
+        return this.http.post(CONFIG.URL.ORDERS.SEARCH_DEATILS, payload);
     }
 
     getDistrictList(): Observable<any> {
@@ -72,6 +74,10 @@ export class RoutesService {
         return this.http.get(CONFIG.URL.REPORT + `/${userId}`);
     }
 
+    getProductList(): Observable<any> {
+        return this.http.get(CONFIG.URL.PRODUCT);
+    }
+
     errorHandler(error: any) {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) {
@@ -80,7 +86,6 @@ export class RoutesService {
         } else {
             // Get server-side error
             errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
-            //alert('Please contact an administrator')
         }
         return throwError(() => new Error('test'));
     }

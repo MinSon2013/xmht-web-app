@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AGENCY_ROLE, Cities, MSG_STATUS, RECEIPT, STATUS, STOCKER_ROLE, Transports, USER_SALESMAN_ROLE } from '../../constants/const-data';
 import { Order, ProductItem } from '../../models/order';
 import { FormControl, FormGroupDirective, NgForm } from '@angular/forms';
@@ -11,9 +11,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { SocketService } from '../../services/socket.service';
 import { tap } from 'rxjs';
 import { CONFIG } from '../../common/config';
-import { CustomSocket } from '../../sockets/custom-socket';
-import { Product } from '../../models/product';
-import { OrderService } from '../../services/order.service';
+import { RoutesService } from '../../services/routes.service';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -27,7 +25,7 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   templateUrl: './order-add.component.html',
   styleUrls: ['./order-add.component.scss']
 })
-export class OrderAddComponent implements OnInit {
+export class OrderAddComponent implements OnInit, OnDestroy {
   readonly routingOrderList = CONFIG.APP_ROUTING.ORDER.ORDERS + CONFIG.APP_ROUTING.ORDER.LIST;
 
   header: string = 'Thêm mới đơn hàng';
@@ -92,22 +90,25 @@ export class OrderAddComponent implements OnInit {
     public translate: TranslateService,
     private toastr: ToastrService,
     private socketService: SocketService,
-    private socket: CustomSocket,
-    private orderService: OrderService,
+    private routesService: RoutesService,
   ) { }
 
   ngOnInit(): void {
+    this.getFilterList();
     this.emitSocket();
   }
 
+  ngOnDestroy(): void { }
+
   emitSocket() {
-    this.socket.on('emitGetProductList', (response: Product[]) => {
+    // Listening product CRUD
+    this.socketService.socketOnGetProductList().subscribe((result) => {
       this.getFilterList();
     })
   }
 
   getFilterList() {
-    this.orderService.getFilterList().subscribe((response: any) => {
+    this.routesService.getFilterList().subscribe((response: any) => {
       if (response) {
         this.agencyList = this.helper.sortAZ(response.agencyList, 'agencyName');
         this.productList = this.helper.sortAZ(response.productList, 'id');
@@ -167,7 +168,7 @@ export class OrderAddComponent implements OnInit {
       ).subscribe((response: any) => {
         this.loading = false;
         if (response) {
-          this.order.id = response.id;
+          //this.order.id = response.id;
           this.helper.showSuccess(this.toastr, this.helper.getMessage(this.translate, 'MESSAGE.ADD_ORDER', MSG_STATUS.SUCCESS));
           this.router.navigate([this.routingOrderList]);
         } else {

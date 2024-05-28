@@ -44,99 +44,6 @@ export class SocketService {
         });
     }
 
-    openConnect() {
-        this.socket.connect();
-    }
-
-    createdNotification(notify: Notify) {
-        this.socket.emit('addNotify', notify);
-        return new Observable((subscribe) => {
-            this.socket.on('notifyAdded', (data: any) => {
-                subscribe.next(data);
-            });
-        })
-    }
-
-    updatedNotification(notify: Notify) {
-        this.socket.emit('updateNotify', notify);
-        return new Observable((subscribe) => {
-            this.socket.on('notifyUpdated', (data: any) => {
-                subscribe.next(data);
-            });
-        })
-    }
-
-    changeStatusNotify(request: any) {
-        this.socket.emit('changeStatusNotify', request);
-    }
-
-    createdOrder(order: Order) {
-        this.socket.emit('addOrder', order);
-        return new Observable((subscribe) => {
-            this.socket.on('orderAdded', (data: any) => {
-                subscribe.next(data);
-            });
-        })
-    }
-
-    updatedOrder(order: Order) {
-        this.socket.emit('updateOrder', order);
-        return new Observable((subscribe) => {
-            this.socket.on('orderUpdated', (data: any) => {
-                subscribe.next(data);
-            });
-        })
-    }
-
-    changeStatusOrder(request: any) {
-        this.socket.emit('changeStatusOrder', request);
-        return new Observable((subscribe) => {
-            this.socket.on('statusOrderChanged', (data: any) => {
-                subscribe.next(data);
-            });
-        })
-    }
-
-    changeIsViewedOrder(request: any) {
-        this.socket.emit('changeIsViewedOrder', request);
-    }
-
-    emitGetBadge(agencyId: number) {
-        this.socket.emit('getBadge', { agencyId });
-    }
-
-    emitGetNotifications(agencyId: number) {
-        this.socket.emit('getNotifyList', { agencyId });
-    }
-
-    emitGetOrderList(agencyId: number, dateTime?: string) {
-        if (dateTime) {
-            this.socket.emit('getOrderList', { agencyId, dateTime });
-        } else {
-            this.socket.emit('getOrderList', { agencyId });
-        }
-    }
-
-    getNotifications(agencyId: number): Observable<Notify[]> {
-        return new Observable((subscribe) => {
-            this.socket.on('getNotifyList', (data: any) => {
-                subscribe.next(data);
-            });
-        })
-    }
-
-    getOrderList(): Observable<Order[] | any[]> {
-        return new Observable((subscribe) => {
-            this.socket.on('getOrderList', (data: any) => {
-                subscribe.next(data);
-            });
-        })
-    }
-
-    emitLogOut() {
-        this.socket.emit('logOut');
-    }
-
     listen(eventName: string) {
         return new Observable((subscribe) => {
             this.socket.on(eventName, (data: any) => {
@@ -149,13 +56,70 @@ export class SocketService {
         this.socket.emit(eventName, data);
     }
 
-    deleteOrder(id: number) {
-        this.socket.emit('deleteOrder', id);
+    createdNotification(notify: Notify) {
+        this.socket.emit('addNotify', notify);
         return new Observable((subscribe) => {
-            this.socket.on('orderDeleted', (data: any) => {
+            this.socket.on('emitNotifyAdded', (data: any) => {
                 subscribe.next(data);
             });
         })
+    }
+
+    updatedNotification(notify: Notify) {
+        this.socket.emit('updateNotify', notify);
+        return new Observable((subscribe) => {
+            this.socket.on('emitNotifyUpdatedToClient', (data: any) => {
+                subscribe.next(data);
+            });
+        })
+    }
+
+    changeStatusNotify(request: any) {
+        this.socket.emit('changeStatusNotify', request);
+    }
+
+    createdOrder(order: Order) {
+        this.socket.emit('addOrder', order);
+        return new Observable((subscribe) => {
+            this.socket.on('emitOrderAdded', (data: any) => {
+                subscribe.next(data);
+            });
+        })
+    }
+
+    updatedOrder(order: Order) {
+        this.socket.emit('updateOrder', order);
+        return new Observable((subscribe) => {
+            this.socket.on('emitOrderUpdated', (data: any) => {
+                subscribe.next(data);
+            });
+        })
+    }
+
+    deleteOrder(id: number) {
+        this.socket.emit('deleteOrder', id);
+        return new Observable((subscribe) => {
+            this.socket.on('emitOrderDeleted', (data: any) => {
+                subscribe.next(data);
+            });
+        })
+    }
+
+    changeStatusOrder(request: any) {
+        this.socket.emit('changeStatusOrder', request);
+        return new Observable((subscribe) => {
+            this.socket.on('emitStatusOrderChanged', (data: any) => {
+                subscribe.next(data);
+            });
+        })
+    }
+
+    changeIsViewedOrder(request: any) {
+        this.socket.emit('changeIsViewedOrder', request);
+    }
+
+    emitLogOut() {
+        this.socket.emit('logOut');
     }
 
     createdReport(obj: Reports) {
@@ -175,7 +139,7 @@ export class SocketService {
         };
         this.socket.emit('addReport', report);
         return new Observable((subscribe) => {
-            this.socket.on('reportAdded', (data: any) => {
+            this.socket.on('emitReportAdded', (data: any) => {
                 subscribe.next(data);
             });
         })
@@ -199,7 +163,7 @@ export class SocketService {
         };
         this.socket.emit('updateReport', report);
         return new Observable((subscribe) => {
-            this.socket.on('reportUpdated', (data: any) => {
+            this.socket.on('emitReportUpdatedToClient', (data: any) => {
                 subscribe.next(data);
             });
         })
@@ -208,7 +172,7 @@ export class SocketService {
     deleteReport(id: number) {
         this.socket.emit('deleteReport', id);
         return new Observable((subscribe) => {
-            this.socket.on('reportDeleted', (data: any) => {
+            this.socket.on('emitReportDeleted', (data: any) => {
                 subscribe.next(data);
             });
         })
@@ -217,7 +181,7 @@ export class SocketService {
     createdProduct(product: Product | any) {
         this.socket.emit('addProduct', product);
         return new Observable((subscribe) => {
-            this.socket.on('productAdded', (data: any) => {
+            this.socket.on('emitProductAdded', (data: any) => {
                 subscribe.next(data);
             });
         })
@@ -226,7 +190,7 @@ export class SocketService {
     updatedProduct(product: Product | any) {
         this.socket.emit('updateProduct', product);
         return new Observable((subscribe) => {
-            this.socket.on('productUpdated', (data: any) => {
+            this.socket.on('emitProductUpdatedToClient', (data: any) => {
                 subscribe.next(data);
             });
         })
@@ -235,9 +199,109 @@ export class SocketService {
     deleteProduct(id: number) {
         this.socket.emit('deleteProduct', id);
         return new Observable((subscribe) => {
-            this.socket.on('productDeleted', (data: any) => {
+            this.socket.on('emitProductDeleted', (data: any) => {
                 subscribe.next(data);
             });
         })
     }
+
+    socketOnOrderAdded(): Observable<any> {
+        return new Observable((subscribe) => {
+            this.socket.on('emitOrderAdded', (data: any) => {
+                console.log("emitOrderAdded")
+                subscribe.next(data);
+            });
+        })
+    }
+
+    socketOnOrderUpdated(): Observable<any> {
+        return new Observable((subscribe) => {
+            this.socket.on('emitOrderUpdated', (data: any) => {
+                console.log("emitOrderUpdated")
+                subscribe.next(data);
+            });
+        })
+    }
+
+    socketOnOrderDeleted(): Observable<any> {
+        return new Observable((subscribe) => {
+            this.socket.on('emitOrderDeleted', (data: any) => {
+                console.log("emitOrderDeleted")
+                subscribe.next(data);
+            });
+        })
+    }
+
+    socketOnOrderStatusChanged(): Observable<any> {
+        return new Observable((subscribe) => {
+            this.socket.on('emitStatusOrderChanged', (data: any) => {
+                console.log("emitStatusOrderChanged")
+                subscribe.next(data);
+            });
+        })
+    }
+
+    socketOnOrderIsViewedChanged(): Observable<any> {
+        return new Observable((subscribe) => {
+            this.socket.on('emitIsViewOrderChanged', (data: any) => {
+                console.log("emitIsViewOrderChanged")
+                subscribe.next(data);
+            });
+        })
+    }
+
+    socketOnGetProductList(): Observable<any> {
+        return new Observable((subscribe) => {
+            this.socket.on('emitGetProductList', (data: any) => {
+                console.log("emitGetProductList")
+                subscribe.next(data);
+            });
+        })
+    }
+
+    socketOnProductUpdated(): Observable<any> {
+        return new Observable((subscribe) => {
+            this.socket.on('emitProductUpdated', (data: any) => {
+                console.log("emitProductUpdated")
+                subscribe.next(data);
+            });
+        })
+    }
+
+    socketOnGetReportList(): Observable<any> {
+        return new Observable((subscribe) => {
+            this.socket.on('emitGetReportList', (data: any) => {
+                console.log("emitGetReportList")
+                subscribe.next(data);
+            });
+        })
+    }
+
+    socketOnReportUpdated(): Observable<any> {
+        return new Observable((subscribe) => {
+            this.socket.on('emitReportUpdated', (data: any) => {
+                console.log("emitReportUpdated")
+                subscribe.next(data);
+            });
+        })
+    }
+
+    socketOnNotifyUpdated(): Observable<any> {
+        return new Observable((subscribe) => {
+            this.socket.on('emitNotifyUpdated', (data: any) => {
+                console.log("emitNotifyUpdated")
+                subscribe.next(data);
+            });
+        })
+    }
+
+    socketOnNotifyCRUD(): Observable<any> {
+        return new Observable((subscribe) => {
+            this.socket.on('emitNotifyCRUD', (data: any) => {
+                console.log("emitNotifyCRUD")
+                subscribe.next(data);
+            });
+        })
+    }
+
 }

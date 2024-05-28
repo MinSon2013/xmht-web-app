@@ -131,8 +131,8 @@
                 border-bottom: 1px solid grey;
                 border-right: 1px solid grey;
                 border-style: dotted;
-                padding: 0.5rem;
-                font-size: 12pt;
+                padding: 0.25rem;
+                font-size: 9pt;
             }
 
             td {
@@ -223,14 +223,25 @@
                 font-weight: 500;
             }
         }
+
+        .s-load-more {
+            font-style: italic;
+            font-size: 11pt;
+        }
+
+        .s-load-more:hover {
+            color: black;
+            font-weight: 500;
+            cursor: pointer;
+        }
     }
 
     .mat-mdc-table .mdc-data-table__header-row {
-        height: 40px;
+        height: 32px;
     }
 
     .mat-mdc-table .mdc-data-table__row {
-        height: 40px;
+        height: 30px;
     }
 
     .mat-mdc-form-field {

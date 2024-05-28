@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { CustomMatPaginatorIntl } from '../common/custom-paginator';
 import { DialogDeleteConfirmComponent } from '../common/dialog-delete-confirm/dialog-delete-confirm.component';
@@ -20,7 +20,7 @@ import { Pickup } from '../models/pickup';
     { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl }
   ]
 })
-export class DistrictComponent implements OnInit {
+export class DistrictComponent implements OnInit, OnDestroy {
 
   displayedColumns: string[] = ['districtName', 'province', 'deleteAction'];
   dataSource = new MatTableDataSource<District>();
@@ -58,7 +58,14 @@ export class DistrictComponent implements OnInit {
     this.getData();
   }
 
-  getData() {
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+  }
+
+  ngOnDestroy(): void { }
+
+  private getData() {
     this.districtService.getDistrictList().subscribe((response: any) => {
       if (response.length > 0) {
         this.dataSource.data = response;
@@ -85,26 +92,12 @@ export class DistrictComponent implements OnInit {
     });
   }
 
-  getUserDistrict() {
+  private getUserDistrict() {
     this.districtService.getUserDistrictList().subscribe((response: any) => {
       if (response) {
         this.districtId = response;
       }
     });
-  }
-
-  hideShowNoDataRow() {
-    if (this.dataSource.data.length === 0) {
-      this.hasData = false;
-    } else {
-      this.hasData = true;
-    }
-    this.length = this.dataSource.data.length;
-  }
-
-  ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
   }
 
   onEdit(row: any) {
@@ -138,7 +131,8 @@ export class DistrictComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.dataSource.data = this.dataSource.data.filter(x => x.id !== row.id);
+        let data = this.dataSource.data.filter(x => x.id !== row.id);
+        this.dataSource.data = data;
         if (this.dataSource.data.length === 0) {
           this.hasData = false;
         } else {
@@ -149,6 +143,14 @@ export class DistrictComponent implements OnInit {
     });
   }
 
+  hideShowNoDataRow() {
+    if (this.dataSource.data.length === 0) {
+      this.hasData = false;
+    } else {
+      this.hasData = true;
+    }
+    this.length = this.dataSource.data.length;
+  }
 }
 
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -11,19 +11,19 @@ import { Notify } from '../models/notify';
 import { NotificationService } from '../services/notification.service';
 import { Agency } from '../models/agency';
 import { SocketService } from '../services/socket.service';
-import { CustomSocket } from '../sockets/custom-socket';
-import { AgencyService } from '../services/agency.service';
+import { RoutesService } from '../services/routes.service';
 
 @Component({
   selector: 'app-notify',
   templateUrl: './notify.component.html',
   styleUrls: ['./notify.component.scss']
 })
-export class NotifyComponent implements OnInit {
+export class NotifyComponent implements OnInit, OnDestroy {
 
   displayedColumns: string[] = ['checkAll', 'updatedDate', 'agencyName', 'contents', 'fileName', 'statusOrder', 'confirmer', 'action'];
   dataSource = new MatTableDataSource<Notify>();
   dataSourceClone = new MatTableDataSource<Notify>();
+  dataElement: Notify[] = [];
   colspan: number = 0;
 
   helper = new Helper();
@@ -48,14 +48,35 @@ export class NotifyComponent implements OnInit {
   isAreaManager: boolean = this.userRole === USER_AREA_MANAGER_ROLE;
   isSalesman: boolean = this.userRole === USER_SALESMAN_ROLE;
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
+  // Binding total items count to paginator Mat table
+  mpPaginator: MatPaginator | undefined;
+  // Set paginator using dynamic data from Api
+  @ViewChild(MatPaginator, { static: false })
+  set paginator(value: MatPaginator) {
+    if (this.dataSource) {
+      this.mpPaginator = value;
+      this.dataSource.paginator = this.paginator;
+    }
+  }
+
+  // Set sort using dynamic data from Api
+  @ViewChild(MatSort, { static: false })
+  set sort(value: MatSort) {
+    if (this.dataSource) {
+      this.dataSource.sort = value;
+    }
+  }
+
+  totalItems: number = 0;
+  pageSize: number = 10;
+  skip: number = 0;
+  takeLimitQuery: number = 100;
+  pageIndex: number = 0;
 
   constructor(public dialog: MatDialog,
     public notifyService: NotificationService,
     private socketService: SocketService,
-    private socket: CustomSocket,
-    private agencyService: AgencyService,
+    private routesService: RoutesService,
   ) { this.getAgencys(); }
 
   ngOnInit(): void {
@@ -67,68 +88,89 @@ export class NotifyComponent implements OnInit {
       this.displayedColumns = ['checkAll', 'updatedDate', 'contents', 'fileName', 'statusOrder', 'confirmer', 'action'];
     }
     this.colspan = this.displayedColumns.length;
-    this.getData();
+    this.getNotifyList();
     this.emitSocket();
   }
 
-  getData() {
-    this.notifyService.getNotificationList().subscribe((response: any) => {
-      const notifyAgencyList = response.notifyAgencyList.length > 0 ? response.notifyAgencyList : [];
-      if (response.notifyList.length > 0) {
-        this.dataSource.data = response.notifyList.length > 0 ? response.notifyList : [];
-        this.dataSource.data.forEach(el => {
-          el.showContent = this.convertHtmlToText(el.contents);
-          if (el.showContent.length > this.MAX_LENGTH_SHORT_CONTENT) {
-            el.showContent = el.showContent.substring(0, (this.MAX_LENGTH_SHORT_CONTENT - 1));
-            el.showLabel = "...[Chi tiết]";
-            el.showDetail = false;
-          }
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+  }
 
-          if (el.agencyList && el.agencyList?.length === 1) {
-            let agencyId = el.agencyList[0];
-            const item = this.agencyList.find(x => x.id === agencyId);
-            if (item) {
-              el.agencyName = item.agencyName;
-            } else {
-              el.agencyName = '';
-            }
-          } else if (el.agencyList && el.agencyList?.length > 1) {
-            el.agencyName = "Tất cả"
-          }
-          if (el.sender === this.loginId) { // sender is userId, loginId is userId
-            el.isViewed = true;
-          } else {
-            const item = notifyAgencyList.find((x: { notificationId: number; agencyId: number; isViewed: boolean }) => x.notificationId === el.id && x.agencyId === this.agencyId);
-            if (item) {
-              el.isViewed = item.isViewed;
-              el.agencyId = item.agencyId;
-            }
-          }
+  ngOnDestroy(): void { }
 
-          if (el.notificationType === NOTIFY_TYPE.COUPON && !el.isViewed) {
-            this.badgeNumber2 = this.badgeNumber2 + 1;
-            this.isBadgeHidden2 = false;
-          }
-          if (el.notificationType === NOTIFY_TYPE.GENERAL && !el.isViewed) {
-            this.badgeNumber1 = this.badgeNumber1 + 1;
-            this.isBadgeHidden1 = false;
-          }
-        });
-      } else {
-        this.dataSource.data = [];
-      }
+  getNotifyList() {
+    this.totalItems = 0;
+    this.skip = 0;
+    this.pageIndex = 0;
+    this.dataElement = [];
 
-      this.dataSourceClone = new MatTableDataSource<Notify>(this.dataSource.data);
-      if (this.dataSource.data.length === 0) {
-        this.hasData = false;
-      } else {
-        this.hasData = true;
-      }
+    this.notifyService.getNotificationList(this.takeLimitQuery, this.skip).subscribe((response: any) => {
+      this.generalResponseToDataSource(response, this.pageIndex);
     });
   }
 
+  generalResponseToDataSource(response: any, pageIndex: number) {
+    this.totalItems = response.totalCount;
+    const notifyAgencyList = response.notifyAgencyList.length > 0 ? response.notifyAgencyList : [];
+    if (response.notifyList.length > 0) {
+      response.notifyList.forEach((el: any) => {
+        el.showContent = this.convertHtmlToText(el.contents);
+        if (el.showContent.length > this.MAX_LENGTH_SHORT_CONTENT) {
+          el.showContent = el.showContent.substring(0, (this.MAX_LENGTH_SHORT_CONTENT - 1));
+          el.showLabel = "...[Chi tiết]";
+          el.showDetail = false;
+        }
+
+        if (el.agencyList && el.agencyList?.length === 1) {
+          let agencyId = el.agencyList[0];
+          const item = this.agencyList.find(x => x.id === agencyId);
+          if (item) {
+            el.agencyName = item.agencyName;
+          } else {
+            el.agencyName = '';
+          }
+        } else if (el.agencyList && el.agencyList?.length > 1) {
+          el.agencyName = "Tất cả"
+        }
+        if (el.sender === this.loginId) { // sender is userId, loginId is userId
+          el.isViewed = true;
+        } else {
+          const item = notifyAgencyList.find((x: { notificationId: number; agencyId: number; isViewed: boolean }) => x.notificationId === el.id && x.agencyId === this.agencyId);
+          if (item) {
+            el.isViewed = item.isViewed;
+            el.agencyId = item.agencyId;
+          }
+        }
+
+        if (el.notificationType === NOTIFY_TYPE.COUPON && !el.isViewed) {
+          this.badgeNumber2 = this.badgeNumber2 + 1;
+          this.isBadgeHidden2 = false;
+        }
+        if (el.notificationType === NOTIFY_TYPE.GENERAL && !el.isViewed) {
+          this.badgeNumber1 = this.badgeNumber1 + 1;
+          this.isBadgeHidden1 = false;
+        }
+      });
+      this.dataElement = [...this.dataElement, ...response.notifyList];
+    } else {
+      if (pageIndex === 0) {
+        this.dataElement = [];
+      }
+    }
+
+    this.dataSourceClone = new MatTableDataSource<Notify>(this.dataElement);
+    this.dataSource = new MatTableDataSource(this.claimDataSource(pageIndex));
+
+    if (this.dataSource.data.length === 0) {
+      this.hasData = false;
+    } else {
+      this.hasData = true;
+    }
+  }
+
   getAgencys() {
-    this.agencyService.getAgencyList().subscribe((response: any) => {
+    this.routesService.getAgencyList().subscribe((response: any) => {
       this.agencyList = response;
     });
   }
@@ -143,8 +185,7 @@ export class NotifyComponent implements OnInit {
   onLoadNotify(key: number) {
     switch (key) {
       case 1:
-        this.getData();
-
+        this.getNotifyList();
         break;
       case 2:
         const arr1 = this.dataSourceClone.data.filter(x => x.notificationType === NOTIFY_TYPE.COUPON);
@@ -161,14 +202,9 @@ export class NotifyComponent implements OnInit {
   }
 
   emitSocket() {
-    this.socket.on('emitNotifyList', (response: any) => {
-      this.getData();
+    this.socketService.socketOnNotifyCRUD().subscribe((response: any) => {
+      this.getNotifyList();
     })
-  }
-
-  ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
   }
 
   onEdit(row: any) {
@@ -184,7 +220,7 @@ export class NotifyComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.getData();
+      this.getNotifyList();
     });
   }
 
@@ -195,7 +231,11 @@ export class NotifyComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.dataSource.data = this.dataSource.data.filter(x => x.id !== row.id);
+
+        this.dataElement = this.dataElement.filter(x => x.id !== row.id);
+        this.dataSourceClone = new MatTableDataSource<Notify>(this.dataElement);
+        this.dataSource = new MatTableDataSource(this.claimDataSource(this.pageIndex));
+
         if (this.dataSource.data.length === 0) {
           this.hasData = false;
         } else {
@@ -269,11 +309,32 @@ export class NotifyComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.getData();
+        this.getNotifyList();
         this.checkedAll = false;
         this.arrDelete = [];
       }
     });
+  }
+
+  changePaging(event: any) {
+    this.pageSize = event.pageSize;
+    let itemIndex = (event.pageIndex + 1) * event.pageSize;
+    if (itemIndex <= this.dataElement.length) {
+      this.dataSource = new MatTableDataSource(this.claimDataSource(event.pageIndex));
+    } else {
+      this.skip += 1; this.skip += 1;
+      this.onLazyLoadCallAPI(event.pageIndex);
+    }
+  }
+
+  claimDataSource(pageIndex: number) {
+    return this.dataElement.slice(pageIndex * this.pageSize, (pageIndex + 1) * this.pageSize)
+  }
+
+  onLazyLoadCallAPI(pageIndex: number) {
+    this.notifyService.getNotificationList(this.takeLimitQuery, this.skip).subscribe((response) => {
+      this.generalResponseToDataSource(response, pageIndex);
+    })
   }
 
 }

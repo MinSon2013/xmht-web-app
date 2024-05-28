@@ -15,10 +15,6 @@ export class ProductService {
         private webrequestService: WebRequestService,
     ) { }
 
-    getProductList() {
-        return this.webrequestService.get(this.url);
-    }
-
     getSumProductOrderList(obj: Search) {
         const payload = {
             approvedNumber: Number(obj.approvedNumber),
@@ -33,7 +29,7 @@ export class ProductService {
     }
 
     getOne(id: number) {
-        return this.webrequestService.post(this.url + `/${id}`);
+        return this.webrequestService.get(this.url + `/${id}`);
     }
 
     create(obj: Product | any) {

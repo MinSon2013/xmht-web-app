@@ -13,12 +13,6 @@ export class StoreService {
         private webrequestService: WebRequestService,
     ) { }
 
-    getStoreList() {
-        const userId = this.helper.getUserId();
-        const agencyId = this.helper.getAgencyId();
-        return this.webrequestService.get(this.url + `/${userId}/${agencyId}`);
-    }
-
     create(obj: Store) {
         const payload = {
             storeName: obj.storeName,

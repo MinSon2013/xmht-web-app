@@ -10,8 +10,8 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { SearchDetailsOrder } from '../../models/search';
 import * as XLSX from 'xlsx-js-style';
 import { ExcelDetailsConfig } from '../../helpers/excel-details.config';
-import { ProductService } from '../../services/product.service';
-import { CustomSocket } from '../../sockets/custom-socket';
+import { RoutesService } from '../../services/routes.service';
+import { SocketService } from '../../services/socket.service';
 
 @Component({
   selector: 'app-order-detail-statistic',
@@ -54,6 +54,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
   columnDefRowSumSection: string[] = [];
   displayedRowSumSection: { label: string, value: number }[] = [];
   dataSource = new MatTableDataSource<any>();
+  dataOrderList: any[] = [];
 
   thRowspan: number = 3;
   thColspan: number = 0;
@@ -100,17 +101,19 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
   fromToDate: string = "Từ ngày.....................đến ngày.....................";
   customer: string = "";
 
+  skip: number = 0;
+  takeLimitQuery: number = 100;
+  totalCount: number = 0;
+  isShowLoadmore: boolean = false;
+
   constructor(
     public router: Router,
     private orderService: OrderService,
     public translate: TranslateService,
-    private socket: CustomSocket,
-    private productService: ProductService,
+    private socketService: SocketService,
     private cdr: ChangeDetectorRef,
+    private routesService: RoutesService,
   ) {
-  }
-
-  ngOnDestroy(): void {
   }
 
   ngOnInit() {
@@ -120,32 +123,94 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
     this.emitSocket();
   }
 
+  ngOnDestroy(): void {
+  }
+
   emitSocket() {
-    this.socket.on('emitGetOrderList', (response: Product[]) => {
-      this.setDisplayedColumns();
-    });
-    this.socket.on('statusOrderChanged', (response: Product[]) => {
-      this.setDisplayedColumns();
+    // Listening product CRUD
+    this.socketService.socketOnGetProductList().subscribe((result) => {
+      this.autoScrollView();
+      this.getProductList();
     })
-    this.socket.on('emitGetProductList', (response: Product[]) => {
+    // Listening order status changed
+    this.socketService.socketOnOrderStatusChanged().subscribe((result) => {
+      this.autoScrollView();
+      this.mappingOrderStatusChanged(result);
+    });
+
+    // Listening updated order
+    this.socketService.socketOnOrderUpdated().subscribe((result) => {
+      this.autoScrollView();
+      this.mappingOrderUpdatedSuccess(result);
+    });
+
+    // Listening added order
+    this.socketService.socketOnOrderAdded().subscribe((result) => {
+      this.autoScrollView();
+      this.totalCount = this.totalCount + 1;
+      this.mappingOrderAddedSuccess(result);
+    });
+
+    // listening deleted order
+    this.socketService.socketOnOrderDeleted().subscribe((result) => {
+      this.autoScrollView();
+      this.isShowLoadmore = false;
+      this.skip = 0;
+      this.dataOrderList = [];
       this.getOrderDetailData();
+    });
+  }
+
+  private getProductList() {
+    this.routesService.getProductList().subscribe((res) => {
+      this.productList = this.helper.sortAZ(res, 'id');
+      this.productList = this.helper.sortAZ(this.productList, 'category');
+      this.gerneralDetailData();
     })
   }
 
-  getOrderDetailData() {
-    this.productService.getProductList().subscribe((response: any) => {
-      if (response.length > 0) {
-        this.productList = response;
-        this.productList.sort((a, b) => (a.category > b.category ? -1 : 1));
-        this.autoScrollView();
-        this.setDisplayedColumns();
-      } else {
-        this.productList = [];
+  private mappingOrderAddedSuccess(result: any) {
+    this.isShowLoadmore = false;
+    this.skip = 0;
+    this.dataOrderList = [];
+    this.getOrderDetailData();
+  }
+
+  private mappingOrderUpdatedSuccess(result: any) {
+    result.order.agencyName = this.customerList.find(i => i.id === result.order.agencyId)?.agencyName || "";
+    result.products.forEach((p: any) => {
+      const product = this.productList.find(k => k.id === p.id);
+      if (product) {
+        p.category = product.category;
+        p.name = product.name;
       }
     });
+    result.order.products = this.helper.sortAZ(result.products, 'id');
+    result.order.products = this.helper.sortAZ(result.products, 'category');
+
+    this.dataOrderList = this.dataOrderList.map(x => (x.id === result.order.id) ? result.order : x)
+    this.gerneralDetailData();
+  }
+
+  private mappingOrderStatusChanged(result: any) {
+    const item = this.dataOrderList.find(k => k.id === result.id);
+    if (item) {
+      item.status = result.status;
+      item.note = result.note;
+      item.approvedNumber = result.approvedNumber;
+      item.shippingDate = result.shippingDate;
+      item.isViewed = result.isViewed;
+
+      this.dataOrderList = this.dataOrderList.map(x => (x.id === result.id) ? item : x)
+      this.gerneralDetailData();
+    }
   }
 
   onShow() {
+    this.isShowLoadmore = false;
+    this.skip = 0;
+    this.dataOrderList = [];
+
     this.loading = true;
     this.showDetailOrderTable = false;
     this.fromToDate = `Từ ngày ${this.helper.getDateFormat(3, this.range.value.start)} đến ngày ${this.helper.getDateFormat(3, this.range.value.end)}`;
@@ -161,7 +226,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
       this.searchForm.agencyId = this.helper.getAgencyId() + "";
     }
     this.autoScrollView();
-    this.setDisplayedColumns();
+    this.getOrderDetailData();
   }
 
   resetFormSearch() {
@@ -193,11 +258,10 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
   }
 
   getFilterList() {
-    this.orderService.getFilterList().subscribe((response: any) => {
+    this.routesService.getFilterList().subscribe((response: any) => {
       if (response) {
         this.customerList = response.agencyList;
-        this.productList = response.productList;
-        this.productList.sort((a, b) => (a.category < b.category ? -1 : 1));
+        this.productList = this.helper.sortAZ(response.productList, 'category');
         this.deliveries = response.deliveryList;
         let licensePlateList = response.licensePlateList;
         let driverList = response.driverList;
@@ -320,115 +384,116 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
 
     /** Handle columndef for section1 */
     this.displayedColumnsSection = [...this.colDefSection, ...this.columnsDefProductName, 'receipt', 'sum', 'license_plate', 'driver']
-    this.cdr.detectChanges();
-
-    this.generalOrderDetailToTable();
   }
 
-  private generalOrderDetailToTable() {
-    this.dataSourceObject = [];
-    let sumRow: any[] = [];
-    const productTemplate = this.displayedColumnsProductName.map(x => ({ pId: x.id, pValue: "", pCategory: x.label }));
-
-    this.orderService.searchDetails(this.searchForm).subscribe((response: any) => {
-      if (response.length > 0) {
-        this.columnDefRowSumSection = [];
-        this.displayedRowSumSection = [];
-
-        /** Mapping data cell for Section 1 */
-        /*** Hanled datasource for display on a cell */
-        response.forEach((x: any) => {
-          x.agencyName = this.customerList.find(i => i.id === x.agencyId)?.agencyName;
-          let receipt = this.receipt.find(i => i.value === x.receipt);
-          let products = productTemplate.map(x => ({ ...x }));
-          x.products.forEach((k: any) => {
-            products.map(y => {
-              if (y.pId === k.id) {
-                y.pValue = k.quantity;
-              }
-            });
-          });
-
-          this.dataSourceObject.push({
-            no: x.approvedNumber,
-            customer: x.agencyName ? x.agencyName : this.helper.getAgencyName(),
-            deliveryAddress: this.compareObj(this.deliveries, x.deliveryId),
-            licensePlate: x.licensePlates.trim(),
-            receipt: receipt ? receipt.label : "",
-            products: products,
-            sum: x.productTotal.toString(),
-            createdDate: this.replaceTextInDate(x.createdDate),
-            contract: x.contract.trim(),
-            receivedDate: x.receivedDate,
-            confirmedDate: this.replaceTextInDate(x.confirmedDate),
-            shippingDate: this.replaceTextInDate(x.shippingDate),
-            pickupAddress: this.cities.find(k => k.id === x.pickupId) ? this.cities.find(k => k.id === x.pickupId).label : "",
-            driver: x.driver.trim(),
-          });
-          sumRow = [...sumRow, ...products];
-        });
-
-        this.dataSource.data = this.dataSourceObject;
-
-        /** Set sum value footẻ of every product */
-        let groupSumColsSection = this.groupByValue(sumRow, 'pCategory');
-
-        // Sum all of sum
-        let sumTotal = this.helper.sum(this.dataSourceObject, 'sum');
-
-        let sumColRow = productTemplate.map(x => ({ ...x }));
-        groupSumColsSection.forEach((e: any) => {
-          this.columnDefRowSumSection.push(e[0].pCategory + ".s" + groupSumColsSection.indexOf(e));
-          let sum = this.helper.sum(e, 'pValue');
-          sumColRow.map(y => {
-            if (y.pId === e[0].pId) {
-              y.pValue = sum + "";
-            }
-          });
-        });
-
-        sumColRow.forEach(e => {
-          this.displayedRowSumSection.push({ label: e.pCategory + ".s" + sumColRow.indexOf(e), value: Number(e.pValue) });
-        });
-
-        this.columnDefRowSumSection.push("s" + (this.thColspan + 1));
-        this.columnDefRowSumSection.push("s" + (this.thColspan + 2));
-        this.columnDefRowSumSection = ['footer-row-label', ...this.columnDefRowSumSection];
-        this.displayedRowSumSection.push({ label: "s" + (this.thColspan + 1), value: 0 });
-        this.displayedRowSumSection.push({ label: "s" + (this.thColspan + 2), value: sumTotal });
+  getOrderDetailData() {
+    if (this.isShowLoadmore) {
+      this.skip += 1;
+    }
+    this.orderService.searchDetails(this.searchForm, this.takeLimitQuery, this.skip).subscribe((response: any) => {
+      if (response.orders.length > 0) {
+        this.dataOrderList = [...this.dataOrderList, ...response.orders];
+        this.productList = this.helper.sortAZ(response.productList, 'category');
+        this.gerneralDetailData();
+        this.totalCount = response.totalCount;
+        if (this.totalCount > this.dataSource.data.length) {
+          this.isShowLoadmore = true;
+        } else {
+          this.isShowLoadmore = false;
+        }
 
       } else {
         this.dataSource.data = [];
-        this.columnDefRowSumSection = [];
-        this.displayedRowSumSection = [];
-        productTemplate.forEach(e => {
-          this.columnDefRowSumSection.push("s" + productTemplate.indexOf(e));
-          this.displayedRowSumSection.push({ label: "s" + productTemplate.indexOf(e), value: 0 });
-        });
-
-        this.columnDefRowSumSection.push("s" + (this.thColspan + 1));
-        this.columnDefRowSumSection = ['footer-row-label', ...this.columnDefRowSumSection];
-        this.displayedRowSumSection.push({ label: "s" + (this.thColspan + 1), value: 0 });
+        this.totalCount = 0;
+        this.isShowLoadmore = false;
+        this.dataSourceObject = [];
       }
       this.showDetailOrderTable = true;
       this.loading = false;
     });
+    this.cdr.detectChanges();
+  }
+
+  private gerneralDetailData() {
+    this.dataSourceObject = [];
+    let sumRow: any[] = [];
+    this.columnDefRowSumSection = [];
+    this.displayedRowSumSection = [];
+
+    this.setDisplayedColumns();
+    const productTemplate = this.displayedColumnsProductName.map(x => ({ pId: x.id, pValue: "", pCategory: x.label }));
+
+    /** Mapping data cell for Section 1 */
+    /*** Hanled datasource for display on a cell */
+    this.dataOrderList.forEach((x: any) => {
+      x.agencyName = this.customerList.find(i => i.id === x.agencyId)?.agencyName;
+      let receipt = this.receipt.find(i => i.value === x.receipt);
+      let products = productTemplate.map(x => ({ ...x }));
+      x.products.forEach((k: any) => {
+        products.map(y => {
+          if (y.pId === k.id) {
+            y.pValue = k.quantity;
+          }
+        });
+      });
+
+      this.dataSourceObject.push({
+        no: x.approvedNumber,
+        customer: x.agencyName ? x.agencyName : this.helper.getAgencyName(),
+        deliveryAddress: this.compareObj(this.deliveries, x.deliveryId),
+        licensePlate: x.licensePlates.trim(),
+        receipt: receipt ? receipt.label : "",
+        products: products,
+        sum: x.productTotal.toString(),
+        createdDate: this.replaceTextInDate(x.createdDate),
+        contract: x.contract.trim(),
+        receivedDate: x.receivedDate,
+        confirmedDate: this.replaceTextInDate(x.confirmedDate),
+        shippingDate: this.replaceTextInDate(x.shippingDate),
+        pickupAddress: this.cities.find(k => k.id === x.pickupId) ? this.cities.find(k => k.id === x.pickupId).label : "",
+        driver: x.driver.trim(),
+      });
+      sumRow = [...sumRow, ...products];
+    });
+
+    this.dataSource.data = this.dataSourceObject;
+
+    /** Set sum value footer of every product */
+    let groupSumColsSection = this.groupByValue(sumRow, 'pCategory');
+
+    // Sum all of sum
+    let sumTotal = this.helper.sum(this.dataSourceObject, 'sum');
+
+    let sumColRow = productTemplate.map(x => ({ ...x }));
+    groupSumColsSection.forEach((e: any) => {
+      this.columnDefRowSumSection.push(e[0].pCategory + ".s" + groupSumColsSection.indexOf(e));
+      let sum = this.helper.sum(e, 'pValue');
+      sumColRow.map(y => {
+        if (y.pId === e[0].pId) {
+          y.pValue = sum + "";
+        }
+      });
+    });
+
+    sumColRow.forEach(e => {
+      this.displayedRowSumSection.push({ label: e.pCategory + ".s" + sumColRow.indexOf(e), value: Number(e.pValue) });
+    });
+
+    this.columnDefRowSumSection.push("s" + (this.thColspan + 1));
+    this.columnDefRowSumSection.push("s" + (this.thColspan + 2));
+    this.columnDefRowSumSection = ['footer-row-label', ...this.columnDefRowSumSection];
+    this.displayedRowSumSection.push({ label: "s" + (this.thColspan + 1), value: 0 });
+    this.displayedRowSumSection.push({ label: "s" + (this.thColspan + 2), value: sumTotal });
+
+    this.cdr.detectChanges();
   }
 
   private compareObj(obj1: any[], obj2: any): string {
-    const obj = obj1.find(x => x.id === obj2);
-    if (obj) {
-      return obj.label;
-    }
-    return '';
+    return this.helper.compareObj(obj1, obj2);
   }
 
   private groupByValue(arr: any[], key: string) {
-    return Object.values(arr.reduce((acc, curr) => {
-      if (!acc[curr[key]]) acc[curr[key]] = [];
-      acc[curr[key]].push(curr)
-      return acc;
-    }, {}));
+    return this.helper.groupByValue(arr, key);
   }
 
   private replaceProductName(name: string) {
@@ -820,5 +885,9 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
 
   customTrackBy(index: any, item: any) {
     return item.label;
+  }
+
+  dateRangeChange(dateRangeStart: HTMLInputElement, dateRangeEnd: HTMLInputElement) {
+
   }
 }

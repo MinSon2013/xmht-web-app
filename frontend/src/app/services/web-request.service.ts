@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import * as FileSaver from "file-saver";
 import { environment } from "../../environments/environment";
@@ -22,6 +22,7 @@ export class WebRequestService {
             'Access-Control-Allow-Credentials': 'true',
             'Authorization': this.helper.getAccessToken(),
         }),
+        params: new HttpParams()
     };
 
     constructor(private http: HttpClient) {
@@ -29,6 +30,11 @@ export class WebRequestService {
     }
 
     get(url: string) {
+        return this.http.get(`${this.baseUrl}/${url}`, this.httpOptions);
+    }
+
+    getWithParams(url: string, params: HttpParams) {
+        this.httpOptions.params = params;
         return this.http.get(`${this.baseUrl}/${url}`, this.httpOptions);
     }
 

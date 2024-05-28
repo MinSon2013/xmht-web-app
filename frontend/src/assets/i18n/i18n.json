@@ -132,7 +132,7 @@
         "SENT": "Gửi",
         "WAITING": "Chờ giải quyết",
         "AGREE": "Đồng ý đơn",
-        "RECEIVED": "Đã giao",
+        "SHIPPED": "Đã giao",
         "CANCELED": "Đã hủy",
         "REPORT": "Báo cáo",
         "SHOWSLIDE": "Màn hình PXBA",
@@ -319,6 +319,7 @@
         "WRITER": "Người lập",
         "DETAIL_REPORT_TITLE": "BÁO CÁO CHI TIẾT",
         "CUSTOMER_NAME": "Tên khách hàng\t",
-        "TITLE1": "BẢNG CHI TIẾT XUẤT HÀNG THEO MÃ SỐ"
+        "TITLE1": "BẢNG CHI TIẾT XUẤT HÀNG THEO MÃ SỐ",
+        "LOAD_MORE_DATA": "Hiển thị thêm"
     }
 }

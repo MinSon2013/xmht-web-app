@@ -19,17 +19,22 @@ export class NotificationService {
     public readonly userRepo: UserRepository,
   ) { }
 
-  async getAll(agencyId: number): Promise<any> {
-    const res1 = await this.notifyRepo.getAll(agencyId);
-    const res2 = await this.notifyAgencyRepo.getNotificationAgencyByAgencyId(agencyId);
+  async getAll(agencyId: number, take: number, skip: number): Promise<any> {
+    const res1 = await this.notifyRepo.getAll(agencyId, take, skip);
+    const notifyIdList = res1.notifyList.map(x => ({ id: x.id }));
+    const res2 = await this.notifyAgencyRepo.getNotificationAgencyByAgencyId(agencyId, notifyIdList);
     const userList = await this.userRepo.getAllUserList();
-    res1.forEach(x => {
+    res1.notifyList.forEach(x => {
       const user = userList.find(y => y.id === x.sender);
       if (user) {
         x.confirmName = user.fullName;
       }
     })
-    return { notifyList: res1, notifyAgencyList: res2 };
+    return { notifyList: res1.notifyList, notifyAgencyList: res2, totalCount: res1.totalCount };
+  }
+
+  async getOne(id: number): Promise<any> {
+    return await this.notifyRepo.getOne(id)
   }
 
   async create(createDto: NotificationDTO): Promise<Notification | any> {

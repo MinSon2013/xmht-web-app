@@ -106,16 +106,16 @@
   </div>
   <div class="action-group row">
     <div class="action-trigger-button col-7" *ngIf="!mobile">
-      <button mat-raised-button class="btn1 btn-trigger" (click)="onLoadLasted(1)">
+      <button mat-raised-button class="btn1 btn-trigger" (click)="onLoadOrderByStatus(1)">
         <label class="pad-label">{{ "BUTTON.WAITING" | translate }}</label>
       </button>
-      <button mat-raised-button class="btn2 btn-trigger" (click)="onLoadLasted(2)">
+      <button mat-raised-button class="btn2 btn-trigger" (click)="onLoadOrderByStatus(2)">
         <label class="pad-label">{{ "BUTTON.AGREE" | translate }}</label>
       </button>
-      <button mat-raised-button class="btn3 btn-trigger" (click)="onLoadLasted(4)">
-        <label class="pad-label">{{ "BUTTON.RECEIVED" | translate }}</label>
+      <button mat-raised-button class="btn3 btn-trigger" (click)="onLoadOrderByStatus(4)">
+        <label class="pad-label">{{ "BUTTON.SHIPPED" | translate }}</label>
       </button>
-      <button mat-raised-button class="btn4 btn-trigger" (click)="onLoadLasted(5)">
+      <button mat-raised-button class="btn4 btn-trigger" (click)="onLoadOrderByStatus(5)">
         <label class="pad-label">{{ "BUTTON.CANCELED" | translate }}</label>
       </button>
     </div>
@@ -454,8 +454,8 @@
       <tr mat-row *matHeaderRowDef="['no-data']" class="text-center" [hidden]="hasData"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
-    <mat-paginator [hidden]="!hasData" [pageSizeOptions]="[10, 20, 30, 50 , 200, 500]" showFirstLastButtons
-      aria-label="Select page of periodic elements">
+    <mat-paginator #paginator [hidden]="!hasData" showFirstLastButtons [pageSizeOptions]="[10, 20, 50, 100]"
+      [length]="totalItems" (page)="changePaging($event)">
     </mat-paginator>
   </div>
 </div>

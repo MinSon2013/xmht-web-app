@@ -2,17 +2,15 @@ import { ChartConfiguration, ChartData, ChartOptions, ChartType } from 'chart.js
 import { BaseChartDirective } from 'ng2-charts';
 import { Helper } from '../helpers/helper';
 import DatalabelsPlugin from 'chartjs-plugin-datalabels';
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { OrderService } from '../services/order.service';
 import { FormControl } from '@angular/forms';
 import { ProductService } from '../services/product.service';
 import { TranslateService } from '@ngx-translate/core';
 import { FormGroup } from '@angular/forms';
 import { STATUS, STOCKER_ROLE, USER_AREA_MANAGER_ROLE } from '../constants/const-data';
-import { AgencyService } from '../services/agency.service';
-import { CustomSocket } from '../sockets/custom-socket';
-import { Product } from '../models/product';
-import { Order } from '../models/order';
+import { RoutesService } from '../services/routes.service';
+import { SocketService } from '../services/socket.service';
 
 export interface Label { }
 export interface ChartDataSets {
@@ -27,7 +25,7 @@ export interface ChartDataSets {
   templateUrl: './statistics.component.html',
   styleUrls: ['./statistics.component.scss']
 })
-export class StatisticsComponent implements OnInit {
+export class StatisticsComponent implements OnInit, OnDestroy {
   [x: string]: any;
   helper: Helper = new Helper();
   orderList: any[] = [];
@@ -106,8 +104,8 @@ export class StatisticsComponent implements OnInit {
     private productService: ProductService,
     private cdr: ChangeDetectorRef,
     public translate: TranslateService,
-    private agencyService: AgencyService,
-    private socket: CustomSocket,
+    private routesService: RoutesService,
+    private socketService: SocketService,
   ) {
     this.getProducts();
     this.getAgencys();
@@ -119,28 +117,55 @@ export class StatisticsComponent implements OnInit {
     this.emitSocket();
   }
 
+  ngAfterViewChecked() {
+    this.cdr.detectChanges();
+  }
+
+  ngOnDestroy(): void { }
+
   emitSocket() {
-    this.socket.on('emitGetProductList', (response: Product[]) => {
+    // Listening product CRUD
+    this.socketService.socketOnGetProductList().subscribe((result) => {
       this.getProducts(1);
     })
-    this.socket.on('emitGetOrderList', (response: Order[]) => {
+
+    // Listening order status changed
+    this.socketService.socketOnOrderStatusChanged().subscribe((result) => {
       this.getDataChartByDate();
       this.getDataChartPie();
-    })
+    });
+
+    // Listening added order
+    this.socketService.socketOnOrderAdded().subscribe((result) => {
+      this.getDataChartByDate();
+      this.getDataChartPie();
+    });
+
+    // Listening updated order
+    this.socketService.socketOnOrderUpdated().subscribe((result) => {
+      this.getDataChartByDate();
+      this.getDataChartPie();
+    });
+
+    // listening deleted order
+    this.socketService.socketOnOrderDeleted().subscribe((result) => {
+      this.getDataChartByDate();
+      this.getDataChartPie();
+    });
   }
 
   getProducts(n?: number) {
-    this.productService.getProductList().subscribe((response: any) => {
+    this.routesService.getProductList().subscribe((response: any) => {
       this.productList = response;
-
+      this.productList = this.helper.sortAZ(this.productList, 'category');
       if (n) {
         this.getDataChartPie();
       }
     });
   }
 
-  getAgencys() {
-    this.agencyService.getAgencyList().subscribe((response: any) => {
+  private getAgencys() {
+    this.routesService.getAgencyList().subscribe((response: any) => {
       this.agencyList = response;
     });
   }
@@ -187,17 +212,14 @@ export class StatisticsComponent implements OnInit {
     return convert(list);
   }
 
-  ngAfterViewChecked() {
-    this.cdr.detectChanges();
-  }
-
   public chartClicked(event: any): void { }
 
   public chartHovered(event: any): void { }
 
   getDataChartByDate() {
-    this.orderService.search(this.searchForm).subscribe((response: any) => {
-      this.orderList = response;
+    this.orderService.search(this.searchForm, 0, 0).subscribe((response: any) => {
+      this.orderList = response.orderList;
+      this.orderList = this.orderList.reverse();
       this.generateBarChart();
     });
   }
@@ -247,10 +269,6 @@ export class StatisticsComponent implements OnInit {
   }
 
   compareObj(obj1: any[], obj2: any): string {
-    const obj = obj1.find(x => x.id === obj2);
-    if (obj) {
-      return obj.label;
-    }
-    return '';
+    return this.helper.compareObj(obj1, obj2);
   }
 }

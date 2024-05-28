@@ -12,6 +12,7 @@ import { DetailsOrderDTO } from '../dto/details-order.dto';
 import { AgencyService } from '../../agency/agency.service';
 import { DeliveryService } from '../../delivery/delivery.service';
 import { STOCKER_ROLE } from '../../config/constant';
+import { OrderRO } from '../ro/order.ro';
 
 @EntityRepository(Order)
 export class OrderRepository extends Repository<Order> {
@@ -24,39 +25,55 @@ export class OrderRepository extends Repository<Order> {
         super();
     }
 
-    async getOrderList(role: number, agencyId: number,
+    async getOrderList(role: number, agencyId: number, _take: number, _skip: number,
         productService: ProductsService,
         productOrderRepo: ProductOrderRepository,
-    ): Promise<Order[]> {
-        let response: Order[] = [];
+
+    ): Promise<OrderRO> {
+        const take = _take;
+        const skip = _skip * take;
+        let response: OrderRO = new OrderRO;
+        let orderResponse: Order[] = [];
+
         let statusForOrder = this.statusOrderForAll;
         if (role === STOCKER_ROLE) {
             statusForOrder = this.statusOrderForStocker;
         }
 
         if (agencyId !== 0) {
-            response = await this.find({
-                where: {
-                    agencyId, status: In(statusForOrder)
-                },
-                order: { approvedNumber: 'DESC', id: 'DESC' }
-            });
-        } else {
-            response = await this.find({
-                where: {
-                    status: In(statusForOrder)
-                },
-                order: { approvedNumber: 'DESC', id: 'DESC' }
-            });
-        }
+            let [items, totalCount] = await this.findAndCount(
+                {
+                    where: {
+                        agencyId, status: In(statusForOrder)
+                    },
+                    order: { id: 'DESC' },
+                    take,
+                    skip,
+                }
+            );
 
-        ////
-        response = response.slice(0, 1000);
-        //////
+            response.totalCount = totalCount;
+            orderResponse = items;
+
+        } else {
+            let [items, totalCount] = await this.findAndCount(
+                {
+                    where: {
+                        status: In(statusForOrder)
+                    },
+                    order: { id: 'DESC' },
+                    take,
+                    skip,
+                }
+            );
+
+            response.totalCount = totalCount;
+            orderResponse = items;
+        }
 
         const productList = await productService.getAllProduct();
         const productOrderList = await productOrderRepo.find();
-        response.forEach(el => {
+        orderResponse.forEach(el => {
             el.products = [];
             const items = productOrderList.filter(x => x.orderId === el.id);
             if (items.length > 0) {
@@ -74,6 +91,8 @@ export class OrderRepository extends Repository<Order> {
                 });
             }
         });
+
+        response.orderList = orderResponse;
         return response;
     }
 
@@ -93,7 +112,7 @@ export class OrderRepository extends Repository<Order> {
             orderList = await this.findOne({ id });
         }
         const productList = await productService.getAllProduct();
-        const productOrderList = await productOrderRepo.find({ orderId: orderList.id });
+        const productOrderList = await productOrderRepo.find({ orderId: id });
         let products = [];
         productOrderList.forEach(i => {
             let pName = productList.find(x => x.id === i.productId);
@@ -101,6 +120,7 @@ export class OrderRepository extends Repository<Order> {
                 id: i.productId,
                 name: pName ? pName.name : "",
                 quantity: i.quantity,
+                category: pName.category,
             };
             products.push(temp);
         });
@@ -129,8 +149,8 @@ export class OrderRepository extends Repository<Order> {
         modifyOrderDto.id = order.id;
         await this.createNotify(modifyOrderDto, contents, notificationService, 'CREATE');
 
-        modifyOrderDto.id = order.id;
-        return modifyOrderDto;
+        orderEntity.id = order.id;
+        return this.mappingResponse(orderEntity, entities);
     }
 
     async updateOrder(modifyOrderDto: ModifyOrderDTO,
@@ -196,7 +216,21 @@ export class OrderRepository extends Repository<Order> {
             }
             await this.createNotify(modifyOrderDto, contents, notificationService, 'UPDATE');
         }
-        return await this.update(modifyOrderDto.id, order);
+
+        const result = await this.update(modifyOrderDto.id, order);
+        // return await this.update(modifyOrderDto.id, order);
+
+        order.id = modifyOrderDto.id;
+        return this.mappingResponse(order, modifyOrderDto.products, result);
+    }
+
+    async mappingResponse(orderEntity: Order, productOrder: any[], result?: any): Promise<any> {
+        let orderList = orderEntity;
+        let products = productOrder.map(x => ({
+            id: x.productId ?? x.id,
+            quantity: x.quantity,
+        }));
+        return { order: orderList, products: products, result };
     }
 
     async updateStatus(body: any, notificationService: NotificationService) {
@@ -244,7 +278,8 @@ export class OrderRepository extends Repository<Order> {
         modifyOrderDto.id = body.id;
         modifyOrderDto.status = body.status;
         await this.createNotify(modifyOrderDto, contents, notificationService, 'UPDATE');
-        return query;
+        let affected = query.affected;
+        return { ...body, affected };
     }
 
     async updateView(body: any) {
@@ -255,16 +290,17 @@ export class OrderRepository extends Repository<Order> {
             .execute();
     }
 
-    async deleteOrder(id: number, productOrderRepo: ProductOrderRepository): Promise<DeleteResult> {
+    async deleteOrder(id: number, productOrderRepo: ProductOrderRepository): Promise<any> {
         await productOrderRepo.createQueryBuilder()
             .delete()
             .where("order_id = :id", { id })
             .execute();
-        return await this.delete(id);
+        const result = await this.delete(id);
+        return { result, id };
     }
 
-    async search(searchOderDto: SearchOrderDTO, productService: ProductsService, agencyIdLogin: number, role: number): Promise<Order[]> {
-        let response: Order[] = [];
+    async search(searchOderDto: SearchOrderDTO, productService: ProductsService, agencyIdLogin: number, role: number): Promise<OrderRO> {
+        let response: OrderRO = new OrderRO;
         let statusForOrder = this.statusOrderForAll;
 
         const productList = await productService.getAllProduct();
@@ -277,8 +313,8 @@ export class OrderRepository extends Repository<Order> {
 
         if (role === STOCKER_ROLE) {
             statusForOrder = this.statusOrderForStocker;
-            sql = sql.andWhere('order.status IN (:statusAll)', { statusAll: statusForOrder })
         }
+        sql = sql.andWhere('order.status IN (:statusAll)', { statusAll: statusForOrder })
 
         if (agencyIdLogin > 0) {
             sql = sql.andWhere('order.agencyId = :agencyId', { agencyId: agencyIdLogin })
@@ -307,17 +343,24 @@ export class OrderRepository extends Repository<Order> {
             );
         }
 
-        const orderList = await sql
-            .orderBy('order.approved_number', 'DESC')
-            .addOrderBy('order.id', 'DESC')
+        let orderList = await sql
+            .orderBy('order.id', 'DESC')
             .getRawMany();
-        const dataMap = this.mappingSearch(orderList, productList);
-        response = dataMap;
+
+        let dataMap = this.mappingSearch(orderList, productList);
+        response.totalCount = dataMap.length;
+
+        // If take = 0 then set take = 1000
+        const take = searchOderDto.take; // limit
+        const skip = searchOderDto.skip; // offset
+        if (take > 0) {
+            dataMap = dataMap.slice(skip * take, (skip + 1) * take);
+        }
+        response.orderList = dataMap;
         return response;
     }
 
-    async details(detailsOrderDto: DetailsOrderDTO, productService: ProductsService, agencyIdLogin: number): Promise<Order[]> {
-        let response: Order[] = [];
+    async details(detailsOrderDto: DetailsOrderDTO, productService: ProductsService, agencyIdLogin: number): Promise<any> {
         let _status = [];
         const productList = await productService.getAllProduct();
 
@@ -406,11 +449,20 @@ export class OrderRepository extends Repository<Order> {
             orderList = await sql.orderBy('order.approved_number', 'DESC').getRawMany();
         } else {
             // Request from Details Statistic screen
-            orderList = await sql.orderBy('order.approved_number', 'DESC').limit(1000).getRawMany();///////
+            orderList = await sql.orderBy('order.id', 'DESC').getRawMany();
         }
-        const dataMap = this.mappingSearch(orderList, productList);
-        response = dataMap;
-        return response;
+
+        let dataMap = this.mappingSearch(orderList, productList);
+        let totalCount = dataMap.length;
+
+        // If take = 0 then get all orders
+        const take = detailsOrderDto.take; // limit
+        const skip = detailsOrderDto.skip; // offset
+        if (take > 0) {
+            dataMap = dataMap.slice(skip * take, (skip + 1) * take);
+        }
+
+        return { orders: dataMap, productList, totalCount };
     }
 
     async getfilterList(
@@ -510,6 +562,7 @@ export class OrderRepository extends Repository<Order> {
                         id: i.productOrder_product_id,
                         quantity: i.productOrder_quantity,
                         name: prod ? prod.name : '',
+                        category: prod ? prod.category : 0,
                     }
                     el.products.push(item2);
                 });

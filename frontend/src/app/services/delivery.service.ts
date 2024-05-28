@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
 import { CONFIG } from "../common/config";
 import { WebRequestService } from "./web-request.service";
-import { District } from "../models/district";
 import { Helper } from "../helpers/helper";
 
 @Injectable({ providedIn: 'root' })

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { CustomMatPaginatorIntl } from '../common/custom-paginator';
 import { DialogDeleteConfirmComponent } from '../common/dialog-delete-confirm/dialog-delete-confirm.component';
@@ -8,7 +8,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { Helper } from '../helpers/helper';
 import { Store } from '../models/store';
-import { StoreService } from '../services/store.service';
 import { DialogModifyStoreComponent } from './dialog-modify-store/dialog-modify-store.component';
 import { Router } from '@angular/router';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -23,7 +22,7 @@ import { RoutesService } from '../services/routes.service';
     { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl }
   ]
 })
-export class StoresComponent implements OnInit {
+export class StoresComponent implements OnInit, OnDestroy {
 
   displayedColumns: string[] = ['agencyName', 'districtName', 'provinceName', 'storeName', 'address', 'phone', 'deleteAction'];
   dataSource = new MatTableDataSource<Store>();
@@ -48,7 +47,6 @@ export class StoresComponent implements OnInit {
   sticky: boolean = true;
 
   constructor(public dialog: MatDialog,
-    private storeService: StoreService,
     public router: Router,
     private deviceService: DeviceDetectorService,
     private routesService: RoutesService,
@@ -65,6 +63,13 @@ export class StoresComponent implements OnInit {
     this.onRequestServer();
   }
 
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+  }
+
+  ngOnDestroy(): void { }
+
   onRequestServer() {
     this.routesService.getAgencyList().pipe(
       tap((res) => {
@@ -74,7 +79,6 @@ export class StoresComponent implements OnInit {
       }),
       switchMap((result) => {
         if (!this.isAreaManager) {
-          console.log('not true');
           return of(result);
         } else {
           return this.routesService.getUserDistrictList();
@@ -119,7 +123,7 @@ export class StoresComponent implements OnInit {
   }
 
   getStoreList() {
-    this.storeService.getStoreList().subscribe((response: any) => {
+    this.routesService.getStoreList().subscribe((response: any) => {
       this.generalStoreList(response);
     });
   }
@@ -130,11 +134,6 @@ export class StoresComponent implements OnInit {
     } else {
       this.hasData = true;
     }
-  }
-
-  ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
   }
 
   onEdit(row: any) {

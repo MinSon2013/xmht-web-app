@@ -6,4 +6,6 @@ export class SearchOrderDTO {
     endDate: string;
     status: number;
     userId: number; // Login userId
+    take: number;
+    skip: number;
 }
