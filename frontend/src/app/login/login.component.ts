@@ -1,20 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { tap } from 'rxjs';
+import { tap, timeout } from 'rxjs';
 import { Helper } from '../helpers/helper';
 import { LoginService } from '../services/login.service';
 import { SocketService } from '../services/socket.service';
 import { CONFIG } from '../common/config';
+import { CustomSocket } from '../sockets/custom-socket';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
   username: string = ''; // administrator
   password: string = ''; // administrator
+export class LoginComponent implements OnInit, OnDestroy {
   readonly routingOrderList = CONFIG.APP_ROUTING.ORDER.ORDERS + CONFIG.APP_ROUTING.ORDER.LIST;
 
   isUsernameValid: boolean = true;
@@ -25,13 +26,13 @@ export class LoginComponent implements OnInit {
   constructor(private loginService: LoginService,
     private router: Router,
     private toastr: ToastrService,
-    private socket: SocketService,
+    private socketService: SocketService,
   ) { }
 
   ngOnInit(): void {
     if (this.helper.isExpireToken()) {
       if (this.helper.checkSession()) {
-        this.navigateUrl();
+        this.router.navigate([this.routingOrderList]);
       }
     }
   }
@@ -39,6 +40,8 @@ export class LoginComponent implements OnInit {
   ngAfterViewInit() {
     this.helper.checkSession();
   }
+
+  ngOnDestroy(): void { }
 
   validationUsername(): boolean {
     let pattern = RegExp(/^[\w~.]*$/);
@@ -80,22 +83,17 @@ export class LoginComponent implements OnInit {
     if (this.validationUsername() && this.validationPassword()) {
       this.loginService.login(this.username.trim(), this.password.trim())
         .pipe(
-          tap(() => {
-            this.navigateUrl();
-          })
-        ).subscribe()
+          tap()
+        ).subscribe(() => {
+          window.location.reload();
+          setTimeout(() => {
+            this.router.navigate([this.routingOrderList]);
+          }, 5000);
+        });
     } else {
       this.error = 'Tên đăng nhập hoặc mật khẩu không đúng.';
       this.helper.showError(this.toastr, this.error);
     }
-  }
-
-  navigateUrl() {
-    this.router.navigate([this.routingOrderList])
-      .then(() => {
-        window.location.reload();
-        this.socket.openConnect();
-      });
   }
 
   focusNext(id: string) {
