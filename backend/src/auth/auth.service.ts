@@ -133,7 +133,8 @@ export class AuthService {
                 // Update user-role, full-name for agency in `users`
                 const f = agencyListNotUser.find(x => x.userId === el.id);
                 if (f) {
-                    await this.userService.syncUser(el.id, f.agencyName, 4);
+                    await this.userService.syncUser(el.id, f.agencyName, f.role);
+                    // await this.userService.syncUser(el.id, f.agencyName, 4);
                 }
 
                 // Update full-name for user in `users`

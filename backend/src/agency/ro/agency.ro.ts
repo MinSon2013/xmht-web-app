@@ -8,4 +8,5 @@ export class AgencyRO {
     email: string;
     contract: string;
     userName: string;
+    role: number;
 }

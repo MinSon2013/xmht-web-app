@@ -131,7 +131,7 @@ export class AgencyRepository extends Repository<Agency> {
         const ids = await this.getIdsNotAgency();
         const result = await this.createQueryBuilder('a')
             .innerJoinAndSelect(Users, 'u', 'u.id = a.user_id')
-            .where('a.id NOT IN (:ids)', { ids: ids.toString() })
+            .where('a.id NOT IN (:ids)', { ids })
             .getRawMany();
 
         const res: AgencyRO[] = [];
@@ -146,6 +146,7 @@ export class AgencyRepository extends Repository<Agency> {
             item.phone = element.a_phone;
             item.userId = element.u_id;
             item.userName = element.u_username;
+            item.role = element.u_role === 0 ? 4 : element.u_role;
             res.push(item);
         });
         return res;
@@ -186,6 +187,7 @@ export class AgencyRepository extends Repository<Agency> {
             item.userId = element.u_id;
             item.phone = element.a_phone;
             item.userName = element.u_username;
+            item.role = element.u_role;
             result.push(item);
         });
         return result;
