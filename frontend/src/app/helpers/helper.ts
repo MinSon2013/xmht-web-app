@@ -255,6 +255,8 @@ export class Helper {
       return moment(value).format(UPDATE_DATE_FORMAT_3);
     } else if (t === 4) {
       return moment().format('HH giờ mm"');
+    } else if (t === 5) {
+      return moment(value).format(UPDATE_DATE_FORMAT_2);
     } else {
       return '';
     }

@@ -35,11 +35,9 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
   receipt: any[] = RECEIPT;
   receivedStatus: number = 2;
   shippedStatus: number = 4;
-  nowDate = this.helper.getDateFormat(3);
-  range = new FormGroup({
-    start: new FormControl<Date | null>(new Date()),
-    end: new FormControl<Date | null>(new Date()),
-  });
+  displayTodate = "";
+  today = "";
+  tomorrow = "";
 
   productList: Product[] = [];
   agencyList: any[] = [];
@@ -103,6 +101,7 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.convertDate();
     this.loading = true;
     this.displayService.setNavigationVisibility(false);
     this.onRequestServer();
@@ -114,9 +113,6 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
   }
 
   onRequestServer() {
-    this.searchForm.startDate = this.range.value.start !== null ? this.helper.getDateFormat(3, this.range.value.start) : this.nowDate;
-    this.searchForm.endDate = this.range.value.end !== null ? this.helper.getDateFormat(3, this.range.value.end) : this.nowDate;
-
     this.routesService.getFilterList().pipe(
       tap((res) => {
         this.mappingFilterList(res);
@@ -163,8 +159,6 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
   }
 
   private getOrderDetailData() {
-    this.searchForm.startDate = this.range.value.start !== null ? this.helper.getDateFormat(3, this.range.value.start) : this.nowDate;
-    this.searchForm.endDate = this.range.value.end !== null ? this.helper.getDateFormat(3, this.range.value.end) : this.nowDate;
     this.orderService.searchDetails(this.searchForm).subscribe((response: any) => {
       this.productList = this.helper.sortAZ(response.productList, 'category');
       this.mappingOrderDetail(response.orders);
@@ -208,13 +202,6 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
 
   onBack() {
     this.location.back();
-  }
-
-  dateRangeChange(dateRangeStart: HTMLInputElement, dateRangeEnd: HTMLInputElement) {
-    if (dateRangeEnd.value) {
-      this.loading = true;
-      this.getOrderDetailData();
-    }
   }
 
   private setDisplayedColumns() {
@@ -470,6 +457,22 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
     this.columnDefRowSumSection2.push("s" + (this.thColspan + 1));
     this.columnDefRowSumSection2 = ['footer-row-label', ...this.columnDefRowSumSection2];
     this.displayedRowSumSection2.push({ label: "s" + (this.thColspan + 1), value: 0 });
+  }
+
+  private convertDate() {
+    let today = new Date();
+    today = new Date(new Date().setHours(6, 0, 0, 0));
+    let tomorrow = new Date(+new Date() + 86400000);
+    tomorrow = new Date(+new Date().setHours(6, 0, 0, 0) + 86400000);
+    this.today = this.helper.getDateFormat(5, today);
+    this.tomorrow = this.helper.getDateFormat(5, tomorrow);
+
+    this.searchForm.startDate = this.today;
+    this.searchForm.endDate = this.tomorrow;
+
+    this.displayTodate = this.helper.getDateFormat(1);
+    this.displayTodate = `Thời gian hiện tại:  ${this.displayTodate.replace(" ", " ngày ")}`;
+
   }
 
   private compareObj(obj1: any[], obj2: any): string {

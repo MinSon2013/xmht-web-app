@@ -407,11 +407,11 @@ export class OrderRepository extends Repository<Order> {
                     sql = sql.andWhere('((order.status = :status1', { status1: Number(_status[0]) });
                     sql = sql.andWhere(
                         `IF(LENGTH(order.confirmed_date) > 10,
-                          STR_TO_DATE(RIGHT(order.confirmed_date, 10), '%d/%m/%Y'),
+                          STR_TO_DATE(RIGHT(order.confirmed_date, 16), '%H:%i %d/%m/%Y'),
                           STR_TO_DATE(order.confirmed_date, '%d/%m/%Y')
                         )
-                        BETWEEN STR_TO_DATE(:start, \'%d/%m/%Y\') 
-                        AND STR_TO_DATE(:end, \'%d/%m/%Y\')
+                        BETWEEN STR_TO_DATE(:start, \'%H:%i %d/%m/%Y\') 
+                        AND STR_TO_DATE(:end, \'%H:%i %d/%m/%Y\')
                     )`,
                         { start: detailsOrderDto.startDate, end: detailsOrderDto.endDate }
                     );
@@ -420,11 +420,11 @@ export class OrderRepository extends Repository<Order> {
                     sql = sql.orWhere('(order.status = :status2', { status2: Number(_status[1]) });
                     sql = sql.andWhere(
                         `IF(LENGTH(order.shipping_date) > 10,
-                          STR_TO_DATE(RIGHT(order.shipping_date, 10), '%d/%m/%Y'),
+                          STR_TO_DATE(RIGHT(order.shipping_date, 16), '%H:%i %d/%m/%Y'),
                           STR_TO_DATE(order.shipping_date, '%d/%m/%Y')
                         )
-                        BETWEEN STR_TO_DATE(:start, \'%d/%m/%Y\') 
-                        AND STR_TO_DATE(:end, \'%d/%m/%Y\')
+                        BETWEEN STR_TO_DATE(:start, \'%H:%i %d/%m/%Y\') 
+                        AND STR_TO_DATE(:end, \'%H:%i %d/%m/%Y\')
                         )) `,
                         { start: detailsOrderDto.startDate, end: detailsOrderDto.endDate }
                     );
@@ -480,11 +480,11 @@ export class OrderRepository extends Repository<Order> {
 
         let orders = await this.find();
 
-        driverList = orders.map(x => x.driver);
+        driverList = orders.map(x => ({ agencyId: x.agencyId, driver: x.driver }));
         driverList = driverList.filter((elem, index, self) => {
             return index === self.indexOf(elem);
         })
-        licensePlateList = orders.map(x => x.licensePlates);
+        licensePlateList = orders.map(x => ({ agencyId: x.agencyId, licensePlates: x.licensePlates }));
         licensePlateList = licensePlateList.filter((elem, index, self) => {
             return index === self.indexOf(elem);
         })

@@ -9,7 +9,7 @@ body {
 
 body {
     margin: 0;
-    font-family: 'Times New Roman', Times, serif, sans-serif;
+    font-family: 'Roboto', serif, sans-serif;
 }
 
 @import '@fortawesome/fontawesome-free/scss/fontawesome.scss';
@@ -28,7 +28,7 @@ body {
 
 body {
     position: relative;
-    font-family: 'Times New Roman', Times, serif;
+    font-family: 'Roboto', serif, sans-serif;
     background-color: whitesmoke !important;
     display: contents;
     overflow: hidden;
@@ -77,4 +77,18 @@ body {
 input,
 textarea {
     outline-color: lightsteelblue !important;
+}
+
+span,
+label,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+th,
+td {
+    font-family: 'Roboto', serif, sans-serif;
 }

@@ -35,7 +35,9 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
   productList: Product[] = [];
   customerList: any[] = [];
   driverList: any[] = [];
+  driverListClone: { agencyId: number, driver: string }[] = [];
   licensePlateList: any[] = [];
+  licensePlateListClone: { agencyId: number, licensePlates: string }[] = [];
 
   customerSelected: any = null;
   receivedAdressSelected: any = null;
@@ -72,8 +74,8 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
     deliveryAddress: string,
     licensePlate: string,
     receipt: string,
-    products: { pId: number, pValue: string }[],
-    sum: string,
+    products: { pId: number, pValue: number }[],
+    sum: number,
   }[] = [];
 
   productDataSource: {
@@ -263,16 +265,8 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
         this.customerList = response.agencyList;
         this.productList = this.helper.sortAZ(response.productList, 'category');
         this.deliveries = response.deliveryList;
-        let licensePlateList = response.licensePlateList;
-        let driverList = response.driverList;
-
-        let mapList = new Map(driverList.map((s: string) => [s.trim().toLowerCase(), s]));
-        driverList = [...mapList.values()];
-        let mapList1 = new Map(licensePlateList.map((s: string) => [s.trim().toLowerCase(), s]));
-        licensePlateList = [...mapList1.values()];
-        this.licensePlateList = this.sortAZ(licensePlateList);
-        this.driverList = this.sortAZ(driverList);
-
+        this.licensePlateListClone = response.licensePlateList;
+        this.driverListClone = response.driverList;
         this.loading = false;
       }
     });
@@ -301,6 +295,24 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
 
   onChangeCustomer(event: any) {
     this.customer = "   " + this.customerSelected?.agencyName;
+    let drivers = this.driverListClone.map(x => ({ ...x }));
+    drivers = this.driverListClone.filter(x => x.agencyId === this.customerSelected?.id);
+    let licensePlates = this.licensePlateListClone.map(x => ({ ...x }));
+    licensePlates = this.licensePlateListClone.filter(x => x.agencyId === this.customerSelected?.id);
+    if (drivers.length > 0) {
+      let mapList = new Map(drivers.map((s: any) => [s.driver.trim().toLowerCase(), s.driver]));
+      let driverList = [...mapList.values()];
+      this.driverList = this.sortAZ(driverList);
+    } else {
+      this.driverList = [];
+    }
+    if (licensePlates.length > 0) {
+      let mapList1 = new Map(licensePlates.map((s: any) => [s.licensePlates.trim().toLowerCase(), s.licensePlates]));
+      let licensePlateList = [...mapList1.values()];
+      this.licensePlateList = this.sortAZ(licensePlateList);
+    } else {
+      this.licensePlateList = [];
+    }
   }
 
   private setDisplayedColumns() {
@@ -421,7 +433,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
     this.displayedRowSumSection = [];
 
     this.setDisplayedColumns();
-    const productTemplate = this.displayedColumnsProductName.map(x => ({ pId: x.id, pValue: "", pCategory: x.label }));
+    const productTemplate = this.displayedColumnsProductName.map(x => ({ pId: x.id, pValue: 0, pCategory: x.label }));
 
     /** Mapping data cell for Section 1 */
     /*** Hanled datasource for display on a cell */
@@ -432,7 +444,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
       x.products.forEach((k: any) => {
         products.map(y => {
           if (y.pId === k.id) {
-            y.pValue = k.quantity;
+            y.pValue = Number(k.quantity);
           }
         });
       });
@@ -444,7 +456,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
         licensePlate: x.licensePlates.trim(),
         receipt: receipt ? receipt.label : "",
         products: products,
-        sum: x.productTotal.toString(),
+        sum: Number(x.productTotal),
         createdDate: this.replaceTextInDate(x.createdDate),
         contract: x.contract.trim(),
         receivedDate: x.receivedDate,
@@ -470,7 +482,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
       let sum = this.helper.sum(e, 'pValue');
       sumColRow.map(y => {
         if (y.pId === e[0].pId) {
-          y.pValue = sum + "";
+          y.pValue = Number(sum);
         }
       });
     });
@@ -482,7 +494,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
     this.columnDefRowSumSection.push("s" + (this.thColspan + 1));
     this.columnDefRowSumSection.push("s" + (this.thColspan + 2));
     this.columnDefRowSumSection = ['footer-row-label', ...this.columnDefRowSumSection];
-    this.displayedRowSumSection.push({ label: "s" + (this.thColspan + 1), value: sumTotal });
+    this.displayedRowSumSection.push({ label: "s" + (this.thColspan + 1), value: Number(sumTotal) });
     this.displayedRowSumSection.push({ label: "s" + (this.thColspan + 2), value: 0 });
 
     this.cdr.detectChanges();
@@ -585,7 +597,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
     let emptyRow = ['', '', '', '', '', '', '', '', '', '', '', '', '',];
 
     // Convert last row SUM
-    let lastRowSum: string[] = [];
+    let lastRowSum: any[] = [];
     leftHeader.forEach(f => {
       headerColumnRight1.push("");
       headerColumnRight2.push("");
@@ -611,7 +623,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
       headerCustomer.push("");
     }
     this.displayedRowSumSection.forEach(k => {
-      lastRowSum.push(k.value > 0 ? k.value.toString() : "");
+      lastRowSum.push(k.value > 0 ? Number(k.value) : "");
     });
     lastRowSum.push("");
     lastRowSum.push("");

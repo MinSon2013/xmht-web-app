@@ -13,6 +13,7 @@
         margin-left: 3rem;
         margin-right: 1rem;
         font-weight: 500;
+        font-size: 11pt;
     }
 
     .btn-back {
@@ -69,7 +70,7 @@
         }
 
         table {
-            border: 1px solid grey;
+            border: 1.5px solid grey;
 
             th {
                 color: rgb(0, 0, 0);
@@ -80,19 +81,40 @@
 
             th,
             td {
-                border-bottom: 1px solid grey;
-                border-right: 1px solid grey;
+                border-right: 1px dotted grey;
                 border-style: dotted;
                 padding: 0.25rem 0.25rem;
                 font-size: 9pt;
-                font-family: 'Times New Roman', Times, serif;
+                font-family: 'Roboto', serif, sans-serif;
             }
 
             td {
+                border-style: dotted;
+                border-bottom: 1px dotted grey;
                 white-space: pre;
                 color: black;
                 text-align: left;
                 vertical-align: middle;
+            }
+
+            .b-bottom {
+                border-bottom: 1.5px solid grey;
+            }
+
+            .b-left {
+                border-left: 1.5px solid grey;
+            }
+
+            .b-top {
+                border-top: 1.5px solid grey;
+            }
+
+            .b-left-last:last-child {
+                border-left: 1.5px solid grey;
+            }
+
+            .footer {
+                border-top: 1px solid grey !important;
             }
 
             .p-td {
