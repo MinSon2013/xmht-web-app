@@ -470,8 +470,7 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
     this.searchForm.startDate = this.today;
     this.searchForm.endDate = this.tomorrow;
 
-    this.displayTodate = this.helper.getDateFormat(1);
-    this.displayTodate = `Thời gian hiện tại:  ${this.displayTodate.replace(" ", " ngày ")}`;
+    this.displayTodate = `Ngày:  ${this.helper.getDateFormat(3, today)}`;
 
   }
 
