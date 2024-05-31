@@ -268,6 +268,10 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
         this.licensePlateListClone = response.licensePlateList;
         this.driverListClone = response.driverList;
         this.loading = false;
+        if (this.isAgency) {
+          this.searchForm.agencyId = this.helper.getAgencyId() + "";
+          this.convertDriverLicenseplate(this.helper.getAgencyId());
+        }
       }
     });
   }
@@ -295,10 +299,14 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
 
   onChangeCustomer(event: any) {
     this.customer = "   " + this.customerSelected?.agencyName;
+    this.convertDriverLicenseplate(this.customerSelected?.id);
+  }
+
+  convertDriverLicenseplate(agencyId: number) {
     let drivers = this.driverListClone.map(x => ({ ...x }));
-    drivers = this.driverListClone.filter(x => x.agencyId === this.customerSelected?.id);
+    drivers = this.driverListClone.filter(x => x.agencyId === agencyId);
     let licensePlates = this.licensePlateListClone.map(x => ({ ...x }));
-    licensePlates = this.licensePlateListClone.filter(x => x.agencyId === this.customerSelected?.id);
+    licensePlates = this.licensePlateListClone.filter(x => x.agencyId === agencyId);
     if (drivers.length > 0) {
       let mapList = new Map(drivers.map((s: any) => [s.driver.trim().toLowerCase(), s.driver]));
       let driverList = [...mapList.values()];
