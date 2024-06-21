@@ -426,6 +426,15 @@
     }
 }
 
+.mat-mdc-table .mdc-data-table__header-row {
+    height: 45px;
+}
+
+.mat-mdc-table .mdc-data-table__row {
+    height: 35px;
+    line-height: var(--mdc-typography-body2-line-height, 4px) !important;
+}
+
 @media only screen and (max-width: 1920px) {
 
     span,

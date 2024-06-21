@@ -41,6 +41,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
 
   customerSelected: any = null;
   receivedAdressSelected: any = null;
+  pickupAdressSelected: any = null;
   receiptSelected: any = null;
   productSelected: any = null;
   driverSelected: any = null;
@@ -220,6 +221,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
     this.searchForm.startDate = this.range.value.start !== null ? this.helper.getDateFormat(3, this.range.value.start) : "";
     this.searchForm.endDate = this.range.value.end !== null ? this.helper.getDateFormat(3, this.range.value.end) : "";
     this.searchForm.deliveryId = this.receivedAdressSelected ? this.receivedAdressSelected.id : "";
+    this.searchForm.pickupId = this.pickupAdressSelected ? this.pickupAdressSelected.id : "";
     this.searchForm.licensePlate = this.licensePlateSelected ? this.licensePlateSelected : "";
     this.searchForm.driver = this.driverSelected ? this.driverSelected : "";
     this.searchForm.receipt = this.receiptSelected ? this.receiptSelected.value : "";
@@ -234,6 +236,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
   resetFormSearch() {
     this.invalid();
     this.receivedAdressSelected = null;
+    this.pickupAdressSelected = null;
     this.receiptSelected = null;
     this.productSelected = null;
     this.driverSelected = null;

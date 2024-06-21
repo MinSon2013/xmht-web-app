@@ -9,7 +9,7 @@ import { Order } from '../models/order';
 import { DialogDetailOrderComponent } from './dialog-detail-order/dialog-detail-order.component';
 import { Helper } from '../helpers/helper';
 import { DialogConfirmOrderComponent } from './dialog-confirm-order/dialog-confirm-order.component';
-import { AGENCY_ROLE, Cities, SERVICE_TYPE, STATUS, STOCKER_ROLE, USER_AREA_MANAGER_ROLE, USER_SALESMAN_ROLE } from '../constants/const-data';
+import { AGENCY_ROLE, Cities, PRODUCT_CATEGORIES, SERVICE_TYPE, STATUS, STOCKER_ROLE, USER_AREA_MANAGER_ROLE, USER_SALESMAN_ROLE } from '../constants/const-data';
 import { CustomMatPaginatorIntl } from '../common/custom-paginator';
 import * as moment from 'moment';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -37,7 +37,6 @@ export class OrderListComponent implements OnInit, OnDestroy {
   readonly routingSlideShow = CONFIG.APP_ROUTING.ORDER.ORDERS + CONFIG.APP_ROUTING.ORDER.SLIDESHOW;
   readonly routingPrint = CONFIG.APP_ROUTING.PRINT;
 
-  displayedColumns: string[] = ['approvedNumber', 'agencyName', 'contract', 'createdDate', 'receivedDate', 'confirmedDate', 'shippingDate', 'deliveryId', 'pickupId', 'productName', 'quantity', 'productTotal', 'licensePlates', 'driver', 'status', 'deleteAction'];
   colspan: number = 0;
   dataSource = new MatTableDataSource<Order>();
   dataSourceClone = new MatTableDataSource<Order>();
@@ -108,6 +107,21 @@ export class OrderListComponent implements OnInit, OnDestroy {
   takeLimitQuery: number = 100;
   pageIndex: number = 0;
 
+  colDefDefault: string[] = ['approvedNumber', 'agencyName', 'contract', 'createdDate', 'receivedDate', 'confirmedDate', 'shippingDate', 'deliveryId', 'pickupId'];
+  columnsRow1: string[] = [...this.colDefDefault, 'products', 'productTotal', 'licensePlates', 'driver', 'status', 'deleteAction'];
+  columnsRowProductCategory: string[] = [];
+  columnsDefProductName: string[] = [];
+  displayedColumnsProductName: { id: number, label: string, value: string }[] = [];
+  displayedColumns: string[] = [];
+  thRowspan: number = 3;
+  thColspan: number = 0;
+  productDataSource: {
+    categoryValue: string,
+    displayedCategory: string,
+    pColspan: number,
+    productList: { pId: number, pCategory: number, pName: string }[],
+  }[] = [];
+
   constructor(public dialog: MatDialog,
     public router: Router,
     private orderService: OrderService,
@@ -123,15 +137,15 @@ export class OrderListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.isAreaManager) {
-      this.displayedColumns = ['approvedNumber', 'agencyName', 'contract', 'createdDate', 'receivedDate', 'confirmedDate', 'shippingDate', 'deliveryId', 'pickupId', 'productName', 'quantity', 'productTotal', 'licensePlates', 'driver', 'status'];
+      this.columnsRow1 = ['approvedNumber', 'agencyName', 'contract', 'createdDate', 'receivedDate', 'confirmedDate', 'shippingDate', 'deliveryId', 'pickupId', 'products', 'productTotal', 'licensePlates', 'driver', 'status'];
     }
     if (this.isAgency) {
-      this.displayedColumns = ['approvedNumber', 'contract', 'createdDate', 'receivedDate', 'confirmedDate', 'shippingDate', 'deliveryId', 'pickupId', 'productName', 'quantity', 'productTotal', 'licensePlates', 'driver', 'status', 'deleteAction'];
+      this.columnsRow1 = ['approvedNumber', 'contract', 'createdDate', 'receivedDate', 'confirmedDate', 'shippingDate', 'deliveryId', 'pickupId', 'products', 'productTotal', 'licensePlates', 'driver', 'status', 'deleteAction'];
     }
     if (this.isStocker) {
       this.status = this.status.slice(0, 3);
     }
-    this.colspan = this.displayedColumns.length;
+    this.colspan = this.columnsRow1.length;
 
     this.onRequestServer();
     this.emitSocket();
@@ -214,6 +228,7 @@ export class OrderListComponent implements OnInit, OnDestroy {
     this.dataElement = [result.order, ...this.dataElement,];
     this.dataSourceClone = new MatTableDataSource<Order>(this.dataElement);
     this.dataSource = new MatTableDataSource(this.claimDataSource(this.pageIndex));
+    this.gerneralDetailData();
     this.cdr.detectChanges();
   }
 
@@ -232,12 +247,14 @@ export class OrderListComponent implements OnInit, OnDestroy {
     this.dataElement = this.dataElement.map(x => (x.id === result.order.id) ? result.order : x)
     this.dataSourceClone = new MatTableDataSource<Order>(this.dataElement);
     this.dataSource = new MatTableDataSource(this.claimDataSource(this.pageIndex));
+    this.gerneralDetailData();
   }
 
   private mappingOrderDeletedSuccess(id: number) {
     this.dataElement = this.dataElement.filter(x => x.id !== id)
     this.dataSourceClone = new MatTableDataSource<Order>(this.dataElement);
     this.dataSource = new MatTableDataSource(this.claimDataSource(this.pageIndex));
+    this.gerneralDetailData();
   }
 
   private mappingOrderStatusChanged(result: any) {
@@ -252,6 +269,7 @@ export class OrderListComponent implements OnInit, OnDestroy {
       this.dataElement = this.dataElement.map(x => (x.id === result.id) ? item : x)
       this.dataSourceClone = new MatTableDataSource<Order>(this.dataElement);
       this.dataSource = new MatTableDataSource(this.claimDataSource(this.pageIndex));
+      this.gerneralDetailData();
     }
   }
 
@@ -263,6 +281,7 @@ export class OrderListComponent implements OnInit, OnDestroy {
 
       this.dataSourceClone = new MatTableDataSource<Order>(this.dataElement);
       this.dataSource = new MatTableDataSource(this.claimDataSource(this.pageIndex));
+      this.gerneralDetailData();
     }
   }
 
@@ -285,7 +304,7 @@ export class OrderListComponent implements OnInit, OnDestroy {
       this.dataElement = [...this.dataElement, ...response.orderList];
       this.dataSourceClone = new MatTableDataSource<Order>(this.dataElement);
       this.dataSource = new MatTableDataSource(this.claimDataSource(pageIndex));
-
+      this.gerneralDetailData();
       this.hasData = true;
     } else {
       this.hasData = false;
@@ -326,7 +345,7 @@ export class OrderListComponent implements OnInit, OnDestroy {
     let itemIndex = (event.pageIndex + 1) * event.pageSize;
     if (itemIndex <= this.dataElement.length) {
       this.dataSource = new MatTableDataSource(this.claimDataSource(event.pageIndex));
-
+      this.gerneralDetailData();
     } else {
       this.skip += 1; this.skip += 1;
       if (this.isEnabledSearch) {
@@ -398,6 +417,7 @@ export class OrderListComponent implements OnInit, OnDestroy {
       if (result) {
         this.dataElement = this.dataElement.filter(x => x.id !== row.id);
         this.dataSource = new MatTableDataSource(this.claimDataSource(this.pageIndex));
+        this.gerneralDetailData();
         if (this.dataElement.length === 0) {
           this.hasData = false;
         } else {
@@ -617,6 +637,149 @@ export class OrderListComponent implements OnInit, OnDestroy {
 
   onlyNumberKey(event: any) {
     return this.helper.onlyNumberKey(event);
+  }
+
+  private setDisplayedColumns() {
+    this.productDataSource = [];
+    this.columnsRowProductCategory = [];
+    this.columnsDefProductName = [];
+    this.displayedColumnsProductName = [];
+    this.displayedColumns = [];
+
+    let sutuList: { pId: number, pCategory: number, pName: string }[] = [];
+    let phutuList: { pId: number, pCategory: number, pName: string }[] = [];
+    let xaList: { pId: number, pCategory: number, pName: string }[] = [];
+    let khacList: { pId: number, pCategory: number, pName: string }[] = [];
+    this.thColspan = this.productList.length;
+
+    /** Replacement product name for displayed columns */
+    let subProductList = this.groupByValue(this.productList, 'category');
+    subProductList.forEach((e: any) => {
+      switch (e[0].category) {
+        case PRODUCT_CATEGORIES[0].value:
+          e.forEach((x: any) => {
+            sutuList.push({ pId: x.id, pCategory: x.category, pName: this.replaceProductName(x.name) });
+          });
+          this.productDataSource.push({
+            displayedCategory: PRODUCT_CATEGORIES[0].label,
+            categoryValue: PRODUCT_CATEGORIES[0].value.toString(),
+            productList: sutuList,
+            pColspan: sutuList.length,
+          });
+          this.columnsRowProductCategory.push(PRODUCT_CATEGORIES[0].value.toString());
+          break;
+        case PRODUCT_CATEGORIES[1].value:
+          e.forEach((x: any) => {
+            phutuList.push({ pId: x.id, pCategory: x.category, pName: this.replaceProductName(x.name) });
+          });
+          this.productDataSource.push({
+            displayedCategory: PRODUCT_CATEGORIES[1].label,
+            categoryValue: PRODUCT_CATEGORIES[1].value.toString(),
+            productList: phutuList,
+            pColspan: phutuList.length,
+          });
+          this.columnsRowProductCategory.push(PRODUCT_CATEGORIES[1].value.toString());
+          break;
+        case PRODUCT_CATEGORIES[2].value:
+          e.forEach((x: any) => {
+            xaList.push({ pId: x.id, pCategory: x.category, pName: this.replaceProductName(x.name) });
+          });
+          this.productDataSource.push({
+            displayedCategory: PRODUCT_CATEGORIES[2].label,
+            categoryValue: PRODUCT_CATEGORIES[2].value.toString(),
+            productList: xaList,
+            pColspan: xaList.length,
+          });
+          this.columnsRowProductCategory.push(PRODUCT_CATEGORIES[2].value.toString());
+          break;
+        case PRODUCT_CATEGORIES[3].value:
+          e.forEach((x: any) => {
+            khacList.push({ pId: x.id, pCategory: x.category, pName: this.replaceProductName(x.name) });
+          });
+          this.productDataSource.push({
+            displayedCategory: PRODUCT_CATEGORIES[3].label,
+            categoryValue: PRODUCT_CATEGORIES[3].value.toString(),
+            productList: khacList,
+            pColspan: khacList.length,
+          });
+          this.columnsRowProductCategory.push(PRODUCT_CATEGORIES[3].value.toString());
+          break;
+      }
+    });
+
+    /** Displayed column product name  */
+    const displayedProductList = [...sutuList, ...phutuList, ...xaList, ...khacList];
+    this.columnsDefProductName = displayedProductList.map(p => p.pCategory.toString() + "." + displayedProductList.indexOf(p));
+    this.displayedColumnsProductName = displayedProductList.map(p =>
+    ({
+      id: p.pId,
+      label: p.pCategory.toString() + "." + displayedProductList.indexOf(p),
+      value: p.pName
+    })
+    );
+
+    /** Handle columndef for section1 */
+    this.displayedColumns = [...this.colDefDefault, ...this.columnsDefProductName, 'productTotal', 'licensePlates', 'driver', 'status', 'deleteAction']
+
+    if (this.isAreaManager) {
+      this.displayedColumns = ['approvedNumber', 'agencyName', 'contract', 'createdDate', 'receivedDate', 'confirmedDate', 'shippingDate', 'deliveryId', 'pickupId', ...this.columnsDefProductName, 'productTotal', 'licensePlates', 'driver', 'status'];
+    }
+    if (this.isAgency) {
+      this.displayedColumns = ['approvedNumber', 'contract', 'createdDate', 'receivedDate', 'confirmedDate', 'shippingDate', 'deliveryId', 'pickupId', ...this.columnsDefProductName, 'productTotal', 'licensePlates', 'driver', 'status', 'deleteAction'];
+    }
+  }
+
+  private gerneralDetailData() {
+    this.setDisplayedColumns();
+    const productTemplate = this.displayedColumnsProductName.map(x => ({ pId: x.id, pValue: 0, pCategory: x.label }));
+
+    /** Mapping data cell for Section 1 */
+    /*** Hanled datasource for display on a cell */
+    this.dataSource.data.forEach((x: any) => {
+      let products = productTemplate.map(x => ({ ...x }));
+      x.product = x.products;
+      x.product.forEach((k: any) => {
+        products.map(y => {
+          if (y.pId === k.id) {
+            y.pValue = Number(k.quantity);
+          }
+        });
+      });
+
+      x.product = products;
+    });
+
+    this.cdr.detectChanges();
+  }
+
+  private groupByValue(arr: any[], key: string) {
+    return this.helper.groupByValue(arr, key);
+  }
+
+  private replaceProductName(name: string) {
+    const replacements = [
+      [" SƯ TỬ", ""],
+      [" Sư Tử", ""],
+      [" Sư tử", ""],
+      [" sư tử", ""],
+      [" PHỤ TỬ", ""],
+      [" Phụ Tử", ""],
+      [" Phụ tử", ""],
+      [" phụ tử", ""],
+      [" XÁ", ""],
+      [" Xá", ""],
+      [" xá", ""],
+    ];
+
+    let _name = replacements.reduce(
+      (acc, [oldStr, newStr]) => {
+        return acc.replaceAll(oldStr, newStr);
+      }, name);
+    return _name;
+  }
+
+  customTrackBy(index: any, item: any) {
+    return item.label;
   }
 
 }

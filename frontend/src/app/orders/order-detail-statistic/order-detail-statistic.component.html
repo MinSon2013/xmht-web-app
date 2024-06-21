@@ -46,6 +46,20 @@
                 </select>
             </div>
         </div>
+        <!-- Pickup Address -->
+        <div class="div-header row">
+            <span class="label">{{ "DETAILS_STATISTIC.PICKEDUP_ADDRESS" | translate }}</span>
+            <div class="" style="padding: 0;">
+                <select class="form-select select" [(ngModel)]="pickupAdressSelected">
+                    <option [ngValue]="null" [disabled]="true" [selected]="true">
+                        -- {{ "DETAILS_STATISTIC.SELECT_PICKUP_ADDRESS" | translate }} --
+                    </option>
+                    <option [ngValue]="item" *ngFor="let item of cities">
+                        {{ item.label }}
+                    </option>
+                </select>
+            </div>
+        </div>
         <!-- License plate -->
         <div class="div-header row">
             <span class="label">{{ "DETAILS_STATISTIC.LICENSE_PLATE" | translate }}</span>

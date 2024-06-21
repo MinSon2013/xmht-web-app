@@ -152,7 +152,7 @@
       <!-- ApprovedNumber column -->
       <ng-container matColumnDef="approvedNumber" [sticky]="sticky">
         <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by approvedNumber"
-          class="nowrap">
+          class="nowrap" [attr.rowspan]="thRowspan">
           {{ "ORDER.APPROVED_NUMBER_1" | translate }}
         </th>
         <td mat-cell *matCellDef="let element" class="sticky-col center {{
@@ -168,7 +168,8 @@
 
       <!-- AgencyName Column -->
       <ng-container matColumnDef="agencyName" *ngIf="!isAgency" [sticky]="sticky">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by agencyName" class="nowrap">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by agencyName" class="nowrap"
+          [attr.rowspan]="thRowspan">
           {{ "ORDER.AGENCY" | translate }}
         </th>
         <td mat-cell *matCellDef="let element" class="sticky-col {{
@@ -184,7 +185,8 @@
 
       <!-- contract Column -->
       <ng-container matColumnDef="contract">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by contract" class="nowrap">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by contract" class="nowrap"
+          [attr.rowspan]="thRowspan">
           {{ "ORDER.CONTRACT" | translate }}
         </th>
         <td mat-cell *matCellDef="let element" class="{{
@@ -201,7 +203,7 @@
       <!-- createdDate Column -->
       <ng-container matColumnDef="createdDate">
         <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by created date"
-          class="nowrap">
+          class="nowrap" [attr.rowspan]="thRowspan">
           {{ "ORDER.CREATEDDATE" | translate }}
         </th>
         <td mat-cell *matCellDef="let element" class="{{
@@ -218,7 +220,7 @@
       <!-- receivedDate Column -->
       <ng-container matColumnDef="receivedDate">
         <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by received date"
-          class="nowrap">
+          class="nowrap" [attr.rowspan]="thRowspan">
           {{ "ORDER.RECEIVEDDATE1" | translate }} <br />{{
           "ORDER.RECEIVEDDATE2" | translate
           }}
@@ -238,7 +240,7 @@
       <!-- confirmedDate Column -->
       <ng-container matColumnDef="confirmedDate">
         <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by confirmed date"
-          class="nowrap">
+          class="nowrap" [attr.rowspan]="thRowspan">
           {{ "ORDER.CONFIRMED_DATE" | translate }}
         </th>
         <td mat-cell *matCellDef="let element" class="{{
@@ -255,7 +257,7 @@
       <!-- shippingDate Column -->
       <ng-container matColumnDef="shippingDate">
         <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by shipping date"
-          class="nowrap">
+          class="nowrap" [attr.rowspan]="thRowspan">
           {{ "ORDER.SHIPPING_DATE" | translate }}
         </th>
         <td mat-cell *matCellDef="let element" class="{{
@@ -271,7 +273,8 @@
 
       <!-- deliveryId Column -->
       <ng-container matColumnDef="deliveryId">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by deliveryId" class="nowrap">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by deliveryId" class="nowrap"
+          [attr.rowspan]="thRowspan">
           {{ "ORDER.DELIVERY_ADDRESS" | translate }}
         </th>
         <td mat-cell *matCellDef="let element" class="{{
@@ -287,7 +290,8 @@
 
       <!-- pickupId Column -->
       <ng-container matColumnDef="pickupId">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by pickupId" class="nowrap">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by pickupId" class="nowrap"
+          [attr.rowspan]="thRowspan">
           {{ "ORDER.PICKUP_ADDRESS" | translate }}
         </th>
         <td mat-cell *matCellDef="let element" class="{{
@@ -301,45 +305,36 @@
         </td>
       </ng-container>
 
-      <!-- product Column -->
-      <ng-container matColumnDef="productName">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by productName">
+      <!-- PRODUCTS Column -->
+      <ng-container matColumnDef="products">
+        <th mat-header-cell *matHeaderCellDef [attr.colspan]="thColspan">
           {{ "ORDER.PRODUCT" | translate }}
         </th>
-        <td mat-cell class="wrap-text" *matCellDef="let element" class="nowrap" style="text-align: start;">
-          <span *ngFor="let i of element.products" class="{{
-              element.isViewed === 0 &&
-              (element.sender !== element.agencyId ||
-                element.sender === element.agencyId)
-                ? 'bold'
-                : ''
-            }}">
-            {{ i.name }}<br />
-          </span>
-        </td>
+        <!-- This column doesn't generate <td> items, so no need to add a definition for them -->
       </ng-container>
 
-      <ng-container matColumnDef="quantity">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by quantity" class="nowrap">
-          {{ "ORDER.QUANTITY" | translate }} <br />(tấn)
+      <!-- Product Category Column -->
+      <ng-container [matColumnDef]="column.categoryValue" *ngFor="let column of productDataSource">
+        <th mat-header-cell *matHeaderCellDef [attr.colspan]="column.pColspan">
+          {{column.displayedCategory}}
         </th>
-        <td mat-cell class="wrap-text center" *matCellDef="let element">
-          <span *ngFor="let i of element.products" class="{{
-              element.isViewed === 0 &&
-              (element.sender !== element.agencyId ||
-                element.sender === element.agencyId)
-                ? 'bold'
-                : ''
-            }}">
-            {{ i.quantity }} <br />
-          </span>
+        <!-- This column doesn't generate <td> items, so no need to add a definition for them -->
+      </ng-container>
+
+      <!-- Product Name Column -->
+      <ng-container [matColumnDef]="item.label"
+        *ngFor="let item of displayedColumnsProductName;trackBy: customTrackBy;let i = index">
+        <th mat-header-cell *matHeaderCellDef class="align-top" style="padding: 0.25rem;">
+          {{item.value}}</th>
+        <td mat-cell *matCellDef="let element" class="p-td">
+          {{element.product[i].pValue > 0 ? element.product[i].pValue : "-" }}
         </td>
       </ng-container>
 
       <!-- productTotal Column -->
       <ng-container matColumnDef="productTotal">
         <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by productTotal"
-          class="nowrap">
+          class="nowrap" [attr.rowspan]="thRowspan">
           {{ "ORDER.TOTAL" | translate }} <br /> (tấn)
         </th>
         <td mat-cell *matCellDef="let element" class="center {{
@@ -356,7 +351,7 @@
       <!-- licensePlates Column -->
       <ng-container matColumnDef="licensePlates">
         <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by license plates"
-          class="nowrap">
+          class="nowrap" [attr.rowspan]="thRowspan">
           {{ "ORDER.LICENSE_PLATE1" | translate }} <br />
           {{ "ORDER.LICENSE_PLATE2" | translate }}
         </th>
@@ -374,7 +369,7 @@
       <!-- driver Column -->
       <ng-container matColumnDef="driver">
         <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by driver"
-          class="driver nowrap">
+          class="driver nowrap" [attr.rowspan]="thRowspan">
           {{ "ORDER.DRIVER" | translate }}
         </th>
         <td mat-cell *matCellDef="let element" class="pre-line {{
@@ -390,7 +385,8 @@
 
       <!-- status Column -->
       <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by status" class="nowrap">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by status" class="nowrap"
+          [attr.rowspan]="thRowspan">
           {{ "ORDER.STATUS" | translate }}
         </th>
         <td mat-cell *matCellDef="let element" class="{{
@@ -432,7 +428,7 @@
 
       <!-- delete action Column -->
       <ng-container matColumnDef="deleteAction" [stickyEnd]="sticky">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Các thao tác</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header [attr.rowspan]="thRowspan">Các thao tác</th>
         <td mat-cell *matCellDef="let element" class="sticky-col del-action">
           <div class="center">
             <mat-icon aria-hidden="false" aria-label="Edit icon" fontSet="fas" fontIcon="fa-pen" class="fa-pen"
@@ -450,10 +446,14 @@
           {{ "MESSAGE.NO_DATA" | translate }}
         </td>
       </ng-container>
-      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+
+      <tr mat-header-row *matHeaderRowDef="columnsRow1; sticky: true"></tr>
+      <tr mat-header-row *matHeaderRowDef="columnsRowProductCategory; sticky: true"></tr>
+      <tr mat-header-row *matHeaderRowDef="columnsDefProductName; sticky: true"></tr>
       <tr mat-row *matHeaderRowDef="['no-data']" class="text-center" [hidden]="hasData"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
+
     <mat-paginator #paginator [hidden]="!hasData" showFirstLastButtons [pageSizeOptions]="[10, 20, 50, 100]"
       [length]="totalItems" (page)="changePaging($event)">
     </mat-paginator>

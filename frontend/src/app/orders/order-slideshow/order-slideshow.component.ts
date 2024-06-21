@@ -8,7 +8,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Cities, PRODUCT_CATEGORIES, RECEIPT } from '../../constants/const-data';
 import { Product } from '../../models/product';
 import { Helper } from '../../helpers/helper';
-import { FormControl, FormGroup } from '@angular/forms';
 import { SearchDetailsOrder } from '../../models/search';
 import { RoutesService } from '../../services/routes.service';
 import { concatMap, finalize, tap } from 'rxjs';
@@ -55,9 +54,10 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
 
   /** Defined column section2 */
   columnsRow1Section2: string[] = ['no', 'products', 'sum'];
-  displayedColumnsSection2: string[] = [];
   dataSource2 = new MatTableDataSource<any>();
   columnDefRowSumSection2: string[] = [];
+  displayedColumnsSection2: string[] = ['no', 'sum'];
+  columnDefRowSumFooterSection2: string[] = ['no', 'sum'];
   displayedRowSumSection2: { label: string, value: number }[] = [];
 
   thRowspan: number = 3;
@@ -87,6 +87,9 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
   responseReceived: any[] = [];
   responseShipped: any[] = [];
   loading: boolean = true;
+  totalInDay: number = 0;
+  columnDefRowLastedSection1: string[] = ['empty', 'footer-row-lasted-label', 'total', 'lasted'];
+  colspanLasted: number = 0;
 
   constructor(
     public router: Router,
@@ -209,7 +212,7 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
     this.displayedColumnsProductName = [];
     this.columnsRowProductCategory = [];
     this.displayedColumnsSection1 = [];
-    this.displayedColumnsSection2 = [];
+    // this.displayedColumnsSection2 = [];
     this.productDataSource = [];
 
     let sutuList: { pId: number, pCategory: number, pName: string }[] = [];
@@ -290,7 +293,6 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
 
     /** Handle columndef for section1, section2 */
     this.displayedColumnsSection1 = [...this.colDefSection1, ...this.columnsDefProductName, 'sum']
-    this.displayedColumnsSection2 = ['no', ...this.columnsDefProductName, 'sum']
   }
 
   private generalOrderDetailToTable() {
@@ -306,6 +308,8 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
     if (this.responseReceived.length > 0) {
       this.columnDefRowSumSection1 = [];
       this.displayedRowSumSection1 = [];
+      this.columnDefRowLastedSection1 = ['empty', 'footer-row-lasted-label', 'total', 'lasted'];
+      this.colspanLasted = 0;
 
       this.responseReceived.forEach((x: any) => {
         x.agencyName = this.agencyList.find(i => i.id === x.agencyId)?.agencyName;
@@ -339,10 +343,12 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
 
       // Total sum
       let sumTotal1 = this.helper.sum(dataSourceObject1, 'sum');
+      this.totalInDay = Math.round((this.totalInDay + sumTotal1) * 100000000) / 100000000;
 
       let sumColRow1 = productTemplate.map(x => ({ ...x }));
       groupSumRowSection1.forEach((e: any) => {
         this.columnDefRowSumSection1.push(e[0].pCategory + ".s" + groupSumRowSection1.indexOf(e));
+        this.columnDefRowLastedSection1.push(e[0].pCategory + ".s" + groupSumRowSection1.indexOf(e));
         let sum = this.helper.sum(e, 'pValue');
         sumColRow1.map(y => {
           if (y.pId === e[0].pId) {
@@ -358,6 +364,10 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
       this.columnDefRowSumSection1.push("s" + (this.thColspan + 1));
       this.columnDefRowSumSection1 = ['footer-row-label', ...this.columnDefRowSumSection1];
       this.displayedRowSumSection1.push({ label: "s" + (this.thColspan + 1), value: sumTotal1 });
+
+      // Pop 4 element
+      this.columnDefRowLastedSection1 = this.columnDefRowLastedSection1.slice(0, this.columnDefRowLastedSection1.length - productTemplate.length);
+      this.colspanLasted = this.columnDefRowSumSection1.length - 4;
     } else {
       this.displayedColumnRowSection1(productTemplate);
     }
@@ -398,31 +408,17 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
 
       // Sum all of sum
       let sumTotal2 = this.helper.sum(dataSourceObject2, 'sum');
+      this.totalInDay = Math.round((this.totalInDay + sumTotal2) * 100000000) / 100000000;
 
       this.dataSource2.data = dataSourceObject2;
-      let sumColRow2 = productTemplate.map(x => ({ ...x }));
 
-      groupSumColsSection2.forEach((e: any) => {
-        this.columnDefRowSumSection2.push(e[0].pCategory + ".s" + groupSumColsSection2.indexOf(e));
-        let sum = this.helper.sum(e, 'pValue');
-        sumColRow2.map(y => {
-          if (y.pId === e[0].pId) {
-            y.pValue = sum + "";
-          }
-        });
-      });
-
-      sumColRow2.forEach(e => {
-        this.displayedRowSumSection2.push({ label: e.pCategory + ".s" + sumColRow2.indexOf(e), value: Number(e.pValue) });
-      });
-
-      this.columnDefRowSumSection2.push("s" + (this.thColspan + 1));
-      this.columnDefRowSumSection2 = ['footer-row-label', ...this.columnDefRowSumSection2];
+      this.columnDefRowSumSection2 = ['footer-row-label', "s" + (this.thColspan + 1)];
       this.displayedRowSumSection2.push({ label: "s" + (this.thColspan + 1), value: sumTotal2 });
     } else {
       this.displayedColumnRowSection2(productTemplate);
     }
     /**** END */
+
     this.loading = false;
     this.cdr.detectChanges();
   }
@@ -430,10 +426,13 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
   private displayedColumnRowSection1(productTemplate: any[]) {
     this.dataSource1.data = [];
     this.columnDefRowSumSection1 = [];
-    this.displayedRowSumSection1 = [];
+    this.columnDefRowLastedSection1 = ['empty', 'footer-row-lasted-label', 'total', 'lasted'];
+    this.colspanLasted = 0;
+    this.totalInDay = 0;
 
     productTemplate.forEach(e => {
       this.columnDefRowSumSection1.push("s" + productTemplate.indexOf(e));
+      this.columnDefRowLastedSection1.push("s" + productTemplate.indexOf(e));
       this.displayedRowSumSection1.push({ label: "s" + productTemplate.indexOf(e), value: 0 });
     });
 
@@ -441,6 +440,9 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
     this.columnDefRowSumSection1.push("s" + (this.thColspan + 1));
     this.columnDefRowSumSection1 = ['footer-row-label', ...this.columnDefRowSumSection1];
     this.displayedRowSumSection1.push({ label: "s" + (this.thColspan + 1), value: 0 });
+    // Pop 4 element
+    this.columnDefRowLastedSection1 = this.columnDefRowLastedSection1.slice(0, this.columnDefRowLastedSection1.length - productTemplate.length);
+    this.colspanLasted = this.columnDefRowSumSection1.length - 4;
   }
 
   private displayedColumnRowSection2(productTemplate: any[]) {
@@ -448,14 +450,8 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
     this.columnDefRowSumSection2 = [];
     this.displayedRowSumSection2 = [];
 
-    productTemplate.forEach(e => {
-      this.columnDefRowSumSection2.push("s" + productTemplate.indexOf(e));
-      this.displayedRowSumSection2.push({ label: "s" + productTemplate.indexOf(e), value: 0 });
-    });
-
     // Section2
-    this.columnDefRowSumSection2.push("s" + (this.thColspan + 1));
-    this.columnDefRowSumSection2 = ['footer-row-label', ...this.columnDefRowSumSection2];
+    this.columnDefRowSumSection2 = ['footer-row-label', "s" + (this.thColspan + 1)];
     this.displayedRowSumSection2.push({ label: "s" + (this.thColspan + 1), value: 0 });
   }
 
@@ -463,14 +459,16 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
     let today = new Date();
     today = new Date(new Date().setHours(6, 0, 0, 0));
     let tomorrow = new Date(+new Date() + 86400000);
-    tomorrow = new Date(+new Date().setHours(6, 0, 0, 0) + 86400000);
+    tomorrow = new Date(+new Date().setHours(7, 0, 0, 0) + 86400000);
     this.today = this.helper.getDateFormat(5, today);
     this.tomorrow = this.helper.getDateFormat(5, tomorrow);
-
+    console.log(today)
+    console.log(tomorrow)
     this.searchForm.startDate = this.today;
     this.searchForm.endDate = this.tomorrow;
-
     this.displayTodate = `Ngày:  ${this.helper.getDateFormat(3, today)}`;
+    // this.displayTodate = `Ngày:  ${this.helper.getDateFormat(3, today)}`;
+    this.displayTodate = `Thời gian lấy dữ liệu (từ 6h sáng ${this.helper.getDateFormat(3, today)} đến 7h sáng ${this.helper.getDateFormat(3, tomorrow)})`;
 
   }
 
