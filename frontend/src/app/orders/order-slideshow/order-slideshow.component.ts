@@ -212,7 +212,7 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
     this.displayedColumnsProductName = [];
     this.columnsRowProductCategory = [];
     this.displayedColumnsSection1 = [];
-    // this.displayedColumnsSection2 = [];
+    this.displayedColumnsSection2 = [];
     this.productDataSource = [];
 
     let sutuList: { pId: number, pCategory: number, pName: string }[] = [];
@@ -293,6 +293,7 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
 
     /** Handle columndef for section1, section2 */
     this.displayedColumnsSection1 = [...this.colDefSection1, ...this.columnsDefProductName, 'sum']
+    this.displayedColumnsSection2 = ['no', ...this.columnsDefProductName, 'sum']
   }
 
   private generalOrderDetailToTable() {
