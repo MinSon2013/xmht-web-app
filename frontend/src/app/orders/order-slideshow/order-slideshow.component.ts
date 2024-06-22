@@ -463,8 +463,6 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
     tomorrow = new Date(+new Date().setHours(7, 0, 0, 0) + 86400000);
     this.today = this.helper.getDateFormat(5, today);
     this.tomorrow = this.helper.getDateFormat(5, tomorrow);
-    console.log(today)
-    console.log(tomorrow)
     this.searchForm.startDate = this.today;
     this.searchForm.endDate = this.tomorrow;
     this.displayTodate = `Ngày:  ${this.helper.getDateFormat(3, today)}`;
