@@ -327,7 +327,7 @@
         <th mat-header-cell *matHeaderCellDef class="align-top" style="padding: 0.25rem;">
           {{item.value}}</th>
         <td mat-cell *matCellDef="let element" class="p-td">
-          {{element.product[i].pValue > 0 ? element.product[i].pValue : "-" }}
+          {{element.product[i].pValue > 0 ? element.product[i].pValue : "" }}
         </td>
       </ng-container>
 
