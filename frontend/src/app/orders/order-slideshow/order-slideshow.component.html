@@ -8,8 +8,8 @@
                 <label class="pad-label">{{ "BUTTON.BACK" | translate }}</label>
             </button>
         </div>
-        <span class="col-7 label">{{ displayTodate }}</span>
-        <span class="col-2 lb-ton">
+        <span class="col-6 label">{{ displayTodate }}</span>
+        <span class="col-3 lb-ton">
             {{"SLIDESHOW.LABEL_TON" | translate}}</span>
     </div>
 
@@ -168,7 +168,7 @@
 
                 <!-- NO Column -->
                 <ng-container matColumnDef="no">
-                    <th mat-header-cell *matHeaderCellDef [attr.rowspan]="thRowspan" class="b-bottom w8">
+                    <th mat-header-cell *matHeaderCellDef [attr.rowspan]="thRowspan" class="b-bottom width10">
                         {{ "SLIDESHOW.NO" | translate }}</th>
                     <td mat-cell *matCellDef="let element; let i = index" [ngClass]="{'tr-bg': i%2 === 0}">
                         {{element.no}}
@@ -178,7 +178,7 @@
                 <!-- SUM Column -->
                 <ng-container matColumnDef="sum">
                     <th mat-header-cell *matHeaderCellDef [attr.rowspan]="thRowspan"
-                        class="col-sum b-bottom b-left b-top w15">
+                        class="col-sum b-bottom b-left b-top">
                         {{'SLIDESHOW.SUM' | translate}}
                     </th>
                     <td mat-cell *matCellDef="let element; let i = index" [ngClass]="{'tr-bg': i%2 === 0}"

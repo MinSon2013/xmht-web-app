@@ -13,11 +13,10 @@ import { CustomSocket } from '../sockets/custom-socket';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-  username: string = ''; // administrator
-  password: string = ''; // administrator
 export class LoginComponent implements OnInit, OnDestroy {
   readonly routingOrderList = CONFIG.APP_ROUTING.ORDER.ORDERS + CONFIG.APP_ROUTING.ORDER.LIST;
-
+  username: string = ''; // administrator
+  password: string = ''; // administrator
   isUsernameValid: boolean = true;
   isPasswordValid: boolean = true;
   error: string = '';
