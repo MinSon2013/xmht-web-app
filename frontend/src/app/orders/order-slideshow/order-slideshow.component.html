@@ -115,7 +115,7 @@
 
                 <!-- Footer row sum label -->
                 <ng-container matColumnDef="footer-row-label">
-                    <th mat-footer-cell *matFooterCellDef [attr.colspan]="5" class="footer">
+                    <th mat-footer-cell *matFooterCellDef [attr.colspan]="5" class="footer color-white">
                         {{'SLIDESHOW.SUM_ALL' | translate}}
                     </th>
                 </ng-container>
@@ -129,11 +129,13 @@
 
                 <!-- Footer row lasted label -->
                 <ng-container matColumnDef="empty">
-                    <th mat-footer-cell *matFooterCellDef [attr.colspan]="5" class="footer none-border"></th>
+                    <th mat-footer-cell *matFooterCellDef [attr.colspan]="5" class="footer none-border color-white">
+                    </th>
                 </ng-container>
 
                 <ng-container matColumnDef="footer-row-lasted-label">
-                    <th mat-footer-cell *matFooterCellDef [attr.colspan]="3" class="footer lr-border text-style-lasted">
+                    <th mat-footer-cell *matFooterCellDef [attr.colspan]="3"
+                        class="footer lr-border text-style-lasted color-white">
                         {{'SLIDESHOW.SUM_IN_DAY' | translate}}
                     </th>
                 </ng-container>
@@ -218,7 +220,7 @@
 
                 <!-- Footer row sum label -->
                 <ng-container matColumnDef="footer-row-label" class="footer">
-                    <th mat-footer-cell *matFooterCellDef class="pre-space b-top">
+                    <th mat-footer-cell *matFooterCellDef class="pre-space b-top color-white">
                         {{'SLIDESHOW.SUM_ALL' | translate}}
                     </th>
                 </ng-container>

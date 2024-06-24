@@ -89,6 +89,8 @@
                 width: auto;
                 text-align: center;
                 font-weight: 600;
+                background: #90bdf5;
+                color: rgb(0, 0, 0);
             }
 
             th,
@@ -143,11 +145,12 @@
             }
 
             .bg-yellow {
-                background-color: yellow;
+                // background-color: yellow;
+                background-color: #90bdf5;
             }
 
             .text-flowerblue {
-                color: royalblue;
+                color: blue;
             }
 
             .text-red {
@@ -155,11 +158,11 @@
             }
 
             .text-green {
-                color: mediumseagreen;
+                color: green;
             }
 
             .text-grey {
-                color: grey;
+                color: black;
             }
 
             .pre-space {
@@ -284,6 +287,10 @@
 
     .display-none {
         display: none;
+    }
+
+    .color-white {
+        background-color: white !important;
     }
 
 }
