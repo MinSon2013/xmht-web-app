@@ -278,6 +278,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
         if (this.isAgency) {
           this.searchForm.agencyId = this.helper.getAgencyId() + "";
           this.convertDriverLicenseplate(this.helper.getAgencyId());
+          this.convertPickupAddress(this.helper.getAgencyId());
         }
       }
     });
