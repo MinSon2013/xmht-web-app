@@ -38,6 +38,8 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
   driverListClone: { agencyId: number, driver: string }[] = [];
   licensePlateList: any[] = [];
   licensePlateListClone: { agencyId: number, licensePlates: string }[] = [];
+  pickupAddressList: any[] = [];
+  pickupAddressListClone: { agencyId: number, pickupId: number, label: string }[] = [];
 
   customerSelected: any = null;
   receivedAdressSelected: any = null;
@@ -270,6 +272,8 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
         this.deliveries = response.deliveryList;
         this.licensePlateListClone = response.licensePlateList;
         this.driverListClone = response.driverList;
+        this.pickupAddressList = [];
+        this.pickupAddressListClone = response.pickupList;
         this.loading = false;
         if (this.isAgency) {
           this.searchForm.agencyId = this.helper.getAgencyId() + "";
@@ -303,6 +307,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
   onChangeCustomer(event: any) {
     this.customer = "   " + this.customerSelected?.agencyName;
     this.convertDriverLicenseplate(this.customerSelected?.id);
+    this.convertPickupAddress(this.customerSelected?.id);
   }
 
   convertDriverLicenseplate(agencyId: number) {
@@ -323,6 +328,23 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
       this.licensePlateList = this.sortAZ(licensePlateList);
     } else {
       this.licensePlateList = [];
+    }
+  }
+
+  convertPickupAddress(agencyId: number) {
+    let pickupAddress = this.pickupAddressListClone.map(x => ({ ...x }));
+    pickupAddress = this.pickupAddressListClone.filter(x => x.agencyId === agencyId);
+    if (pickupAddress.length > 0) {
+      let list: any[] = [];
+      pickupAddress.forEach(x => {
+        let item = this.cities.find(y => y.id === x.pickupId);
+        if (item) {
+          list.push({ agencyId: agencyId, pickupId: x.pickupId, label: item.label });
+        }
+      });
+      this.pickupAddressList = list;
+    } else {
+      this.pickupAddressList = [];
     }
   }
 

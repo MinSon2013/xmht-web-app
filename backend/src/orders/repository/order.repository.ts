@@ -477,6 +477,7 @@ export class OrderRepository extends Repository<Order> {
         let agencyList = [];
         let deliveryList = [];
         let productList = [];
+        let pickupList = [];
 
         let orders = await this.find();
 
@@ -500,7 +501,9 @@ export class OrderRepository extends Repository<Order> {
 
         deliveryList = await deliveryService.findAll();
 
-        return { productList, agencyList, driverList, licensePlateList, deliveryList };
+        pickupList = await this.getDisctintPickupOrder();
+
+        return { productList, agencyList, driverList, licensePlateList, deliveryList, pickupList };
     }
 
     private mappingOrder(modifyOrderDto: ModifyOrderDTO): Order {
@@ -643,5 +646,15 @@ export class OrderRepository extends Repository<Order> {
         }
 
         return str;
+    }
+
+    private async getDisctintPickupOrder() {
+        const list = await this.createQueryBuilder()
+            .select('distinct o.agency_id as agencyId, o.pickup_id as pickupId')
+            .from(Order, 'o')
+            .orderBy('o.agency_id')
+            .addOrderBy('o.pickup_id')
+            .getRawMany();
+        return list;
     }
 }
