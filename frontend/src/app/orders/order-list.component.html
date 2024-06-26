@@ -307,16 +307,16 @@
           {{ "ORDER.PRODUCT" | translate }}
         </th>
         <td mat-cell class="wrap-text" *matCellDef="let element; let i = index" [ngClass]="{'tr-bg': i%2 === 0}"
-          class="nowrap" style="text-align: start;">
-          <span *ngFor="let i of element.products" class="{{
+          class="nowrap" style="text-align: start;padding: 0;">
+          <div *ngFor="let i of element.products" class="{{
                 element.isViewed === 0 &&
                 (element.sender !== element.agencyId ||
                   element.sender === element.agencyId)
                   ? 'bold'
                   : ''
-              }}">
-            {{ i.name }}<br />
-          </span>
+              }} tr-p">
+            <tr>{{ i.name }}</tr>
+          </div>
         </td>
       </ng-container>
 
@@ -324,16 +324,17 @@
       <ng-container matColumnDef="quantity">
         <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by quantity" class="nowrap">
           {{ "ORDER.QUANTITY" | translate }} <br />(tấn)
-        <td mat-cell class="wrap-text center" *matCellDef="let element; let i = index" [ngClass]="{'tr-bg': i%2 === 0}">
-          <span *ngFor="let i of element.products" class="{{
+        <td mat-cell class="wrap-text center" *matCellDef="let element; let i = index" [ngClass]="{'tr-bg': i%2 === 0}"
+          style="padding: 0;">
+          <div *ngFor="let i of element.products" class="{{
                   element.isViewed === 0 &&
                   (element.sender !== element.agencyId ||
                     element.sender === element.agencyId)
                     ? 'bold'
                     : ''
-                }}">
-            {{ i.quantity }} <br />
-          </span>
+                }} tr-p">
+            <tr>{{ i.quantity }}</tr>
+          </div>
         </td>
       </ng-container>
 

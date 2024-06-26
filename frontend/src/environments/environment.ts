@@ -4,8 +4,7 @@
 
 export const environment = {
   production: false,
-  //apiUrl: 'http://localhost:3000',
-  apiUrl: 'https://backend2.xmht.vn',
+  apiUrl: 'http://localhost:3002',
   secretKey: 'JWT_SECRET_KEY-2023',
 };
 
