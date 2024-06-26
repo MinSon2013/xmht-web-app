@@ -440,9 +440,12 @@
 }
 
 .tr-p {
-    border-bottom: 1px dotted grey;
     padding-left: 16px;
     padding-right: 16px;
+}
+
+.tr-border {
+    border-bottom: 1px dotted grey;
 }
 
 @media only screen and (max-width: 1920px) {
