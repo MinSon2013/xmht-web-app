@@ -58,6 +58,7 @@ import { NgImageSliderModule } from 'ng-image-slider';
 import { OrderDetailStatisticComponent } from './orders/order-detail-statistic/order-detail-statistic.component';
 import { OrderSlideshowComponent } from './orders/order-slideshow/order-slideshow.component';
 import { RoutesService } from './services/routes.service';
+import { NumberFormatPipe } from './helpers/number.pipe';
 
 const config: SocketIoConfig = { url: `${environment.apiUrl}`, options: {} };
 
@@ -103,6 +104,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     DialogModifyReportComponent,
     OrderDetailStatisticComponent,
     OrderSlideshowComponent,
+    NumberFormatPipe,
   ],
   imports: [
     BrowserModule,
@@ -149,7 +151,9 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     NgxPrintElementDirective,
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' } },
     RoutesService,
+    NumberFormatPipe,
   ],
+  exports: [NumberFormatPipe],
   bootstrap: [AppComponent]
 })
 export class AppModule {

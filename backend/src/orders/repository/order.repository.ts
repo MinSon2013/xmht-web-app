@@ -19,7 +19,7 @@ export class OrderRepository extends Repository<Order> {
     private NOTIFY_TYPE_GENERAL = 1;
     private readonly helper = new Helper();
     private readonly statusOrderForAll = [1, 2, 3, 4, 5];
-    private readonly statusOrderForStocker = [1, 2, 3,]; // Case user is stocker. GET order with status = [1,2,3]
+    private readonly statusOrderForStocker = [2, 3, 4]; // Case user is stocker. GET order with status = [2,3]
 
     constructor() {
         super();

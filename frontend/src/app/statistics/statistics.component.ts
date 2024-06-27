@@ -112,6 +112,9 @@ export class StatisticsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    if (this.isStocker) {
+      this.status = this.status.slice(1, 4);
+    }
     this.getDataChartPie();
     this.getDataChartByDate();
     this.emitSocket();

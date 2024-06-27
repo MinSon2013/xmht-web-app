@@ -12,11 +12,13 @@ import * as XLSX from 'xlsx-js-style';
 import { ExcelDetailsConfig } from '../../helpers/excel-details.config';
 import { RoutesService } from '../../services/routes.service';
 import { SocketService } from '../../services/socket.service';
+import { NumberFormatPipe } from '../../helpers/number.pipe';
 
 @Component({
   selector: 'app-order-detail-statistic',
   templateUrl: './order-detail-statistic.component.html',
-  styleUrls: ['./order-detail-statistic.component.scss']
+  styleUrls: ['./order-detail-statistic.component.scss'],
+  providers: [NumberFormatPipe]
 })
 export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
   private helper = new Helper();
@@ -118,6 +120,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
     private socketService: SocketService,
     private cdr: ChangeDetectorRef,
     private routesService: RoutesService,
+    private formatPipe: NumberFormatPipe,
   ) {
   }
 
@@ -657,7 +660,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
       headerCustomer.push("");
     }
     this.displayedRowSumSection.forEach(k => {
-      lastRowSum.push(k.value > 0 ? Number(k.value) : "");
+      lastRowSum.push(k.value > 0 ? this.transformDecimal(k.value) : "");
     });
     lastRowSum.push("");
     lastRowSum.push("");
@@ -687,10 +690,10 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
 
       // Convert cell for cell products
       e.products.forEach((p: any) => {
-        row.push(p.pValue); // Cell 9......n
+        row.push(this.transformDecimal(p.pValue)); // Cell 9......n
       });
 
-      row.push(e.sum); // Cell 10
+      row.push(this.transformDecimal(e.sum)); // Cell 10
       row.push(e.receipt); // Cell 11
       row.push(e.licensePlate); // Cell 12
       row.push(e.driver); // Cell 13
@@ -788,7 +791,7 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
       }
 
       // Style for cell sum of every customer
-      const colX = XLSX.utils.encode_cell({ c: colMiddleIdx + 1, r: R });
+      const colX = XLSX.utils.encode_cell({ c: colMiddleIdx, r: R });
       ws[colX].s = ExcelDetailsConfig.colSumStyle;
     }
 
@@ -935,5 +938,9 @@ export class OrderDetailStatisticComponent implements OnInit, OnDestroy {
 
   dateRangeChange(dateRangeStart: HTMLInputElement, dateRangeEnd: HTMLInputElement) {
 
+  }
+
+  transformDecimal(nstr: any) {
+    return this.formatPipe.transform(nstr);
   }
 }

@@ -178,7 +178,7 @@
         [ngModelOptions]="{standalone: true}"></textarea>
     </div>
 
-    <div class="mb-6 row field" [hidden]="!isAdmin && !isSalesman">
+    <div class="mb-6 row field" [hidden]="!isAdmin && !isSalesman && !isStocker">
       <span class="col-5 text-label" for="status">
         {{'ORDER.STATUS' | translate}}
       </span>

@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AGENCY_ROLE, Cities, MSG_STATUS, RECEIPT, STATUS, Transports, USER_SALESMAN_ROLE } from '../../constants/const-data';
+import { AGENCY_ROLE, Cities, MSG_STATUS, RECEIPT, STATUS, STOCKER_ROLE, Transports, USER_SALESMAN_ROLE } from '../../constants/const-data';
 import { Order } from '../../models/order';
 import { MyErrorStateMatcher } from '../order-add/order-add.component';
 import { Helper } from '../../helpers/helper';
@@ -9,7 +9,6 @@ import { MAT_DATE_FORMATS } from '@angular/material/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import { SocketService } from '../../services/socket.service';
-import { tap } from 'rxjs';
 import { OrderService } from '../../services/order.service';
 import { RoutesService } from '../../services/routes.service';
 
@@ -92,6 +91,7 @@ export class DialogDetailOrderComponent implements OnInit {
   isAdmin: boolean = this.helper.isAdmin();
   isSalesman: boolean = this.userRole === USER_SALESMAN_ROLE;
   isAgency: boolean = this.userRole === AGENCY_ROLE;
+  isStocker: boolean = this.userRole === STOCKER_ROLE;
   disabled: boolean = false;
 
   constructor(

@@ -11,13 +11,15 @@ import { SERVICE_TYPE, STOCKER_ROLE, USER_AREA_MANAGER_ROLE } from '../constants
 import { Helper } from '../helpers/helper';
 import { RoutesService } from '../services/routes.service';
 import { SocketService } from '../services/socket.service';
+import { NumberFormatPipe } from '../helpers/number.pipe';
 
 @Component({
   selector: 'app-products',
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.scss'],
   providers: [
-    { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl }
+    { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl },
+    NumberFormatPipe
   ]
 })
 export class ProductsComponent implements OnInit, OnDestroy {
@@ -38,6 +40,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
   constructor(public dialog: MatDialog,
     private routesService: RoutesService,
     private socketService: SocketService,
+    private formatPipe: NumberFormatPipe,
   ) { }
 
   ngOnInit(): void {
@@ -124,6 +127,10 @@ export class ProductsComponent implements OnInit, OnDestroy {
         }
       }
     });
+  }
+
+  transformDecimal(nstr: any) {
+    return this.formatPipe.transform(nstr);
   }
 }
 

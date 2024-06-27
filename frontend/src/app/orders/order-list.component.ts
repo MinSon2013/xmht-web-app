@@ -23,13 +23,15 @@ import { CONFIG } from '../common/config';
 import { concatMap, finalize, tap } from 'rxjs';
 import { RoutesService } from '../services/routes.service';
 import { SocketService } from '../services/socket.service';
+import { NumberFormatPipe } from '../helpers/number.pipe';
 
 @Component({
   selector: 'app-order-list',
   templateUrl: './order-list.component.html',
   styleUrls: ['./order-list.component.scss'],
   providers: [
-    { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl }
+    { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl },
+    NumberFormatPipe
   ]
 })
 export class OrderListComponent implements OnInit, OnDestroy {
@@ -108,21 +110,6 @@ export class OrderListComponent implements OnInit, OnDestroy {
   takeLimitQuery: number = 100;
   pageIndex: number = 0;
 
-  // colDefDefault: string[] = ['approvedNumber', 'agencyName', 'contract', 'createdDate', 'receivedDate', 'confirmedDate', 'shippingDate', 'deliveryId', 'pickupId'];
-  // columnsRow1: string[] = [...this.colDefDefault, 'products', 'productTotal', 'licensePlates', 'driver', 'status', 'deleteAction'];
-  // columnsRowProductCategory: string[] = [];
-  // columnsDefProductName: string[] = [];
-  // displayedColumnsProductName: { id: number, label: string, value: string }[] = [];
-  // displayedColumns: string[] = [];
-  // thRowspan: number = 3;
-  // thColspan: number = 0;
-  // productDataSource: {
-  //   categoryValue: string,
-  //   displayedCategory: string,
-  //   pColspan: number,
-  //   productList: { pId: number, pCategory: number, pName: string }[],
-  // }[] = [];
-
   constructor(public dialog: MatDialog,
     public router: Router,
     private orderService: OrderService,
@@ -132,6 +119,7 @@ export class OrderListComponent implements OnInit, OnDestroy {
     private routesService: RoutesService,
     private socketService: SocketService,
     private cdr: ChangeDetectorRef,
+    private formatPipe: NumberFormatPipe,
   ) {
     this.epicFunction();
   }
@@ -144,7 +132,7 @@ export class OrderListComponent implements OnInit, OnDestroy {
       this.displayedColumns = ['approvedNumber', 'contract', 'createdDate', 'receivedDate', 'confirmedDate', 'shippingDate', 'deliveryId', 'pickupId', 'productName', 'quantity', 'productTotal', 'licensePlates', 'driver', 'status', 'deleteAction'];
     }
     if (this.isStocker) {
-      this.status = this.status.slice(0, 3);
+      this.status = this.status.slice(1, 4);
     }
     this.colspan = this.displayedColumns.length;
     this.onRequestServer();
@@ -446,8 +434,8 @@ export class OrderListComponent implements OnInit, OnDestroy {
       row.push(this.deliveries.find(x => x.id === e.deliveryId) ? this.deliveries.find(x => x.id === e.deliveryId).label : '');
       row.push(this.cities.find(x => x.id === e.pickupId) ? this.cities.find(x => x.id === e.pickupId).label : '');
       row.push(this.getProductName(e.products));
-      row.push(this.getProductQuantity(e.products));
-      row.push(Number(e.productTotal));
+      row.push(this.transformDecimal(this.getProductQuantity(e.products)));
+      row.push(this.transformDecimal(e.productTotal));
       row.push(e.licensePlates);
       row.push(e.driver);
       rows.push(row);
@@ -629,6 +617,10 @@ export class OrderListComponent implements OnInit, OnDestroy {
 
   onlyNumberKey(event: any) {
     return this.helper.onlyNumberKey(event);
+  }
+
+  transformDecimal(nstr: any) {
+    return this.formatPipe.transform(nstr);
   }
 
 }

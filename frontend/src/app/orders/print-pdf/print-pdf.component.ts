@@ -15,11 +15,13 @@ import { Order } from '../../models/order';
 import { CONFIG } from '../../common/config';
 import { RoutesService } from '../../services/routes.service';
 import { SocketService } from '../../services/socket.service';
+import { NumberFormatPipe } from '../../helpers/number.pipe';
 
 @Component({
   selector: 'app-print-pdf',
   templateUrl: './print-pdf.component.html',
-  styleUrls: ['./print-pdf.component.scss']
+  styleUrls: ['./print-pdf.component.scss'],
+  providers: [NumberFormatPipe]
 })
 export class PrintPdfComponent implements OnInit, OnDestroy {
   @ViewChild('pdfTable') pdfTable!: ElementRef;
@@ -62,6 +64,7 @@ export class PrintPdfComponent implements OnInit, OnDestroy {
     private location: Location,
     private routesService: RoutesService,
     private socketService: SocketService,
+    private formatPipe: NumberFormatPipe,
   ) {
     const navigation = this.router.getCurrentNavigation();
     this.data = navigation?.extras;
@@ -232,6 +235,10 @@ export class PrintPdfComponent implements OnInit, OnDestroy {
       this.spans[i][key] = count;
       i += count;
     }
+  }
+
+  transformDecimal(nstr: any) {
+    return this.formatPipe.transform(nstr);
   }
 
 }

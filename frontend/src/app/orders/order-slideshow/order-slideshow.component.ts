@@ -12,6 +12,7 @@ import { SearchDetailsOrder } from '../../models/search';
 import { RoutesService } from '../../services/routes.service';
 import { concatMap, finalize, tap } from 'rxjs';
 import { SocketService } from '../../services/socket.service';
+import { NumberFormatPipe } from '../../helpers/number.pipe';
 
 export interface ItemRow {
   no: number,
@@ -26,7 +27,8 @@ export interface ItemRow {
 @Component({
   selector: 'app-order-slideshow',
   templateUrl: './order-slideshow.component.html',
-  styleUrls: ['./order-slideshow.component.scss']
+  styleUrls: ['./order-slideshow.component.scss'],
+  providers: [NumberFormatPipe]
 })
 export class OrderSlideshowComponent implements OnInit, OnDestroy {
   private helper = new Helper();
@@ -100,6 +102,7 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
     private socketService: SocketService,
     private routesService: RoutesService,
     private cdr: ChangeDetectorRef,
+    private formatPipe: NumberFormatPipe,
   ) {
   }
 
@@ -410,7 +413,6 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
       // Sum all of sum
       let sumTotal2 = this.helper.sum(dataSourceObject2, 'sum');
       this.totalInDay = Math.round((this.totalInDay + sumTotal2) * 100000000) / 100000000;
-
       this.dataSource2.data = dataSourceObject2;
 
       this.columnDefRowSumSection2 = ['footer-row-label', "s" + (this.thColspan + 1)];
@@ -522,5 +524,9 @@ export class OrderSlideshowComponent implements OnInit, OnDestroy {
   /** Updated product name display column when order changed */
   customTrackBy(index: any, item: any) {
     return item.label;
+  }
+
+  transformDecimal(nstr: any) {
+    return this.formatPipe.transform(nstr);
   }
 }

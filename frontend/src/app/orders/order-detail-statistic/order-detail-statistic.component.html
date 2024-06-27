@@ -263,7 +263,7 @@
                         {{item.value}}</th>
                     <td mat-cell *matCellDef="let element; let j = index" [ngClass]="{'tr-bg': j%2 === 0}"
                         class="p-td {{getClass(item.label)}}">
-                        {{element.products[i].pValue > 0 ? element.products[i].pValue : "-" }}
+                        {{element.products[i].pValue > 0 ? transformDecimal(element.products[i].pValue) : "-" }}
                     </td>
                 </ng-container>
 
@@ -273,7 +273,7 @@
                         {{'DETAILS_STATISTIC.SUM' | translate}}
                     </th>
                     <td mat-cell *matCellDef="let element; let i = index" [ngClass]="{'tr-bg': i%2 === 0}"
-                        class="bold p-td">{{element.sum > 0 ? element.sum : "-" }}
+                        class="bold p-td">{{element.sum > 0 ? transformDecimal(element.sum) : "-" }}
                     </td>
                 </ng-container>
 
@@ -317,7 +317,7 @@
                 <!-- Footer row sum value -->
                 <ng-container [matColumnDef]="col.label" *ngFor="let col of displayedRowSumSection;">
                     <td mat-footer-cell *matFooterCellDef class="bold p-td {{getClass(col.label)}}">
-                        {{col.value > 0 ? col.value : ""}}
+                        {{col.value > 0 ? transformDecimal(col.value) : ""}}
                     </td>
                 </ng-container>
 

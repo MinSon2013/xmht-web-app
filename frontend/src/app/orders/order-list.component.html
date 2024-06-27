@@ -333,7 +333,7 @@
                     ? 'bold'
                     : ''
                 }} tr-p {{j === element.products.length - 1 ? '' : 'tr-border'}}">
-            <tr>{{ i.quantity }}</tr>
+            <tr>{{ transformDecimal(i.quantity) }}</tr>
           </div>
         </td>
       </ng-container>
@@ -351,7 +351,7 @@
               ? 'bold'
               : ''
           }}">
-          {{ element.productTotal }}
+          {{ transformDecimal(element.productTotal) }}
         </td>
       </ng-container>
 
