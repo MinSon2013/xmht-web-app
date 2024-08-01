@@ -479,13 +479,18 @@ export class OrderRepository extends Repository<Order> {
         let productList = [];
         let pickupList = [];
 
-        let orders = await this.find();
+        const query = await this.createQueryBuilder()
+            .select('agency_id as agencyId')
+            .addSelect('driver as driver')
+            .addSelect('license_plates as licensePlates')
+            .getRawMany();
 
-        driverList = orders.map(x => ({ agencyId: x.agencyId, driver: x.driver }));
+        driverList = query.map(x => ({ agencyId: x.agencyId, driver: x.driver }));
         driverList = driverList.filter((elem, index, self) => {
             return index === self.indexOf(elem);
         })
-        licensePlateList = orders.map(x => ({ agencyId: x.agencyId, licensePlates: x.licensePlates }));
+
+        licensePlateList = query.map(x => ({ agencyId: x.agencyId, licensePlates: x.licensePlates }));
         licensePlateList = licensePlateList.filter((elem, index, self) => {
             return index === self.indexOf(elem);
         })

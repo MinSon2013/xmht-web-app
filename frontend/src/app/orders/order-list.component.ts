@@ -109,6 +109,8 @@ export class OrderListComponent implements OnInit, OnDestroy {
   skip: number = 0;
   takeLimitQuery: number = 100;
   pageIndex: number = 0;
+  res: any;
+  res1: any;
 
   constructor(public dialog: MatDialog,
     public router: Router,
@@ -150,15 +152,19 @@ export class OrderListComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.routesService.getFilterList().pipe(
       tap((res) => {
-        this.generalFiltersToList(res);
+        //this.generalFiltersToList(res);
+        this.res = res;
       }),
       concatMap(() => this.routesService.getOrderList(this.takeLimitQuery, this.skip)),
       tap((res1) => {
-        this.generalResponseToDataSource(res1, this.pageIndex);
+        // this.generalResponseToDataSource(res1, this.pageIndex);
+        this.res1 = res1;
       }),
-      finalize(() => this.loading = false)
     ).subscribe(success => {
       console.log('success');
+      this.loading = false;
+      this.generalFiltersToList(this.res);
+      this.generalResponseToDataSource(this.res1, this.pageIndex);
     }, errorData => {
       console.log(errorData);
       this.loading = false
