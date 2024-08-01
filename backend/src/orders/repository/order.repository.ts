@@ -483,6 +483,7 @@ export class OrderRepository extends Repository<Order> {
             .select('agency_id as agencyId')
             .addSelect('driver as driver')
             .addSelect('license_plates as licensePlates')
+            .addSelect('pickup_id as pickupId')
             .getRawMany();
 
         driverList = query.map(x => ({ agencyId: x.agencyId, driver: x.driver }));
@@ -492,6 +493,11 @@ export class OrderRepository extends Repository<Order> {
 
         licensePlateList = query.map(x => ({ agencyId: x.agencyId, licensePlates: x.licensePlates }));
         licensePlateList = licensePlateList.filter((elem, index, self) => {
+            return index === self.indexOf(elem);
+        })
+
+        pickupList = query.map(x => ({ agencyId: x.agencyId, pickupId: x.pickupId }));
+        pickupList = pickupList.filter((elem, index, self) => {
             return index === self.indexOf(elem);
         })
 
@@ -505,8 +511,6 @@ export class OrderRepository extends Repository<Order> {
         }
 
         deliveryList = await deliveryService.findAll();
-
-        pickupList = await this.getDisctintPickupOrder();
 
         return { productList, agencyList, driverList, licensePlateList, deliveryList, pickupList };
     }
@@ -651,15 +655,5 @@ export class OrderRepository extends Repository<Order> {
         }
 
         return str;
-    }
-
-    private async getDisctintPickupOrder() {
-        const list = await this.createQueryBuilder()
-            .select('distinct o.agency_id as agencyId, o.pickup_id as pickupId')
-            .from(Order, 'o')
-            .orderBy('o.agency_id')
-            .addOrderBy('o.pickup_id')
-            .getRawMany();
-        return list;
     }
 }
