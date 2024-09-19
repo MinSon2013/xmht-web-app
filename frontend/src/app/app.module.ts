@@ -125,9 +125,10 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
-        deps: [HttpClient]
-      }
+        useFactory: (http: HttpClient) =>
+          new TranslateHttpLoader(http, './assets/i18n/', `.json?v=${new Date().getTime()}`),
+        deps: [HttpClient],
+      },
     }),
     NgxPrintElementModule,
     NgxEditorModule,
