@@ -85,7 +85,7 @@
             id="name" type="text" [(ngModel)]="item.name" [ngModelOptions]="{standalone: true}" />
           <input matInput [disabled]="disabled"
             class="p-quantity col-3 margin appearance-none border rounded w-full py-2 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline {{error1.length !== 0 ? 'focus-i' : ''}}"
-            id="quantity" type="text" maxlength="5" [(ngModel)]="item.quantity" [ngModelOptions]="{standalone: true}"
+            id="quantity" type="text" maxlength="8" [(ngModel)]="item.quantity" [ngModelOptions]="{standalone: true}"
             [errorStateMatcher]="matcher" placeholder="0.0" (keydown)="onlyNumberKey($event)" (focusout)="focusOut()" />
           <span class="col-2 label-ton">(tấn)</span>
         </div>
