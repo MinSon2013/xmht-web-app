@@ -301,5 +301,11 @@ export class Helper {
     }, {}));
   }
 
+  public removeDuplicatesFromArrayOfObjects(list: any[]) {
+    const uniq = new Set(list.map(e => JSON.stringify(e)));
+    const res = Array.from(uniq).map(e => JSON.parse(e));
+    return res;
+  }
+
 }
 

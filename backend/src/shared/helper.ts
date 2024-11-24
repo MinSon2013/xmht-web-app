@@ -14,4 +14,10 @@ export class Helper {
             return moment(new Date).format(this.UPDATE_DATE_FORMAT_3);
         }
     }
+
+    public removeDuplicatesFromArrayOfObjects(list: any[]) {
+        const uniq = new Set(list.map(e => JSON.stringify(e)));
+        const res = Array.from(uniq).map(e => JSON.parse(e));
+        return res;
+    }
 }

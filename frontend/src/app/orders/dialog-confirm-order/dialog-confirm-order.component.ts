@@ -97,6 +97,7 @@ export class DialogConfirmOrderComponent implements OnInit, OnDestroy {
     this.order.status = row.status;
     this.order.note = row.note;
     this.order.products = products.sort((a: any, b: any) => a.category < b.category ? -1 : 1);
+    this.order.products = this.helper.removeDuplicatesFromArrayOfObjects(this.order.products);
     this.order.contract = row.contract;
     this.order.sender = row.sender;
     this.order.isViewed = row.isViewed;

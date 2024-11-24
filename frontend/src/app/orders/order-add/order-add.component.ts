@@ -155,7 +155,7 @@ export class OrderAddComponent implements OnInit, OnDestroy {
       }
       this.order.sender = this.helper.getUserId();
       this.order.products = this.order.products.filter(x => x.quantity.toString() !== '0' && x.quantity.toString() !== '');
-
+      this.order.products = this.helper.removeDuplicatesFromArrayOfObjects(this.order.products);
       if (this.order.status === STATUS[1].value) {
         this.order.confirmedDate = this.helper.getDateFormat(2);
       }

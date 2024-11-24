@@ -223,6 +223,7 @@ export class DialogDetailOrderComponent implements OnInit {
       }
     });
     this.order.products = products;
+    this.order.products = this.helper.removeDuplicatesFromArrayOfObjects(this.order.products);
   }
 
   onSubmit() {
@@ -233,6 +234,8 @@ export class DialogDetailOrderComponent implements OnInit {
       this.order.transport = Number(this.transportSelected.id);
       this.order.receipt = Number(this.receiptSelected.value);
       this.order.products = this.order.products.filter(x => x.quantity && x.quantity.toString() !== '0' && x.quantity.toString() !== '');
+      // remove duplicates from array of objects 
+      this.order.products = this.helper.removeDuplicatesFromArrayOfObjects(this.order.products);
       this.order.receivedDate = this.helper.getDateFormat(3, this.testForm.value.date);
       this.order.agencyId = this.agencySelected.id ?? this.order.agencyId;
       if (!this.order.isViewed) {

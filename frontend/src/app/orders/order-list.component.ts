@@ -288,6 +288,7 @@ export class OrderListComponent implements OnInit, OnDestroy {
       response.orderList.forEach((x: any) => {
         x.agencyName = this.agencyList.find(i => i.id === x.agencyId)?.agencyName || "";
         x.products = this.helper.sortAZ(x.products, 'category');
+        x.products = this.helper.removeDuplicatesFromArrayOfObjects(x.products);
       });
 
       this.dataElement = [...this.dataElement, ...response.orderList];

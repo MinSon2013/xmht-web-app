@@ -133,7 +133,7 @@ export class OrderRepository extends Repository<Order> {
     ): Promise<ModifyOrderDTO> {
         const orderEntity = this.mappingOrder(modifyOrderDto);
         const order = await this.save(orderEntity);
-        const entities: ProductOrder[] = [];
+        let entities: ProductOrder[] = [];
         modifyOrderDto.products.forEach(element => {
             const item = new ProductOrder();
             item.orderId = order.id;
@@ -142,6 +142,7 @@ export class OrderRepository extends Repository<Order> {
             item.createdDate = this.helper.getUpdateDate(2);
             entities.push(item);
         });
+        entities = this.helper.removeDuplicatesFromArrayOfObjects(entities);
         await productOrderRepo.save(entities);
 
         // tao thong bao
@@ -180,12 +181,24 @@ export class OrderRepository extends Repository<Order> {
             .where("order_id = :orderId", { orderId: modifyOrderDto.id })
             .execute();
 
+        const _maxProductOrder = await productOrderRepo.find({
+            order: {
+                id: 'DESC',
+            },
+            take: 1,
+        });
+        // Get MAX id in ProductOrder
+        let maxIdInProductOrderList = _maxProductOrder[0].id;
+        maxIdInProductOrderList = maxIdInProductOrderList + 1;
+
         modifyOrderDto.products.forEach(async element => {
-            const newProductOrder = new ProductOrder();
+            let newProductOrder = new ProductOrder();
+            newProductOrder.id = maxIdInProductOrderList;
             newProductOrder.productId = element.id;
             newProductOrder.orderId = modifyOrderDto.id;
             newProductOrder.quantity = element.quantity;
             newProductOrder.createdDate = this.helper.getUpdateDate(2);
+            maxIdInProductOrderList = maxIdInProductOrderList + 1;
             await productOrderRepo.save(newProductOrder);
         });
 
